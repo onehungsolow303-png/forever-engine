@@ -36,6 +36,9 @@ namespace ForeverEngine.Demo.Battle
                 else if (Input.GetKeyDown(KeyCode.S)) PlayerMove(0, -1);
                 else if (Input.GetKeyDown(KeyCode.A)) PlayerMove(-1, 0);
                 else if (Input.GetKeyDown(KeyCode.D)) PlayerMove(1, 0);
+                // Attack nearest adjacent enemy with 1, or any key 1-9
+                else if (Input.GetKeyDown(KeyCode.Alpha1) || Input.GetKeyDown(KeyCode.F))
+                    AttackNearestEnemy();
                 else if (Input.GetKeyDown(KeyCode.Space)) PlayerEndTurn();
             }
         }
@@ -99,10 +102,25 @@ namespace ForeverEngine.Demo.Battle
 
         public void PlayerMove(int dx, int dy)
         {
-            if (CurrentTurn == null || !CurrentTurn.IsPlayer || CurrentTurn.MovementRemaining <= 0) return;
+            if (CurrentTurn == null || !CurrentTurn.IsPlayer) return;
+
             int nx = CurrentTurn.X + dx, ny = CurrentTurn.Y + dy;
             if (!Grid.IsWalkable(nx, ny)) return;
-            if (Combatants.Any(c => c.IsAlive && c.X == nx && c.Y == ny)) return;
+
+            // Bump attack: moving into an enemy attacks them instead
+            var target = Combatants.FirstOrDefault(c => c.IsAlive && !c.IsPlayer && c.X == nx && c.Y == ny);
+            if (target != null)
+            {
+                if (CurrentTurn.HasAction)
+                {
+                    ResolveAttack(CurrentTurn, target);
+                    CurrentTurn.HasAction = false;
+                    CheckBattleEnd();
+                }
+                return;
+            }
+
+            if (CurrentTurn.MovementRemaining <= 0) return;
             CurrentTurn.X = nx; CurrentTurn.Y = ny;
             CurrentTurn.MovementRemaining--;
         }
@@ -113,6 +131,27 @@ namespace ForeverEngine.Demo.Battle
             if (!IsAdjacent(CurrentTurn, target)) return;
             ResolveAttack(CurrentTurn, target);
             CurrentTurn.HasAction = false;
+            CheckBattleEnd();
+        }
+
+        public void AttackNearestEnemy()
+        {
+            if (CurrentTurn == null || !CurrentTurn.IsPlayer || !CurrentTurn.HasAction) return;
+            // Find closest adjacent alive enemy
+            var target = Combatants
+                .Where(c => c.IsAlive && !c.IsPlayer && IsAdjacent(CurrentTurn, c))
+                .OrderBy(c => System.Math.Abs(c.X - CurrentTurn.X) + System.Math.Abs(c.Y - CurrentTurn.Y))
+                .FirstOrDefault();
+            if (target != null)
+            {
+                ResolveAttack(CurrentTurn, target);
+                CurrentTurn.HasAction = false;
+                CheckBattleEnd();
+            }
+            else
+            {
+                Log.Add("No adjacent enemy to attack! Move closer first.");
+            }
         }
 
         public void PlayerEndTurn() { if (CurrentTurn != null && CurrentTurn.IsPlayer) NextTurn(); }
