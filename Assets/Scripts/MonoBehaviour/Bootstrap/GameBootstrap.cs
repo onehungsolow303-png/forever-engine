@@ -1,13 +1,13 @@
 using UnityEngine;
 using Unity.Entities;
+using ForeverEngine.ECS.Data;
+using ForeverEngine.MonoBehaviour.Rendering;
+using ForeverEngine.MonoBehaviour.Input;
+using ForeverEngine.MonoBehaviour.UI;
+using ForeverEngine.MonoBehaviour.Camera;
 
 namespace ForeverEngine.MonoBehaviour.Bootstrap
 {
-    /// <summary>
-    /// Entry point — rewritten from pygame main.py main().
-    /// Initializes ECS world, loads map, spawns entities, starts game loop.
-    /// Attach to a single GameObject in the bootstrap scene.
-    /// </summary>
     public class GameBootstrap : UnityEngine.MonoBehaviour
     {
         [Header("Map Loading")]
@@ -17,41 +17,51 @@ namespace ForeverEngine.MonoBehaviour.Bootstrap
         [Header("References")]
         public GameConfig GameConfig;
         public CameraController CameraController;
+        public TileRenderer TileRenderer;
+        public EntityRenderer EntityRenderer;
+        public FogRenderer FogRenderer;
+        public HUDManager HUDManager;
+        public CombatLogUI CombatLogUI;
 
         private EntityManager _entityManager;
-        private bool _initialized;
+        private MapDataStore _mapDataStore;
 
         private void Start()
         {
             _entityManager = World.DefaultGameObjectInjectionWorld.EntityManager;
 
             if (!string.IsNullOrEmpty(MapDataPath))
-            {
                 LoadMap(MapDataPath);
-            }
             else
-            {
-                Debug.Log("[ForeverEngine] No map path specified. Waiting for map selection.");
-            }
+                Debug.Log("[ForeverEngine] No map path. Use File > Open to load a map.");
         }
 
         public void LoadMap(string mapDataJsonPath)
         {
-            Debug.Log($"[ForeverEngine] Loading map: {mapDataJsonPath}");
+            Debug.Log($"[ForeverEngine] Loading: {mapDataJsonPath}");
 
             var importer = GetComponent<MapImporter>();
-            if (importer == null)
-                importer = gameObject.AddComponent<MapImporter>();
-
+            if (importer == null) importer = gameObject.AddComponent<MapImporter>();
             importer.Import(mapDataJsonPath, _entityManager);
-            _initialized = true;
 
-            // Center camera on player spawn
+            _mapDataStore = MapDataStore.Instance;
+
+            if (TileRenderer != null)
+                TileRenderer.RenderLevel(_mapDataStore.CurrentZ);
+
+            if (FogRenderer != null)
+                FogRenderer.Initialize(_mapDataStore.Width, _mapDataStore.Height);
+
             var playerSpawn = importer.GetPlayerSpawnPosition();
             if (CameraController != null)
-                CameraController.SnapTo(playerSpawn.x, playerSpawn.y);
+                CameraController.SnapTo(playerSpawn.x + 0.5f, playerSpawn.y + 0.5f);
 
-            Debug.Log("[ForeverEngine] Map loaded. Game ready.");
+            Debug.Log($"[ForeverEngine] Map loaded: {_mapDataStore.Width}x{_mapDataStore.Height}");
+        }
+
+        private void OnDestroy()
+        {
+            _mapDataStore?.Dispose();
         }
     }
 }
