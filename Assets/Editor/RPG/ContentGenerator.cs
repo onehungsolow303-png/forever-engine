@@ -16,9 +16,11 @@ namespace ForeverEngine.Editor.RPG
 
             EnsureDirectories();
 
-            SpellGenerator.GenerateAll();
-            ClassGenerator.GenerateAll();
-            SpeciesGenerator.GenerateAll();
+            // TODO: These generators will be implemented when ScriptableObject content pipeline is built
+            // SpellGenerator.GenerateAll();
+            // ClassGenerator.GenerateAll();
+            // SpeciesGenerator.GenerateAll();
+            Debug.Log("[ContentGenerator] Content generators not yet implemented — using InfinityRPGData static tables.");
 
             AssetDatabase.SaveAssets();
             AssetDatabase.Refresh();
