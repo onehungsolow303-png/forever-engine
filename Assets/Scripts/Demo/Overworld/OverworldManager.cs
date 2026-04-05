@@ -93,6 +93,17 @@ namespace ForeverEngine.Demo.Overworld
 
             // Random encounter check
             if (!Tiles.TryGetValue((q, r), out var tile)) return;
+
+            // No encounters near safe locations (2 hex radius)
+            foreach (var safeLoc in LocationData.GetAll())
+            {
+                if (safeLoc.IsSafe && Mathf.Abs(q - safeLoc.HexQ) + Mathf.Abs(r - safeLoc.HexR) <= 2)
+                    return;
+            }
+
+            // No encounters in first 3 moves (tutorial grace period)
+            if (Player.MovesTaken <= 3) return;
+
             float chance = tile.Type switch
             {
                 TileType.Plains => 0.05f,

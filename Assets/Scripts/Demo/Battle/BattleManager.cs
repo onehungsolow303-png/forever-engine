@@ -20,8 +20,25 @@ namespace ForeverEngine.Demo.Battle
         private int _turnIndex;
         private uint _rngSeed;
         private Encounters.EncounterData _encounterData;
+        private BattleRenderer _renderer;
 
         private void Awake() => Instance = this;
+
+        private void Update()
+        {
+            if (_renderer == null) _renderer = FindFirstObjectByType<BattleRenderer>();
+            if (_renderer != null) _renderer.UpdateVisuals(Combatants, CurrentTurn);
+
+            // Player input during their turn
+            if (CurrentTurn != null && CurrentTurn.IsPlayer && !BattleOver)
+            {
+                if (Input.GetKeyDown(KeyCode.W)) PlayerMove(0, 1);
+                else if (Input.GetKeyDown(KeyCode.S)) PlayerMove(0, -1);
+                else if (Input.GetKeyDown(KeyCode.A)) PlayerMove(-1, 0);
+                else if (Input.GetKeyDown(KeyCode.D)) PlayerMove(1, 0);
+                else if (Input.GetKeyDown(KeyCode.Space)) PlayerEndTurn();
+            }
+        }
 
         private void Start()
         {
@@ -52,6 +69,11 @@ namespace ForeverEngine.Demo.Battle
             // Roll initiative
             foreach (var c in Combatants) c.RollInitiative(ref _rngSeed);
             Combatants = Combatants.OrderByDescending(c => c.InitiativeRoll).ToList();
+
+            // Create visual renderer
+            var rendererGO = new GameObject("BattleRenderer");
+            var renderer = rendererGO.AddComponent<BattleRenderer>();
+            renderer.Initialize(Grid, Combatants, Camera.main);
 
             StartTurn();
             Log.Add($"Battle begins! {_encounterData.Enemies.Count} enemies.");
