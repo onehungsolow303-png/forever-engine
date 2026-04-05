@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using ForeverEngine.ECS.Data;
+using ForeverEngine.MonoBehaviour.CharacterCreation;
 
 namespace ForeverEngine.Demo
 {
@@ -29,6 +30,53 @@ namespace ForeverEngine.Demo
             Inventory.Add(new ItemInstance { ItemId = 100, StackCount = 3, MaxStack = 10 }); // Food
             Inventory.Add(new ItemInstance { ItemId = 101, StackCount = 3, MaxStack = 10 }); // Water
         }
+
+        /// <summary>
+        /// Creates a PlayerData from a finalized CharacterData produced by CharacterCreator.
+        /// Maps RPG stats (HP, AC, ability scores, speed) and assigns a class-appropriate
+        /// starting weapon and armor name.
+        /// </summary>
+        public static PlayerData FromCharacterData(CharacterData cd)
+        {
+            var pd = new PlayerData();
+
+            // Core stats
+            pd.HP    = cd.currentHP;
+            pd.MaxHP = cd.maxHP;
+            pd.AC    = cd.armorClass;
+
+            // Ability scores
+            pd.Strength     = cd.strength;
+            pd.Dexterity    = cd.dexterity;
+            pd.Constitution = cd.constitution;
+
+            // Speed: CharacterData stores feet; PlayerData uses tiles (1 tile = 5 ft)
+            pd.Speed = cd.speed / 5;
+
+            // Starting position
+            pd.HexQ = 2;
+            pd.HexR = 2;
+
+            // Class-based weapon and attack dice
+            (pd.WeaponName, pd.AttackDice, pd.ArmorName) = GetClassGear(cd.className);
+
+            return pd;
+        }
+
+        private static (string weapon, string attackDice, string armor) GetClassGear(string className) =>
+            className.ToLowerInvariant() switch
+            {
+                "fighter"   => ("Longsword",   "1d8+3",  "Chain Mail"),
+                "warrior"   => ("Longsword",   "1d8+3",  "Chain Mail"),
+                "rogue"     => ("Shortsword",  "1d6+3",  "Leather Armor"),
+                "ranger"    => ("Longbow",     "1d8+2",  "Leather Armor"),
+                "wizard"    => ("Quarterstaff","1d6+2",  "Robes"),
+                "cleric"    => ("Mace",        "1d6+2",  "Chain Mail"),
+                "paladin"   => ("Longsword",   "1d8+3",  "Plate Armor"),
+                "barbarian" => ("Greataxe",    "1d12+3", "Hide Armor"),
+                "bard"      => ("Rapier",      "1d8+2",  "Leather Armor"),
+                _           => ("Shortsword",  "1d6+1",  "Leather Armor")
+            };
 
         public bool IsAlive => HP > 0;
         public bool IsStarving => Hunger <= 0;

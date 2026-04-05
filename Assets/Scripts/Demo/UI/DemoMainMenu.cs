@@ -4,8 +4,20 @@ namespace ForeverEngine.Demo.UI
 {
     public class DemoMainMenu : UnityEngine.MonoBehaviour
     {
+        // Character creation UI — lazily created so it doesn't block the main menu
+        private CharacterCreationUI _charCreation;
+
+        private void Awake()
+        {
+            // Attach CharacterCreationUI to the same GameObject
+            _charCreation = gameObject.AddComponent<CharacterCreationUI>();
+        }
+
         private void OnGUI()
         {
+            // When character creation is active, it renders itself; don't draw the menu beneath it
+            // (CharacterCreationUI.OnGUI draws its own full-screen overlay)
+
             // Title
             var titleStyle = new GUIStyle(GUI.skin.label) { fontSize = 36, alignment = TextAnchor.MiddleCenter, fontStyle = FontStyle.Bold };
             GUI.Label(new Rect(0, Screen.height * 0.2f, Screen.width, 50), "SHATTERED KINGDOM", titleStyle);
@@ -20,13 +32,13 @@ namespace ForeverEngine.Demo.UI
 
             if (GUI.Button(new Rect(x, y, btnW, btnH), "New Game"))
             {
-                // Ensure GameManager exists
+                // Ensure GameManager exists before opening character creation
                 if (GameManager.Instance == null)
                 {
                     var go = new GameObject("GameManager");
                     go.AddComponent<GameManager>();
                 }
-                GameManager.Instance.NewGame(Random.Range(1, 99999));
+                _charCreation.Show();
             }
 
             if (GUI.Button(new Rect(x, y + 50, btnW, btnH), "Continue"))

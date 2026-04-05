@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using ForeverEngine.MonoBehaviour.CharacterCreation;
 
 namespace ForeverEngine.Demo
 {
@@ -8,6 +9,7 @@ namespace ForeverEngine.Demo
         public static GameManager Instance { get; private set; }
 
         public PlayerData Player { get; private set; }
+        public CharacterData CharacterData { get; private set; }
         public int CurrentSeed { get; private set; } = 42;
         public string PendingEncounterId { get; set; }
         public string PendingLocationId { get; set; }
@@ -26,6 +28,19 @@ namespace ForeverEngine.Demo
         {
             CurrentSeed = seed;
             Player = new PlayerData { HexQ = 2, HexR = 2 };
+            Player.DiscoveredLocations.Add("camp");
+            SceneManager.LoadScene("Overworld");
+        }
+
+        /// <summary>
+        /// Called by CharacterCreationUI when the player confirms their character.
+        /// Converts CharacterData to PlayerData, then loads the Overworld.
+        /// </summary>
+        public void StartGameWithCharacter(CharacterData characterData, int seed = 0)
+        {
+            CharacterData = characterData;
+            CurrentSeed   = seed > 0 ? seed : Random.Range(1, 99999);
+            Player        = PlayerData.FromCharacterData(characterData);
             Player.DiscoveredLocations.Add("camp");
             SceneManager.LoadScene("Overworld");
         }
