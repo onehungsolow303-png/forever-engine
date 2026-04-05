@@ -30,7 +30,7 @@ namespace ForeverEngine.MonoBehaviour.Camera
         {
             _camera = GetComponent<UnityEngine.Camera>();
             _camera.orthographic = true;
-            _camera.orthographicSize = 8f; // Default zoom
+            _camera.orthographicSize = 5f; // Zoom in closer to see the dungeon
         }
 
         private void LateUpdate()

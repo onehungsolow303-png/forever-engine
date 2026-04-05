@@ -52,11 +52,31 @@ namespace ForeverEngine.MonoBehaviour.Bootstrap
             if (FogRenderer != null)
                 FogRenderer.Initialize(_mapDataStore.Width, _mapDataStore.Height);
 
+            // Center camera on player spawn
             var playerSpawn = importer.GetPlayerSpawnPosition();
             if (CameraController != null)
+            {
                 CameraController.SnapTo(playerSpawn.x + 0.5f, playerSpawn.y + 0.5f);
+                // Find the player GameObject (created by EntityRenderer) and set as target
+                StartCoroutine(FindAndFollowPlayer());
+            }
 
             Debug.Log($"[ForeverEngine] Map loaded: {_mapDataStore.Width}x{_mapDataStore.Height}");
+        }
+
+        private System.Collections.IEnumerator FindAndFollowPlayer()
+        {
+            // Wait a frame for EntityRenderer to create GameObjects
+            yield return null;
+            yield return null;
+
+            if (EntityRenderer != null)
+            {
+                // Camera follows the entity container — player token will be a child
+                var playerGO = GameObject.FindWithTag("Player");
+                if (playerGO != null && CameraController != null)
+                    CameraController.SetTarget(playerGO.transform);
+            }
         }
 
         private void OnDestroy()

@@ -43,6 +43,17 @@ namespace ForeverEngine.MonoBehaviour.Rendering
                     go = Instantiate(_creaturePrefab, transform);
                     _entityObjects[entity] = go;
 
+                    // Tag player so camera can find it
+                    if (combat.TokenType == TokenType.Player)
+                    {
+                        go.tag = "Player";
+                        go.name = "PlayerToken";
+                    }
+                    else
+                    {
+                        go.name = $"Entity_{entity.Index}";
+                    }
+
                     var sr = go.GetComponent<SpriteRenderer>();
                     if (sr != null)
                     {

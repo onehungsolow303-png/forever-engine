@@ -11,6 +11,7 @@ namespace ForeverEngine.MonoBehaviour.Rendering
         private Texture2D _fogTexture;
         private Color32[] _fogPixels;
         private int _width, _height;
+        private bool _enabled = true;
 
         public void Initialize(int width, int height)
         {
@@ -20,6 +21,7 @@ namespace ForeverEngine.MonoBehaviour.Rendering
             _fogTexture.filterMode = FilterMode.Point;
             _fogPixels = new Color32[width * height];
 
+            // Start with everything unexplored (black)
             var unexplored = new Color32(0, 0, 0, 255);
             for (int i = 0; i < _fogPixels.Length; i++)
                 _fogPixels[i] = unexplored;
@@ -27,15 +29,37 @@ namespace ForeverEngine.MonoBehaviour.Rendering
             _fogTexture.SetPixels32(_fogPixels);
             _fogTexture.Apply();
 
+            // Create sprite if we don't have one
+            if (_fogSprite == null)
+                _fogSprite = GetComponent<SpriteRenderer>();
+
+            if (_fogSprite == null)
+            {
+                _fogSprite = gameObject.AddComponent<SpriteRenderer>();
+                _fogSprite.sortingOrder = 10;
+            }
+
+            // Pivot at bottom-left so it aligns with tilemap origin
             _fogSprite.sprite = Sprite.Create(
                 _fogTexture,
                 new Rect(0, 0, width, height),
                 Vector2.zero,
-                1f);
+                1f); // 1 pixel per unit = same scale as tilemap
+
+            Debug.Log($"[FogRenderer] Initialized {width}x{height} fog overlay");
+        }
+
+        public void Toggle()
+        {
+            _enabled = !_enabled;
+            if (_fogSprite != null)
+                _fogSprite.enabled = _enabled;
         }
 
         private void LateUpdate()
         {
+            if (!_enabled) return;
+
             var store = MapDataStore.Instance;
             if (store == null || !store.FogGrid.IsCreated) return;
 
@@ -47,6 +71,7 @@ namespace ForeverEngine.MonoBehaviour.Rendering
             {
                 int x = i % _width;
                 int y = i / _width;
+                // Texture Y is flipped (bottom-up) relative to map grid (top-down)
                 int texIdx = (_height - 1 - y) * _width + x;
                 if (texIdx < 0 || texIdx >= _fogPixels.Length) continue;
 

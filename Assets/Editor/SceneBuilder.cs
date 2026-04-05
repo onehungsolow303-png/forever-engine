@@ -41,11 +41,10 @@ namespace ForeverEngine.Editor
 
             // --- Fog Overlay ---
             var fogGO = new GameObject("FogOverlay");
-            fogGO.transform.position = new Vector3(0, 0, -0.5f);
+            fogGO.transform.position = new Vector3(0, 0, -0.5f); // In front of tilemap
             var fogSprite = fogGO.AddComponent<SpriteRenderer>();
             fogSprite.sortingOrder = 10;
             var fogRenderer = fogGO.AddComponent<ForeverEngine.MonoBehaviour.Rendering.FogRenderer>();
-            // Wire fogSprite via serialized field
             var fogSO = new SerializedObject(fogRenderer);
             fogSO.FindProperty("_fogSprite").objectReferenceValue = fogSprite;
             fogSO.ApplyModifiedPropertiesWithoutUndo();
