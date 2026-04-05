@@ -1,6 +1,7 @@
 using UnityEngine;
 using System.Collections.Generic;
 using ForeverEngine.Genres.Strategy;
+using ForeverEngine.Demo.UI;
 
 namespace ForeverEngine.Demo.Overworld
 {
@@ -18,6 +19,7 @@ namespace ForeverEngine.Demo.Overworld
         [SerializeField] private float _dayLengthSeconds = 600f; // 10 min
 
         private OverworldRenderer _renderer;
+        private DialogueOverlay   _dialogueOverlay;
 
         private void Awake() => Instance = this;
 
@@ -51,6 +53,17 @@ namespace ForeverEngine.Demo.Overworld
                 interiorGO.AddComponent<Demo.Locations.LocationInteriorManager>();
             }
 
+            // Setup dialogue overlay
+            if (DialogueOverlay.Instance == null)
+            {
+                var overlayGO = new GameObject("DialogueOverlay");
+                _dialogueOverlay = overlayGO.AddComponent<DialogueOverlay>();
+            }
+            else
+            {
+                _dialogueOverlay = DialogueOverlay.Instance;
+            }
+
             // Handle returning from battle
             if (gm.LastBattleWon)
             {
@@ -66,28 +79,30 @@ namespace ForeverEngine.Demo.Overworld
 
         private void Update()
         {
-            // Day/night
+            // Day/night and visuals always run
             DayTime = (DayTime + Time.deltaTime / _dayLengthSeconds) % 1f;
             Fog.SetRevealRadius(IsNight ? 1 : 2);
+            if (_renderer != null && GameManager.Instance?.Player != null)
+                _renderer.UpdateVisuals(GameManager.Instance.Player.HexQ, GameManager.Instance.Player.HexR, Fog, IsNight);
+
+            // Block movement and location entry while dialogue overlay is open
+            if (_dialogueOverlay != null && _dialogueOverlay.IsOpen) return;
 
             // Input: hex movement (WASD mapped to hex directions)
-            if (Input.GetKeyDown(KeyCode.W) || Input.GetKeyDown(KeyCode.UpArrow)) Player.TryMove(0, 1);
-            else if (Input.GetKeyDown(KeyCode.S) || Input.GetKeyDown(KeyCode.DownArrow)) Player.TryMove(0, -1);
-            else if (Input.GetKeyDown(KeyCode.A) || Input.GetKeyDown(KeyCode.LeftArrow)) Player.TryMove(-1, 0);
+            if      (Input.GetKeyDown(KeyCode.W) || Input.GetKeyDown(KeyCode.UpArrow))    Player.TryMove(0, 1);
+            else if (Input.GetKeyDown(KeyCode.S) || Input.GetKeyDown(KeyCode.DownArrow))  Player.TryMove(0, -1);
+            else if (Input.GetKeyDown(KeyCode.A) || Input.GetKeyDown(KeyCode.LeftArrow))  Player.TryMove(-1, 0);
             else if (Input.GetKeyDown(KeyCode.D) || Input.GetKeyDown(KeyCode.RightArrow)) Player.TryMove(1, 0);
             else if (Input.GetKeyDown(KeyCode.Q)) Player.TryMove(-1, 1); // hex NW
             else if (Input.GetKeyDown(KeyCode.E)) Player.TryMove(1, -1); // hex SE
             else if (Input.GetKeyDown(KeyCode.F)) Player.Forage();
             else if (Input.GetKeyDown(KeyCode.Return) || Input.GetKeyDown(KeyCode.KeypadEnter)) TryEnterLocation();
-
-            // Update visuals every frame
-            if (_renderer != null && GameManager.Instance?.Player != null)
-                _renderer.UpdateVisuals(GameManager.Instance.Player.HexQ, GameManager.Instance.Player.HexR, Fog, IsNight);
         }
 
         /// <summary>
-        /// Called when the player presses Enter. If they are standing on a known
-        /// location, delegates to LocationInteriorManager to handle generation/cache.
+        /// Called when the player presses Enter on a location hex.
+        /// Safe locations (town, fortress, camp) open NPC dialogue first.
+        /// Dungeon/castle locations hand off to LocationInteriorManager for combat entry.
         /// </summary>
         private void TryEnterLocation()
         {
@@ -96,15 +111,22 @@ namespace ForeverEngine.Demo.Overworld
 
             foreach (var loc in LocationData.GetAll())
             {
-                if (loc.HexQ == p.HexQ && loc.HexR == p.HexR)
+                if (loc.HexQ != p.HexQ || loc.HexR != p.HexR) continue;
+
+                // Safe locations: show NPC dialogue overlay
+                if (loc.IsSafe && _dialogueOverlay != null)
                 {
-                    var interior = Demo.Locations.LocationInteriorManager.Instance;
-                    if (interior != null)
-                        interior.EnterLocation(loc);
-                    else
-                        Debug.LogWarning("[Overworld] LocationInteriorManager not found.");
+                    _dialogueOverlay.Show(loc.Type);
                     return;
                 }
+
+                // Dungeon / castle: enter combat via interior manager
+                var interior = Demo.Locations.LocationInteriorManager.Instance;
+                if (interior != null)
+                    interior.EnterLocation(loc);
+                else
+                    Debug.LogWarning("[Overworld] LocationInteriorManager not found.");
+                return;
             }
 
             Debug.Log("[Overworld] No location at current position.");
