@@ -46,8 +46,14 @@ namespace ForeverEngine.ECS.Systems
 
             if (totalXPToAward > 0)
             {
-                // Award XP to all living player characters, split equally
-                int playerCount = CountLivingPlayers(ref state);
+                // Count living players for XP split
+                int playerCount = 0;
+                foreach (var combat in SystemAPI.Query<RefRO<CombatStateComponent>>()
+                    .WithAll<PlayerTag>())
+                {
+                    if (combat.ValueRO.Alive) playerCount++;
+                }
+
                 int xpEach = playerCount > 0 ? totalXPToAward / playerCount : 0;
 
                 if (xpEach > 0)
@@ -71,17 +77,6 @@ namespace ForeverEngine.ECS.Systems
 
             ecb.Playback(state.EntityManager);
             ecb.Dispose();
-        }
-
-        private static int CountLivingPlayers(ref SystemState state)
-        {
-            int count = 0;
-            foreach (var combat in SystemAPI.Query<RefRO<CombatStateComponent>>()
-                .WithAll<PlayerTag>())
-            {
-                if (combat.ValueRO.Alive) count++;
-            }
-            return count;
         }
 
         /// <summary>

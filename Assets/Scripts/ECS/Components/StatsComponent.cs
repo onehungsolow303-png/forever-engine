@@ -1,4 +1,5 @@
 using Unity.Entities;
+using ForeverEngine.ECS.Utility;
 
 namespace ForeverEngine.ECS.Components
 {
