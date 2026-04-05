@@ -1,0 +1,619 @@
+[Licensing::Module] Trying to connect to existing licensing client channel...
+Built from '6000.0/staging' branch; Version is '6000.0.72f1 (b731fd3ae857) revision 12005885'; Using compiler version '193933523'; Build Type 'Release'
+OS: 'Windows 11  (10.0.26200) Professional' Language: 'en' Physical Memory: 63063 MB
+BatchMode: 1, IsHumanControllingUs: 0, StartBugReporterOnCrash: 0, Is64bit: 1
+System  architecture: x64
+[Licensing::IpcConnector] Successfully connected to: "LicenseClient-bp303" at "2026-04-05T16:16:49.14699Z"
+Process architecture: x64
+Date: 2026-04-05T16:16:49Z
+
+COMMAND LINE ARGUMENTS:
+C:\Program Files\Unity\Hub\Editor\6000.0.72f1\Editor\Unity.exe
+-projectPath
+C:/Dev/Forever engin
+-batchmode
+-executeMethod
+ForeverEngine.Editor.DemoSceneBuilder.BuildAll
+-logFile
+C:/Dev/Forever engin/tests/demo-build.log
+-quit
+Successfully changed project path to: C:/Dev/Forever engin
+C:/Dev/Forever engin
+[UnityMemory] Configuration Parameters - Can be set up in boot.config
+    "memorysetup-bucket-allocator-granularity=16"
+    "memorysetup-bucket-allocator-bucket-count=8"
+    "memorysetup-bucket-allocator-block-size=33554432"
+    "memorysetup-bucket-allocator-block-count=8"
+    "memorysetup-main-allocator-block-size=16777216"
+    "memorysetup-thread-allocator-block-size=16777216"
+    "memorysetup-gfx-main-allocator-block-size=16777216"
+    "memorysetup-gfx-thread-allocator-block-size=16777216"
+    "memorysetup-cache-allocator-block-size=4194304"
+    "memorysetup-typetree-allocator-block-size=2097152"
+    "memorysetup-profiler-bucket-allocator-granularity=16"
+    "memorysetup-profiler-bucket-allocator-bucket-count=8"
+    "memorysetup-profiler-bucket-allocator-block-size=33554432"
+    "memorysetup-profiler-bucket-allocator-block-count=8"
+    "memorysetup-profiler-allocator-block-size=16777216"
+    "memorysetup-profiler-editor-allocator-block-size=1048576"
+    "memorysetup-temp-allocator-size-main=16777216"
+    "memorysetup-job-temp-allocator-block-size=2097152"
+    "memorysetup-job-temp-allocator-block-size-background=1048576"
+    "memorysetup-job-temp-allocator-reduction-small-platforms=262144"
+    "memorysetup-allocator-temp-initial-block-size-main=262144"
+    "memorysetup-allocator-temp-initial-block-size-worker=262144"
+    "memorysetup-temp-allocator-size-background-worker=32768"
+    "memorysetup-temp-allocator-size-job-worker=262144"
+    "memorysetup-temp-allocator-size-preload-manager=33554432"
+    "memorysetup-temp-allocator-size-nav-mesh-worker=65536"
+    "memorysetup-temp-allocator-size-audio-worker=65536"
+    "memorysetup-temp-allocator-size-cloud-worker=32768"
+    "memorysetup-temp-allocator-size-gi-baking-worker=262144"
+    "memorysetup-temp-allocator-size-gi-baking-worker=262144"
+    "memorysetup-temp-allocator-size-gi-baking-worker=262144"
+    "memorysetup-temp-allocator-size-gi-baking-worker=262144"
+    "memorysetup-temp-allocator-size-gi-baking-worker=262144"
+    "memorysetup-temp-allocator-size-gfx=262144"
+Player connection [23400]  Target information:
+
+Player connection [23400]  * "[IP] 192.168.1.113 [Port] 55504 [Flags] 2 [Guid] 1940586392 [EditorId] 1940586392 [Version] 1048832 [Id] WindowsEditor(7,DESKTOP-2LJVMIP) [Debug] 1 [PackageName] WindowsEditor [ProjectName] Editor" 
+
+Player connection [23400] Host joined multi-casting on [225.0.0.222:54997]...
+Player connection [23400] Host joined alternative multi-casting on [225.0.0.222:34997]...
+Input System module state changed to: Initialized.
+[Physics::Module] Initialized fallback backend.
+[Physics::Module] Id: 0xdecafbad
+[Package Manager] Connected to IPC stream "Upm-35488" after 0.2 seconds.
+Library Redirect Path: Library/
+[Physics::Module] Selected backend.
+[Physics::Module] Name: PhysX
+[Physics::Module] Id: 0xf2b8ea05
+[Physics::Module] SDK Version: 4.1.2
+[Physics::Module] Integration Version: 1.0.0
+[Physics::Module] Threading Mode: Multi-Threaded
+Refreshing native plugins compatible for Editor in 0.08 ms, found 0 plugins.
+Preloading 0 native plugins for Editor in 0.00 ms.
+Initialize engine version: 6000.0.72f1 (b731fd3ae857)
+[Subsystems] Discovering subsystems at path C:/Program Files/Unity/Hub/Editor/6000.0.72f1/Editor/Data/Resources/UnitySubsystems
+[Subsystems] Discovering subsystems at path C:/Dev/Forever engin/Assets
+GfxDevice: creating device client; kGfxThreadingModeNonThreaded
+Direct3D:
+    Version:  Direct3D 11.0 [level 11.1]
+    Renderer: NVIDIA GeForce RTX 5090 (ID=0x2b85)
+    Vendor:   NVIDIA
+    VRAM:     32187 MB
+    Driver:   32.0.15.9597
+Initialize mono
+Mono path[0] = 'C:/Program Files/Unity/Hub/Editor/6000.0.72f1/Editor/Data/Managed'
+Mono path[1] = 'C:/Program Files/Unity/Hub/Editor/6000.0.72f1/Editor/Data/MonoBleedingEdge/lib/mono/unityjit-win32'
+Mono config path = 'C:/Program Files/Unity/Hub/Editor/6000.0.72f1/Editor/Data/MonoBleedingEdge/etc'
+Using monoOptions --debugger-agent=transport=dt_socket,embedding=1,server=y,suspend=n,address=127.0.0.1:56488
+Using cacheserver namespaces - metadata:defaultmetadata, artifacts:defaultartifacts
+Using cacheserver namespaces - metadata:defaultmetadata, artifacts:defaultartifacts
+ImportWorker Server TCP listen port: 0
+AcceleratorClientConnectionCallback - disconnected - :0
+Begin MonoManager ReloadAssembly
+[Licensing::Client] Handshaking with LicensingClient:
+  Version:                 1.17.4+4293ba1
+  Session Id:              0b7e4801b26a453d9ecdad1182f5b6db
+  Correlation Id:          dd94fe47367eb93d2e71edf8c9e989bd
+  External correlation Id: 7148055225312523010
+  Machine Id:              gstSTUP4QwZYnBaUulASzeuKBU0=
+[Licensing::Module] Successfully connected to LicensingClient on channel: "LicenseClient-bp303" (connect: 0.00s, validation: 0.00s, handshake: 0.63s)
+[Licensing::IpcConnector] Successfully connected to: "LicenseClient-bp303-notifications" at "2026-04-05T16:16:49.7800002Z"
+[Licensing::Module] Error: Access token is unavailable; failed to update
+[Licensing::Client] Successfully resolved entitlement details
+[Licensing::Module] License group:
+  Id: 20067582077754-UnityPersXXXX
+  Product: Unity Personal
+  Type: Assigned
+  Expiration: Unlimited
+[Licensing::Client] Successfully updated license, isAsync: True, time: 0.00
+[Licensing::Client] Successfully resolved entitlement details
+[Licensing::Module] Licensing Background thread has ended after 0.64s
+Registering precompiled unity dll's ...
+Register platform support module: C:/Program Files/Unity/Hub/Editor/6000.0.72f1/Editor/Data/PlaybackEngines/WindowsStandaloneSupport/UnityEditor.WindowsStandalone.Extensions.dll
+Registered in 0.001606 seconds.
+- Loaded All Assemblies, in  0.221 seconds
+Native extension for WindowsStandalone target not found
+Package Manager log level set to [2]
+Mono: successfully reloaded assembly
+- Finished resetting the current domain, in  0.173 seconds
+Domain Reload Profiling: 393ms
+	BeginReloadAssembly (71ms)
+		ExecutionOrderSort (0ms)
+		DisableScriptedObjects (0ms)
+		BackupInstance (0ms)
+		ReleaseScriptingObjects (0ms)
+		CreateAndSetChildDomain (0ms)
+	RebuildCommonClasses (21ms)
+	RebuildNativeTypeToScriptingClass (6ms)
+	initialDomainReloadingComplete (28ms)
+	LoadAllAssembliesAndSetupDomain (93ms)
+		LoadAssemblies (69ms)
+		RebuildTransferFunctionScriptingTraits (0ms)
+		AnalyzeDomain (92ms)
+			TypeCache.Refresh (90ms)
+				TypeCache.ScanAssembly (83ms)
+			BuildScriptInfoCaches (0ms)
+			ResolveRequiredComponents (0ms)
+	FinalizeReload (173ms)
+		ReleaseScriptCaches (0ms)
+		RebuildScriptCaches (0ms)
+		SetupLoadedEditorAssemblies (153ms)
+			LogAssemblyErrors (0ms)
+			InitializePlatformSupportModulesInManaged (14ms)
+			SetLoadedEditorAssemblies (2ms)
+			BeforeProcessingInitializeOnLoad (30ms)
+			ProcessInitializeOnLoadAttributes (81ms)
+			ProcessInitializeOnLoadMethodAttributes (26ms)
+			AfterProcessingInitializeOnLoad (0ms)
+			EditorAssembliesLoaded (0ms)
+		ExecutionOrderSort2 (0ms)
+		AwakeInstancesAfterBackupRestoration (0ms)
+[Licensing::Client] Successfully resolved entitlement details
+Application.AssetDatabase Initial Refresh Start
+[Package Manager] Restoring resolved packages state from cache
+[Licensing::Client] Successfully resolved entitlement details
+[Package Manager] Registered 35 packages:
+  Packages from [https://packages.unity.com]:
+    com.unity.entities@1.3.5 (location: C:\Dev\Forever engin\Library\PackageCache\com.unity.entities@0afb1656b145)
+    com.unity.collections@2.5.1 (location: C:\Dev\Forever engin\Library\PackageCache\com.unity.collections@56bff8827a7e)
+    com.unity.mathematics@1.3.2 (location: C:\Dev\Forever engin\Library\PackageCache\com.unity.mathematics@8017b507cc74)
+    com.unity.inputsystem@1.11.2 (location: C:\Dev\Forever engin\Library\PackageCache\com.unity.inputsystem@3c4a97c3950f)
+    com.unity.burst@1.8.28 (location: C:\Dev\Forever engin\Library\PackageCache\com.unity.burst@07790c2d06d9)
+    com.unity.nuget.mono-cecil@1.11.6 (location: C:\Dev\Forever engin\Library\PackageCache\com.unity.nuget.mono-cecil@ecb9724e46ff)
+    com.unity.test-framework.performance@3.3.0 (location: C:\Dev\Forever engin\Library\PackageCache\com.unity.test-framework.performance@a902ab7fb342)
+    com.unity.serialization@3.1.5 (location: C:\Dev\Forever engin\Library\PackageCache\com.unity.serialization@c463b52e88d7)
+    com.unity.profiling.core@1.0.3 (location: C:\Dev\Forever engin\Library\PackageCache\com.unity.profiling.core@8a49f7027d06)
+    com.unity.scriptablebuildpipeline@2.6.1 (location: C:\Dev\Forever engin\Library\PackageCache\com.unity.scriptablebuildpipeline@36e3b5898ee2)
+    com.unity.searcher@4.9.3 (location: C:\Dev\Forever engin\Library\PackageCache\com.unity.searcher@1e17ce91558d)
+  Built-in packages:
+    com.unity.2d.tilemap@1.0.0 (location: C:\Dev\Forever engin\Library\PackageCache\com.unity.2d.tilemap@5ce952705efb)
+    com.unity.2d.sprite@1.0.0 (location: C:\Dev\Forever engin\Library\PackageCache\com.unity.2d.sprite@0eb6ea2c7181)
+    com.unity.ui@2.0.0 (location: C:\Dev\Forever engin\Library\PackageCache\com.unity.ui@ccd6582d7949)
+    com.unity.test-framework@1.6.0 (location: C:\Dev\Forever engin\Library\PackageCache\com.unity.test-framework@24afccc4ed24)
+    com.unity.render-pipelines.universal@17.0.4 (location: C:\Dev\Forever engin\Library\PackageCache\com.unity.render-pipelines.universal@7b0cf3c8f06b)
+    com.unity.render-pipelines.core@17.0.4 (location: C:\Dev\Forever engin\Library\PackageCache\com.unity.render-pipelines.core@d7b87cecdab8)
+    com.unity.shadergraph@17.0.4 (location: C:\Dev\Forever engin\Library\PackageCache\com.unity.shadergraph@87ab1782f698)
+    com.unity.render-pipelines.universal-config@17.0.3 (location: C:\Dev\Forever engin\Library\PackageCache\com.unity.render-pipelines.universal-config@dd206bf35d04)
+    com.unity.ext.nunit@2.0.5 (location: C:\Dev\Forever engin\Library\PackageCache\com.unity.ext.nunit@031a54704bff)
+    com.unity.modules.imgui@1.0.0 (location: C:\Dev\Forever engin\Library\PackageCache\com.unity.modules.imgui)
+    com.unity.modules.jsonserialize@1.0.0 (location: C:\Dev\Forever engin\Library\PackageCache\com.unity.modules.jsonserialize)
+    com.unity.modules.tilemap@1.0.0 (location: C:\Dev\Forever engin\Library\PackageCache\com.unity.modules.tilemap)
+    com.unity.modules.uielements@1.0.0 (location: C:\Dev\Forever engin\Library\PackageCache\com.unity.modules.uielements)
+    com.unity.modules.audio@1.0.0 (location: C:\Dev\Forever engin\Library\PackageCache\com.unity.modules.audio)
+    com.unity.modules.physics@1.0.0 (location: C:\Dev\Forever engin\Library\PackageCache\com.unity.modules.physics)
+    com.unity.modules.assetbundle@1.0.0 (location: C:\Dev\Forever engin\Library\PackageCache\com.unity.modules.assetbundle)
+    com.unity.modules.unityanalytics@1.0.0 (location: C:\Dev\Forever engin\Library\PackageCache\com.unity.modules.unityanalytics)
+    com.unity.modules.unitywebrequest@1.0.0 (location: C:\Dev\Forever engin\Library\PackageCache\com.unity.modules.unitywebrequest)
+    com.unity.ugui@2.0.0 (location: C:\Dev\Forever engin\Library\PackageCache\com.unity.ugui@47e51ce530b9)
+    com.unity.modules.terrain@1.0.0 (location: C:\Dev\Forever engin\Library\PackageCache\com.unity.modules.terrain)
+    com.unity.rendering.light-transport@1.0.1 (location: C:\Dev\Forever engin\Library\PackageCache\com.unity.rendering.light-transport@9bd588f963c0)
+    com.unity.modules.ui@1.0.0 (location: C:\Dev\Forever engin\Library\PackageCache\com.unity.modules.ui)
+    com.unity.modules.hierarchycore@1.0.0 (location: C:\Dev\Forever engin\Library\PackageCache\com.unity.modules.hierarchycore)
+    com.unity.modules.physics2d@1.0.0 (location: C:\Dev\Forever engin\Library\PackageCache\com.unity.modules.physics2d)
+[Subsystems] No new subsystems found in resolved package list.
+[Package Manager] Done registering packages in 0.00 seconds
+Assembly reference Packages/com.unity.entities/Unity.Scenes.Editor/Internals/Properties/Unity.Properties.Internals.asmref has no target assembly definition
+Assembly reference Packages/com.unity.entities/Unity.Scenes.Editor/Internals/Properties/Unity.Properties.Internals.asmref has no target assembly definition
+[ScriptCompilation] Requested script compilation because: Assetdatabase observed changes in script compilation related files
+info: Microsoft.Hosting.Lifetime[14]
+      Now listening on: http://localhost:80
+info: Microsoft.Hosting.Lifetime[0]
+      Application started. Press Ctrl+C to shut down.
+info: Microsoft.Hosting.Lifetime[0]
+      Hosting environment: Production
+info: Microsoft.Hosting.Lifetime[0]
+      Content root path: C:\Dev\Forever engin\
+info: Microsoft.AspNetCore.Hosting.Diagnostics[1]
+      Request starting HTTP/2 POST http://ilpp/UnityILPP.PostProcessing/Ping application/grpc -
+info: Microsoft.AspNetCore.Routing.EndpointMiddleware[0]
+      Executing endpoint 'gRPC - /UnityILPP.PostProcessing/Ping'
+info: Microsoft.AspNetCore.Routing.EndpointMiddleware[1]
+      Executed endpoint 'gRPC - /UnityILPP.PostProcessing/Ping'
+info: Microsoft.AspNetCore.Hosting.Diagnostics[2]
+      Request finished HTTP/2 POST http://ilpp/UnityILPP.PostProcessing/Ping application/grpc - - 200 - application/grpc 26.2905ms
+Starting: C:\Program Files\Unity\Hub\Editor\6000.0.72f1\Editor\Data\bee_backend.exe --ipc --defer-dag-verification --dagfile="Library/Bee/1900b0aE.dag" --continue-on-failure --profile="Library/Bee/backend1.traceevents" ScriptAssemblies
+WorkingDir: C:/Dev/Forever engin
+DisplayProgressbar: Compiling Scripts
+info: Microsoft.AspNetCore.Hosting.Diagnostics[1]
+      Request starting HTTP/2 POST http://ilpp/UnityILPP.PostProcessing/ConfigurePostProcessors application/grpc -
+info: Microsoft.AspNetCore.Routing.EndpointMiddleware[0]
+      Executing endpoint 'gRPC - /UnityILPP.PostProcessing/ConfigurePostProcessors'
+warn: Unity.ILPP.Runner.PostProcessingAssemblyLoadContext[0]
+      Assembly system.runtime.interopservices.windowsruntime has duplicate hint path. Ignoring "C:\Program Files\Unity\Hub\Editor\6000.0.72f1\Editor\Data\UnityReferenceAssemblies\unity-4.8-api\Facades\System.Runtime.InteropServices.WindowsRuntime.dll" in favor of "C:\Program Files\Unity\Hub\Editor\6000.0.72f1\Editor\Data\NetStandard\Extensions\2.0.0\System.Runtime.InteropServices.WindowsRuntime.dll"
+warn: Unity.ILPP.Runner.PostProcessingAssemblyLoadContext[0]
+      Assembly system.componentmodel.composition has duplicate hint path. Ignoring "C:\Program Files\Unity\Hub\Editor\6000.0.72f1\Editor\Data\UnityReferenceAssemblies\unity-4.8-api\System.ComponentModel.Composition.dll" in favor of "C:\Program Files\Unity\Hub\Editor\6000.0.72f1\Editor\Data\NetStandard\compat\2.1.0\shims\netfx\System.ComponentModel.Composition.dll"
+info: Unity.ILPP.Runner.PostProcessingAssemblyLoadContext[0]
+      Resolved Unity.Burst.Cecil, Version=0.11.4.0, Culture=neutral, PublicKeyToken=50cebf1cceb9d05e with Library\PackageCache\com.unity.burst@07790c2d06d9\Unity.Burst.CodeGen\Unity.Burst.Cecil.dll
+info: Unity.ILPP.Runner.PostProcessingAssemblyLoadContext[0]
+      Resolved Mono.Cecil, Version=0.11.5.0, Culture=neutral, PublicKeyToken=50cebf1cceb9d05e with Library\PackageCache\com.unity.nuget.mono-cecil@ecb9724e46ff\Mono.Cecil.dll
+info: Microsoft.AspNetCore.Routing.EndpointMiddleware[1]
+      Executed endpoint 'gRPC - /UnityILPP.PostProcessing/ConfigurePostProcessors'
+info: Microsoft.AspNetCore.Hosting.Diagnostics[2]
+      Request finished HTTP/2 POST http://ilpp/UnityILPP.PostProcessing/ConfigurePostProcessors application/grpc - - 200 - application/grpc 331.4005ms
+Starting: C:\Program Files\Unity\Hub\Editor\6000.0.72f1\Editor\Data\Tools\netcorerun\netcorerun.exe "C:\Program Files\Unity\Hub\Editor\6000.0.72f1\Editor\Data\Tools\BuildPipeline\ScriptCompilationBuildProgram.exe" "Library/Bee/1900b0aE.dag.json" "Library/Bee/1900b0aE-inputdata.json" "Library\Bee\buildprogram0.traceevents"
+WorkingDir: C:/Dev/Forever engin
+ExitCode: 4 Duration: 0s462ms
+Rebuilding DAG because FileSignature timestamp changed: Library/Bee/1900b0aE-inputdata.json
+[679/872    0s] ILPP-Configuration Library/ilpp-configuration.nevergeneratedoutput
+*** Tundra requires additional run (0.44 seconds), 1 items updated, 678 evaluated
+ExitCode: 0 Duration: 0s396ms
+Starting: C:\Program Files\Unity\Hub\Editor\6000.0.72f1\Editor\Data\bee_backend.exe --ipc --defer-dag-verification --dagfile="Library/Bee/1900b0aE.dag" --continue-on-failure --dagfilejson="Library\Bee\1900b0aE.dag.json" --profile="Library/Bee/backend2.traceevents" ScriptAssemblies
+WorkingDir: C:/Dev/Forever engin
+info: Microsoft.AspNetCore.Hosting.Diagnostics[1]
+      Request starting HTTP/2 POST http://ilpp/UnityILPP.PostProcessing/ConfigurePostProcessors application/grpc -
+info: Microsoft.AspNetCore.Routing.EndpointMiddleware[0]
+      Executing endpoint 'gRPC - /UnityILPP.PostProcessing/ConfigurePostProcessors'
+info: Unity.ILPP.Runner.PostProcessingAssemblyLoadContext[0]
+      Current configuration matches the requested one, skipping
+info: Microsoft.AspNetCore.Routing.EndpointMiddleware[1]
+      Executed endpoint 'gRPC - /UnityILPP.PostProcessing/ConfigurePostProcessors'
+info: Microsoft.AspNetCore.Hosting.Diagnostics[2]
+      Request finished HTTP/2 POST http://ilpp/UnityILPP.PostProcessing/ConfigurePostProcessors application/grpc - - 200 - application/grpc 0.9621ms
+info: Microsoft.AspNetCore.Hosting.Diagnostics[1]
+      Request starting HTTP/2 POST http://ilpp/UnityILPP.PostProcessing/PostProcessAssembly application/grpc -
+info: Microsoft.AspNetCore.Routing.EndpointMiddleware[0]
+      Executing endpoint 'gRPC - /UnityILPP.PostProcessing/PostProcessAssembly'
+info: Unity.ILPP.Runner.PostProcessingPipeline[0]
+      Processing assembly Library/Bee/artifacts/1900b0aE.dag/ForeverEngine.dll, with 132 defines and 234 references
+info: Unity.ILPP.Runner.PostProcessingPipeline[0]
+      processors: Unity.Entities.CodeGen.EntitiesILPostProcessors, Unity.Jobs.CodeGen.JobsILPostProcessor, zzzUnity.Burst.CodeGen.BurstILPostProcessor
+info: Unity.ILPP.Runner.PostProcessingPipeline[0]
+      running Unity.Entities.CodeGen.EntitiesILPostProcessors
+info: Unity.ILPP.Runner.PostProcessingAssemblyLoadContext[0]
+      Resolved Mono.Cecil.Rocks, Version=0.11.5.0, Culture=neutral, PublicKeyToken=50cebf1cceb9d05e with Library\PackageCache\com.unity.nuget.mono-cecil@ecb9724e46ff\Mono.Cecil.Rocks.dll
+info: Microsoft.AspNetCore.Hosting.Diagnostics[1]
+      Request starting HTTP/2 POST http://ilpp/UnityILPP.PostProcessing/PostProcessAssembly application/grpc -
+info: Microsoft.AspNetCore.Routing.EndpointMiddleware[0]
+      Executing endpoint 'gRPC - /UnityILPP.PostProcessing/PostProcessAssembly'
+info: Unity.ILPP.Runner.PostProcessingPipeline[0]
+      Processing assembly Library/Bee/artifacts/1900b0aE.dag/ForeverEngine.Tests.PlayMode.dll, with 132 defines and 230 references
+info: Unity.ILPP.Runner.PostProcessingPipeline[0]
+      processors: Unity.Entities.CodeGen.EntitiesILPostProcessors, Unity.Jobs.CodeGen.JobsILPostProcessor, zzzUnity.Burst.CodeGen.BurstILPostProcessor
+info: Unity.ILPP.Runner.PostProcessingPipeline[0]
+      running Unity.Entities.CodeGen.EntitiesILPostProcessors
+info: Microsoft.AspNetCore.Hosting.Diagnostics[1]
+      Request starting HTTP/2 POST http://ilpp/UnityILPP.PostProcessing/PostProcessAssembly application/grpc -
+info: Microsoft.AspNetCore.Routing.EndpointMiddleware[0]
+      Executing endpoint 'gRPC - /UnityILPP.PostProcessing/PostProcessAssembly'
+info: Microsoft.AspNetCore.Hosting.Diagnostics[1]
+      Request starting HTTP/2 POST http://ilpp/UnityILPP.PostProcessing/PostProcessAssembly application/grpc -
+info: Microsoft.AspNetCore.Routing.EndpointMiddleware[0]
+      Executing endpoint 'gRPC - /UnityILPP.PostProcessing/PostProcessAssembly'
+info: Unity.ILPP.Runner.PostProcessingPipeline[0]
+      Processing assembly Library/Bee/artifacts/1900b0aE.dag/ForeverEngine.Tests.EditMode.dll, with 130 defines and 259 references
+info: Unity.ILPP.Runner.PostProcessingPipeline[0]
+      processors: Unity.Entities.CodeGen.EntitiesILPostProcessors, Unity.Jobs.CodeGen.JobsILPostProcessor, zzzUnity.Burst.CodeGen.BurstILPostProcessor
+info: Unity.ILPP.Runner.PostProcessingPipeline[0]
+      Processing assembly Library/Bee/artifacts/1900b0aE.dag/Assembly-CSharp-Editor.dll, with 130 defines and 309 references
+info: Unity.ILPP.Runner.PostProcessingPipeline[0]
+      processors: Unity.Entities.CodeGen.EntitiesILPostProcessors, Unity.Jobs.CodeGen.JobsILPostProcessor, zzzUnity.Burst.CodeGen.BurstILPostProcessor
+info: Unity.ILPP.Runner.PostProcessingPipeline[0]
+      running Unity.Entities.CodeGen.EntitiesILPostProcessors
+info: Unity.ILPP.Runner.PostProcessingPipeline[0]
+      running Unity.Entities.CodeGen.EntitiesILPostProcessors
+info: Unity.ILPP.Runner.PostProcessingAssemblyLoadContext[0]
+      Resolved UnityEngine.CoreModule, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null with C:\Program Files\Unity\Hub\Editor\6000.0.72f1\Editor\Data\Managed\UnityEngine\UnityEngine.CoreModule.dll
+info: Unity.ILPP.Runner.PostProcessingAssemblyLoadContext[0]
+      Resolved Unity.Entities, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null with Library\Bee\artifacts\1900b0aE.dag\Unity.Entities.dll
+info: Unity.ILPP.Runner.PostProcessingAssemblyLoadContext[0]
+      Resolved Unity.Collections, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null with Library\Bee\artifacts\1900b0aE.dag\Unity.Collections.dll
+info: Unity.ILPP.Runner.PostProcessingAssemblyLoadContext[0]
+      Resolved Unity.Burst, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null with Library\Bee\artifacts\1900b0aE.dag\Unity.Burst.dll
+  - EILPP : ForeverEngine.Tests.PlayMode : : 338ms (~228ms)
+  - EILPP : ForeverEngine.Tests.EditMode : : 338ms (~228ms)
+    - EILPP : ForeverEngine.Tests.EditMode : GetAllComponentTypes: 3ms 
+  - EILPP : Assembly-CSharp-Editor : : 338ms (~214ms)
+    - EILPP : ForeverEngine.Tests.EditMode : Cloner: 1ms 
+    - EILPP : Assembly-CSharp-Editor : GetAllComponentTypes: 3ms 
+    - EILPP : ForeverEngine.Tests.EditMode : ComponentDataPP: 106ms 
+    - EILPP : Assembly-CSharp-Editor : Cloner: 1ms 
+    - EILPP : Assembly-CSharp-Editor : ComponentDataPP: 120ms 
+    - EILPP : ForeverEngine.Tests.PlayMode : GetAllComponentTypes: 3ms 
+    - EILPP : ForeverEngine.Tests.PlayMode : Cloner: 1ms 
+    - EILPP : ForeverEngine.Tests.PlayMode : ComponentDataPP: 106ms 
+info: Unity.ILPP.Runner.PostProcessingPipeline[0]
+      running Unity.Jobs.CodeGen.JobsILPostProcessor
+info: Unity.ILPP.Runner.PostProcessingPipeline[0]
+      running Unity.Jobs.CodeGen.JobsILPostProcessor
+info: Unity.ILPP.Runner.PostProcessingPipeline[0]
+      running Unity.Jobs.CodeGen.JobsILPostProcessor
+info: Unity.ILPP.Runner.PostProcessingAssemblyLoadContext[0]
+      Resolved UnityEditor.CoreModule, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null with C:\Program Files\Unity\Hub\Editor\6000.0.72f1\Editor\Data\Managed\UnityEngine\UnityEditor.CoreModule.dll
+info: Unity.ILPP.Runner.PostProcessingAssemblyLoadContext[0]
+      Resolved UnityEditor.CoreModule, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null with C:\Program Files\Unity\Hub\Editor\6000.0.72f1\Editor\Data\Managed\UnityEngine\UnityEditor.CoreModule.dll
+info: Unity.ILPP.Runner.PostProcessingPipeline[0]
+      running zzzUnity.Burst.CodeGen.BurstILPostProcessor
+info: Unity.ILPP.Runner.PostProcessingPipeline[0]
+      running zzzUnity.Burst.CodeGen.BurstILPostProcessor
+info: Unity.ILPP.Runner.PostProcessingPipeline[0]
+      running zzzUnity.Burst.CodeGen.BurstILPostProcessor
+info: Microsoft.AspNetCore.Routing.EndpointMiddleware[1]
+      Executed endpoint 'gRPC - /UnityILPP.PostProcessing/PostProcessAssembly'
+info: Microsoft.AspNetCore.Hosting.Diagnostics[2]
+      Request finished HTTP/2 POST http://ilpp/UnityILPP.PostProcessing/PostProcessAssembly application/grpc - - 200 - application/grpc 1095.4943ms
+info: Unity.ILPP.Runner.PostProcessingAssemblyLoadContext[0]
+      Resolved Unity.Burst.Cecil.Rocks, Version=0.11.4.0, Culture=neutral, PublicKeyToken=50cebf1cceb9d05e with Library\PackageCache\com.unity.burst@07790c2d06d9\Unity.Burst.CodeGen\Unity.Burst.Cecil.Rocks.dll
+  - EILPP : ForeverEngine : : 1110ms (~890ms)
+    - EILPP : ForeverEngine : GetAllComponentTypes: 1ms 
+    - EILPP : ForeverEngine : Cloner: 19ms 
+    - EILPP : ForeverEngine : ComponentDataPP: 84ms 
+    - EILPP : ForeverEngine : WriteAssembly: 116ms 
+info: Unity.ILPP.Runner.PostProcessingPipeline[0]
+      running Unity.Jobs.CodeGen.JobsILPostProcessor
+info: Unity.ILPP.Runner.PostProcessingPipeline[0]
+      running zzzUnity.Burst.CodeGen.BurstILPostProcessor
+info: Microsoft.AspNetCore.Routing.EndpointMiddleware[1]
+      Executed endpoint 'gRPC - /UnityILPP.PostProcessing/PostProcessAssembly'
+info: Microsoft.AspNetCore.Hosting.Diagnostics[2]
+      Request finished HTTP/2 POST http://ilpp/UnityILPP.PostProcessing/PostProcessAssembly application/grpc - - 200 - application/grpc 1210.4185ms
+info: Microsoft.AspNetCore.Routing.EndpointMiddleware[1]
+      Executed endpoint 'gRPC - /UnityILPP.PostProcessing/PostProcessAssembly'
+info: Microsoft.AspNetCore.Hosting.Diagnostics[2]
+      Request finished HTTP/2 POST http://ilpp/UnityILPP.PostProcessing/PostProcessAssembly application/grpc - - 200 - application/grpc 1210.7054ms
+info: Microsoft.AspNetCore.Routing.EndpointMiddleware[1]
+      Executed endpoint 'gRPC - /UnityILPP.PostProcessing/PostProcessAssembly'
+info: Microsoft.AspNetCore.Hosting.Diagnostics[2]
+      Request finished HTTP/2 POST http://ilpp/UnityILPP.PostProcessing/PostProcessAssembly application/grpc - - 200 - application/grpc 1467.7600ms
+ExitCode: 0 Duration: 3s692ms
+Finished compiling graph: 875 nodes, 14956 flattened edges (11656 ToBuild, 138 ToUse), maximum node priority 1131
+[460/872    0s] WriteText Library/Bee/artifacts/1900b0aE.dag/ForeverEngine.rsp
+[474/872    0s] WriteText Library/Bee/artifacts/1900b0aE.dag/Assembly-CSharp-Editor.rsp
+[675/872    0s] ILPP-Configuration Library/ilpp-configuration.nevergeneratedoutput
+[856/872    1s] Csc Library/Bee/artifacts/1900b0aE.dag/ForeverEngine.dll (+2 others)
+Assets\Scripts\AI\Director\DramaManager.cs(10,23): warning CS0414: The field 'DramaManager._dramaDecay' is assigned but its value is never used
+[857/872    0s] Csc Library/Bee/artifacts/1900b0aE.dag/ForeverEngine.Tests.PlayMode.dll (+2 others)
+[858/872    0s] Csc Library/Bee/artifacts/1900b0aE.dag/ForeverEngine.Tests.EditMode.dll (+2 others)
+[859/872    0s] Csc Library/Bee/artifacts/1900b0aE.dag/Assembly-CSharp-Editor.dll (+2 others)
+[860/872    1s] ILPostProcess Library/Bee/artifacts/1900b0aE.dag/post-processed/ForeverEngine.Tests.PlayMode.dll (+pdb)
+Processing assembly Library/Bee/artifacts/1900b0aE.dag/ForeverEngine.Tests.PlayMode.dll, with 132 defines and 230 references
+
+processors: Unity.Entities.CodeGen.EntitiesILPostProcessors, Unity.Jobs.CodeGen.JobsILPostProcessor, zzzUnity.Burst.CodeGen.BurstILPostProcessor
+
+running Unity.Entities.CodeGen.EntitiesILPostProcessors
+
+running Unity.Jobs.CodeGen.JobsILPostProcessor
+
+running zzzUnity.Burst.CodeGen.BurstILPostProcessor
+[861/872    0s] CopyFiles Library/ScriptAssemblies/ForeverEngine.Tests.PlayMode.dll
+[862/872    0s] CopyFiles Library/ScriptAssemblies/ForeverEngine.Tests.PlayMode.pdb
+[863/872    1s] ILPostProcess Library/Bee/artifacts/1900b0aE.dag/post-processed/ForeverEngine.Tests.EditMode.dll (+pdb)
+Processing assembly Library/Bee/artifacts/1900b0aE.dag/ForeverEngine.Tests.EditMode.dll, with 130 defines and 259 references
+
+processors: Unity.Entities.CodeGen.EntitiesILPostProcessors, Unity.Jobs.CodeGen.JobsILPostProcessor, zzzUnity.Burst.CodeGen.BurstILPostProcessor
+
+running Unity.Entities.CodeGen.EntitiesILPostProcessors
+
+running Unity.Jobs.CodeGen.JobsILPostProcessor
+
+running zzzUnity.Burst.CodeGen.BurstILPostProcessor
+[864/872    1s] ILPostProcess Library/Bee/artifacts/1900b0aE.dag/post-processed/Assembly-CSharp-Editor.dll (+pdb)
+Processing assembly Library/Bee/artifacts/1900b0aE.dag/Assembly-CSharp-Editor.dll, with 130 defines and 309 references
+
+processors: Unity.Entities.CodeGen.EntitiesILPostProcessors, Unity.Jobs.CodeGen.JobsILPostProcessor, zzzUnity.Burst.CodeGen.BurstILPostProcessor
+
+running Unity.Entities.CodeGen.EntitiesILPostProcessors
+
+running Unity.Jobs.CodeGen.JobsILPostProcessor
+
+running zzzUnity.Burst.CodeGen.BurstILPostProcessor
+[865/872    0s] CopyFiles Library/ScriptAssemblies/ForeverEngine.Tests.EditMode.pdb
+[866/872    0s] CopyFiles Library/ScriptAssemblies/Assembly-CSharp-Editor.pdb
+[867/872    0s] CopyFiles Library/ScriptAssemblies/Assembly-CSharp-Editor.dll
+[868/872    0s] CopyFiles Library/ScriptAssemblies/ForeverEngine.Tests.EditMode.dll
+[869/872    1s] ILPostProcess Library/Bee/artifacts/1900b0aE.dag/post-processed/ForeverEngine.dll (+pdb)
+Processing assembly Library/Bee/artifacts/1900b0aE.dag/ForeverEngine.dll, with 132 defines and 234 references
+
+processors: Unity.Entities.CodeGen.EntitiesILPostProcessors, Unity.Jobs.CodeGen.JobsILPostProcessor, zzzUnity.Burst.CodeGen.BurstILPostProcessor
+
+running Unity.Entities.CodeGen.EntitiesILPostProcessors
+
+running Unity.Jobs.CodeGen.JobsILPostProcessor
+
+running zzzUnity.Burst.CodeGen.BurstILPostProcessor
+[870/872    0s] CopyFiles Library/ScriptAssemblies/ForeverEngine.pdb
+[871/872    0s] CopyFiles Library/ScriptAssemblies/ForeverEngine.dll
+*** Tundra build success (3.68 seconds), 19 items updated, 872 evaluated
+Assets\Scripts\AI\Director\DramaManager.cs(10,23): warning CS0414: The field 'DramaManager._dramaDecay' is assigned but its value is never used
+AssetDatabase: script compilation time: 4.891676s
+Begin MonoManager ReloadAssembly
+- Loaded All Assemblies, in  0.636 seconds
+Start importing Assets/Scripts/Demo using Guid(dbab0d246358be44b9f7024f7ef3084d) (DefaultImporter) -> (artifact id: '1b2d858169fc90fa799bebace76f6180') in 0.0157417 seconds
+Start importing Assets/Scripts/Demo/Encounters using Guid(72f3ef6391fda6442b6133eb6017c0be) (DefaultImporter) -> (artifact id: 'c5f34ba64b2d46d4e0657a3effd1fa5e') in 0.0045399 seconds
+Start importing Assets/Scripts/Demo/Overworld using Guid(f6067128524849a4881c92afa56686d1) (DefaultImporter) -> (artifact id: 'cffe607fec02f279c287bc340a007e5f') in 0.003845 seconds
+Start importing Assets/Scripts/Demo/NPCs using Guid(2b4ac482143eda94f808e04123382177) (DefaultImporter) -> (artifact id: '3dd7d318d4cb4bc23992c52eb6d2a7bd') in 0.003928 seconds
+Start importing Assets/Scripts/Demo/Battle using Guid(9ccec9853749a5c42be334c7dfd2e6a1) (DefaultImporter) -> (artifact id: '8f9f5eddaa2ce12eb5af24508434d8b0') in 0.0039925 seconds
+Start importing Assets/Scripts/Demo/Quests using Guid(5e8d756dd861e2247890334181d9ee6d) (DefaultImporter) -> (artifact id: '6bf5f7baa76968edb8257adbcae43a95') in 0.0194848 seconds
+Start importing Assets/Scripts/Demo/Locations using Guid(8e53312220c927b48a514dd4372c2088) (DefaultImporter) -> (artifact id: '4fcf1a9a0477b81c72dfb9c6486acb9c') in 0.0086412 seconds
+Start importing Assets/Scripts/Demo/UI using Guid(8f652c3f049db48459c87451d1fcd7e7) (DefaultImporter) -> (artifact id: '3894c1e7836a420ea03c1ab49ae2c2a5') in 0.0047866 seconds
+Refreshing native plugins compatible for Editor in 0.51 ms, found 1 plugins.
+Native extension for WindowsStandalone target not found
+Assembly reference Packages/com.unity.entities/Unity.Scenes.Editor/Internals/Properties/Unity.Properties.Internals.asmref has no target assembly definition
+TypeManager.Initialize took: 191ms
+Mono: successfully reloaded assembly
+- Finished resetting the current domain, in  1.905 seconds
+Domain Reload Profiling: 2539ms
+	BeginReloadAssembly (206ms)
+		ExecutionOrderSort (0ms)
+		DisableScriptedObjects (8ms)
+		BackupInstance (0ms)
+		ReleaseScriptingObjects (0ms)
+		CreateAndSetChildDomain (126ms)
+	RebuildCommonClasses (20ms)
+	RebuildNativeTypeToScriptingClass (7ms)
+	initialDomainReloadingComplete (15ms)
+	LoadAllAssembliesAndSetupDomain (385ms)
+		LoadAssemblies (331ms)
+		RebuildTransferFunctionScriptingTraits (0ms)
+		AnalyzeDomain (103ms)
+			TypeCache.Refresh (75ms)
+				TypeCache.ScanAssembly (70ms)
+			BuildScriptInfoCaches (21ms)
+			ResolveRequiredComponents (6ms)
+	FinalizeReload (1905ms)
+		ReleaseScriptCaches (0ms)
+		RebuildScriptCaches (0ms)
+		SetupLoadedEditorAssemblies (1783ms)
+			LogAssemblyErrors (0ms)
+			InitializePlatformSupportModulesInManaged (7ms)
+			SetLoadedEditorAssemblies (4ms)
+			BeforeProcessingInitializeOnLoad (80ms)
+			ProcessInitializeOnLoadAttributes (1556ms)
+			ProcessInitializeOnLoadMethodAttributes (132ms)
+			AfterProcessingInitializeOnLoad (3ms)
+			EditorAssembliesLoaded (0ms)
+		ExecutionOrderSort2 (0ms)
+		AwakeInstancesAfterBackupRestoration (8ms)
+Refreshing native plugins compatible for Editor in 0.43 ms, found 1 plugins.
+Preloading 0 native plugins for Editor in 0.00 ms.
+Asset Pipeline Refresh (id=569ad0d6647624b4c81032a241599718): Total: 8.013 seconds - Initiated by InitialRefreshV2(ForceSynchronousImport)
+	Summary:
+		Imports: total=8 (actual=8, local cache=0, cache server=0)
+		Asset DB Process Time: managed=2 ms, native=2265 ms
+		Asset DB Callback time: managed=177 ms, native=8 ms
+		Scripting: domain reloads=1, domain reload time=636 ms, compile time=4893 ms, other=29 ms
+		Project Asset Count: scripts=1272, non-scripts=2222
+		Asset File Changes: new=30, changed=30, moved=0, deleted=0
+		Scan Filter Count: 0
+	InvokeCustomDependenciesCallbacks: 0.001ms
+	InvokePackagesCallback: 6.577ms
+	ApplyChangesToAssetFolders: 2.936ms
+	Scan: 113.825ms
+	OnSourceAssetsModified: 0.642ms
+	CategorizeAssetsWithTransientArtifact: 25.416ms
+	ProcessAssetsWithTransientArtifactChanges: 37.579ms
+	CategorizeAssets: 25.480ms
+	ImportOutOfDateAssets: 1979.562ms (-2983.340ms without children)
+		ImportManagerImport: 69.121ms (2.928ms without children)
+			ImportInProcess: 66.146ms
+			UpdateCategorizedAssets: 0.048ms
+		CompileScripts: 4892.778ms
+		ReloadNativeAssets: 0.001ms
+		UnloadImportedAssets: 0.214ms
+		ReloadImportedAssets: 0.003ms
+		EnsureUptoDateAssetsAreRegisteredWithGuidPM: 0.281ms
+		InitializingProgressBar: 0.000ms
+		PostProcessAllAssetNotificationsAddChangedAssets: 0.000ms
+		OnDemandSchedulerStart: 0.504ms
+	PostProcessAllAssets: 177.879ms
+	Hotreload: 1.736ms
+	GatherAllCurrentPrimaryArtifactRevisions: 0.001ms
+	UnloadStreamsBegin: 1.063ms
+	PersistCurrentRevisions: 0.254ms
+	UnloadStreamsEnd: 0.001ms
+	GenerateScriptTypeHashes: 1.246ms
+	Untracked: 5640.035ms
+
+Application.AssetDatabase Initial Refresh End
+Scanning for USB devices : 41.887ms
+Initializing Unity extensions:
+[MODES] ModeService[none].Initialize
+[MODES] ModeService[none].LoadModes
+[MODES] Loading mode Default (0) for mode-current-id-Forever engin
+Unloading 110 Unused Serialized files (Serialized files now loaded: 0)
+Unloading 5355 unused Assets / (3.7 MB). Loaded Objects now: 6048.
+Memory consumption went from 191.1 MB to 187.3 MB.
+Total: 7.808500 ms (FindLiveObjects: 0.335500 ms CreateObjectMapping: 0.132400 ms MarkObjects: 5.395800 ms  DeleteObjects: 1.943900 ms)
+
+Unloading 0 Unused Serialized files (Serialized files now loaded: 0)
+Unloading 0 unused Assets / (0 B). Loaded Objects now: 6051.
+Memory consumption went from 175.2 MB to 175.2 MB.
+Total: 4.026900 ms (FindLiveObjects: 0.143800 ms CreateObjectMapping: 0.055900 ms MarkObjects: 3.823100 ms  DeleteObjects: 0.003500 ms)
+
+Start importing Assets/Scenes/MainMenu.unity using Guid(1bbb046f078e8954c9cca4f2c856d91d) (DefaultImporter) -> (artifact id: '6ad9d2480f7ae5aac19fb904a6f2fbef') in 0.0006444 seconds
+Refreshing native plugins compatible for Editor in 0.34 ms, found 1 plugins.
+Preloading 0 native plugins for Editor in 0.00 ms.
+Asset Pipeline Refresh (id=047b1c5397970d84dbd2f296d7e25342): Total: 0.027 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+[DemoSceneBuilder] MainMenu scene created
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace ()
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+ForeverEngine.Editor.DemoSceneBuilder:BuildMainMenu () (at Assets/Editor/DemoSceneBuilder.cs:42)
+ForeverEngine.Editor.DemoSceneBuilder:BuildAll () (at Assets/Editor/DemoSceneBuilder.cs:18)
+
+(Filename: Assets/Editor/DemoSceneBuilder.cs Line: 42)
+
+Unloading 12 Unused Serialized files (Serialized files now loaded: 0)
+Unloading 19 unused Assets / (326.3 KB). Loaded Objects now: 6054.
+Memory consumption went from 180.1 MB to 179.8 MB.
+Total: 5.056200 ms (FindLiveObjects: 0.150300 ms CreateObjectMapping: 0.053700 ms MarkObjects: 4.674900 ms  DeleteObjects: 0.176700 ms)
+
+Start importing Assets/Scenes/Overworld.unity using Guid(32adcb27f85cc5c4a8580e500b76aca2) (DefaultImporter) -> (artifact id: '4bd6e9b52d7d00c75d207895bbef2b19') in 0.0005883 seconds
+Refreshing native plugins compatible for Editor in 0.36 ms, found 1 plugins.
+Preloading 0 native plugins for Editor in 0.00 ms.
+Asset Pipeline Refresh (id=7d1a7229bab91264a8b6c04a5b57761e): Total: 0.018 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+[DemoSceneBuilder] Overworld scene created
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace ()
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+ForeverEngine.Editor.DemoSceneBuilder:BuildOverworld () (at Assets/Editor/DemoSceneBuilder.cs:80)
+ForeverEngine.Editor.DemoSceneBuilder:BuildAll () (at Assets/Editor/DemoSceneBuilder.cs:19)
+
+(Filename: Assets/Editor/DemoSceneBuilder.cs Line: 80)
+
+Unloading 11 Unused Serialized files (Serialized files now loaded: 0)
+Unloading 19 unused Assets / (326.5 KB). Loaded Objects now: 6054.
+Memory consumption went from 183.8 MB to 183.5 MB.
+Total: 4.646900 ms (FindLiveObjects: 0.131200 ms CreateObjectMapping: 0.054400 ms MarkObjects: 4.290500 ms  DeleteObjects: 0.170200 ms)
+
+Start importing Assets/Scenes/BattleMap.unity using Guid(0547ab729e451d14e871f1c847030c35) (DefaultImporter) -> (artifact id: '5f8aa7dab25b45b774fcd2084148dd82') in 0.0006187 seconds
+Refreshing native plugins compatible for Editor in 0.30 ms, found 1 plugins.
+Preloading 0 native plugins for Editor in 0.00 ms.
+Asset Pipeline Refresh (id=ae37c513ad0ebd1499882af871e3f740): Total: 0.017 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+[DemoSceneBuilder] BattleMap scene created
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace ()
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+ForeverEngine.Editor.DemoSceneBuilder:BuildBattleMap () (at Assets/Editor/DemoSceneBuilder.cs:110)
+ForeverEngine.Editor.DemoSceneBuilder:BuildAll () (at Assets/Editor/DemoSceneBuilder.cs:20)
+
+(Filename: Assets/Editor/DemoSceneBuilder.cs Line: 110)
+
+[DemoSceneBuilder] All 3 demo scenes created!
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace ()
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+ForeverEngine.Editor.DemoSceneBuilder:BuildAll () (at Assets/Editor/DemoSceneBuilder.cs:21)
+
+(Filename: Assets/Editor/DemoSceneBuilder.cs Line: 21)
+
+Batchmode quit successfully invoked - shutting down!
+Unloading 11 Unused Serialized files (Serialized files now loaded: 0)
+Unloading 19 unused Assets / (304.2 KB). Loaded Objects now: 6066.
+Memory consumption went from 189.5 MB to 189.2 MB.
+Total: 4.770600 ms (FindLiveObjects: 0.123900 ms CreateObjectMapping: 0.055400 ms MarkObjects: 4.375000 ms  DeleteObjects: 0.215500 ms)
+
+[Physics::Module] Cleanup current backned.
+[Physics::Module] Id: 0xf2b8ea05
+Input System module state changed to: ShutdownInProgress.
+Input System polling thread exited.
+Input System module state changed to: Shutdown.
+[Licensing::IpcConnector] LicenseClient-bp303-notifications channel disconnected successfully.
+[Licensing::IpcConnector] LicenseClient-bp303 channel disconnected successfully.
+AcceleratorClientConnectionCallback - disconnected - :0
+Cleanup mono
+abort_threads: Failed aborting id: 000000000000AABC, mono_thread_manage will ignore it
+
+abort_threads: Failed aborting id: 000000000000B08C, mono_thread_manage will ignore it
+
+abort_threads: Failed aborting id: 000000000000AABC, mono_thread_manage will ignore it
+
+abort_threads: Failed aborting id: 000000000000B08C, mono_thread_manage will ignore it
+
+debugger-agent: Unable to listen on 3544
+Exiting batchmode successfully now!
+Exiting without the bug reporter. Application will terminate with return code 0
