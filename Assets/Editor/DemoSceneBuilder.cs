@@ -38,6 +38,18 @@ namespace ForeverEngine.Editor
             var gmGO = new GameObject("GameManager");
             gmGO.AddComponent<GameManager>();
 
+            // AI Systems (child of GameManager — persists via DontDestroyOnLoad)
+            var aiGO = new GameObject("AI_Systems");
+            aiGO.transform.SetParent(gmGO.transform);
+            aiGO.AddComponent<ForeverEngine.Demo.AI.DemoAIIntegration>();
+            aiGO.AddComponent<ForeverEngine.AI.Director.AIDirector>();
+            aiGO.AddComponent<ForeverEngine.AI.Learning.DynamicDifficulty>();
+            aiGO.AddComponent<ForeverEngine.AI.PlayerModeling.PlayerProfiler>();
+            aiGO.AddComponent<ForeverEngine.AI.Memory.MemoryManager>();
+            aiGO.AddComponent<ForeverEngine.AI.SelfHealing.SystemMonitor>();
+            aiGO.AddComponent<ForeverEngine.AI.SelfHealing.PerformanceRegulator>();
+            aiGO.AddComponent<ForeverEngine.AI.Inference.InferenceEngine>();
+
             EditorSceneManager.SaveScene(scene, "Assets/Scenes/MainMenu.unity");
             Debug.Log("[DemoSceneBuilder] MainMenu scene created");
         }

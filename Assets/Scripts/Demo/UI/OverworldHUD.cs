@@ -38,6 +38,15 @@ namespace ForeverEngine.Demo.UI
                 }
             }
 
+            // Bottom-left: AI Status (toggle with Tab)
+            var ai = Demo.AI.DemoAIIntegration.Instance;
+            if (ai != null)
+            {
+                GUI.Box(new Rect(10, Screen.height - 110, 280, 70), "");
+                var aiStyle = new GUIStyle(GUI.skin.label) { fontSize = 10, normal = { textColor = new Color(0.5f, 0.8f, 0.5f) } };
+                GUI.Label(new Rect(15, Screen.height - 108, 270, 65), ai.GetAIStatusText(), aiStyle);
+            }
+
             // Bottom: Controls
             GUI.Label(new Rect(10, Screen.height - 30, 500, 20), "WASD/QE: Move | F: Forage | I: Inventory | Enter: Interact with location | Esc: Pause");
 

@@ -86,6 +86,7 @@ namespace ForeverEngine.Demo.Overworld
                 {
                     GameManager.Instance.Player.DiscoveredLocations.Add(loc.Id);
                     if (loc.IsSafe) GameManager.Instance.Player.LastSafeLocation = loc.Id;
+                    Demo.AI.DemoAIIntegration.Instance?.OnLocationDiscovered(loc.Id);
                     Debug.Log($"[Overworld] Arrived at {loc.Name}");
                     return;
                 }

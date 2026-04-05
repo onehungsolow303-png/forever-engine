@@ -73,6 +73,9 @@ namespace ForeverEngine.Demo.Battle
             foreach (var c in Combatants) c.RollInitiative(ref _rngSeed);
             Combatants = Combatants.OrderByDescending(c => c.InitiativeRoll).ToList();
 
+            // Notify AI integration
+            Demo.AI.DemoAIIntegration.Instance?.OnCombatStarted(encId);
+
             // Create visual renderer
             var rendererGO = new GameObject("BattleRenderer");
             var renderer = rendererGO.AddComponent<BattleRenderer>();
@@ -191,17 +194,28 @@ namespace ForeverEngine.Demo.Battle
             int roll = attacker.RollAttack(ref _rngSeed);
             bool hit = roll == 20 || (roll != 1 && roll + DiceRoller.AbilityModifier(attacker.Strength) >= target.AC);
 
+            var ai = Demo.AI.DemoAIIntegration.Instance;
             if (hit)
             {
                 int damage = attacker.RollDamage(ref _rngSeed);
                 if (damage < 1) damage = 1;
                 target.TakeDamage(damage);
                 Log.Add($"{attacker.Name} hits {target.Name} for {damage}! (d20={roll})");
-                if (!target.IsAlive) Log.Add($"{target.Name} is defeated!");
+
+                // AI events
+                if (attacker.IsPlayer) ai?.OnPlayerAttacked(true, damage, target.Name);
+                if (target.IsPlayer) ai?.OnPlayerDamaged(damage);
+
+                if (!target.IsAlive)
+                {
+                    Log.Add($"{target.Name} is defeated!");
+                    if (!target.IsPlayer) ai?.OnEnemyKilled(target.Name);
+                }
             }
             else
             {
                 Log.Add($"{attacker.Name} misses {target.Name}. (d20={roll})");
+                if (attacker.IsPlayer) ai?.OnPlayerAttacked(false, 0, target.Name);
             }
         }
 
@@ -215,12 +229,14 @@ namespace ForeverEngine.Demo.Battle
             {
                 BattleOver = true; PlayerWon = false;
                 Log.Add("You have fallen...");
+                Demo.AI.DemoAIIntegration.Instance?.OnPlayerDied();
                 return;
             }
             if (Combatants.All(c => c.IsPlayer || !c.IsAlive))
             {
                 BattleOver = true; PlayerWon = true;
                 Log.Add("Victory!");
+                Demo.AI.DemoAIIntegration.Instance?.OnCombatVictory(_encounterData.GoldReward, _encounterData.XPReward);
                 var gm = GameManager.Instance;
                 if (gm != null)
                 {
