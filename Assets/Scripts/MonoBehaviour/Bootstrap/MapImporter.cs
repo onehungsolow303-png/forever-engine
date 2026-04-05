@@ -228,6 +228,7 @@ namespace ForeverEngine.MonoBehaviour.Bootstrap
                 {
                     SightRadius = 16  // FOW_SIGHT_RADIUS from pygame config.py
                 });
+                em.AddComponent<PlayerTag>(entity);
             }
 
             // Visual
