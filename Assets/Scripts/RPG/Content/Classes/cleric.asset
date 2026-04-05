@@ -1,0 +1,146 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 53adf33f24ffc204e9dfc62296eedca2, type: 3}
+  m_Name: cleric
+  m_EditorClassIdentifier: ForeverEngine::ForeverEngine.RPG.Character.ClassData
+  Id: cleric
+  Name: Cleric
+  HitDie: 8
+  PrimaryAbilities: 04000000
+  SpellcastingAbility: 4
+  CastingType: 1
+  ArmorProficiencies:
+  - Light
+  - Medium
+  - Shields
+  WeaponProficiencies:
+  - Simple
+  ToolProficiencies: []
+  SaveProficiencies: 0400000005000000
+  SkillChoices:
+  - History
+  - Insight
+  - Medicine
+  - Persuasion
+  - Religion
+  SkillChoiceCount: 2
+  Progression:
+  - Level: 1
+    FeaturesGained:
+    - Spellcasting
+    - Divine Domain
+    IsASILevel: 0
+    SubclassFeature: Divine Domain
+  - Level: 2
+    FeaturesGained:
+    - Channel Divinity (1 use)
+    - Domain Feature
+    IsASILevel: 0
+    SubclassFeature: Domain Feature
+  - Level: 3
+    FeaturesGained:
+    - 2nd-Level Spells
+    IsASILevel: 0
+    SubclassFeature: 
+  - Level: 4
+    FeaturesGained:
+    - Ability Score Improvement
+    IsASILevel: 1
+    SubclassFeature: 
+  - Level: 5
+    FeaturesGained:
+    - Destroy Undead (CR 1/2)
+    - 3rd-Level Spells
+    IsASILevel: 0
+    SubclassFeature: 
+  - Level: 6
+    FeaturesGained:
+    - Channel Divinity (2 uses)
+    - Domain Feature
+    IsASILevel: 0
+    SubclassFeature: Domain Feature
+  - Level: 7
+    FeaturesGained:
+    - 4th-Level Spells
+    IsASILevel: 0
+    SubclassFeature: 
+  - Level: 8
+    FeaturesGained:
+    - Ability Score Improvement
+    - Destroy Undead (CR 1)
+    - Domain Feature
+    IsASILevel: 1
+    SubclassFeature: Domain Feature
+  - Level: 9
+    FeaturesGained:
+    - 5th-Level Spells
+    IsASILevel: 0
+    SubclassFeature: 
+  - Level: 10
+    FeaturesGained:
+    - Divine Intervention
+    IsASILevel: 0
+    SubclassFeature: 
+  - Level: 11
+    FeaturesGained:
+    - Destroy Undead (CR 2)
+    - 6th-Level Spells
+    IsASILevel: 0
+    SubclassFeature: 
+  - Level: 12
+    FeaturesGained:
+    - Ability Score Improvement
+    IsASILevel: 1
+    SubclassFeature: 
+  - Level: 13
+    FeaturesGained:
+    - 7th-Level Spells
+    IsASILevel: 0
+    SubclassFeature: 
+  - Level: 14
+    FeaturesGained:
+    - Destroy Undead (CR 3)
+    IsASILevel: 0
+    SubclassFeature: 
+  - Level: 15
+    FeaturesGained:
+    - 8th-Level Spells
+    IsASILevel: 0
+    SubclassFeature: 
+  - Level: 16
+    FeaturesGained:
+    - Ability Score Improvement
+    IsASILevel: 1
+    SubclassFeature: 
+  - Level: 17
+    FeaturesGained:
+    - Destroy Undead (CR 4)
+    - 9th-Level Spells
+    - Domain Feature
+    IsASILevel: 0
+    SubclassFeature: Domain Feature
+  - Level: 18
+    FeaturesGained:
+    - Channel Divinity (3 uses)
+    IsASILevel: 0
+    SubclassFeature: 
+  - Level: 19
+    FeaturesGained:
+    - Ability Score Improvement
+    IsASILevel: 1
+    SubclassFeature: 
+  - Level: 20
+    FeaturesGained:
+    - Divine Intervention Improvement
+    IsASILevel: 0
+    SubclassFeature: 
+  MulticlassPrereqs: 04000000

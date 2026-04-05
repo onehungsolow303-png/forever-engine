@@ -1,0 +1,142 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 53adf33f24ffc204e9dfc62296eedca2, type: 3}
+  m_Name: sorcerer
+  m_EditorClassIdentifier: ForeverEngine::ForeverEngine.RPG.Character.ClassData
+  Id: sorcerer
+  Name: Sorcerer
+  HitDie: 6
+  PrimaryAbilities: 05000000
+  SpellcastingAbility: 5
+  CastingType: 1
+  ArmorProficiencies: []
+  WeaponProficiencies:
+  - Dagger
+  - Dart
+  - Sling
+  - Quarterstaff
+  - Light Crossbow
+  ToolProficiencies: []
+  SaveProficiencies: 0200000005000000
+  SkillChoices:
+  - Arcana
+  - Deception
+  - Insight
+  - Intimidation
+  - Persuasion
+  - Religion
+  SkillChoiceCount: 2
+  Progression:
+  - Level: 1
+    FeaturesGained:
+    - Spellcasting
+    - Sorcerous Origin
+    IsASILevel: 0
+    SubclassFeature: Sorcerous Origin
+  - Level: 2
+    FeaturesGained:
+    - Font of Magic (2 points)
+    IsASILevel: 0
+    SubclassFeature: 
+  - Level: 3
+    FeaturesGained:
+    - Metamagic (2 options)
+    - Font of Magic (3 points)
+    IsASILevel: 0
+    SubclassFeature: 
+  - Level: 4
+    FeaturesGained:
+    - Ability Score Improvement
+    IsASILevel: 1
+    SubclassFeature: 
+  - Level: 5
+    FeaturesGained:
+    - Font of Magic (5 points)
+    IsASILevel: 0
+    SubclassFeature: 
+  - Level: 6
+    FeaturesGained:
+    - Origin Feature
+    IsASILevel: 0
+    SubclassFeature: Origin Feature
+  - Level: 7
+    FeaturesGained:
+    - Font of Magic (7 points)
+    IsASILevel: 0
+    SubclassFeature: 
+  - Level: 8
+    FeaturesGained:
+    - Ability Score Improvement
+    IsASILevel: 1
+    SubclassFeature: 
+  - Level: 9
+    FeaturesGained:
+    - Font of Magic (9 points)
+    IsASILevel: 0
+    SubclassFeature: 
+  - Level: 10
+    FeaturesGained:
+    - Metamagic (3 options)
+    IsASILevel: 0
+    SubclassFeature: 
+  - Level: 11
+    FeaturesGained:
+    - Font of Magic (11 points)
+    IsASILevel: 0
+    SubclassFeature: 
+  - Level: 12
+    FeaturesGained:
+    - Ability Score Improvement
+    IsASILevel: 1
+    SubclassFeature: 
+  - Level: 13
+    FeaturesGained:
+    - Font of Magic (13 points)
+    IsASILevel: 0
+    SubclassFeature: 
+  - Level: 14
+    FeaturesGained:
+    - Origin Feature
+    IsASILevel: 0
+    SubclassFeature: Origin Feature
+  - Level: 15
+    FeaturesGained:
+    - Font of Magic (15 points)
+    IsASILevel: 0
+    SubclassFeature: 
+  - Level: 16
+    FeaturesGained:
+    - Ability Score Improvement
+    IsASILevel: 1
+    SubclassFeature: 
+  - Level: 17
+    FeaturesGained:
+    - Metamagic (4 options)
+    - Font of Magic (17 points)
+    IsASILevel: 0
+    SubclassFeature: 
+  - Level: 18
+    FeaturesGained:
+    - Origin Feature
+    IsASILevel: 0
+    SubclassFeature: Origin Feature
+  - Level: 19
+    FeaturesGained:
+    - Ability Score Improvement
+    IsASILevel: 1
+    SubclassFeature: 
+  - Level: 20
+    FeaturesGained:
+    - Sorcerous Restoration
+    IsASILevel: 0
+    SubclassFeature: 
+  MulticlassPrereqs: 05000000

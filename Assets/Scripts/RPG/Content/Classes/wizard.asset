@@ -1,0 +1,140 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 53adf33f24ffc204e9dfc62296eedca2, type: 3}
+  m_Name: wizard
+  m_EditorClassIdentifier: ForeverEngine::ForeverEngine.RPG.Character.ClassData
+  Id: wizard
+  Name: Wizard
+  HitDie: 6
+  PrimaryAbilities: 03000000
+  SpellcastingAbility: 3
+  CastingType: 1
+  ArmorProficiencies: []
+  WeaponProficiencies:
+  - Dagger
+  - Dart
+  - Sling
+  - Quarterstaff
+  - Light Crossbow
+  ToolProficiencies: []
+  SaveProficiencies: 0300000004000000
+  SkillChoices:
+  - Arcana
+  - History
+  - Insight
+  - Investigation
+  - Medicine
+  - Religion
+  SkillChoiceCount: 2
+  Progression:
+  - Level: 1
+    FeaturesGained:
+    - Spellcasting
+    - Arcane Recovery
+    IsASILevel: 0
+    SubclassFeature: 
+  - Level: 2
+    FeaturesGained:
+    - Arcane Tradition
+    IsASILevel: 0
+    SubclassFeature: Arcane Tradition
+  - Level: 3
+    FeaturesGained:
+    - 2nd-Level Spells
+    IsASILevel: 0
+    SubclassFeature: 
+  - Level: 4
+    FeaturesGained:
+    - Ability Score Improvement
+    IsASILevel: 1
+    SubclassFeature: 
+  - Level: 5
+    FeaturesGained:
+    - 3rd-Level Spells
+    IsASILevel: 0
+    SubclassFeature: 
+  - Level: 6
+    FeaturesGained:
+    - Tradition Feature
+    IsASILevel: 0
+    SubclassFeature: Tradition Feature
+  - Level: 7
+    FeaturesGained:
+    - 4th-Level Spells
+    IsASILevel: 0
+    SubclassFeature: 
+  - Level: 8
+    FeaturesGained:
+    - Ability Score Improvement
+    IsASILevel: 1
+    SubclassFeature: 
+  - Level: 9
+    FeaturesGained:
+    - 5th-Level Spells
+    IsASILevel: 0
+    SubclassFeature: 
+  - Level: 10
+    FeaturesGained:
+    - Tradition Feature
+    IsASILevel: 0
+    SubclassFeature: Tradition Feature
+  - Level: 11
+    FeaturesGained:
+    - 6th-Level Spells
+    IsASILevel: 0
+    SubclassFeature: 
+  - Level: 12
+    FeaturesGained:
+    - Ability Score Improvement
+    IsASILevel: 1
+    SubclassFeature: 
+  - Level: 13
+    FeaturesGained:
+    - 7th-Level Spells
+    IsASILevel: 0
+    SubclassFeature: 
+  - Level: 14
+    FeaturesGained:
+    - Tradition Feature
+    IsASILevel: 0
+    SubclassFeature: Tradition Feature
+  - Level: 15
+    FeaturesGained:
+    - 8th-Level Spells
+    IsASILevel: 0
+    SubclassFeature: 
+  - Level: 16
+    FeaturesGained:
+    - Ability Score Improvement
+    IsASILevel: 1
+    SubclassFeature: 
+  - Level: 17
+    FeaturesGained:
+    - 9th-Level Spells
+    IsASILevel: 0
+    SubclassFeature: 
+  - Level: 18
+    FeaturesGained:
+    - Spell Mastery
+    IsASILevel: 0
+    SubclassFeature: 
+  - Level: 19
+    FeaturesGained:
+    - Ability Score Improvement
+    IsASILevel: 1
+    SubclassFeature: 
+  - Level: 20
+    FeaturesGained:
+    - Signature Spells
+    IsASILevel: 0
+    SubclassFeature: 
+  MulticlassPrereqs: 03000000

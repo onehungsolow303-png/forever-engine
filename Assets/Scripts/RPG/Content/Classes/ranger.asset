@@ -1,0 +1,148 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 53adf33f24ffc204e9dfc62296eedca2, type: 3}
+  m_Name: ranger
+  m_EditorClassIdentifier: ForeverEngine::ForeverEngine.RPG.Character.ClassData
+  Id: ranger
+  Name: Ranger
+  HitDie: 10
+  PrimaryAbilities: 0100000004000000
+  SpellcastingAbility: 4
+  CastingType: 2
+  ArmorProficiencies:
+  - Light
+  - Medium
+  - Shields
+  WeaponProficiencies:
+  - Simple
+  - Martial
+  ToolProficiencies: []
+  SaveProficiencies: 0000000001000000
+  SkillChoices:
+  - Animal Handling
+  - Athletics
+  - Insight
+  - Investigation
+  - Nature
+  - Perception
+  - Stealth
+  - Survival
+  SkillChoiceCount: 3
+  Progression:
+  - Level: 1
+    FeaturesGained:
+    - Favored Enemy
+    - Natural Explorer
+    IsASILevel: 0
+    SubclassFeature: 
+  - Level: 2
+    FeaturesGained:
+    - Fighting Style
+    - Spellcasting
+    IsASILevel: 0
+    SubclassFeature: 
+  - Level: 3
+    FeaturesGained:
+    - Ranger Conclave
+    - Primeval Awareness
+    IsASILevel: 0
+    SubclassFeature: Ranger Conclave
+  - Level: 4
+    FeaturesGained:
+    - Ability Score Improvement
+    IsASILevel: 1
+    SubclassFeature: 
+  - Level: 5
+    FeaturesGained:
+    - Extra Attack
+    IsASILevel: 0
+    SubclassFeature: 
+  - Level: 6
+    FeaturesGained:
+    - Favored Enemy Improvement
+    - Natural Explorer Improvement
+    IsASILevel: 0
+    SubclassFeature: 
+  - Level: 7
+    FeaturesGained:
+    - Conclave Feature
+    IsASILevel: 0
+    SubclassFeature: Conclave Feature
+  - Level: 8
+    FeaturesGained:
+    - Ability Score Improvement
+    - Land's Stride
+    IsASILevel: 1
+    SubclassFeature: 
+  - Level: 9
+    FeaturesGained:
+    - 3rd-Level Spells
+    IsASILevel: 0
+    SubclassFeature: 
+  - Level: 10
+    FeaturesGained:
+    - Natural Explorer Improvement
+    - Hide in Plain Sight
+    IsASILevel: 0
+    SubclassFeature: 
+  - Level: 11
+    FeaturesGained:
+    - Conclave Feature
+    IsASILevel: 0
+    SubclassFeature: Conclave Feature
+  - Level: 12
+    FeaturesGained:
+    - Ability Score Improvement
+    IsASILevel: 1
+    SubclassFeature: 
+  - Level: 13
+    FeaturesGained:
+    - 4th-Level Spells
+    IsASILevel: 0
+    SubclassFeature: 
+  - Level: 14
+    FeaturesGained:
+    - Favored Enemy Improvement
+    - Vanish
+    IsASILevel: 0
+    SubclassFeature: 
+  - Level: 15
+    FeaturesGained:
+    - Conclave Feature
+    IsASILevel: 0
+    SubclassFeature: Conclave Feature
+  - Level: 16
+    FeaturesGained:
+    - Ability Score Improvement
+    IsASILevel: 1
+    SubclassFeature: 
+  - Level: 17
+    FeaturesGained:
+    - 5th-Level Spells
+    IsASILevel: 0
+    SubclassFeature: 
+  - Level: 18
+    FeaturesGained:
+    - Feral Senses
+    IsASILevel: 0
+    SubclassFeature: 
+  - Level: 19
+    FeaturesGained:
+    - Ability Score Improvement
+    IsASILevel: 1
+    SubclassFeature: 
+  - Level: 20
+    FeaturesGained:
+    - Foe Slayer
+    IsASILevel: 0
+    SubclassFeature: 
+  MulticlassPrereqs: 0100000004000000

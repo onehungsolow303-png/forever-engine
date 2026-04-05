@@ -1,0 +1,155 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 53adf33f24ffc204e9dfc62296eedca2, type: 3}
+  m_Name: druid
+  m_EditorClassIdentifier: ForeverEngine::ForeverEngine.RPG.Character.ClassData
+  Id: druid
+  Name: Druid
+  HitDie: 8
+  PrimaryAbilities: 04000000
+  SpellcastingAbility: 4
+  CastingType: 1
+  ArmorProficiencies:
+  - Light
+  - Medium
+  - Shields (nonmetal)
+  WeaponProficiencies:
+  - Club
+  - Dagger
+  - Dart
+  - Javelin
+  - Mace
+  - Quarterstaff
+  - Scimitar
+  - Sickle
+  - Sling
+  - Spear
+  ToolProficiencies:
+  - Herbalism Kit
+  SaveProficiencies: 0300000004000000
+  SkillChoices:
+  - Arcana
+  - Animal Handling
+  - Insight
+  - Medicine
+  - Nature
+  - Perception
+  - Religion
+  - Survival
+  SkillChoiceCount: 2
+  Progression:
+  - Level: 1
+    FeaturesGained:
+    - Druidic
+    - Spellcasting
+    IsASILevel: 0
+    SubclassFeature: 
+  - Level: 2
+    FeaturesGained:
+    - Wild Shape
+    - Druid Circle
+    IsASILevel: 0
+    SubclassFeature: Druid Circle
+  - Level: 3
+    FeaturesGained:
+    - 2nd-Level Spells
+    IsASILevel: 0
+    SubclassFeature: 
+  - Level: 4
+    FeaturesGained:
+    - Ability Score Improvement
+    - Wild Shape Improvement
+    IsASILevel: 1
+    SubclassFeature: 
+  - Level: 5
+    FeaturesGained:
+    - 3rd-Level Spells
+    IsASILevel: 0
+    SubclassFeature: 
+  - Level: 6
+    FeaturesGained:
+    - Circle Feature
+    IsASILevel: 0
+    SubclassFeature: Circle Feature
+  - Level: 7
+    FeaturesGained:
+    - 4th-Level Spells
+    IsASILevel: 0
+    SubclassFeature: 
+  - Level: 8
+    FeaturesGained:
+    - Ability Score Improvement
+    - Wild Shape Improvement
+    IsASILevel: 1
+    SubclassFeature: 
+  - Level: 9
+    FeaturesGained:
+    - 5th-Level Spells
+    IsASILevel: 0
+    SubclassFeature: 
+  - Level: 10
+    FeaturesGained:
+    - Circle Feature
+    IsASILevel: 0
+    SubclassFeature: Circle Feature
+  - Level: 11
+    FeaturesGained:
+    - 6th-Level Spells
+    IsASILevel: 0
+    SubclassFeature: 
+  - Level: 12
+    FeaturesGained:
+    - Ability Score Improvement
+    IsASILevel: 1
+    SubclassFeature: 
+  - Level: 13
+    FeaturesGained:
+    - 7th-Level Spells
+    IsASILevel: 0
+    SubclassFeature: 
+  - Level: 14
+    FeaturesGained:
+    - Circle Feature
+    IsASILevel: 0
+    SubclassFeature: Circle Feature
+  - Level: 15
+    FeaturesGained:
+    - 8th-Level Spells
+    IsASILevel: 0
+    SubclassFeature: 
+  - Level: 16
+    FeaturesGained:
+    - Ability Score Improvement
+    IsASILevel: 1
+    SubclassFeature: 
+  - Level: 17
+    FeaturesGained:
+    - 9th-Level Spells
+    IsASILevel: 0
+    SubclassFeature: 
+  - Level: 18
+    FeaturesGained:
+    - Timeless Body
+    - Beast Spells
+    IsASILevel: 0
+    SubclassFeature: 
+  - Level: 19
+    FeaturesGained:
+    - Ability Score Improvement
+    IsASILevel: 1
+    SubclassFeature: 
+  - Level: 20
+    FeaturesGained:
+    - Archdruid
+    IsASILevel: 0
+    SubclassFeature: 
+  MulticlassPrereqs: 04000000

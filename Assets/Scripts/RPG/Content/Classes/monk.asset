@@ -1,0 +1,172 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 53adf33f24ffc204e9dfc62296eedca2, type: 3}
+  m_Name: monk
+  m_EditorClassIdentifier: ForeverEngine::ForeverEngine.RPG.Character.ClassData
+  Id: monk
+  Name: Monk
+  HitDie: 8
+  PrimaryAbilities: 0100000004000000
+  SpellcastingAbility: 4
+  CastingType: 0
+  ArmorProficiencies: []
+  WeaponProficiencies:
+  - Simple
+  - Shortsword
+  ToolProficiencies:
+  - One Artisan Tool or Musical Instrument
+  SaveProficiencies: 0000000001000000
+  SkillChoices:
+  - Acrobatics
+  - Athletics
+  - History
+  - Insight
+  - Religion
+  - Stealth
+  SkillChoiceCount: 2
+  Progression:
+  - Level: 1
+    FeaturesGained:
+    - Unarmored Defense
+    - Martial Arts (d4)
+    IsASILevel: 0
+    SubclassFeature: 
+  - Level: 2
+    FeaturesGained:
+    - Ki (2 points)
+    - Flurry of Blows
+    - Patient Defense
+    - Step of the Wind
+    - Unarmored Movement (+10 ft)
+    IsASILevel: 0
+    SubclassFeature: 
+  - Level: 3
+    FeaturesGained:
+    - Monastic Tradition
+    - Ki (3 points)
+    - Deflect Missiles
+    IsASILevel: 0
+    SubclassFeature: Monastic Tradition
+  - Level: 4
+    FeaturesGained:
+    - Ability Score Improvement
+    - Ki (4 points)
+    - Slow Fall
+    IsASILevel: 1
+    SubclassFeature: 
+  - Level: 5
+    FeaturesGained:
+    - Extra Attack
+    - Ki (5 points)
+    - Stunning Strike
+    - Martial Arts (d6)
+    IsASILevel: 0
+    SubclassFeature: 
+  - Level: 6
+    FeaturesGained:
+    - Ki-Empowered Strikes
+    - Ki (6 points)
+    - Tradition Feature
+    - Unarmored Movement (+15 ft)
+    IsASILevel: 0
+    SubclassFeature: Tradition Feature
+  - Level: 7
+    FeaturesGained:
+    - Evasion
+    - Ki (7 points)
+    - Stillness of Mind
+    IsASILevel: 0
+    SubclassFeature: 
+  - Level: 8
+    FeaturesGained:
+    - Ability Score Improvement
+    - Ki (8 points)
+    IsASILevel: 1
+    SubclassFeature: 
+  - Level: 9
+    FeaturesGained:
+    - Ki (9 points)
+    - Unarmored Movement Improvement
+    IsASILevel: 0
+    SubclassFeature: 
+  - Level: 10
+    FeaturesGained:
+    - Ki (10 points)
+    - Purity of Body
+    - Unarmored Movement (+20 ft)
+    IsASILevel: 0
+    SubclassFeature: 
+  - Level: 11
+    FeaturesGained:
+    - Ki (11 points)
+    - Tradition Feature
+    - Martial Arts (d8)
+    IsASILevel: 0
+    SubclassFeature: Tradition Feature
+  - Level: 12
+    FeaturesGained:
+    - Ability Score Improvement
+    - Ki (12 points)
+    IsASILevel: 1
+    SubclassFeature: 
+  - Level: 13
+    FeaturesGained:
+    - Ki (13 points)
+    - Tongue of the Sun and Moon
+    IsASILevel: 0
+    SubclassFeature: 
+  - Level: 14
+    FeaturesGained:
+    - Ki (14 points)
+    - Diamond Soul
+    - Unarmored Movement (+25 ft)
+    IsASILevel: 0
+    SubclassFeature: 
+  - Level: 15
+    FeaturesGained:
+    - Ki (15 points)
+    - Timeless Body
+    IsASILevel: 0
+    SubclassFeature: 
+  - Level: 16
+    FeaturesGained:
+    - Ability Score Improvement
+    - Ki (16 points)
+    IsASILevel: 1
+    SubclassFeature: 
+  - Level: 17
+    FeaturesGained:
+    - Ki (17 points)
+    - Tradition Feature
+    - Martial Arts (d10)
+    IsASILevel: 0
+    SubclassFeature: Tradition Feature
+  - Level: 18
+    FeaturesGained:
+    - Ki (18 points)
+    - Empty Body
+    - Unarmored Movement (+30 ft)
+    IsASILevel: 0
+    SubclassFeature: 
+  - Level: 19
+    FeaturesGained:
+    - Ability Score Improvement
+    - Ki (19 points)
+    IsASILevel: 1
+    SubclassFeature: 
+  - Level: 20
+    FeaturesGained:
+    - Ki (20 points)
+    - Perfect Self
+    IsASILevel: 0
+    SubclassFeature: 
+  MulticlassPrereqs: 0100000004000000

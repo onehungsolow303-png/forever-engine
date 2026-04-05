@@ -1,0 +1,144 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 53adf33f24ffc204e9dfc62296eedca2, type: 3}
+  m_Name: warrior
+  m_EditorClassIdentifier: ForeverEngine::ForeverEngine.RPG.Character.ClassData
+  Id: warrior
+  Name: Warrior
+  HitDie: 10
+  PrimaryAbilities: 0000000001000000
+  SpellcastingAbility: 3
+  CastingType: 3
+  ArmorProficiencies:
+  - Light
+  - Medium
+  - Heavy
+  - Shields
+  WeaponProficiencies:
+  - Simple
+  - Martial
+  ToolProficiencies: []
+  SaveProficiencies: 0000000002000000
+  SkillChoices:
+  - Acrobatics
+  - Animal Handling
+  - Athletics
+  - History
+  - Insight
+  - Intimidation
+  - Perception
+  - Survival
+  SkillChoiceCount: 2
+  Progression:
+  - Level: 1
+    FeaturesGained:
+    - Fighting Style
+    - Second Wind
+    IsASILevel: 0
+    SubclassFeature: 
+  - Level: 2
+    FeaturesGained:
+    - Action Surge (1 use)
+    IsASILevel: 0
+    SubclassFeature: 
+  - Level: 3
+    FeaturesGained:
+    - Martial Archetype
+    IsASILevel: 0
+    SubclassFeature: Martial Archetype
+  - Level: 4
+    FeaturesGained:
+    - Ability Score Improvement
+    IsASILevel: 1
+    SubclassFeature: 
+  - Level: 5
+    FeaturesGained:
+    - Extra Attack (1)
+    IsASILevel: 0
+    SubclassFeature: 
+  - Level: 6
+    FeaturesGained:
+    - Ability Score Improvement
+    IsASILevel: 1
+    SubclassFeature: 
+  - Level: 7
+    FeaturesGained:
+    - Archetype Feature
+    IsASILevel: 0
+    SubclassFeature: Archetype Feature
+  - Level: 8
+    FeaturesGained:
+    - Ability Score Improvement
+    IsASILevel: 1
+    SubclassFeature: 
+  - Level: 9
+    FeaturesGained:
+    - Indomitable (1 use)
+    IsASILevel: 0
+    SubclassFeature: 
+  - Level: 10
+    FeaturesGained:
+    - Archetype Feature
+    IsASILevel: 0
+    SubclassFeature: Archetype Feature
+  - Level: 11
+    FeaturesGained:
+    - Extra Attack (2)
+    IsASILevel: 0
+    SubclassFeature: 
+  - Level: 12
+    FeaturesGained:
+    - Ability Score Improvement
+    IsASILevel: 1
+    SubclassFeature: 
+  - Level: 13
+    FeaturesGained:
+    - Indomitable (2 uses)
+    IsASILevel: 0
+    SubclassFeature: 
+  - Level: 14
+    FeaturesGained:
+    - Ability Score Improvement
+    IsASILevel: 1
+    SubclassFeature: 
+  - Level: 15
+    FeaturesGained:
+    - Archetype Feature
+    IsASILevel: 0
+    SubclassFeature: Archetype Feature
+  - Level: 16
+    FeaturesGained:
+    - Ability Score Improvement
+    IsASILevel: 1
+    SubclassFeature: 
+  - Level: 17
+    FeaturesGained:
+    - Action Surge (2 uses)
+    - Indomitable (3 uses)
+    IsASILevel: 0
+    SubclassFeature: 
+  - Level: 18
+    FeaturesGained:
+    - Archetype Feature
+    IsASILevel: 0
+    SubclassFeature: Archetype Feature
+  - Level: 19
+    FeaturesGained:
+    - Ability Score Improvement
+    IsASILevel: 1
+    SubclassFeature: 
+  - Level: 20
+    FeaturesGained:
+    - Extra Attack (3)
+    IsASILevel: 0
+    SubclassFeature: 
+  MulticlassPrereqs: 00000000

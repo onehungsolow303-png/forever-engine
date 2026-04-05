@@ -1,0 +1,149 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 53adf33f24ffc204e9dfc62296eedca2, type: 3}
+  m_Name: barbarian
+  m_EditorClassIdentifier: ForeverEngine::ForeverEngine.RPG.Character.ClassData
+  Id: barbarian
+  Name: Barbarian
+  HitDie: 12
+  PrimaryAbilities: 00000000
+  SpellcastingAbility: 0
+  CastingType: 0
+  ArmorProficiencies:
+  - Light
+  - Medium
+  - Shields
+  WeaponProficiencies:
+  - Simple
+  - Martial
+  ToolProficiencies: []
+  SaveProficiencies: 0000000002000000
+  SkillChoices:
+  - Animal Handling
+  - Athletics
+  - Intimidation
+  - Nature
+  - Perception
+  - Survival
+  SkillChoiceCount: 2
+  Progression:
+  - Level: 1
+    FeaturesGained:
+    - Rage (2 uses, +2 damage)
+    - Unarmored Defense
+    IsASILevel: 0
+    SubclassFeature: 
+  - Level: 2
+    FeaturesGained:
+    - Reckless Attack
+    - Danger Sense
+    IsASILevel: 0
+    SubclassFeature: 
+  - Level: 3
+    FeaturesGained:
+    - Primal Path
+    - Rage (3 uses)
+    IsASILevel: 0
+    SubclassFeature: Primal Path
+  - Level: 4
+    FeaturesGained:
+    - Ability Score Improvement
+    IsASILevel: 1
+    SubclassFeature: 
+  - Level: 5
+    FeaturesGained:
+    - Extra Attack
+    - Fast Movement (+10 ft)
+    IsASILevel: 0
+    SubclassFeature: 
+  - Level: 6
+    FeaturesGained:
+    - Path Feature
+    - Rage (4 uses)
+    IsASILevel: 0
+    SubclassFeature: Path Feature
+  - Level: 7
+    FeaturesGained:
+    - Feral Instinct
+    IsASILevel: 0
+    SubclassFeature: 
+  - Level: 8
+    FeaturesGained:
+    - Ability Score Improvement
+    IsASILevel: 1
+    SubclassFeature: 
+  - Level: 9
+    FeaturesGained:
+    - Brutal Critical (1 die)
+    - Rage (+3 damage)
+    IsASILevel: 0
+    SubclassFeature: 
+  - Level: 10
+    FeaturesGained:
+    - Path Feature
+    IsASILevel: 0
+    SubclassFeature: Path Feature
+  - Level: 11
+    FeaturesGained:
+    - Relentless Rage
+    IsASILevel: 0
+    SubclassFeature: 
+  - Level: 12
+    FeaturesGained:
+    - Ability Score Improvement
+    - Rage (5 uses)
+    IsASILevel: 1
+    SubclassFeature: 
+  - Level: 13
+    FeaturesGained:
+    - Brutal Critical (2 dice)
+    IsASILevel: 0
+    SubclassFeature: 
+  - Level: 14
+    FeaturesGained:
+    - Path Feature
+    IsASILevel: 0
+    SubclassFeature: Path Feature
+  - Level: 15
+    FeaturesGained:
+    - Persistent Rage
+    IsASILevel: 0
+    SubclassFeature: 
+  - Level: 16
+    FeaturesGained:
+    - Ability Score Improvement
+    - Rage (+4 damage)
+    IsASILevel: 1
+    SubclassFeature: 
+  - Level: 17
+    FeaturesGained:
+    - Brutal Critical (3 dice)
+    - Rage (6 uses)
+    IsASILevel: 0
+    SubclassFeature: 
+  - Level: 18
+    FeaturesGained:
+    - Indomitable Might
+    IsASILevel: 0
+    SubclassFeature: 
+  - Level: 19
+    FeaturesGained:
+    - Ability Score Improvement
+    IsASILevel: 1
+    SubclassFeature: 
+  - Level: 20
+    FeaturesGained:
+    - Primal Champion
+    - Rage (Unlimited)
+    IsASILevel: 0
+    SubclassFeature: 
+  MulticlassPrereqs: 00000000

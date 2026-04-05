@@ -47,7 +47,7 @@ namespace ForeverEngine.Editor.RPG
                 SpeciesTrait.FeyAncestry | SpeciesTrait.Trance | SpeciesTrait.DarkvisionStandard,
                 new[] { "Common", "Elvish" },
                 new[] { "Longsword", "Shortsword", "Shortbow", "Longbow" },
-                new[] { LoadSpell("phantom_image") }, // Bonus cantrip from wizard list
+                new[] { LoadSpell("minor_illusion") }, // Bonus cantrip from wizard list
                 null
             );
 
@@ -70,7 +70,7 @@ namespace ForeverEngine.Editor.RPG
                 SpeciesTrait.FeyAncestry | SpeciesTrait.Trance | SpeciesTrait.DarkvisionSuperior | SpeciesTrait.SunlightSensitivity | SpeciesTrait.DrowMagic,
                 new[] { "Common", "Elvish", "Undercommon" },
                 new[] { "Rapier", "Shortsword", "Hand Crossbow" },
-                new[] { LoadSpell("floating_lights") }, // Dancing Lights innate
+                new[] { LoadSpell("dancing_lights") }, // Dancing Lights innate
                 null
             );
 
@@ -151,7 +151,7 @@ namespace ForeverEngine.Editor.RPG
                 SpeciesTrait.HellishResistance | SpeciesTrait.InfernalLegacy | SpeciesTrait.DarkvisionStandard,
                 new[] { "Common", "Infernal" },
                 System.Array.Empty<string>(),
-                new[] { LoadSpell("divine_manifestation") }, // Thaumaturgy innate
+                new[] { LoadSpell("thaumaturgy") }, // Thaumaturgy innate
                 null
             ));
 
@@ -174,7 +174,7 @@ namespace ForeverEngine.Editor.RPG
                 SpeciesTrait.GnomeCunning | SpeciesTrait.MinorIllusion | SpeciesTrait.DarkvisionStandard,
                 new[] { "Common", "Gnomish" },
                 System.Array.Empty<string>(),
-                new[] { LoadSpell("phantom_image") }, // Minor Illusion innate
+                new[] { LoadSpell("minor_illusion") }, // Minor Illusion innate
                 null
             );
 

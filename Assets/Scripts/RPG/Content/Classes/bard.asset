@@ -1,0 +1,165 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 53adf33f24ffc204e9dfc62296eedca2, type: 3}
+  m_Name: bard
+  m_EditorClassIdentifier: ForeverEngine::ForeverEngine.RPG.Character.ClassData
+  Id: bard
+  Name: Bard
+  HitDie: 8
+  PrimaryAbilities: 05000000
+  SpellcastingAbility: 5
+  CastingType: 1
+  ArmorProficiencies:
+  - Light
+  WeaponProficiencies:
+  - Simple
+  - Hand Crossbow
+  - Longsword
+  - Rapier
+  - Shortsword
+  ToolProficiencies:
+  - Three Musical Instruments
+  SaveProficiencies: 0100000005000000
+  SkillChoices:
+  - Acrobatics
+  - Animal Handling
+  - Arcana
+  - Athletics
+  - Deception
+  - History
+  - Insight
+  - Intimidation
+  - Investigation
+  - Medicine
+  - Nature
+  - Perception
+  - Performance
+  - Persuasion
+  - Religion
+  - Sleight of Hand
+  - Stealth
+  - Survival
+  SkillChoiceCount: 3
+  Progression:
+  - Level: 1
+    FeaturesGained:
+    - Spellcasting
+    - Bardic Inspiration (d6)
+    IsASILevel: 0
+    SubclassFeature: 
+  - Level: 2
+    FeaturesGained:
+    - Jack of All Trades
+    - Song of Rest (d6)
+    IsASILevel: 0
+    SubclassFeature: 
+  - Level: 3
+    FeaturesGained:
+    - Bard College
+    - Expertise
+    IsASILevel: 0
+    SubclassFeature: Bard College
+  - Level: 4
+    FeaturesGained:
+    - Ability Score Improvement
+    IsASILevel: 1
+    SubclassFeature: 
+  - Level: 5
+    FeaturesGained:
+    - Bardic Inspiration (d8)
+    - Font of Inspiration
+    IsASILevel: 0
+    SubclassFeature: 
+  - Level: 6
+    FeaturesGained:
+    - Countercharm
+    - College Feature
+    IsASILevel: 0
+    SubclassFeature: College Feature
+  - Level: 7
+    FeaturesGained:
+    - 4th-Level Spells
+    IsASILevel: 0
+    SubclassFeature: 
+  - Level: 8
+    FeaturesGained:
+    - Ability Score Improvement
+    IsASILevel: 1
+    SubclassFeature: 
+  - Level: 9
+    FeaturesGained:
+    - Song of Rest (d8)
+    - 5th-Level Spells
+    IsASILevel: 0
+    SubclassFeature: 
+  - Level: 10
+    FeaturesGained:
+    - Bardic Inspiration (d10)
+    - Expertise
+    - Magical Secrets
+    IsASILevel: 0
+    SubclassFeature: 
+  - Level: 11
+    FeaturesGained:
+    - 6th-Level Spells
+    IsASILevel: 0
+    SubclassFeature: 
+  - Level: 12
+    FeaturesGained:
+    - Ability Score Improvement
+    IsASILevel: 1
+    SubclassFeature: 
+  - Level: 13
+    FeaturesGained:
+    - Song of Rest (d10)
+    - 7th-Level Spells
+    IsASILevel: 0
+    SubclassFeature: 
+  - Level: 14
+    FeaturesGained:
+    - Magical Secrets
+    - College Feature
+    IsASILevel: 0
+    SubclassFeature: College Feature
+  - Level: 15
+    FeaturesGained:
+    - Bardic Inspiration (d12)
+    - 8th-Level Spells
+    IsASILevel: 0
+    SubclassFeature: 
+  - Level: 16
+    FeaturesGained:
+    - Ability Score Improvement
+    IsASILevel: 1
+    SubclassFeature: 
+  - Level: 17
+    FeaturesGained:
+    - Song of Rest (d12)
+    - 9th-Level Spells
+    IsASILevel: 0
+    SubclassFeature: 
+  - Level: 18
+    FeaturesGained:
+    - Magical Secrets
+    IsASILevel: 0
+    SubclassFeature: 
+  - Level: 19
+    FeaturesGained:
+    - Ability Score Improvement
+    IsASILevel: 1
+    SubclassFeature: 
+  - Level: 20
+    FeaturesGained:
+    - Superior Inspiration
+    IsASILevel: 0
+    SubclassFeature: 
+  MulticlassPrereqs: 05000000

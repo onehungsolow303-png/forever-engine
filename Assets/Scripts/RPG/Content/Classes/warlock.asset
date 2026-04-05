@@ -1,0 +1,143 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 53adf33f24ffc204e9dfc62296eedca2, type: 3}
+  m_Name: warlock
+  m_EditorClassIdentifier: ForeverEngine::ForeverEngine.RPG.Character.ClassData
+  Id: warlock
+  Name: Warlock
+  HitDie: 8
+  PrimaryAbilities: 05000000
+  SpellcastingAbility: 5
+  CastingType: 4
+  ArmorProficiencies:
+  - Light
+  WeaponProficiencies:
+  - Simple
+  ToolProficiencies: []
+  SaveProficiencies: 0400000005000000
+  SkillChoices:
+  - Arcana
+  - Deception
+  - History
+  - Intimidation
+  - Investigation
+  - Nature
+  - Religion
+  SkillChoiceCount: 2
+  Progression:
+  - Level: 1
+    FeaturesGained:
+    - Otherworldly Patron
+    - Pact Magic
+    IsASILevel: 0
+    SubclassFeature: Otherworldly Patron
+  - Level: 2
+    FeaturesGained:
+    - Eldritch Invocations (2)
+    IsASILevel: 0
+    SubclassFeature: 
+  - Level: 3
+    FeaturesGained:
+    - Pact Boon
+    IsASILevel: 0
+    SubclassFeature: 
+  - Level: 4
+    FeaturesGained:
+    - Ability Score Improvement
+    IsASILevel: 1
+    SubclassFeature: 
+  - Level: 5
+    FeaturesGained:
+    - Eldritch Invocations (3)
+    - 3rd-Level Pact Slots
+    IsASILevel: 0
+    SubclassFeature: 
+  - Level: 6
+    FeaturesGained:
+    - Patron Feature
+    IsASILevel: 0
+    SubclassFeature: Patron Feature
+  - Level: 7
+    FeaturesGained:
+    - Eldritch Invocations (4)
+    - 4th-Level Pact Slots
+    IsASILevel: 0
+    SubclassFeature: 
+  - Level: 8
+    FeaturesGained:
+    - Ability Score Improvement
+    IsASILevel: 1
+    SubclassFeature: 
+  - Level: 9
+    FeaturesGained:
+    - Eldritch Invocations (5)
+    - 5th-Level Pact Slots
+    IsASILevel: 0
+    SubclassFeature: 
+  - Level: 10
+    FeaturesGained:
+    - Patron Feature
+    IsASILevel: 0
+    SubclassFeature: Patron Feature
+  - Level: 11
+    FeaturesGained:
+    - Mystic Arcanum (6th level)
+    IsASILevel: 0
+    SubclassFeature: 
+  - Level: 12
+    FeaturesGained:
+    - Ability Score Improvement
+    - Eldritch Invocations (6)
+    IsASILevel: 1
+    SubclassFeature: 
+  - Level: 13
+    FeaturesGained:
+    - Mystic Arcanum (7th level)
+    IsASILevel: 0
+    SubclassFeature: 
+  - Level: 14
+    FeaturesGained:
+    - Patron Feature
+    IsASILevel: 0
+    SubclassFeature: Patron Feature
+  - Level: 15
+    FeaturesGained:
+    - Mystic Arcanum (8th level)
+    - Eldritch Invocations (7)
+    IsASILevel: 0
+    SubclassFeature: 
+  - Level: 16
+    FeaturesGained:
+    - Ability Score Improvement
+    IsASILevel: 1
+    SubclassFeature: 
+  - Level: 17
+    FeaturesGained:
+    - Mystic Arcanum (9th level)
+    IsASILevel: 0
+    SubclassFeature: 
+  - Level: 18
+    FeaturesGained:
+    - Eldritch Invocations (8)
+    IsASILevel: 0
+    SubclassFeature: 
+  - Level: 19
+    FeaturesGained:
+    - Ability Score Improvement
+    IsASILevel: 1
+    SubclassFeature: 
+  - Level: 20
+    FeaturesGained:
+    - Eldritch Master
+    IsASILevel: 0
+    SubclassFeature: 
+  MulticlassPrereqs: 05000000

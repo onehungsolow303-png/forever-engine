@@ -1,0 +1,157 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 53adf33f24ffc204e9dfc62296eedca2, type: 3}
+  m_Name: rogue
+  m_EditorClassIdentifier: ForeverEngine::ForeverEngine.RPG.Character.ClassData
+  Id: rogue
+  Name: Rogue
+  HitDie: 8
+  PrimaryAbilities: 01000000
+  SpellcastingAbility: 3
+  CastingType: 3
+  ArmorProficiencies:
+  - Light
+  WeaponProficiencies:
+  - Simple
+  - Hand Crossbow
+  - Longsword
+  - Rapier
+  - Shortsword
+  ToolProficiencies:
+  - Thieves' Tools
+  SaveProficiencies: 0100000003000000
+  SkillChoices:
+  - Acrobatics
+  - Athletics
+  - Deception
+  - Insight
+  - Intimidation
+  - Investigation
+  - Perception
+  - Performance
+  - Persuasion
+  - Sleight of Hand
+  - Stealth
+  SkillChoiceCount: 4
+  Progression:
+  - Level: 1
+    FeaturesGained:
+    - Expertise
+    - Sneak Attack (1d6)
+    - Thieves' Cant
+    IsASILevel: 0
+    SubclassFeature: 
+  - Level: 2
+    FeaturesGained:
+    - Cunning Action
+    IsASILevel: 0
+    SubclassFeature: 
+  - Level: 3
+    FeaturesGained:
+    - Roguish Archetype
+    - Sneak Attack (2d6)
+    IsASILevel: 0
+    SubclassFeature: Roguish Archetype
+  - Level: 4
+    FeaturesGained:
+    - Ability Score Improvement
+    IsASILevel: 1
+    SubclassFeature: 
+  - Level: 5
+    FeaturesGained:
+    - Uncanny Dodge
+    - Sneak Attack (3d6)
+    IsASILevel: 0
+    SubclassFeature: 
+  - Level: 6
+    FeaturesGained:
+    - Expertise
+    IsASILevel: 0
+    SubclassFeature: 
+  - Level: 7
+    FeaturesGained:
+    - Evasion
+    - Sneak Attack (4d6)
+    IsASILevel: 0
+    SubclassFeature: 
+  - Level: 8
+    FeaturesGained:
+    - Ability Score Improvement
+    IsASILevel: 1
+    SubclassFeature: 
+  - Level: 9
+    FeaturesGained:
+    - Archetype Feature
+    - Sneak Attack (5d6)
+    IsASILevel: 0
+    SubclassFeature: Archetype Feature
+  - Level: 10
+    FeaturesGained:
+    - Ability Score Improvement
+    IsASILevel: 1
+    SubclassFeature: 
+  - Level: 11
+    FeaturesGained:
+    - Reliable Talent
+    - Sneak Attack (6d6)
+    IsASILevel: 0
+    SubclassFeature: 
+  - Level: 12
+    FeaturesGained:
+    - Ability Score Improvement
+    IsASILevel: 1
+    SubclassFeature: 
+  - Level: 13
+    FeaturesGained:
+    - Archetype Feature
+    - Sneak Attack (7d6)
+    IsASILevel: 0
+    SubclassFeature: Archetype Feature
+  - Level: 14
+    FeaturesGained:
+    - Blindsense
+    IsASILevel: 0
+    SubclassFeature: 
+  - Level: 15
+    FeaturesGained:
+    - Slippery Mind
+    - Sneak Attack (8d6)
+    IsASILevel: 0
+    SubclassFeature: 
+  - Level: 16
+    FeaturesGained:
+    - Ability Score Improvement
+    IsASILevel: 1
+    SubclassFeature: 
+  - Level: 17
+    FeaturesGained:
+    - Archetype Feature
+    - Sneak Attack (9d6)
+    IsASILevel: 0
+    SubclassFeature: Archetype Feature
+  - Level: 18
+    FeaturesGained:
+    - Elusive
+    IsASILevel: 0
+    SubclassFeature: 
+  - Level: 19
+    FeaturesGained:
+    - Ability Score Improvement
+    IsASILevel: 1
+    SubclassFeature: 
+  - Level: 20
+    FeaturesGained:
+    - Stroke of Luck
+    - Sneak Attack (10d6)
+    IsASILevel: 0
+    SubclassFeature: 
+  MulticlassPrereqs: 01000000
