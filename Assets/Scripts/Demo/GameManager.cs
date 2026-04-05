@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using ForeverEngine.MonoBehaviour.CharacterCreation;
+using ForeverEngine.RPG.Character;
 
 namespace ForeverEngine.Demo
 {
@@ -10,9 +11,11 @@ namespace ForeverEngine.Demo
 
         public PlayerData Player { get; private set; }
         public CharacterData CharacterData { get; private set; }
+        public CharacterSheet Character { get; set; }
         public int CurrentSeed { get; private set; } = 42;
         public string PendingEncounterId { get; set; }
         public string PendingLocationId { get; set; }
+        public string PendingMapDataPath { get; set; }
         public bool LastBattleWon { get; set; }
         public int LastBattleGoldEarned { get; set; }
         public int LastBattleXPEarned { get; set; }
@@ -43,6 +46,30 @@ namespace ForeverEngine.Demo
             Player        = PlayerData.FromCharacterData(characterData);
             Player.DiscoveredLocations.Add("camp");
             SceneManager.LoadScene("Overworld");
+        }
+
+        /// <summary>
+        /// Called by the premade character selection buttons.
+        /// Creates PlayerData from the CharacterSheet, then loads Overworld.
+        /// </summary>
+        public void StartGameWithSheet(CharacterSheet sheet, int seed = 0)
+        {
+            Character     = sheet;
+            CurrentSeed   = seed > 0 ? seed : Random.Range(1, 99999);
+            Player        = new PlayerData { HexQ = 2, HexR = 2 };
+            Player.DiscoveredLocations.Add("camp");
+            SyncPlayerFromCharacter();
+            SceneManager.LoadScene("Overworld");
+        }
+
+        /// <summary>
+        /// Copy CharacterSheet state into PlayerData for backward compatibility.
+        /// Call after character creation, level up, equip changes, and rest.
+        /// </summary>
+        public void SyncPlayerFromCharacter()
+        {
+            if (Character == null || Player == null) return;
+            RPGBridge.SyncPlayerFromCharacter(Character, Player);
         }
 
         public void EnterBattle(string encounterId)
