@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEditor;
 using UnityEditor.SceneManagement;
+using System.IO;
 using ForeverEngine.Demo;
 using ForeverEngine.Demo.UI;
 using ForeverEngine.Demo.Overworld;
@@ -120,6 +121,58 @@ namespace ForeverEngine.Editor
 
             EditorSceneManager.SaveScene(scene, "Assets/Scenes/BattleMap.unity");
             Debug.Log("[DemoSceneBuilder] BattleMap scene created");
+        }
+
+        /// <summary>
+        /// Opens BattleMap scene, enters Play mode, waits for the battle to
+        /// render, captures a screenshot, then exits.  Callable from batch mode.
+        /// </summary>
+        [MenuItem("Forever Engine/Playtest Capture")]
+        public static void PlaytestCapture()
+        {
+            string screenshotPath = Path.GetFullPath(
+                Path.Combine(Application.dataPath, "..", "tests", "playtest-battle.png"));
+
+            // Ensure tests directory exists
+            Directory.CreateDirectory(Path.GetDirectoryName(screenshotPath));
+
+            // Open BattleMap scene
+            EditorSceneManager.OpenScene("Assets/Scenes/BattleMap.unity");
+
+            int frameCount = 0;
+            bool registered = false;
+
+            void OnUpdate()
+            {
+                if (!EditorApplication.isPlaying) return;
+                frameCount++;
+
+                if (frameCount == 60)
+                {
+                    ScreenCapture.CaptureScreenshot(screenshotPath);
+                    Debug.Log($"[PlaytestCapture] Screenshot saved to: {screenshotPath}");
+                }
+
+                if (frameCount == 90)
+                {
+                    EditorApplication.isPlaying = false;
+                    EditorApplication.update -= OnUpdate;
+                    registered = false;
+                    Debug.Log("[PlaytestCapture] Done. Exiting play mode.");
+
+                    if (Application.isBatchMode)
+                        EditorApplication.Exit(0);
+                }
+            }
+
+            if (!registered)
+            {
+                EditorApplication.update += OnUpdate;
+                registered = true;
+            }
+
+            EditorApplication.isPlaying = true;
+            Debug.Log("[PlaytestCapture] Entering play mode on BattleMap...");
         }
     }
 }
