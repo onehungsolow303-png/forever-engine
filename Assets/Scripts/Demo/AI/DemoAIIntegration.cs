@@ -25,6 +25,10 @@ namespace ForeverEngine.Demo.AI
         private float _combatTimeAccum;
         private float _exploreTimeAccum;
         private bool _inCombat;
+        private int _encountersSinceLastSave;
+
+        [System.Serializable]
+        private class QTableWrapper { public float[] values; }
 
         private void Awake()
         {
@@ -288,6 +292,32 @@ namespace ForeverEngine.Demo.AI
             return baseData;
         }
 
+        // === Q-Table Persistence ===
+        public float[] LoadCombatQTable()
+        {
+            var mem = MemoryManager.Instance?.LongTerm;
+            if (mem == null) return null;
+            string json = mem.Get("combat_qtable", null);
+            if (string.IsNullOrEmpty(json)) return null;
+            var wrapper = UnityEngine.JsonUtility.FromJson<QTableWrapper>(json);
+            return wrapper?.values;
+        }
+
+        public void SaveCombatQTable(float[] table)
+        {
+            if (table == null) return;
+            var mem = MemoryManager.Instance?.LongTerm;
+            if (mem == null) return;
+            var wrapper = new QTableWrapper { values = table };
+            mem.Set("combat_qtable", UnityEngine.JsonUtility.ToJson(wrapper));
+            _encountersSinceLastSave++;
+            if (_encountersSinceLastSave >= 3)
+            {
+                MemoryManager.Instance.SaveLongTerm();
+                _encountersSinceLastSave = 0;
+            }
+        }
+
         // === Debug info for HUD ===
         public string GetAIStatusText()
         {
@@ -303,6 +333,8 @@ namespace ForeverEngine.Demo.AI
             if (profile != null)
                 text += $"Style: {profile.GetPrimaryArchetype()}\n";
             text += $"K/D: {_totalKills}/{_totalDeaths} | Encounters: {_encounterCount}";
+            string hasQTable = LoadCombatQTable() != null ? "Active" : "New";
+            text += $"\nQ-Learning: {hasQTable}";
             return text;
         }
     }

@@ -78,7 +78,7 @@ namespace ForeverEngine.Demo.Battle
             Demo.AI.DemoAIIntegration.Instance?.OnCombatStarted(encId);
 
             // Initialize Q-learning brains for each enemy
-            float[] savedTable = null; // Will load from LTM in Task 3
+            float[] savedTable = Demo.AI.DemoAIIntegration.Instance?.LoadCombatQTable();
             foreach (var c in Combatants)
             {
                 if (!c.IsPlayer && c.IsAlive)
@@ -358,6 +358,11 @@ namespace ForeverEngine.Demo.Battle
             {
                 float endReward = PlayerWon ? -0.5f : 0.5f;
                 foreach (var b in _brains.Values) b.OnEpisodeEnd(endReward);
+
+                // Save Q-table to LTM
+                var firstBrain = _brains.Values.FirstOrDefault();
+                if (firstBrain != null)
+                    Demo.AI.DemoAIIntegration.Instance?.SaveCombatQTable(firstBrain.SaveQTable());
             }
         }
 
