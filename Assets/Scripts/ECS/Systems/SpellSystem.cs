@@ -1,6 +1,7 @@
 using Unity.Entities;
 using Unity.Collections;
 using Unity.Burst;
+using Unity.Mathematics;
 using ForeverEngine.ECS.Components;
 using ForeverEngine.ECS.Utility;
 
@@ -97,7 +98,7 @@ namespace ForeverEngine.ECS.Systems
                 state.EntityManager.HasComponent<StatsComponent>(request.ValueRO.Target))
             {
                 var targetStats = state.EntityManager.GetComponentData<StatsComponent>(request.ValueRO.Target);
-                targetStats.HP = UnityEngine.Mathf.Max(0, targetStats.HP - damage);
+                targetStats.HP = math.max(0, targetStats.HP - damage);
                 ecb.SetComponent(request.ValueRO.Target, targetStats);
             }
 
