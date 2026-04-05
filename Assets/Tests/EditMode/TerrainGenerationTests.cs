@@ -11,7 +11,7 @@ namespace ForeverEngine.Tests
         [Test] public void PerlinNoise_Deterministic() { PerlinNoise.Seed(42); float a = PerlinNoise.Octave(5f, 5f, 4); PerlinNoise.Seed(42); float b = PerlinNoise.Octave(5f, 5f, 4); Assert.AreEqual(a, b, 0.0001f); }
         [Test] public void TerrainGenerator_ProducesWalkable()
         {
-            var req = new GenerationRequest { Width = 64, Height = 64, Seed = 42 };
+            var req = new MapGenerationRequest { Width = 64, Height = 64, Seed = 42 };
             var profile = MapProfile.Get("dungeon");
             var result = TerrainGenerator.Generate(req, profile);
             int walkable = 0; for (int i = 0; i < result.Walkability.Length; i++) if (result.Walkability[i]) walkable++;

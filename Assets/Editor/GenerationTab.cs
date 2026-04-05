@@ -30,7 +30,7 @@ namespace ForeverEngine.Editor
             if (GUILayout.Button("Generate Map", GUILayout.Height(30)))
             {
                 _status = "Generating...";
-                var request = new GenerationRequest
+                var request = new MapGenerationRequest
                 {
                     MapType = _mapType, Biome = _biome,
                     Width = _width, Height = _height, Seed = _seed,

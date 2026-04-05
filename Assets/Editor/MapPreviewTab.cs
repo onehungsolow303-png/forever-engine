@@ -15,7 +15,7 @@ namespace ForeverEngine.Editor
 
             if (GUILayout.Button("Generate Preview (64x64 dungeon)"))
             {
-                var req = new GenerationRequest { MapType = "dungeon", Width = 64, Height = 64, Seed = Random.Range(1, 99999), PartyLevel = 3, PartySize = 4 };
+                var req = new MapGenerationRequest { MapType = "dungeon", Width = 64, Height = 64, Seed = Random.Range(1, 99999), PartyLevel = 3, PartySize = 4 };
                 var result = PipelineCoordinator.Generate(req);
                 if (result.Success) _previewTexture = BuildPreview(result, 64, 64);
                 else Debug.LogWarning($"Preview failed: {result.Error}");

@@ -5,8 +5,8 @@ namespace ForeverEngine.Tests
 {
     public class GenerationDataTests
     {
-        [Test] public void GenerationRequest_Valid() { var req = new GenerationRequest(); Assert.IsTrue(req.Validate(out _)); }
-        [Test] public void GenerationRequest_InvalidWidth() { var req = new GenerationRequest { Width = 10 }; Assert.IsFalse(req.Validate(out string err)); Assert.IsTrue(err.Contains("Width")); }
+        [Test] public void MapGenerationRequest_Valid() { var req = new MapGenerationRequest(); Assert.IsTrue(req.Validate(out _)); }
+        [Test] public void MapGenerationRequest_InvalidWidth() { var req = new MapGenerationRequest { Width = 10 }; Assert.IsFalse(req.Validate(out string err)); Assert.IsTrue(err.Contains("Width")); }
         [Test] public void MapProfile_DungeonExists() { var p = MapProfile.Get("dungeon"); Assert.IsNotNull(p); Assert.AreEqual("dungeon", p.Id); Assert.AreEqual(MapFamily.Dungeon, p.Family); }
         [Test] public void MapProfile_UnknownReturnsDungeon() { var p = MapProfile.Get("nonexistent"); Assert.AreEqual("dungeon", p.Id); }
         [Test] public void GameTables_XPBudget_Scales() { Assert.AreEqual(300, GameTables.GetXPBudget(1, 4)); Assert.Greater(GameTables.GetXPBudget(10, 4), GameTables.GetXPBudget(1, 4)); }
