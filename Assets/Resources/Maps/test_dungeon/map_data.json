@@ -1,0 +1,45 @@
+{
+  "config": {
+    "width": 8,
+    "height": 8,
+    "map_type": "dungeon",
+    "biome": "cave",
+    "seed": 42,
+    "schema_version": "1.0.0"
+  },
+  "z_levels": [
+    {
+      "z": 0,
+      "terrain_png": "z_0.png",
+      "walkability": [
+        0,0,0,0,0,0,0,0,
+        0,1,1,1,1,1,1,0,
+        0,1,1,1,1,1,1,0,
+        0,1,1,1,1,1,1,0,
+        0,1,1,1,1,1,1,0,
+        0,1,1,1,1,1,1,0,
+        0,1,1,1,1,1,1,0,
+        0,0,0,0,0,0,0,0
+      ],
+      "entities": []
+    }
+  ],
+  "transitions": [],
+  "spawns": [
+    {
+      "name": "Player",
+      "x": 2, "y": 2, "z": 0,
+      "token_type": "player",
+      "ai_behavior": "static",
+      "stats": {"hp": 20, "ac": 14, "strength": 14, "dexterity": 12, "speed": 6, "atk_dice": "1d8+2"}
+    },
+    {
+      "name": "Goblin",
+      "x": 5, "y": 5, "z": 0,
+      "token_type": "enemy",
+      "ai_behavior": "chase",
+      "stats": {"hp": 7, "ac": 12, "strength": 10, "dexterity": 14, "speed": 6, "atk_dice": "1d6+1"}
+    }
+  ],
+  "labels": []
+}
