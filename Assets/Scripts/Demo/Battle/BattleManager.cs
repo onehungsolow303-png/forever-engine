@@ -22,6 +22,7 @@ namespace ForeverEngine.Demo.Battle
         private Encounters.EncounterData _encounterData;
         private BattleRenderer _renderer;
         private Dictionary<BattleCombatant, CombatBrain> _brains = new();
+        private CombatIntelligence _neuralBrain;
 
         private void Awake() => Instance = this;
 
@@ -83,6 +84,14 @@ namespace ForeverEngine.Demo.Battle
             {
                 if (!c.IsPlayer && c.IsAlive)
                     _brains[c] = new CombatBrain(savedTable, seed: (int)_rngSeed + c.X * 100 + c.Y);
+            }
+
+            // Create neural intelligence if InferenceEngine exists
+            if (ForeverEngine.AI.Inference.InferenceEngine.Instance != null)
+            {
+                var go = new GameObject("CombatIntelligence");
+                go.transform.SetParent(transform);
+                _neuralBrain = go.AddComponent<CombatIntelligence>();
             }
 
             // Create visual renderer
@@ -182,7 +191,20 @@ namespace ForeverEngine.Demo.Battle
             }
 
             int aliveAllies = Combatants.Count(c => !c.IsPlayer && c.IsAlive && c != ai);
-            var action = brain.Decide(ai, player, aliveAllies, ai.Behavior ?? "chase");
+            CombatBrain.Action action;
+            if (_neuralBrain != null && ForeverEngine.AI.Inference.InferenceEngine.Instance?.IsAvailable == true)
+            {
+                _neuralBrain.Configure(ai, brain);
+                _neuralBrain.SetBattleContext(player, aliveAllies, ai.Behavior ?? "chase");
+                action = _neuralBrain.DecideAction();
+                // Keep Q-table updated even when using neural path
+                if (_neuralBrain.UsingNeural)
+                    brain.Decide(ai, player, aliveAllies, ai.Behavior ?? "chase");
+            }
+            else
+            {
+                action = brain.Decide(ai, player, aliveAllies, ai.Behavior ?? "chase");
+            }
 
             switch (action)
             {

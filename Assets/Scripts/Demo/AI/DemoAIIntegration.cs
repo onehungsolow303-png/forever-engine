@@ -117,6 +117,11 @@ namespace ForeverEngine.Demo.AI
                     Importance = 0.5f
                 });
             }
+
+            // Attempt to load neural combat model if not already loaded
+            var engine = ForeverEngine.AI.Inference.InferenceEngine.Instance;
+            if (engine != null && !engine.IsAvailable)
+                engine.LoadModel("Models/combat_decision.onnx");
         }
 
         // === Called by BattleManager when player attacks ===
@@ -333,8 +338,9 @@ namespace ForeverEngine.Demo.AI
             if (profile != null)
                 text += $"Style: {profile.GetPrimaryArchetype()}\n";
             text += $"K/D: {_totalKills}/{_totalDeaths} | Encounters: {_encounterCount}";
-            string hasQTable = LoadCombatQTable() != null ? "Active" : "New";
-            text += $"\nQ-Learning: {hasQTable}";
+            var engine = ForeverEngine.AI.Inference.InferenceEngine.Instance;
+            string aiMode = engine != null && engine.IsAvailable ? "Neural+QL" : (LoadCombatQTable() != null ? "Q-Learning" : "New");
+            text += $"\nAI Brain: {aiMode}";
             return text;
         }
     }
