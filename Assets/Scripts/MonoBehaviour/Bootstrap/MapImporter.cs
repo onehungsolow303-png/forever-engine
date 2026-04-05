@@ -4,6 +4,7 @@ using Unity.Collections;
 using Unity.Mathematics;
 using System.IO;
 using ForeverEngine.ECS.Components;
+using ForeverEngine.ECS.Data;
 using ForeverEngine.ECS.Systems;
 
 namespace ForeverEngine.MonoBehaviour.Bootstrap
@@ -106,10 +107,16 @@ namespace ForeverEngine.MonoBehaviour.Bootstrap
                 CurrentZ = 0
             });
 
+            // Initialize MapDataStore with NativeArrays for job system access
+            var store = new MapDataStore();
+            store.Initialize(_mapData.config.width, _mapData.config.height);
+
             // Load terrain textures and walkability per z-level
             foreach (var zLevel in _mapData.z_levels)
             {
                 LoadZLevel(zLevel, dir);
+                if (zLevel.walkability != null)
+                    store.LoadWalkability(zLevel.z, zLevel.walkability);
             }
 
             // Spawn creature entities
