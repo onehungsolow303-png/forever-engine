@@ -1,9 +1,15 @@
 using ForeverEngine.ECS.Utility;
+using ForeverEngine.RPG.Character;
+using ForeverEngine.RPG.Combat;
+using ForeverEngine.RPG.Data;
+using ForeverEngine.RPG.Enums;
+using ForeverEngine.RPG.Items;
 
 namespace ForeverEngine.Demo.Battle
 {
     public class BattleCombatant
     {
+        // === Core fields (unchanged) ===
         public string Name;
         public int X, Y;
         public int HP, MaxHP, AC;
@@ -11,10 +17,25 @@ namespace ForeverEngine.Demo.Battle
         public int AtkCount, AtkSides, AtkBonus;
         public string Behavior;
         public bool IsPlayer;
-        public bool IsAlive => HP > 0;
+        public bool IsAlive => HP > 0 || (IsPlayer && DeathSaves != null && DeathSaves.IsActive);
         public int MovementRemaining;
         public bool HasAction;
         public int InitiativeRoll;
+
+        // === RPG Integration fields ===
+        public CharacterSheet Sheet;
+        public ConditionManager Conditions = new ConditionManager();
+        public DeathSaveTracker DeathSaves;
+        public ConcentrationTracker Concentration;
+
+        // Damage type info for the resolver pipeline
+        public DamageType Resistances;
+        public DamageType Vulnerabilities;
+        public DamageType Immunities;
+        public DamageType AttackDamageType = DamageType.Slashing;
+
+        // Temp HP (tracked here for non-sheet combatants; sheet combatants use Sheet.TempHP)
+        public int TempHP;
 
         public void RollInitiative(ref uint seed)
         {
@@ -24,8 +45,34 @@ namespace ForeverEngine.Demo.Battle
         public int RollAttack(ref uint seed) => DiceRoller.Roll(1, 20, 0, ref seed) + DiceRoller.AbilityModifier(Strength);
         public int RollDamage(ref uint seed) => DiceRoller.Roll(AtkCount, AtkSides, AtkBonus, ref seed);
 
-        public void TakeDamage(int amount) { HP = System.Math.Max(0, HP - amount); }
-        public void StartTurn() { MovementRemaining = Speed; HasAction = true; }
+        /// <summary>
+        /// Apply raw HP damage (after resistance/tempHP already resolved by DamageResolver).
+        /// </summary>
+        public void TakeDamage(int amount)
+        {
+            HP = System.Math.Max(0, HP - amount);
+            if (Sheet != null) Sheet.HP = HP;
+        }
+
+        /// <summary>
+        /// Apply healing. Resets death saves if revived from 0 HP.
+        /// </summary>
+        public void Heal(int amount)
+        {
+            bool wasAtZero = HP <= 0;
+            HP = System.Math.Min(MaxHP, HP + amount);
+            if (Sheet != null) Sheet.HP = HP;
+            if (wasAtZero && HP > 0 && DeathSaves != null)
+                DeathSaves.Reset();
+        }
+        public void StartTurn()
+        {
+            MovementRemaining = Speed;
+            HasAction = true;
+            // Tick condition durations at start of this combatant's turn
+            if (Conditions != null)
+                Conditions.TickDurations();
+        }
 
         public static BattleCombatant FromPlayer(PlayerData data)
         {
@@ -47,7 +94,42 @@ namespace ForeverEngine.Demo.Battle
                 Name = def.Name, X = x, Y = y, IsPlayer = false,
                 HP = def.HP, MaxHP = def.HP, AC = def.AC,
                 Strength = def.Str, Dexterity = def.Dex, Speed = def.Spd,
-                AtkCount = c, AtkSides = s, AtkBonus = b, Behavior = def.Behavior
+                AtkCount = c, AtkSides = s, AtkBonus = b, Behavior = def.Behavior,
+                Conditions = new ConditionManager(),
+                Resistances = def.Resistances,
+                Vulnerabilities = def.Vulnerabilities,
+                Immunities = def.Immunities,
+                AttackDamageType = def.AttackDamageType
+            };
+        }
+
+        /// <summary>
+        /// Create a BattleCombatant from a full CharacterSheet (player).
+        /// </summary>
+        public static BattleCombatant FromCharacterSheet(CharacterSheet sheet)
+        {
+            var snap = sheet.ToStatsSnapshot();
+            return new BattleCombatant
+            {
+                Name = sheet.Name,
+                X = 1, Y = 1,
+                IsPlayer = true,
+                Sheet = sheet,
+                HP = snap.HP,
+                MaxHP = snap.MaxHP,
+                AC = snap.AC,
+                Strength = snap.Strength,
+                Dexterity = snap.Dexterity,
+                Speed = snap.Speed,
+                AtkCount = snap.AtkDiceCount,
+                AtkSides = snap.AtkDiceSides,
+                AtkBonus = snap.AtkDiceBonus,
+                Behavior = "player",
+                Conditions = sheet.Conditions,
+                DeathSaves = sheet.DeathSaves,
+                Concentration = sheet.Concentration,
+                TempHP = sheet.TempHP,
+                AttackDamageType = sheet.MainHand != null ? sheet.MainHand.Type : DamageType.Bludgeoning
             };
         }
     }

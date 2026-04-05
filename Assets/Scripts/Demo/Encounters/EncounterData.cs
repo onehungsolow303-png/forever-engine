@@ -1,9 +1,26 @@
 using System.Collections.Generic;
+using ForeverEngine.RPG.Enums;
 
 namespace ForeverEngine.Demo.Encounters
 {
     [System.Serializable]
-    public class EnemyDef { public string Name; public int HP; public int AC; public int Str; public int Dex; public int Spd; public string AtkDice; public string Behavior; }
+    public class EnemyDef
+    {
+        public string Name;
+        public int HP;
+        public int AC;
+        public int Str;
+        public int Dex;
+        public int Spd;
+        public string AtkDice;
+        public string Behavior;
+
+        // RPG damage type fields (default to None / Slashing for backward compatibility)
+        public DamageType Resistances;
+        public DamageType Vulnerabilities;
+        public DamageType Immunities;
+        public DamageType AttackDamageType = DamageType.Slashing;
+    }
 
     [System.Serializable]
     public class EncounterData
