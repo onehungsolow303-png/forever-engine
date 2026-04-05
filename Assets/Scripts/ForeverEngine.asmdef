@@ -1,0 +1,15 @@
+{
+  "name": "ForeverEngine",
+  "rootNamespace": "ForeverEngine",
+  "references": [
+    "Unity.Entities",
+    "Unity.Burst",
+    "Unity.Collections",
+    "Unity.Mathematics",
+    "Unity.Transforms",
+    "Unity.InputSystem"
+  ],
+  "includePlatforms": [],
+  "excludePlatforms": [],
+  "allowUnsafeCode": true
+}

@@ -1,0 +1,13 @@
+{
+  "name": "ForeverEngine.Tests.PlayMode",
+  "rootNamespace": "ForeverEngine.Tests",
+  "references": [
+    "ForeverEngine",
+    "Unity.Entities",
+    "Unity.Collections",
+    "Unity.Mathematics"
+  ],
+  "optionalUnityReferences": ["TestAssemblies"],
+  "includePlatforms": [],
+  "excludePlatforms": []
+}

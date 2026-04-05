@@ -1,0 +1,14 @@
+{
+  "name": "ForeverEngine.Tests.EditMode",
+  "rootNamespace": "ForeverEngine.Tests",
+  "references": [
+    "ForeverEngine",
+    "Unity.Entities",
+    "Unity.Burst",
+    "Unity.Collections",
+    "Unity.Mathematics"
+  ],
+  "optionalUnityReferences": ["TestAssemblies"],
+  "includePlatforms": ["Editor"],
+  "excludePlatforms": []
+}
