@@ -46,7 +46,7 @@ namespace ForeverEngine.MonoBehaviour.Camera
             // Parallax offset based on mouse
             if (_perspectiveMode)
             {
-                Vector2 mouseOffset = (Vector2)Input.mousePosition -
+                Vector2 mouseOffset = (Vector2)UnityEngine.Input.mousePosition -
                     new Vector2(Screen.width * 0.5f, Screen.height * 0.5f);
                 mouseOffset *= _parallaxStrength / Screen.width;
                 // Applied to child renderers via shader, not camera position

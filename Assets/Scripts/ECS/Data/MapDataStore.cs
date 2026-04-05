@@ -36,8 +36,10 @@ namespace ForeverEngine.ECS.Data
         {
             int size = Width * Height;
             int len = Math.Min(flatData.Length, size);
+            var walk = Walkability;
             for (int i = 0; i < len; i++)
-                Walkability[i] = flatData[i] != 0;
+                walk[i] = flatData[i] != 0;
+            Walkability = walk;
         }
 
         public void Dispose()

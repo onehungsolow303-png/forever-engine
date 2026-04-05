@@ -1,4 +1,5 @@
 using Unity.Entities;
+using Unity.Mathematics;
 using ForeverEngine.ECS.Components;
 
 namespace ForeverEngine.ECS.Systems

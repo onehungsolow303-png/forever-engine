@@ -144,7 +144,7 @@ namespace ForeverEngine.MonoBehaviour.Bootstrap
             {
                 byte[] pngData = File.ReadAllBytes(pngPath);
                 var tex = new Texture2D(2, 2);
-                tex.LoadImage(pngData);
+                ImageConversion.LoadImage(tex, pngData);
                 tex.filterMode = FilterMode.Point; // Pixel-perfect
                 // Store for TileRenderer to use
                 TerrainTextureRegistry.Register(zLevel.z, tex);
