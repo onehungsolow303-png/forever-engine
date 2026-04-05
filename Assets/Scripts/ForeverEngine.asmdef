@@ -11,5 +11,8 @@
   ],
   "includePlatforms": [],
   "excludePlatforms": [],
-  "allowUnsafeCode": true
+  "allowUnsafeCode": true,
+  "autoReferenced": true,
+  "overrideReferences": false,
+  "noEngineReferences": false
 }

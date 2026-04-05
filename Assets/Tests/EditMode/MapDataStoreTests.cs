@@ -40,10 +40,11 @@ namespace ForeverEngine.Tests
         {
             var store = new MapDataStore();
             store.Initialize(8, 8);
+            var walk = store.Walkability;
             for (int x = 0; x < 8; x++)
             {
-                store.Walkability[0 * 8 + x] = true;
-                store.Walkability[1 * 8 + x] = false;
+                walk[0 * 8 + x] = true;
+                walk[1 * 8 + x] = false;
             }
             Assert.IsTrue(store.Walkability[0]);
             Assert.IsFalse(store.Walkability[8]);

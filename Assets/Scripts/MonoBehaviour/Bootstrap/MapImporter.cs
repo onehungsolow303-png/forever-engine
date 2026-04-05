@@ -143,10 +143,16 @@ namespace ForeverEngine.MonoBehaviour.Bootstrap
             if (File.Exists(pngPath))
             {
                 byte[] pngData = File.ReadAllBytes(pngPath);
-                var tex = new Texture2D(2, 2);
-                ImageConversion.LoadImage(tex, pngData);
-                tex.filterMode = FilterMode.Point; // Pixel-perfect
-                // Store for TileRenderer to use
+                var tex = new Texture2D(2, 2, TextureFormat.RGBA32, false);
+                tex.filterMode = FilterMode.Point;
+                // ImageConversion.LoadImage is an extension method that may not resolve
+                // in asmdef-scoped assemblies. Use reflection fallback.
+                var method = typeof(Texture2D).GetMethod("LoadImage",
+                    new System.Type[] { typeof(byte[]) });
+                if (method != null)
+                    method.Invoke(tex, new object[] { pngData });
+                else
+                    Debug.LogWarning("[MapImporter] LoadImage not available, terrain PNG skipped");
                 TerrainTextureRegistry.Register(zLevel.z, tex);
             }
         }
