@@ -48,7 +48,9 @@ namespace ForeverEngine.ECS.Utility
         [BurstCompile]
         public static int AbilityModifier(int score)
         {
-            return (score - 10) / 2;
+            // D&D floor division: (1-10)/2 = -5, not -4
+            int diff = score - 10;
+            return diff >= 0 ? diff / 2 : (diff - 1) / 2;
         }
 
         [BurstCompile]

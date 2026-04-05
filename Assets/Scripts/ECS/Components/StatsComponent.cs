@@ -28,12 +28,12 @@ namespace ForeverEngine.ECS.Components
         public int AtkDiceBonus;   // e.g., 3 for "2d8+3"
 
         // Derived (cached, recalculated on stat change)
-        public int StrMod => (Strength - 10) / 2;
-        public int DexMod => (Dexterity - 10) / 2;
-        public int ConMod => (Constitution - 10) / 2;
-        public int IntMod => (Intelligence - 10) / 2;
-        public int WisMod => (Wisdom - 10) / 2;
-        public int ChaMod => (Charisma - 10) / 2;
+        public int StrMod => Utility.DiceRoller.AbilityModifier(Strength);
+        public int DexMod => Utility.DiceRoller.AbilityModifier(Dexterity);
+        public int ConMod => Utility.DiceRoller.AbilityModifier(Constitution);
+        public int IntMod => Utility.DiceRoller.AbilityModifier(Intelligence);
+        public int WisMod => Utility.DiceRoller.AbilityModifier(Wisdom);
+        public int ChaMod => Utility.DiceRoller.AbilityModifier(Charisma);
 
         public float HPPercent => MaxHP > 0 ? (float)HP / MaxHP : 0f;
 
