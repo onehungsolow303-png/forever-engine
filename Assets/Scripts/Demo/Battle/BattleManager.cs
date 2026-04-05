@@ -1,0 +1,182 @@
+using UnityEngine;
+using System.Collections.Generic;
+using System.Linq;
+using ForeverEngine.ECS.Utility;
+
+namespace ForeverEngine.Demo.Battle
+{
+    public class BattleManager : UnityEngine.MonoBehaviour
+    {
+        public static BattleManager Instance { get; private set; }
+
+        public BattleGrid Grid { get; private set; }
+        public List<BattleCombatant> Combatants { get; private set; } = new();
+        public BattleCombatant CurrentTurn { get; private set; }
+        public int RoundNumber { get; private set; } = 1;
+        public bool BattleOver { get; private set; }
+        public bool PlayerWon { get; private set; }
+        public List<string> Log { get; private set; } = new();
+
+        private int _turnIndex;
+        private uint _rngSeed;
+        private Encounters.EncounterData _encounterData;
+
+        private void Awake() => Instance = this;
+
+        private void Start()
+        {
+            var gm = GameManager.Instance;
+            if (gm == null) return;
+
+            string encId = gm.PendingEncounterId ?? gm.PendingLocationId ?? "default";
+            _encounterData = Encounters.EncounterData.Get(encId);
+            _rngSeed = (uint)(gm.CurrentSeed + encId.GetHashCode());
+
+            // Build grid
+            Grid = new BattleGrid(_encounterData.GridWidth, _encounterData.GridHeight, (int)_rngSeed);
+
+            // Spawn player
+            var player = BattleCombatant.FromPlayer(gm.Player);
+            Combatants.Add(player);
+
+            // Spawn enemies
+            var rng = new System.Random((int)_rngSeed);
+            foreach (var enemyDef in _encounterData.Enemies)
+            {
+                int ex, ey;
+                do { ex = rng.Next(2, Grid.Width - 2); ey = rng.Next(2, Grid.Height - 2); }
+                while (!Grid.IsWalkable(ex, ey) || Combatants.Any(c => c.X == ex && c.Y == ey));
+                Combatants.Add(BattleCombatant.FromEnemy(enemyDef, ex, ey));
+            }
+
+            // Roll initiative
+            foreach (var c in Combatants) c.RollInitiative(ref _rngSeed);
+            Combatants = Combatants.OrderByDescending(c => c.InitiativeRoll).ToList();
+
+            StartTurn();
+            Log.Add($"Battle begins! {_encounterData.Enemies.Count} enemies.");
+        }
+
+        public void StartTurn()
+        {
+            if (BattleOver) return;
+            CurrentTurn = Combatants[_turnIndex];
+            if (!CurrentTurn.IsAlive) { NextTurn(); return; }
+            CurrentTurn.StartTurn();
+
+            if (!CurrentTurn.IsPlayer) ProcessAITurn();
+        }
+
+        public void NextTurn()
+        {
+            _turnIndex = (_turnIndex + 1) % Combatants.Count;
+            if (_turnIndex == 0) RoundNumber++;
+            CheckBattleEnd();
+            if (!BattleOver) StartTurn();
+        }
+
+        public void PlayerMove(int dx, int dy)
+        {
+            if (CurrentTurn == null || !CurrentTurn.IsPlayer || CurrentTurn.MovementRemaining <= 0) return;
+            int nx = CurrentTurn.X + dx, ny = CurrentTurn.Y + dy;
+            if (!Grid.IsWalkable(nx, ny)) return;
+            if (Combatants.Any(c => c.IsAlive && c.X == nx && c.Y == ny)) return;
+            CurrentTurn.X = nx; CurrentTurn.Y = ny;
+            CurrentTurn.MovementRemaining--;
+        }
+
+        public void PlayerAttack(BattleCombatant target)
+        {
+            if (CurrentTurn == null || !CurrentTurn.IsPlayer || !CurrentTurn.HasAction) return;
+            if (!IsAdjacent(CurrentTurn, target)) return;
+            ResolveAttack(CurrentTurn, target);
+            CurrentTurn.HasAction = false;
+        }
+
+        public void PlayerEndTurn() { if (CurrentTurn != null && CurrentTurn.IsPlayer) NextTurn(); }
+
+        private void ProcessAITurn()
+        {
+            var ai = CurrentTurn;
+            var player = Combatants.FirstOrDefault(c => c.IsPlayer && c.IsAlive);
+            if (player == null) { NextTurn(); return; }
+
+            // Simple AI: move toward player, attack if adjacent
+            int dist = System.Math.Abs(ai.X - player.X) + System.Math.Abs(ai.Y - player.Y);
+
+            while (ai.MovementRemaining > 0 && dist > 1)
+            {
+                int dx = System.Math.Sign(player.X - ai.X);
+                int dy = System.Math.Sign(player.Y - ai.Y);
+                int nx = ai.X + dx, ny = ai.Y + dy;
+                if (Grid.IsWalkable(nx, ny) && !Combatants.Any(c => c.IsAlive && c != ai && c.X == nx && c.Y == ny))
+                { ai.X = nx; ai.Y = ny; ai.MovementRemaining--; }
+                else break;
+                dist = System.Math.Abs(ai.X - player.X) + System.Math.Abs(ai.Y - player.Y);
+            }
+
+            if (IsAdjacent(ai, player) && ai.HasAction)
+            {
+                ResolveAttack(ai, player);
+                ai.HasAction = false;
+            }
+
+            // Auto-advance after short delay
+            Invoke(nameof(NextTurn), 0.5f);
+        }
+
+        private void ResolveAttack(BattleCombatant attacker, BattleCombatant target)
+        {
+            int roll = attacker.RollAttack(ref _rngSeed);
+            bool hit = roll == 20 || (roll != 1 && roll + DiceRoller.AbilityModifier(attacker.Strength) >= target.AC);
+
+            if (hit)
+            {
+                int damage = attacker.RollDamage(ref _rngSeed);
+                if (damage < 1) damage = 1;
+                target.TakeDamage(damage);
+                Log.Add($"{attacker.Name} hits {target.Name} for {damage}! (d20={roll})");
+                if (!target.IsAlive) Log.Add($"{target.Name} is defeated!");
+            }
+            else
+            {
+                Log.Add($"{attacker.Name} misses {target.Name}. (d20={roll})");
+            }
+        }
+
+        private bool IsAdjacent(BattleCombatant a, BattleCombatant b) =>
+            System.Math.Abs(a.X - b.X) + System.Math.Abs(a.Y - b.Y) <= 1;
+
+        private void CheckBattleEnd()
+        {
+            var player = Combatants.FirstOrDefault(c => c.IsPlayer);
+            if (player == null || !player.IsAlive)
+            {
+                BattleOver = true; PlayerWon = false;
+                Log.Add("You have fallen...");
+                return;
+            }
+            if (Combatants.All(c => c.IsPlayer || !c.IsAlive))
+            {
+                BattleOver = true; PlayerWon = true;
+                Log.Add("Victory!");
+                var gm = GameManager.Instance;
+                if (gm != null)
+                {
+                    gm.LastBattleWon = true;
+                    gm.LastBattleGoldEarned = _encounterData.GoldReward;
+                    gm.LastBattleXPEarned = _encounterData.XPReward;
+                    gm.Player.HP = player.HP; // Persist damage taken
+                }
+            }
+        }
+
+        public void EndBattle()
+        {
+            if (PlayerWon)
+                GameManager.Instance?.ReturnToOverworld();
+            else
+                GameManager.Instance?.PlayerDied();
+        }
+    }
+}
