@@ -1,5 +1,6 @@
 using UnityEngine;
 using ForeverEngine.RPG.Enums;
+using ForeverEngine.RPG.Spells;
 
 namespace ForeverEngine.RPG.Character
 {
@@ -26,10 +27,7 @@ namespace ForeverEngine.RPG.Character
         public SpeciesTrait Traits;
 
         [Header("Innate Spellcasting")]
-        // References SpellData ScriptableObjects (created in Task 7).
-        // Typed as ScriptableObject[] to compile before SpellData exists.
-        // Task 7 will update this to the concrete SpellData type.
-        public ScriptableObject[] InnateSpells;
+        public SpellData[] InnateSpells;
 
         [Header("Proficiencies & Languages")]
         public string[] Languages;
