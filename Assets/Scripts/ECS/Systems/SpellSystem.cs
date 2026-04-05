@@ -12,7 +12,6 @@ namespace ForeverEngine.ECS.Systems
     /// applies damage/healing/conditions, consumes the spell slot,
     /// and writes SpellCastResultComponent for the UI layer.
     /// </summary>
-    [BurstCompile]
     [UpdateInGroup(typeof(SimulationSystemGroup))]
     [UpdateAfter(typeof(CombatSystem))]
     public partial struct SpellSystem : ISystem
@@ -25,7 +24,6 @@ namespace ForeverEngine.ECS.Systems
             state.RequireForUpdate<GameStateSingleton>();
         }
 
-        [BurstCompile]
         public void OnUpdate(ref SystemState state)
         {
             var gameState = SystemAPI.GetSingleton<GameStateSingleton>();

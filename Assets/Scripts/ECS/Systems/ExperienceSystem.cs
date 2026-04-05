@@ -11,7 +11,6 @@ namespace ForeverEngine.ECS.Systems
     /// checks for level-up thresholds, and updates ProficiencyBonus.
     /// Also distributes XP from EncounterComponent.TotalXP when the encounter completes.
     /// </summary>
-    [BurstCompile]
     [UpdateInGroup(typeof(SimulationSystemGroup))]
     [UpdateAfter(typeof(GameStateSystem))]
     public partial struct ExperienceSystem : ISystem
@@ -21,7 +20,6 @@ namespace ForeverEngine.ECS.Systems
             state.RequireForUpdate<GameStateSingleton>();
         }
 
-        [BurstCompile]
         public void OnUpdate(ref SystemState state)
         {
             var gameState = SystemAPI.GetSingleton<GameStateSingleton>();

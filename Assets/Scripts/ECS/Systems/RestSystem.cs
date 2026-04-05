@@ -1,6 +1,7 @@
 using Unity.Entities;
 using Unity.Collections;
 using Unity.Burst;
+using Unity.Mathematics;
 using ForeverEngine.ECS.Components;
 using ForeverEngine.ECS.Utility;
 using ForeverEngine.Data;
@@ -93,7 +94,7 @@ namespace ForeverEngine.ECS.Systems
                 hpGained += roll > 0 ? roll : 1; // minimum 1 HP per die
             }
 
-            stats.HP = UnityEngine.Mathf.Min(stats.HP + hpGained, stats.MaxHP);
+            stats.HP = math.min(stats.HP + hpGained, stats.MaxHP);
             sheet.HitDiceUsed += diceToSpend;
         }
 
@@ -110,7 +111,7 @@ namespace ForeverEngine.ECS.Systems
             int spent = sheet.HitDiceUsed;
             int recovered = spent / 2;
             if (recovered < 1 && spent > 0) recovered = 1;
-            sheet.HitDiceUsed = UnityEngine.Mathf.Max(0, sheet.HitDiceUsed - recovered);
+            sheet.HitDiceUsed = math.max(0, sheet.HitDiceUsed - recovered);
 
             // Restore all spell slots
             sheet.SpellSlot1Used = 0; sheet.SpellSlot2Used = 0;

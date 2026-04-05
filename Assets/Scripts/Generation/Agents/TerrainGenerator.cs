@@ -14,7 +14,7 @@ namespace ForeverEngine.Generation.Agents
             public int Width, Height;
         }
 
-        public static TerrainResult Generate(GenerationRequest request, MapProfile profile)
+        public static TerrainResult Generate(MapGenerationRequest request, MapProfile profile)
         {
             int w = request.Width, h = request.Height;
             PerlinNoise.Seed(request.Seed);

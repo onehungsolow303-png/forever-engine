@@ -38,7 +38,7 @@ namespace ForeverEngine.Demo.Locations
 
         public static PipelineCoordinator.GenerationResult GenerateInterior(LocationData loc)
         {
-            var request = new GenerationRequest
+            var request = new MapGenerationRequest
             {
                 MapType = loc.MapType ?? "dungeon",
                 Width = loc.InteriorSize,

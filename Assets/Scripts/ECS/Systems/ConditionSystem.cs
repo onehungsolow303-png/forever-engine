@@ -28,29 +28,39 @@ namespace ForeverEngine.ECS.Systems
         {
             var gameState = SystemAPI.GetSingleton<GameStateSingleton>();
 
-            // Only process once per combat round, not every frame
+            var ecb = new EntityCommandBuffer(Allocator.Temp);
+
+            // ── Long-rest condition clear (runs in any game state) ─────────
+            foreach (var (conditions, entity) in
+                SystemAPI.Query<DynamicBuffer<ConditionBufferElement>>()
+                .WithAll<LongRestConditionClearTag>()
+                .WithEntityAccess())
+            {
+                conditions.Clear();
+                ecb.RemoveComponent<LongRestConditionClearTag>(entity);
+            }
+
+            // ── Combat condition ticking (only once per combat round) ──────
             if (gameState.CurrentState == GameState.Combat)
             {
-                if (gameState.CombatRound == _lastProcessedRound) return;
-                _lastProcessedRound = gameState.CombatRound;
+                if (gameState.CombatRound != _lastProcessedRound)
+                {
+                    _lastProcessedRound = gameState.CombatRound;
+
+                    foreach (var (conditions, stats, entity) in
+                        SystemAPI.Query<
+                            DynamicBuffer<ConditionBufferElement>,
+                            RefRW<StatsComponent>>()
+                        .WithEntityAccess())
+                    {
+                        TickConditions(conditions, entity, ref stats.ValueRW, ref ecb);
+                    }
+                }
             }
             else
             {
                 // Outside combat: reset tracker so next combat starts fresh
                 _lastProcessedRound = 0;
-                return;
-            }
-
-            var ecb = new EntityCommandBuffer(Allocator.Temp);
-
-            // Tick conditions down and remove expired ones
-            foreach (var (conditions, stats, entity) in
-                SystemAPI.Query<
-                    DynamicBuffer<ConditionBufferElement>,
-                    RefRW<StatsComponent>>()
-                .WithEntityAccess())
-            {
-                TickConditions(conditions, entity, ref stats.ValueRW, ref ecb);
             }
 
             ecb.Playback(state.EntityManager);

@@ -23,7 +23,7 @@ namespace ForeverEngine.Generation.Agents
             public int Value;       // XP, damage, gold amount
         }
 
-        public static PopulationResult Populate(RoomGraph graph, GenerationRequest request, MapProfile profile, bool[] walkability, int mapWidth)
+        public static PopulationResult Populate(RoomGraph graph, MapGenerationRequest request, MapProfile profile, bool[] walkability, int mapWidth)
         {
             var rng = new System.Random(request.Seed + 999);
             int xpBudget = GameTables.GetXPBudget(request.PartyLevel, request.PartySize);

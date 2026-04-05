@@ -36,6 +36,15 @@ namespace ForeverEngine.MonoBehaviour.ContentLoader
             switch (response.type)
             {
                 case "dungeon":
+                case "village":
+                case "town":
+                case "city":
+                case "wilderness":
+                case "castle":
+                case "cave":
+                case "fort":
+                case "camp":
+                case "temple":
                     LoadDungeon(response);
                     break;
                 case "encounter":

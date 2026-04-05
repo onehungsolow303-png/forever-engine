@@ -16,10 +16,10 @@ namespace ForeverEngine.Generation
             public TerrainGenerator.TerrainResult Terrain;
             public RoomGraph Layout;
             public PopulationGenerator.PopulationResult Population;
-            public GenerationRequest Request;
+            public MapGenerationRequest Request;
         }
 
-        public static GenerationResult Generate(GenerationRequest request)
+        public static GenerationResult Generate(MapGenerationRequest request)
         {
             if (!request.Validate(out string error))
                 return new GenerationResult { Success = false, Error = error };

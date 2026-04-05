@@ -2,7 +2,7 @@ namespace ForeverEngine.Generation.Data
 {
     public enum MapSize { SmallEncounter = 256, MediumEncounter = 512, LargeEncounter = 768, Standard = 512, Large = 1024, Region = 1024, OpenWorld = 1536 }
 
-    public class GenerationRequest
+    public class MapGenerationRequest
     {
         public string MapType = "dungeon";
         public string Biome = "cave";
