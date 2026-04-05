@@ -1,6 +1,7 @@
 using UnityEngine;
 using Unity.Entities;
 using ForeverEngine.ECS.Components;
+using ForeverEngine.ECS.Systems;
 
 namespace ForeverEngine.MonoBehaviour.RPG
 {
