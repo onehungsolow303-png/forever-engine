@@ -44,6 +44,13 @@ namespace ForeverEngine.Demo.Overworld
             Player = playerGO.AddComponent<OverworldPlayer>();
             Player.Initialize(gm.Player, Fog, Tiles, OnPlayerMoved);
 
+            // Setup interior manager (adds itself as a sibling component on a new GO)
+            if (Demo.Locations.LocationInteriorManager.Instance == null)
+            {
+                var interiorGO = new GameObject("LocationInteriorManager");
+                interiorGO.AddComponent<Demo.Locations.LocationInteriorManager>();
+            }
+
             // Handle returning from battle
             if (gm.LastBattleWon)
             {
@@ -71,10 +78,36 @@ namespace ForeverEngine.Demo.Overworld
             else if (Input.GetKeyDown(KeyCode.Q)) Player.TryMove(-1, 1); // hex NW
             else if (Input.GetKeyDown(KeyCode.E)) Player.TryMove(1, -1); // hex SE
             else if (Input.GetKeyDown(KeyCode.F)) Player.Forage();
+            else if (Input.GetKeyDown(KeyCode.Return) || Input.GetKeyDown(KeyCode.KeypadEnter)) TryEnterLocation();
 
             // Update visuals every frame
             if (_renderer != null && GameManager.Instance?.Player != null)
                 _renderer.UpdateVisuals(GameManager.Instance.Player.HexQ, GameManager.Instance.Player.HexR, Fog, IsNight);
+        }
+
+        /// <summary>
+        /// Called when the player presses Enter. If they are standing on a known
+        /// location, delegates to LocationInteriorManager to handle generation/cache.
+        /// </summary>
+        private void TryEnterLocation()
+        {
+            var p = GameManager.Instance?.Player;
+            if (p == null) return;
+
+            foreach (var loc in LocationData.GetAll())
+            {
+                if (loc.HexQ == p.HexQ && loc.HexR == p.HexR)
+                {
+                    var interior = Demo.Locations.LocationInteriorManager.Instance;
+                    if (interior != null)
+                        interior.EnterLocation(loc);
+                    else
+                        Debug.LogWarning("[Overworld] LocationInteriorManager not found.");
+                    return;
+                }
+            }
+
+            Debug.Log("[Overworld] No location at current position.");
         }
 
         private void OnPlayerMoved(int q, int r)
