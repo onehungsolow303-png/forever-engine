@@ -17,6 +17,8 @@ namespace ForeverEngine.Demo.Overworld
 
         [SerializeField] private float _dayLengthSeconds = 600f; // 10 min
 
+        private OverworldRenderer _renderer;
+
         private void Awake() => Instance = this;
 
         private void Start()
@@ -32,6 +34,11 @@ namespace ForeverEngine.Demo.Overworld
             if (gm.Player.ExploredHexes.Count > 0)
                 Fog.LoadExplored(gm.Player.ExploredHexes);
 
+            // Setup renderer
+            var rendererGO = new GameObject("OverworldRenderer");
+            _renderer = rendererGO.AddComponent<OverworldRenderer>();
+            _renderer.Initialize(Tiles, Camera.main);
+
             // Setup player
             var playerGO = new GameObject("OverworldPlayer");
             Player = playerGO.AddComponent<OverworldPlayer>();
@@ -43,6 +50,9 @@ namespace ForeverEngine.Demo.Overworld
                 gm.Player.Gold += gm.LastBattleGoldEarned;
                 gm.LastBattleWon = false;
             }
+
+            // Initial visual update
+            _renderer.UpdateVisuals(gm.Player.HexQ, gm.Player.HexR, Fog, IsNight);
 
             Debug.Log($"[Overworld] Initialized at ({gm.Player.HexQ},{gm.Player.HexR}), {Tiles.Count} tiles");
         }
@@ -61,6 +71,10 @@ namespace ForeverEngine.Demo.Overworld
             else if (Input.GetKeyDown(KeyCode.Q)) Player.TryMove(-1, 1); // hex NW
             else if (Input.GetKeyDown(KeyCode.E)) Player.TryMove(1, -1); // hex SE
             else if (Input.GetKeyDown(KeyCode.F)) Player.Forage();
+
+            // Update visuals every frame
+            if (_renderer != null && GameManager.Instance?.Player != null)
+                _renderer.UpdateVisuals(GameManager.Instance.Player.HexQ, GameManager.Instance.Player.HexR, Fog, IsNight);
         }
 
         private void OnPlayerMoved(int q, int r)
