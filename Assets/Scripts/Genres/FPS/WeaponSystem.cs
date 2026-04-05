@@ -20,7 +20,7 @@ namespace ForeverEngine.Genres.FPS
         public AudioClip FireSound;
     }
 
-    public class WeaponSystem : MonoBehaviour
+    public class WeaponSystem : UnityEngine.MonoBehaviour
     {
         [SerializeField] private List<WeaponData> _weapons = new();
         private int _currentIndex;

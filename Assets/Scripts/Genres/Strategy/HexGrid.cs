@@ -8,7 +8,7 @@ namespace ForeverEngine.Genres.Strategy
     [System.Serializable]
     public struct HexTile { public int Q, R; public TileType Type; public int Height; public float MovementCost; public float DefenseBonus; }
 
-    public class HexGrid : MonoBehaviour
+    public class HexGrid : UnityEngine.MonoBehaviour
     {
         public static HexGrid Instance { get; private set; }
         private Dictionary<(int, int), HexTile> _tiles = new();
@@ -37,7 +37,7 @@ namespace ForeverEngine.Genres.Strategy
         public List<(int, int)> GetNeighbors(int q, int r) => new()
         { (q+1,r), (q-1,r), (q,r+1), (q,r-1), (q+1,r-1), (q-1,r+1) };
 
-        public int Distance(int q1, int r1, int q2, int r2) =>
+        public static int Distance(int q1, int r1, int q2, int r2) =>
             (Mathf.Abs(q1-q2) + Mathf.Abs(q1+r1-q2-r2) + Mathf.Abs(r1-r2)) / 2;
 
         public int TileCount => _tiles.Count;

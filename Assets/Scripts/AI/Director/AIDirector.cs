@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace ForeverEngine.AI.Director
 {
-    public class AIDirector : MonoBehaviour
+    public class AIDirector : UnityEngine.MonoBehaviour
     {
         public static AIDirector Instance { get; private set; }
         [SerializeField] private DirectorConfig _config;

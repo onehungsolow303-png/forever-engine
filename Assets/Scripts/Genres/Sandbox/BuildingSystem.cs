@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace ForeverEngine.Genres.Sandbox
 {
-    public class BuildingSystem : MonoBehaviour
+    public class BuildingSystem : UnityEngine.MonoBehaviour
     {
         public static BuildingSystem Instance { get; private set; }
         [SerializeField] private bool _gridSnap = true;

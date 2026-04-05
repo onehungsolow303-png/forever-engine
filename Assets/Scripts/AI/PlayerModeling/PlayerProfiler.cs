@@ -2,7 +2,7 @@ using UnityEngine;
 
 namespace ForeverEngine.AI.PlayerModeling
 {
-    public class PlayerProfiler : MonoBehaviour
+    public class PlayerProfiler : UnityEngine.MonoBehaviour
     {
         public static PlayerProfiler Instance { get; private set; }
         public static PlayerProfile CurrentProfile => Instance?._profile;

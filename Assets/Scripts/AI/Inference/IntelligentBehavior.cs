@@ -2,7 +2,7 @@ using UnityEngine;
 
 namespace ForeverEngine.AI.Inference
 {
-    public abstract class IntelligentBehavior : MonoBehaviour
+    public abstract class IntelligentBehavior : UnityEngine.MonoBehaviour
     {
         protected InferenceEngine inferenceEngine;
         private bool _useInference = true;

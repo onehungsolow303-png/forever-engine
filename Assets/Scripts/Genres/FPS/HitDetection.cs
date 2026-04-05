@@ -4,7 +4,7 @@ namespace ForeverEngine.Genres.FPS
 {
     public enum HitZone { Head, Body, Limb }
 
-    public class HitDetection : MonoBehaviour
+    public class HitDetection : UnityEngine.MonoBehaviour
     {
         [SerializeField] private float _headMultiplier = 2.0f;
         [SerializeField] private float _bodyMultiplier = 1.0f;

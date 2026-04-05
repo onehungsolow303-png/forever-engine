@@ -8,7 +8,7 @@ namespace ForeverEngine.Genres.Adventure
     [System.Serializable]
     public class PuzzleTrigger { public string Id; public string Type; public bool Activated; }
 
-    public class PuzzleSystem : MonoBehaviour
+    public class PuzzleSystem : UnityEngine.MonoBehaviour
     {
         public static PuzzleSystem Instance { get; private set; }
         private Dictionary<string, PuzzleInstance> _puzzles = new();

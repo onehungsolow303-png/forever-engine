@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace ForeverEngine.AI.SelfHealing
 {
-    public class SystemMonitor : MonoBehaviour
+    public class SystemMonitor : UnityEngine.MonoBehaviour
     {
         public static SystemMonitor Instance { get; private set; }
 

@@ -5,7 +5,7 @@ namespace ForeverEngine.Genres.RTS
 {
     public enum ResourceType { Gold, Wood, Food, Stone, Supply }
 
-    public class ResourceManager : MonoBehaviour
+    public class ResourceManager : UnityEngine.MonoBehaviour
     {
         public static ResourceManager Instance { get; private set; }
         private Dictionary<int, Dictionary<ResourceType, int>> _teamResources = new();

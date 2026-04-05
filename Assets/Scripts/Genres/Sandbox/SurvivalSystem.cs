@@ -2,7 +2,7 @@ using UnityEngine;
 
 namespace ForeverEngine.Genres.Sandbox
 {
-    public class SurvivalSystem : MonoBehaviour
+    public class SurvivalSystem : UnityEngine.MonoBehaviour
     {
         [SerializeField] private float _maxHunger = 100, _maxThirst = 100, _maxStamina = 100;
         [SerializeField] private float _hungerRate = 0.5f, _thirstRate = 0.8f, _staminaRegen = 5f;

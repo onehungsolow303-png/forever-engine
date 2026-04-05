@@ -1,5 +1,6 @@
 using NUnit.Framework;
 using UnityEngine;
+using System.Linq;
 using ForeverEngine.AI.Memory;
 
 namespace ForeverEngine.Tests

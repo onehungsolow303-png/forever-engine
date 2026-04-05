@@ -11,7 +11,7 @@ namespace ForeverEngine.Genres.RTS
         public List<UnitData> CanProduce = new(); public List<string> TechUnlocks = new();
     }
 
-    public class RTSBuildingSystem : MonoBehaviour
+    public class RTSBuildingSystem : UnityEngine.MonoBehaviour
     {
         private List<RTSBuilding> _buildings = new();
 
@@ -28,7 +28,7 @@ namespace ForeverEngine.Genres.RTS
         public List<RTSBuilding> GetBuildings(int teamId) => _buildings.FindAll(b => b.TeamId == teamId && b.IsAlive);
     }
 
-    public class RTSBuilding : MonoBehaviour
+    public class RTSBuilding : UnityEngine.MonoBehaviour
     {
         public BuildingData Data { get; private set; }
         public int TeamId { get; private set; }

@@ -5,7 +5,7 @@ namespace ForeverEngine.Genres.Strategy
 {
     public enum TurnPhase { Movement, Action, End }
 
-    public class TurnManager : MonoBehaviour
+    public class TurnManager : UnityEngine.MonoBehaviour
     {
         public static TurnManager Instance { get; private set; }
         public int CurrentTurn { get; private set; }

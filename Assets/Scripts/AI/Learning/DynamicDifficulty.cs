@@ -11,7 +11,7 @@ namespace ForeverEngine.AI.Learning
         public float adjustSpeed = 0.1f;
     }
 
-    public class DynamicDifficulty : MonoBehaviour
+    public class DynamicDifficulty : UnityEngine.MonoBehaviour
     {
         public static DynamicDifficulty Instance { get; private set; }
         [SerializeField] private DifficultyConfig _config;

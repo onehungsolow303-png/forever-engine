@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace ForeverEngine.AI.Inference
 {
-    public class InferenceScheduler : MonoBehaviour
+    public class InferenceScheduler : UnityEngine.MonoBehaviour
     {
         public static InferenceScheduler Instance { get; private set; }
         [SerializeField] private float _maxInferenceTimeMs = 2.0f;

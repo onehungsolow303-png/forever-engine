@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace ForeverEngine.AI.SelfHealing
 {
-    public class PerformanceRegulator : MonoBehaviour
+    public class PerformanceRegulator : UnityEngine.MonoBehaviour
     {
         public static PerformanceRegulator Instance { get; private set; }
         [SerializeField] private float _targetFrameTimeMs = 16.6f;

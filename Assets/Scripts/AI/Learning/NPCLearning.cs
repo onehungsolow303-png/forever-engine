@@ -11,7 +11,7 @@ namespace ForeverEngine.AI.Learning
         public float baseLearningRate = 0.1f;
     }
 
-    public class NPCLearning : MonoBehaviour
+    public class NPCLearning : UnityEngine.MonoBehaviour
     {
         [SerializeField] private NPCArchetype _archetype;
         private QLearner _learner;

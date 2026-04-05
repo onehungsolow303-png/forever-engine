@@ -3,7 +3,7 @@ using UnityEngine;
 namespace ForeverEngine.Genres.FPS
 {
     [RequireComponent(typeof(CharacterController))]
-    public class FPSController : MonoBehaviour
+    public class FPSController : UnityEngine.MonoBehaviour
     {
         [Header("Movement")] public float WalkSpeed = 5f; public float SprintSpeed = 8f; public float JumpForce = 5f; public float Gravity = -20f;
         [Header("Camera")] public float MouseSensitivity = 2f; public float FieldOfView = 90f; public float HeadBobAmount = 0.05f;

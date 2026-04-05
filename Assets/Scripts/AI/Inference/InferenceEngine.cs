@@ -3,7 +3,7 @@ using System;
 
 namespace ForeverEngine.AI.Inference
 {
-    public class InferenceEngine : MonoBehaviour
+    public class InferenceEngine : UnityEngine.MonoBehaviour
     {
         public static InferenceEngine Instance { get; private set; }
         private bool _modelLoaded;

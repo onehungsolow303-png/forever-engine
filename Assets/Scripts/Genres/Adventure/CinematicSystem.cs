@@ -7,7 +7,7 @@ namespace ForeverEngine.Genres.Adventure
     [System.Serializable]
     public class CinematicStep { public enum StepType { MoveTo, LookAt, Wait, Dialogue, FadeIn, FadeOut } public StepType Type; public Vector3 Target; public float Duration = 1f; public string DialogueText; }
 
-    public class CinematicSystem : MonoBehaviour
+    public class CinematicSystem : UnityEngine.MonoBehaviour
     {
         public static CinematicSystem Instance { get; private set; }
         public bool IsPlaying { get; private set; }

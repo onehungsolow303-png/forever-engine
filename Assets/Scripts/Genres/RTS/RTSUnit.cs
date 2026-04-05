@@ -11,7 +11,7 @@ namespace ForeverEngine.Genres.RTS
         public float BuildTime = 5f; public int GoldCost = 50; public int SupplyCost = 1;
     }
 
-    public class RTSUnit : MonoBehaviour
+    public class RTSUnit : UnityEngine.MonoBehaviour
     {
         [SerializeField] private UnitData _data;
         public int TeamId;

@@ -2,7 +2,7 @@ using UnityEngine;
 
 namespace ForeverEngine.Genres.Sandbox
 {
-    public class DayNightCycle : MonoBehaviour
+    public class DayNightCycle : UnityEngine.MonoBehaviour
     {
         public static DayNightCycle Instance { get; private set; }
         [SerializeField] private float _dayLengthMinutes = 10f;

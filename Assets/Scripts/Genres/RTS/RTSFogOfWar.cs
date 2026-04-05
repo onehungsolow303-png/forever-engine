@@ -5,7 +5,7 @@ using Unity.Collections;
 
 namespace ForeverEngine.Genres.RTS
 {
-    public class RTSFogOfWar : MonoBehaviour
+    public class RTSFogOfWar : UnityEngine.MonoBehaviour
     {
         [SerializeField] private int _gridWidth = 128, _gridHeight = 128;
         private NativeArray<byte> _visibility; // 0=unexplored, 1=explored, 2=visible

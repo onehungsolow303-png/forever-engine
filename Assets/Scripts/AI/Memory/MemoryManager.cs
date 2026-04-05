@@ -2,7 +2,7 @@ using UnityEngine;
 
 namespace ForeverEngine.AI.Memory
 {
-    public class MemoryManager : MonoBehaviour
+    public class MemoryManager : UnityEngine.MonoBehaviour
     {
         public static MemoryManager Instance { get; private set; }
 

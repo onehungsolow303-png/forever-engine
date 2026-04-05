@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace ForeverEngine.Genres.Adventure
 {
-    public class CollectibleTracker : MonoBehaviour
+    public class CollectibleTracker : UnityEngine.MonoBehaviour
     {
         public static CollectibleTracker Instance { get; private set; }
         private Dictionary<string, HashSet<string>> _collected = new();
