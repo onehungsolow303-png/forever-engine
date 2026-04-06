@@ -260,7 +260,20 @@ namespace ForeverEngine.MonoBehaviour.Bootstrap
             {
                 X = data.x, Y = data.y, Z = data.from_z
             });
-            // Transition component would go here
+            em.AddComponentData(entity, new TransitionComponent
+            {
+                FromZ = data.from_z,
+                ToZ = data.to_z,
+                TransitionType = data.type switch
+                {
+                    "stairs_down" => 0,
+                    "stairs_up" => 1,
+                    "ladder" => 2,
+                    "trapdoor" => 3,
+                    "portal" => 4,
+                    _ => 0
+                }
+            });
         }
 
         private static void ParseDice(string dice, out int count, out int sides, out int bonus)
