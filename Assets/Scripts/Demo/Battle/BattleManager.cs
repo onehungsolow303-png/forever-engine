@@ -2,6 +2,10 @@ using UnityEngine;
 using System.Collections.Generic;
 using System.Linq;
 using ForeverEngine.ECS.Utility;
+using ForeverEngine.RPG.Combat;
+using ForeverEngine.RPG.Data;
+using ForeverEngine.RPG.Enums;
+using ForeverEngine.RPG.Spells;
 
 namespace ForeverEngine.Demo.Battle
 {
@@ -24,6 +28,11 @@ namespace ForeverEngine.Demo.Battle
         private Dictionary<BattleCombatant, CombatBrain> _brains = new();
         private CombatIntelligence _neuralBrain;
 
+        // Spell casting UI state
+        private bool _spellMenuOpen;
+        private List<SpellData> _availableSpells = new();
+        private int _selectedSpellSlotLevel = 1;
+
         private void Awake() => Instance = this;
 
         private void Update()
@@ -38,9 +47,15 @@ namespace ForeverEngine.Demo.Battle
                 else if (Input.GetKeyDown(KeyCode.S)) PlayerMove(0, -1);
                 else if (Input.GetKeyDown(KeyCode.A)) PlayerMove(-1, 0);
                 else if (Input.GetKeyDown(KeyCode.D)) PlayerMove(1, 0);
-                // Attack nearest adjacent enemy with 1, or any key 1-9
-                else if (Input.GetKeyDown(KeyCode.Alpha1) || Input.GetKeyDown(KeyCode.F))
+                // Attack nearest adjacent enemy with 1 or F
+                else if (!_spellMenuOpen && (Input.GetKeyDown(KeyCode.Alpha1) || Input.GetKeyDown(KeyCode.F)))
                     AttackNearestEnemy();
+                // Toggle spell menu with Q
+                else if (Input.GetKeyDown(KeyCode.Q))
+                    ToggleSpellMenu();
+                // Spell selection (1-9) when menu is open
+                else if (_spellMenuOpen)
+                    HandleSpellInput();
                 else if (Input.GetKeyDown(KeyCode.Space)) PlayerEndTurn();
             }
         }
@@ -57,8 +72,12 @@ namespace ForeverEngine.Demo.Battle
             // Build grid
             Grid = new BattleGrid(_encounterData.GridWidth, _encounterData.GridHeight, (int)_rngSeed);
 
-            // Spawn player
-            var player = BattleCombatant.FromPlayer(gm.Player);
+            // Spawn player — use CharacterSheet if available, fall back to PlayerData
+            BattleCombatant player;
+            if (gm.Character != null)
+                player = BattleCombatant.FromCharacterSheet(gm.Character);
+            else
+                player = BattleCombatant.FromPlayer(gm.Player);
             Combatants.Add(player);
 
             // Spawn enemies
@@ -107,10 +126,57 @@ namespace ForeverEngine.Demo.Battle
         {
             if (BattleOver) return;
             CurrentTurn = Combatants[_turnIndex];
+
+            // Skip truly dead combatants (enemies at 0 HP, or player who failed death saves)
             if (!CurrentTurn.IsAlive) { NextTurn(); return; }
+
             CurrentTurn.StartTurn();
 
+            // Handle death save mode: player at 0 HP rolls a death save instead of acting
+            if (CurrentTurn.IsPlayer && CurrentTurn.HP <= 0 && CurrentTurn.DeathSaves != null && CurrentTurn.DeathSaves.IsActive)
+            {
+                RollPlayerDeathSave();
+                return; // Turn ends after death save
+            }
+
+            // Check if conditions prevent acting
+            if (CurrentTurn.Conditions != null && !CurrentTurn.Conditions.CanAct)
+            {
+                Log.Add($"{CurrentTurn.Name} is incapacitated and cannot act!");
+                Invoke(nameof(NextTurn), 0.5f);
+                return;
+            }
+
             if (!CurrentTurn.IsPlayer) ProcessAITurn();
+        }
+
+        private void RollPlayerDeathSave()
+        {
+            int roll = DiceRoller.Roll(1, 20, 0, ref _rngSeed);
+            var result = CurrentTurn.DeathSaves.RollDeathSave(roll);
+
+            switch (result)
+            {
+                case DeathSaveResult.Revived:
+                    CurrentTurn.HP = 1;
+                    if (CurrentTurn.Sheet != null) CurrentTurn.Sheet.HP = 1;
+                    Log.Add($"Death Save: d20={roll} -- NATURAL 20! {CurrentTurn.Name} revives with 1 HP!");
+                    break;
+                case DeathSaveResult.Stabilized:
+                    Log.Add($"Death Save: d20={roll} -- Success ({CurrentTurn.DeathSaves.Successes}/3). {CurrentTurn.Name} is stabilized!");
+                    break;
+                case DeathSaveResult.Dead:
+                    Log.Add($"Death Save: d20={roll} -- {(roll <= 1 ? "NATURAL 1! Two failures!" : "Failure")} ({CurrentTurn.DeathSaves.Failures}/3). {CurrentTurn.Name} has died!");
+                    break;
+                case DeathSaveResult.Success:
+                    Log.Add($"Death Save: d20={roll} -- Success ({CurrentTurn.DeathSaves.Successes}/3)");
+                    break;
+                case DeathSaveResult.Failure:
+                    Log.Add($"Death Save: d20={roll} -- {(roll <= 1 ? "NATURAL 1! Two failures!" : "Failure")} ({CurrentTurn.DeathSaves.Failures}/3)");
+                    break;
+            }
+
+            Invoke(nameof(NextTurn), 1.0f);
         }
 
         public void NextTurn()
@@ -176,6 +242,192 @@ namespace ForeverEngine.Demo.Battle
         }
 
         public void PlayerEndTurn() { if (CurrentTurn != null && CurrentTurn.IsPlayer) NextTurn(); }
+
+        // === Spell Casting ===
+
+        private void ToggleSpellMenu()
+        {
+            _spellMenuOpen = !_spellMenuOpen;
+            if (_spellMenuOpen)
+            {
+                var playerCombatant = Combatants.FirstOrDefault(c => c.IsPlayer);
+                if (playerCombatant?.Sheet == null || playerCombatant.Sheet.PreparedSpells.Count == 0)
+                {
+                    Log.Add("No spells available.");
+                    _spellMenuOpen = false;
+                    return;
+                }
+                _availableSpells = playerCombatant.Sheet.PreparedSpells;
+                Log.Add("Spell menu open. Press 1-9 to cast, Q to close.");
+            }
+        }
+
+        private void HandleSpellInput()
+        {
+            // Escape or Q closes menu
+            if (Input.GetKeyDown(KeyCode.Escape) || Input.GetKeyDown(KeyCode.Q))
+            {
+                _spellMenuOpen = false;
+                Log.Add("Spell menu closed.");
+                return;
+            }
+
+            // Number keys 1-9 select a spell
+            for (int i = 0; i < 9 && i < _availableSpells.Count; i++)
+            {
+                if (Input.GetKeyDown(KeyCode.Alpha1 + i))
+                {
+                    CastSpell(_availableSpells[i]);
+                    return;
+                }
+            }
+        }
+
+        private void CastSpell(SpellData spell)
+        {
+            var playerCombatant = Combatants.FirstOrDefault(c => c.IsPlayer);
+            if (playerCombatant?.Sheet == null || !playerCombatant.HasAction)
+            {
+                Log.Add("Cannot cast right now.");
+                return;
+            }
+
+            var sheet = playerCombatant.Sheet;
+            int slotLevel = spell.IsCantrip ? 0 : spell.Level;
+
+            // Find a target — closest enemy for damage spells, self for healing
+            BattleCombatant target = null;
+            if (spell.HealingDiceCount > 0)
+            {
+                target = playerCombatant; // Self-heal
+            }
+            else
+            {
+                // Target closest alive enemy
+                target = Combatants
+                    .Where(c => c.IsAlive && !c.IsPlayer)
+                    .OrderBy(c => System.Math.Abs(c.X - playerCombatant.X) + System.Math.Abs(c.Y - playerCombatant.Y))
+                    .FirstOrDefault();
+            }
+
+            if (target == null && spell.HealingDiceCount <= 0)
+            {
+                Log.Add("No valid target.");
+                return;
+            }
+
+            var castingAbility = RPGBridge.GetCastingAbility(sheet);
+
+            // Build CastContext
+            var ctx = new CastContext
+            {
+                Caster = sheet,
+                Targets = target != null ? new object[] { target } : null,
+                Spell = spell,
+                SlotLevel = slotLevel > 0 ? slotLevel : spell.Level,
+                Metamagic = MetamagicType.None,
+                IsRitual = false
+            };
+
+            var result = SpellCastingPipeline.Cast(
+                ctx,
+                sheet.EffectiveAbilities,
+                sheet.ProficiencyBonus,
+                castingAbility,
+                sheet.SpellSlots,
+                sheet.Concentration,
+                null, // No sorcery points for premades
+                ref _rngSeed);
+
+            if (!result.Success)
+            {
+                Log.Add($"Cannot cast {spell.Name}: {result.FailureReason}");
+                return;
+            }
+
+            _spellMenuOpen = false;
+            playerCombatant.HasAction = false;
+
+            // Apply damage to target
+            if (result.DamageDealt > 0 && target != null && target != playerCombatant)
+            {
+                // Apply through DamageResolver with target's resistances
+                var dmgCtx = new DamageContext
+                {
+                    BaseDamage = spell.GetDamage(),
+                    Type = spell.DamageType,
+                    Critical = false,
+                    BonusDamage = 0,
+                    Resistances = target.Resistances,
+                    Vulnerabilities = target.Vulnerabilities,
+                    Immunities = target.Immunities,
+                    TargetTempHP = target.TempHP,
+                    TargetHP = target.HP
+                };
+                var dmgResult = DamageResolver.Apply(dmgCtx, ref _rngSeed);
+
+                // Apply temp HP absorption
+                if (dmgResult.AbsorbedByTempHP > 0)
+                    target.TempHP -= dmgResult.AbsorbedByTempHP;
+
+                target.TakeDamage(dmgResult.HPDamage);
+
+                string resistMsg = "";
+                if ((target.Resistances & spell.DamageType) != 0)
+                    resistMsg = " (resisted)";
+                if ((target.Vulnerabilities & spell.DamageType) != 0)
+                    resistMsg = " (vulnerable!)";
+
+                Log.Add($"{playerCombatant.Name} casts {spell.Name} on {target.Name} for {dmgResult.AfterResistance} {spell.DamageType} damage{resistMsg}!");
+
+                // AI events
+                var ai = Demo.AI.DemoAIIntegration.Instance;
+                ai?.OnPlayerAttacked(true, dmgResult.AfterResistance, target.Name);
+
+                if (!target.IsAlive)
+                {
+                    Log.Add($"{target.Name} is defeated!");
+                    ai?.OnEnemyKilled(target.Name);
+                }
+
+                // Q-learning penalty for target
+                if (!target.IsPlayer && _brains.TryGetValue(target, out var tgtBrain))
+                    tgtBrain.AddReward(-0.3f);
+            }
+
+            // Apply healing
+            if (result.HealingDone > 0 && target != null)
+            {
+                target.Heal(result.HealingDone);
+                Log.Add($"{playerCombatant.Name} casts {spell.Name} — heals {target.Name} for {result.HealingDone} HP!");
+            }
+
+            // Apply conditions
+            if (result.ConditionsApplied != Condition.None && target != null && target.Conditions != null)
+            {
+                target.Conditions.Apply(result.ConditionsApplied, spell.ConditionDuration, spell.Name);
+                Log.Add($"{target.Name} is now {result.ConditionsApplied}!");
+            }
+
+            // Concentration tracking
+            if (result.ConcentrationStarted)
+            {
+                Log.Add($"{playerCombatant.Name} is concentrating on {spell.Name}.");
+            }
+
+            // Slot info
+            if (result.SlotExpended > 0)
+            {
+                int remaining = sheet.SpellSlots.AvailableSlots[result.SlotExpended - 1];
+                Log.Add($"(Level {result.SlotExpended} slot expended. {remaining} remaining)");
+            }
+
+            CheckBattleEnd();
+        }
+
+        // Public accessor for HUD to read spell menu state
+        public bool IsSpellMenuOpen => _spellMenuOpen;
+        public List<SpellData> AvailableSpells => _availableSpells;
 
         private void ProcessAITurn()
         {
@@ -309,44 +561,177 @@ namespace ForeverEngine.Demo.Battle
 
         private void ResolveAttack(BattleCombatant attacker, BattleCombatant target)
         {
-            int roll = attacker.RollAttack(ref _rngSeed);
-            bool hit = roll == 20 || (roll != 1 && roll + DiceRoller.AbilityModifier(attacker.Strength) >= target.AC);
+            // Build AttackContext
+            var atkAbilities = new AbilityScores(
+                attacker.Strength, attacker.Dexterity, 10, 10, 10, 10);
+            int profBonus = 2; // Default proficiency for demo enemies
+
+            WeaponData weapon = null;
+            bool isMelee = true;
+            bool isRanged = false;
+            int magicBonus = 0;
+
+            if (attacker.Sheet != null)
+            {
+                atkAbilities = attacker.Sheet.EffectiveAbilities;
+                profBonus = attacker.Sheet.ProficiencyBonus;
+                weapon = attacker.Sheet.MainHand;
+                if (weapon != null)
+                {
+                    isMelee = !weapon.IsRanged;
+                    isRanged = weapon.IsRanged;
+                    magicBonus = weapon.MagicBonus;
+                }
+            }
+
+            var atkCtx = new AttackContext
+            {
+                AttackerAbilities = atkAbilities,
+                AttackerProficiency = profBonus,
+                Weapon = weapon,
+                TargetAC = target.AC,
+                AttackerConditions = attacker.Conditions?.ActiveFlags ?? Condition.None,
+                TargetConditions = target.Conditions?.ActiveFlags ?? Condition.None,
+                IsMelee = isMelee,
+                IsRanged = isRanged,
+                CritRange = 20,
+                MagicBonus = magicBonus
+            };
+
+            var atkResult = AttackResolver.Resolve(atkCtx, ref _rngSeed);
 
             var ai = Demo.AI.DemoAIIntegration.Instance;
-            if (hit)
+
+            // Format advantage/disadvantage in log
+            string advStr = atkResult.State switch
             {
-                int damage = attacker.RollDamage(ref _rngSeed);
-                if (damage < 1) damage = 1;
-                target.TakeDamage(damage);
-                Log.Add($"{attacker.Name} hits {target.Name} for {damage}! (d20={roll})");
+                AdvantageState.Advantage => " with advantage",
+                AdvantageState.Disadvantage => " with disadvantage",
+                _ => ""
+            };
 
-                // AI events
-                if (attacker.IsPlayer) ai?.OnPlayerAttacked(true, damage, target.Name);
-                if (target.IsPlayer) ai?.OnPlayerDamaged(damage);
+            if (atkResult.Hit)
+            {
+                // Build DamageContext
+                var baseDmg = new DiceExpression(attacker.AtkCount, (DieType)attacker.AtkSides, attacker.AtkBonus);
+                if (weapon != null)
+                    baseDmg = weapon.GetDamage();
 
-                if (!target.IsAlive)
+                int abilityDmgBonus = 0;
+                if (attacker.Sheet != null)
                 {
-                    Log.Add($"{target.Name} is defeated!");
-                    if (!target.IsPlayer) ai?.OnEnemyKilled(target.Name);
+                    // STR mod for melee, DEX for ranged/finesse
+                    if (weapon != null && weapon.IsFinesse)
+                    {
+                        int strMod = atkAbilities.GetModifier(Ability.STR);
+                        int dexMod = atkAbilities.GetModifier(Ability.DEX);
+                        abilityDmgBonus = strMod > dexMod ? strMod : dexMod;
+                    }
+                    else if (isRanged)
+                        abilityDmgBonus = atkAbilities.GetModifier(Ability.DEX);
+                    else
+                        abilityDmgBonus = atkAbilities.GetModifier(Ability.STR);
                 }
 
-                // Q-learning: penalize target enemy for taking damage
+                var dmgType = attacker.AttackDamageType;
+                if (weapon != null) dmgType = weapon.Type;
+
+                var dmgCtx = new DamageContext
+                {
+                    BaseDamage = baseDmg,
+                    Type = dmgType,
+                    Critical = atkResult.Critical,
+                    BonusDamage = abilityDmgBonus + magicBonus,
+                    Resistances = target.Resistances,
+                    Vulnerabilities = target.Vulnerabilities,
+                    Immunities = target.Immunities,
+                    TargetTempHP = target.TempHP,
+                    TargetHP = target.HP
+                };
+
+                var dmgResult = DamageResolver.Apply(dmgCtx, ref _rngSeed);
+
+                // Apply temp HP absorption
+                if (dmgResult.AbsorbedByTempHP > 0)
+                    target.TempHP -= dmgResult.AbsorbedByTempHP;
+
+                int hpDamage = dmgResult.HPDamage;
+                if (hpDamage < 1 && dmgResult.AfterResistance > 0) hpDamage = 1;
+
+                // Handle damage at 0 HP (death save failures)
+                if (target.HP <= 0 && target.IsPlayer && target.DeathSaves != null && target.DeathSaves.IsActive)
+                {
+                    var dsResult = target.DeathSaves.TakeDamageAtZero(atkResult.Critical);
+                    Log.Add($"{target.Name} takes damage at 0 HP! Death save failure{(atkResult.Critical ? " (x2 from crit)" : "")}.");
+                    if (dsResult == DeathSaveResult.Dead)
+                        Log.Add($"{target.Name} has died!");
+                }
+                else
+                {
+                    target.TakeDamage(hpDamage);
+                }
+
+                // Format log message
+                string critStr = atkResult.Critical ? "CRITICAL HIT! " : "";
+                string resistStr = "";
+                if ((target.Resistances & dmgType) != 0)
+                    resistStr = $" (resisted, halved to {dmgResult.AfterResistance})";
+                if ((target.Vulnerabilities & dmgType) != 0)
+                    resistStr = $" (vulnerable! doubled to {dmgResult.AfterResistance})";
+
+                Log.Add($"{critStr}{attacker.Name} hits {target.Name}{advStr} for {dmgResult.AfterResistance} {dmgType} damage! (d20={atkResult.NaturalRoll}, total={atkResult.Total} vs AC {target.AC}){resistStr}");
+
+                // AI events (preserved)
+                if (attacker.IsPlayer) ai?.OnPlayerAttacked(true, dmgResult.AfterResistance, target.Name);
+                if (target.IsPlayer) ai?.OnPlayerDamaged(dmgResult.AfterResistance);
+
+                // Check concentration on damaged caster
+                if (target.Concentration != null && target.Concentration.IsConcentrating && target.Sheet != null)
+                {
+                    bool maintained = target.Concentration.CheckConcentration(
+                        dmgResult.AfterResistance,
+                        target.Sheet.EffectiveAbilities,
+                        target.Sheet.ProficiencyBonus,
+                        RPGBridge.IsProficientConSave(target.Sheet),
+                        false, // No War Caster for demo
+                        ref _rngSeed);
+                    if (!maintained)
+                        Log.Add($"{target.Name} lost concentration on {target.Concentration.ActiveSpell?.Name ?? "spell"}!");
+                }
+
+                // Death & defeat
+                if (target.HP <= 0)
+                {
+                    if (target.IsPlayer && target.DeathSaves != null && !target.DeathSaves.IsActive && !target.DeathSaves.IsDead)
+                    {
+                        // Enter death save mode
+                        target.DeathSaves.Begin();
+                        Log.Add($"{target.Name} falls to 0 HP! Death saves begin...");
+                    }
+                    else if (!target.IsPlayer)
+                    {
+                        Log.Add($"{target.Name} is defeated!");
+                        ai?.OnEnemyKilled(target.Name);
+                    }
+                }
+
+                // Q-learning: penalize target enemy for taking damage (preserved)
                 if (!target.IsPlayer && _brains.TryGetValue(target, out var tgtBrain))
                     tgtBrain.AddReward(-0.3f);
 
-                // All enemies rewarded for killing player
-                if (!target.IsAlive && target.IsPlayer)
+                // All enemies rewarded for downing player (preserved)
+                if (target.HP <= 0 && target.IsPlayer)
                     foreach (var b in _brains.Values) b.AddReward(1.0f);
             }
             else
             {
-                Log.Add($"{attacker.Name} misses {target.Name}. (d20={roll})");
+                Log.Add($"{attacker.Name} misses {target.Name}{advStr}. (d20={atkResult.NaturalRoll}, total={atkResult.Total} vs AC {target.AC})");
                 if (attacker.IsPlayer) ai?.OnPlayerAttacked(false, 0, target.Name);
             }
 
-            // Q-learning: reward/penalize enemy attacker for hit/miss
+            // Q-learning: reward/penalize enemy attacker for hit/miss (preserved)
             if (!attacker.IsPlayer && _brains.TryGetValue(attacker, out var atkBrain))
-                atkBrain.AddReward(hit ? 0.5f : -0.1f);
+                atkBrain.AddReward(atkResult.Hit ? 0.5f : -0.1f);
         }
 
         private bool IsAdjacent(BattleCombatant a, BattleCombatant b) =>
@@ -355,7 +740,23 @@ namespace ForeverEngine.Demo.Battle
         private void CheckBattleEnd()
         {
             var player = Combatants.FirstOrDefault(c => c.IsPlayer);
-            if (player == null || !player.IsAlive)
+
+            // Player is truly dead only if DeathSaveTracker says so (or no tracker and HP <= 0)
+            bool playerDead = false;
+            if (player == null)
+            {
+                playerDead = true;
+            }
+            else if (player.DeathSaves != null)
+            {
+                playerDead = player.DeathSaves.IsDead;
+            }
+            else
+            {
+                playerDead = !player.IsAlive;
+            }
+
+            if (playerDead)
             {
                 BattleOver = true; PlayerWon = false;
                 Log.Add("You have fallen...");
@@ -372,7 +773,16 @@ namespace ForeverEngine.Demo.Battle
                     gm.LastBattleWon = true;
                     gm.LastBattleGoldEarned = _encounterData.GoldReward;
                     gm.LastBattleXPEarned = _encounterData.XPReward;
-                    gm.Player.HP = player.HP; // Persist damage taken
+                    // Persist damage taken back to CharacterSheet and PlayerData
+                    if (gm.Character != null)
+                    {
+                        gm.Character.HP = player.HP;
+                        gm.SyncPlayerFromCharacter();
+                    }
+                    else
+                    {
+                        gm.Player.HP = player.HP;
+                    }
                 }
             }
 
@@ -381,7 +791,7 @@ namespace ForeverEngine.Demo.Battle
                 float endReward = PlayerWon ? -0.5f : 0.5f;
                 foreach (var b in _brains.Values) b.OnEpisodeEnd(endReward);
 
-                // Save Q-table to LTM
+                // Save Q-table to LTM (preserved)
                 var firstBrain = _brains.Values.FirstOrDefault();
                 if (firstBrain != null)
                     Demo.AI.DemoAIIntegration.Instance?.SaveCombatQTable(firstBrain.SaveQTable());
