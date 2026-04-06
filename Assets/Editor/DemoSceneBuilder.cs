@@ -8,6 +8,7 @@ using ForeverEngine.Demo.Overworld;
 using ForeverEngine.Demo.Battle;
 using ForeverEngine.Demo.Encounters;
 using ForeverEngine.Demo.Locations;
+using ForeverEngine.AI.GameMaster;
 
 namespace ForeverEngine.Editor
 {
@@ -50,6 +51,7 @@ namespace ForeverEngine.Editor
             aiGO.AddComponent<ForeverEngine.AI.SelfHealing.SystemMonitor>();
             aiGO.AddComponent<ForeverEngine.AI.SelfHealing.PerformanceRegulator>();
             aiGO.AddComponent<ForeverEngine.AI.Inference.InferenceEngine>();
+            aiGO.AddComponent<ClaudeAPIClient>();
 
             EditorSceneManager.SaveScene(scene, "Assets/Scenes/MainMenu.unity");
             Debug.Log("[DemoSceneBuilder] MainMenu scene created");
