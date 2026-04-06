@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 using ForeverEngine.RPG.Enums;
@@ -31,12 +32,12 @@ namespace ForeverEngine.Editor.RPG
             int wCount = 0;
             int aCount = 0;
 
-            GenerateBaseWeapons(ref wCount);
-            GenerateMagicWeaponVariants(ref wCount);
+            var baseWeapons = GenerateBaseWeapons(ref wCount);
+            GenerateMagicWeaponVariants(ref wCount, baseWeapons);
             GenerateNamedMagicWeapons(ref wCount);
 
-            GenerateBaseArmor(ref aCount);
-            GenerateMagicArmorVariants(ref aCount);
+            var baseArmor = GenerateBaseArmor(ref aCount);
+            GenerateMagicArmorVariants(ref aCount, baseArmor);
             GenerateNamedMagicArmor(ref aCount);
 
             AssetDatabase.SaveAssets();
@@ -124,10 +125,11 @@ namespace ForeverEngine.Editor.RPG
             return w;
         }
 
-        private static void SaveW(ref int count, WeaponData w)
+        private static WeaponData SaveW(ref int count, WeaponData w)
         {
             AssetDatabase.CreateAsset(w, $"{WeaponDir}/{w.Id}.asset");
             count++;
+            return w;
         }
 
         // =====================================================================
@@ -163,70 +165,71 @@ namespace ForeverEngine.Editor.RPG
             return a;
         }
 
-        private static void SaveA(ref int count, ArmorData a)
+        private static ArmorData SaveA(ref int count, ArmorData a)
         {
             AssetDatabase.CreateAsset(a, $"{ArmorDir}/{a.Id}.asset");
             count++;
+            return a;
         }
 
         // =====================================================================
         // BASE WEAPONS
         // =====================================================================
 
-        private static void GenerateBaseWeapons(ref int count)
+        private static List<WeaponData> GenerateBaseWeapons(ref int count)
         {
+            var bases = new List<WeaponData>();
+
             // --- Simple Melee (8) ---
-            SaveW(ref count, Melee("club", "Club", 1, DieType.D4, DamageType.Bludgeoning, Lgt, "Simple"));
-            SaveW(ref count, Melee("dagger", "Dagger", 1, DieType.D4, DamageType.Piercing, Fin | Lgt | Thr, "Simple"));
-            SaveW(ref count, Melee("greatclub", "Greatclub", 1, DieType.D8, DamageType.Bludgeoning, Two, "Simple"));
-            SaveW(ref count, Melee("handaxe", "Handaxe", 1, DieType.D6, DamageType.Slashing, Lgt | Thr, "Simple"));
-            SaveW(ref count, Melee("javelin", "Javelin", 1, DieType.D6, DamageType.Piercing, Thr, "Simple"));
-            SaveW(ref count, Melee("mace", "Mace", 1, DieType.D6, DamageType.Bludgeoning, WeaponProperty.None, "Simple"));
-            SaveW(ref count, Versatile("quarterstaff", "Quarterstaff", 1, DieType.D6, 1, DieType.D8, DamageType.Bludgeoning, WeaponProperty.None, "Simple"));
-            SaveW(ref count, Melee("sickle", "Sickle", 1, DieType.D4, DamageType.Slashing, Lgt, "Simple"));
+            bases.Add(SaveW(ref count, Melee("club", "Club", 1, DieType.D4, DamageType.Bludgeoning, Lgt, "Simple")));
+            bases.Add(SaveW(ref count, Melee("dagger", "Dagger", 1, DieType.D4, DamageType.Piercing, Fin | Lgt | Thr, "Simple")));
+            bases.Add(SaveW(ref count, Melee("greatclub", "Greatclub", 1, DieType.D8, DamageType.Bludgeoning, Two, "Simple")));
+            bases.Add(SaveW(ref count, Melee("handaxe", "Handaxe", 1, DieType.D6, DamageType.Slashing, Lgt | Thr, "Simple")));
+            bases.Add(SaveW(ref count, Melee("javelin", "Javelin", 1, DieType.D6, DamageType.Piercing, Thr, "Simple")));
+            bases.Add(SaveW(ref count, Melee("mace", "Mace", 1, DieType.D6, DamageType.Bludgeoning, WeaponProperty.None, "Simple")));
+            bases.Add(SaveW(ref count, Versatile("quarterstaff", "Quarterstaff", 1, DieType.D6, 1, DieType.D8, DamageType.Bludgeoning, WeaponProperty.None, "Simple")));
+            bases.Add(SaveW(ref count, Melee("sickle", "Sickle", 1, DieType.D4, DamageType.Slashing, Lgt, "Simple")));
 
             // --- Simple Ranged (4) ---
-            SaveW(ref count, Ranged("light_crossbow", "Light Crossbow", 1, DieType.D8, DamageType.Piercing, 80, 320, Amm | Lod | Two, "Simple"));
-            SaveW(ref count, Ranged("dart", "Dart", 1, DieType.D4, DamageType.Piercing, 20, 60, Fin | Thr, "Simple"));
-            SaveW(ref count, Ranged("shortbow", "Shortbow", 1, DieType.D6, DamageType.Piercing, 80, 320, Amm | Two, "Simple"));
-            SaveW(ref count, Ranged("sling", "Sling", 1, DieType.D4, DamageType.Bludgeoning, 30, 120, Amm, "Simple"));
+            bases.Add(SaveW(ref count, Ranged("light_crossbow", "Light Crossbow", 1, DieType.D8, DamageType.Piercing, 80, 320, Amm | Lod | Two, "Simple")));
+            bases.Add(SaveW(ref count, Ranged("dart", "Dart", 1, DieType.D4, DamageType.Piercing, 20, 60, Fin | Thr, "Simple")));
+            bases.Add(SaveW(ref count, Ranged("shortbow", "Shortbow", 1, DieType.D6, DamageType.Piercing, 80, 320, Amm | Two, "Simple")));
+            bases.Add(SaveW(ref count, Ranged("sling", "Sling", 1, DieType.D4, DamageType.Bludgeoning, 30, 120, Amm, "Simple")));
 
             // --- Martial Melee (14) ---
-            SaveW(ref count, Versatile("battleaxe", "Battleaxe", 1, DieType.D8, 1, DieType.D10, DamageType.Slashing, WeaponProperty.None, "Martial"));
-            SaveW(ref count, Melee("flail", "Flail", 1, DieType.D8, DamageType.Bludgeoning, WeaponProperty.None, "Martial"));
-            SaveW(ref count, Melee("glaive", "Glaive", 1, DieType.D10, DamageType.Slashing, Hvy | Rch | Two, "Martial"));
-            SaveW(ref count, Melee("greataxe", "Greataxe", 1, DieType.D12, DamageType.Slashing, Hvy | Two, "Martial"));
-            SaveW(ref count, Melee("greatsword", "Greatsword", 2, DieType.D6, DamageType.Slashing, Hvy | Two, "Martial"));
-            SaveW(ref count, Melee("halberd", "Halberd", 1, DieType.D10, DamageType.Slashing, Hvy | Rch | Two, "Martial"));
-            SaveW(ref count, Melee("lance", "Lance", 1, DieType.D12, DamageType.Piercing, Rch, "Martial"));
-            SaveW(ref count, Versatile("longsword", "Longsword", 1, DieType.D8, 1, DieType.D10, DamageType.Slashing, WeaponProperty.None, "Martial"));
-            SaveW(ref count, Melee("morningstar", "Morningstar", 1, DieType.D8, DamageType.Piercing, WeaponProperty.None, "Martial"));
-            SaveW(ref count, Melee("rapier", "Rapier", 1, DieType.D8, DamageType.Piercing, Fin, "Martial"));
-            SaveW(ref count, Melee("scimitar", "Scimitar", 1, DieType.D6, DamageType.Slashing, Fin | Lgt, "Martial"));
-            SaveW(ref count, Melee("shortsword", "Shortsword", 1, DieType.D6, DamageType.Piercing, Fin | Lgt, "Martial"));
-            SaveW(ref count, Versatile("trident", "Trident", 1, DieType.D6, 1, DieType.D8, DamageType.Piercing, Thr, "Martial"));
-            SaveW(ref count, Versatile("warhammer", "Warhammer", 1, DieType.D8, 1, DieType.D10, DamageType.Bludgeoning, WeaponProperty.None, "Martial"));
+            bases.Add(SaveW(ref count, Versatile("battleaxe", "Battleaxe", 1, DieType.D8, 1, DieType.D10, DamageType.Slashing, WeaponProperty.None, "Martial")));
+            bases.Add(SaveW(ref count, Melee("flail", "Flail", 1, DieType.D8, DamageType.Bludgeoning, WeaponProperty.None, "Martial")));
+            bases.Add(SaveW(ref count, Melee("glaive", "Glaive", 1, DieType.D10, DamageType.Slashing, Hvy | Rch | Two, "Martial")));
+            bases.Add(SaveW(ref count, Melee("greataxe", "Greataxe", 1, DieType.D12, DamageType.Slashing, Hvy | Two, "Martial")));
+            bases.Add(SaveW(ref count, Melee("greatsword", "Greatsword", 2, DieType.D6, DamageType.Slashing, Hvy | Two, "Martial")));
+            bases.Add(SaveW(ref count, Melee("halberd", "Halberd", 1, DieType.D10, DamageType.Slashing, Hvy | Rch | Two, "Martial")));
+            bases.Add(SaveW(ref count, Melee("lance", "Lance", 1, DieType.D12, DamageType.Piercing, Rch, "Martial")));
+            bases.Add(SaveW(ref count, Versatile("longsword", "Longsword", 1, DieType.D8, 1, DieType.D10, DamageType.Slashing, WeaponProperty.None, "Martial")));
+            bases.Add(SaveW(ref count, Melee("morningstar", "Morningstar", 1, DieType.D8, DamageType.Piercing, WeaponProperty.None, "Martial")));
+            bases.Add(SaveW(ref count, Melee("rapier", "Rapier", 1, DieType.D8, DamageType.Piercing, Fin, "Martial")));
+            bases.Add(SaveW(ref count, Melee("scimitar", "Scimitar", 1, DieType.D6, DamageType.Slashing, Fin | Lgt, "Martial")));
+            bases.Add(SaveW(ref count, Melee("shortsword", "Shortsword", 1, DieType.D6, DamageType.Piercing, Fin | Lgt, "Martial")));
+            bases.Add(SaveW(ref count, Versatile("trident", "Trident", 1, DieType.D6, 1, DieType.D8, DamageType.Piercing, Thr, "Martial")));
+            bases.Add(SaveW(ref count, Versatile("warhammer", "Warhammer", 1, DieType.D8, 1, DieType.D10, DamageType.Bludgeoning, WeaponProperty.None, "Martial")));
 
             // --- Martial Ranged (5) ---
-            SaveW(ref count, Ranged("hand_crossbow", "Hand Crossbow", 1, DieType.D6, DamageType.Piercing, 30, 120, Amm | Lgt | Lod, "Martial"));
-            SaveW(ref count, Ranged("heavy_crossbow", "Heavy Crossbow", 1, DieType.D10, DamageType.Piercing, 100, 400, Amm | Hvy | Lod | Two, "Martial"));
-            SaveW(ref count, Ranged("longbow", "Longbow", 1, DieType.D8, DamageType.Piercing, 150, 600, Amm | Hvy | Two, "Martial"));
-            SaveW(ref count, Ranged("blowgun", "Blowgun", 1, DieType.D4, DamageType.Piercing, 25, 100, Amm | Lod, "Martial"));
-            SaveW(ref count, Ranged("net", "Net", 0, DieType.D4, DamageType.Bludgeoning, 5, 15, Thr, "Martial"));
+            bases.Add(SaveW(ref count, Ranged("hand_crossbow", "Hand Crossbow", 1, DieType.D6, DamageType.Piercing, 30, 120, Amm | Lgt | Lod, "Martial")));
+            bases.Add(SaveW(ref count, Ranged("heavy_crossbow", "Heavy Crossbow", 1, DieType.D10, DamageType.Piercing, 100, 400, Amm | Hvy | Lod | Two, "Martial")));
+            bases.Add(SaveW(ref count, Ranged("longbow", "Longbow", 1, DieType.D8, DamageType.Piercing, 150, 600, Amm | Hvy | Two, "Martial")));
+            bases.Add(SaveW(ref count, Ranged("blowgun", "Blowgun", 1, DieType.D4, DamageType.Piercing, 25, 100, Amm | Lod, "Martial")));
+            bases.Add(SaveW(ref count, Ranged("net", "Net", 0, DieType.D4, DamageType.Bludgeoning, 5, 15, Thr, "Martial")));
+
+            return bases;
         }
 
         // =====================================================================
         // MAGIC WEAPON VARIANTS (+1/+2/+3)
         // =====================================================================
 
-        private static void GenerateMagicWeaponVariants(ref int count)
+        private static void GenerateMagicWeaponVariants(ref int count, List<WeaponData> baseWeapons)
         {
-            var baseGuids = AssetDatabase.FindAssets("t:WeaponData", new[] { WeaponDir });
-            foreach (string guid in baseGuids)
+            foreach (var baseW in baseWeapons)
             {
-                string path = AssetDatabase.GUIDToAssetPath(guid);
-                var baseW = AssetDatabase.LoadAssetAtPath<WeaponData>(path);
-                if (baseW == null || baseW.MagicBonus > 0) continue;
                 for (int b = 1; b <= 3; b++)
                     SaveW(ref count, MagicWeapon(baseW, b));
             }
@@ -353,41 +356,41 @@ namespace ForeverEngine.Editor.RPG
         // BASE ARMOR
         // =====================================================================
 
-        private static void GenerateBaseArmor(ref int count)
+        private static List<ArmorData> GenerateBaseArmor(ref int count)
         {
+            var bases = new List<ArmorData>();
+
             // --- Light Armor (3) ---
-            SaveA(ref count, MakeArmor("padded", "Padded", 11, ArmorType.Light, true, 0));
-            SaveA(ref count, MakeArmor("leather", "Leather", 11, ArmorType.Light, false, 0));
-            SaveA(ref count, MakeArmor("studded_leather", "Studded Leather", 12, ArmorType.Light, false, 0));
+            bases.Add(SaveA(ref count, MakeArmor("padded", "Padded", 11, ArmorType.Light, true, 0)));
+            bases.Add(SaveA(ref count, MakeArmor("leather", "Leather", 11, ArmorType.Light, false, 0)));
+            bases.Add(SaveA(ref count, MakeArmor("studded_leather", "Studded Leather", 12, ArmorType.Light, false, 0)));
 
             // --- Medium Armor (4) ---
-            SaveA(ref count, MakeArmor("hide", "Hide", 12, ArmorType.Medium, false, 0));
-            SaveA(ref count, MakeArmor("chain_shirt", "Chain Shirt", 13, ArmorType.Medium, false, 0));
-            SaveA(ref count, MakeArmor("scale_mail", "Scale Mail", 14, ArmorType.Medium, true, 0));
-            SaveA(ref count, MakeArmor("breastplate", "Breastplate", 14, ArmorType.Medium, false, 0));
+            bases.Add(SaveA(ref count, MakeArmor("hide", "Hide", 12, ArmorType.Medium, false, 0)));
+            bases.Add(SaveA(ref count, MakeArmor("chain_shirt", "Chain Shirt", 13, ArmorType.Medium, false, 0)));
+            bases.Add(SaveA(ref count, MakeArmor("scale_mail", "Scale Mail", 14, ArmorType.Medium, true, 0)));
+            bases.Add(SaveA(ref count, MakeArmor("breastplate", "Breastplate", 14, ArmorType.Medium, false, 0)));
 
             // --- Heavy Armor (4) ---
-            SaveA(ref count, MakeArmor("ring_mail", "Ring Mail", 14, ArmorType.Heavy, true, 0));
-            SaveA(ref count, MakeArmor("chain_mail", "Chain Mail", 16, ArmorType.Heavy, true, 13));
-            SaveA(ref count, MakeArmor("splint", "Splint", 17, ArmorType.Heavy, true, 15));
-            SaveA(ref count, MakeArmor("plate", "Plate", 18, ArmorType.Heavy, true, 15));
+            bases.Add(SaveA(ref count, MakeArmor("ring_mail", "Ring Mail", 14, ArmorType.Heavy, true, 0)));
+            bases.Add(SaveA(ref count, MakeArmor("chain_mail", "Chain Mail", 16, ArmorType.Heavy, true, 13)));
+            bases.Add(SaveA(ref count, MakeArmor("splint", "Splint", 17, ArmorType.Heavy, true, 15)));
+            bases.Add(SaveA(ref count, MakeArmor("plate", "Plate", 18, ArmorType.Heavy, true, 15)));
 
             // --- Shield (1) ---
-            SaveA(ref count, MakeArmor("shield", "Shield", 2, ArmorType.Shield, false, 0));
+            bases.Add(SaveA(ref count, MakeArmor("shield", "Shield", 2, ArmorType.Shield, false, 0)));
+
+            return bases;
         }
 
         // =====================================================================
         // MAGIC ARMOR VARIANTS (+1/+2/+3)
         // =====================================================================
 
-        private static void GenerateMagicArmorVariants(ref int count)
+        private static void GenerateMagicArmorVariants(ref int count, List<ArmorData> baseArmor)
         {
-            var baseGuids = AssetDatabase.FindAssets("t:ArmorData", new[] { ArmorDir });
-            foreach (string guid in baseGuids)
+            foreach (var baseA in baseArmor)
             {
-                string path = AssetDatabase.GUIDToAssetPath(guid);
-                var baseA = AssetDatabase.LoadAssetAtPath<ArmorData>(path);
-                if (baseA == null || baseA.MagicBonus > 0) continue;
                 for (int b = 1; b <= 3; b++)
                     SaveA(ref count, MagicArmor(baseA, b));
             }

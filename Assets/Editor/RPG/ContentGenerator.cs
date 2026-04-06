@@ -58,14 +58,17 @@ namespace ForeverEngine.Editor.RPG
             var classes = AssetDatabase.FindAssets("t:ClassData", new[] { ClassDir });
             var species = AssetDatabase.FindAssets("t:SpeciesData", new[] { SpeciesDir });
             var spells = AssetDatabase.FindAssets("t:SpellData", new[] { SpellDir });
-            var weapons = AssetDatabase.FindAssets("t:WeaponData", new[] { WeaponDir });
-            var armor = AssetDatabase.FindAssets("t:ArmorData", new[] { ArmorDir });
+            // Use file counting for equipment — FindAssets can miss newly-created types in batch mode
+            int weaponCount = System.IO.Directory.Exists(WeaponDir)
+                ? System.IO.Directory.GetFiles(WeaponDir, "*.asset").Length : 0;
+            int armorCount = System.IO.Directory.Exists(ArmorDir)
+                ? System.IO.Directory.GetFiles(ArmorDir, "*.asset").Length : 0;
 
             Debug.Log($"[ContentGenerator] Generated {classes.Length} ClassData assets");
             Debug.Log($"[ContentGenerator] Generated {species.Length} SpeciesData assets");
             Debug.Log($"[ContentGenerator] Generated {spells.Length} SpellData assets");
-            Debug.Log($"[ContentGenerator] Generated {weapons.Length} WeaponData assets");
-            Debug.Log($"[ContentGenerator] Generated {armor.Length} ArmorData assets");
+            Debug.Log($"[ContentGenerator] Generated {weaponCount} WeaponData assets");
+            Debug.Log($"[ContentGenerator] Generated {armorCount} ArmorData assets");
 
             if (classes.Length != 12)
             {
@@ -82,14 +85,14 @@ namespace ForeverEngine.Editor.RPG
                 Debug.LogError($"[ContentGenerator] Expected 205 spells, found {spells.Length}");
                 errors++;
             }
-            if (weapons.Length < 100)
+            if (weaponCount < 100)
             {
-                Debug.LogError($"[ContentGenerator] Expected 100+ weapons, found {weapons.Length}");
+                Debug.LogError($"[ContentGenerator] Expected 100+ weapons, found {weaponCount}");
                 errors++;
             }
-            if (armor.Length < 50)
+            if (armorCount < 50)
             {
-                Debug.LogError($"[ContentGenerator] Expected 50+ armor, found {armor.Length}");
+                Debug.LogError($"[ContentGenerator] Expected 50+ armor, found {armorCount}");
                 errors++;
             }
 
@@ -125,7 +128,7 @@ namespace ForeverEngine.Editor.RPG
                 }
             }
 
-            int total = classes.Length + species.Length + spells.Length + weapons.Length + armor.Length;
+            int total = classes.Length + species.Length + spells.Length + weaponCount + armorCount;
             Debug.Log($"[ContentGenerator] Validation: {total} total assets, {errors} errors");
         }
     }
