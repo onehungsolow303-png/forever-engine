@@ -106,8 +106,9 @@ namespace ForeverEngine.Demo.Battle
                     _brains[c] = new CombatBrain(savedTable, seed: (int)_rngSeed + c.X * 100 + c.Y);
             }
 
-            // Create neural intelligence if InferenceEngine exists
-            if (ForeverEngine.AI.Inference.InferenceEngine.Instance != null)
+            // Create neural intelligence only if InferenceEngine has a loaded model
+            var inferEngine = ForeverEngine.AI.Inference.InferenceEngine.Instance;
+            if (inferEngine != null && inferEngine.IsAvailable)
             {
                 var go = new GameObject("CombatIntelligence");
                 go.transform.SetParent(transform);

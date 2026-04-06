@@ -34,6 +34,9 @@ namespace ForeverEngine.Demo.AI
         {
             if (Instance != null && Instance != this) { Destroy(gameObject); return; }
             Instance = this;
+            // DontDestroyOnLoad requires root GameObject — detach from parent if needed
+            if (transform.parent != null)
+                transform.SetParent(null);
             DontDestroyOnLoad(gameObject);
         }
 
