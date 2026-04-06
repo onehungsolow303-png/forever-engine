@@ -24,7 +24,9 @@ namespace ForeverEngine.MonoBehaviour.RPG
         // ── Events ────────────────────────────────────────────────────────
         public event System.Action OnShortRestBegin;
         public event System.Action OnLongRestBegin;
+#pragma warning disable CS0067
         public event System.Action OnRestComplete;
+#pragma warning restore CS0067
 
         // ── Internal state ────────────────────────────────────────────────
         private int _hitDiceToSpend = 1;

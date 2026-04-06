@@ -32,7 +32,6 @@ namespace ForeverEngine.Demo.Battle
         // Spell casting UI state
         private bool _spellMenuOpen;
         private List<SpellData> _availableSpells = new();
-        private int _selectedSpellSlotLevel = 1;
 
         private void Awake() => Instance = this;
 

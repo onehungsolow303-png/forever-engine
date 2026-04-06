@@ -251,7 +251,7 @@ namespace ForeverEngine.Demo.UI
             _state = ConvState.Conversation;
 
             // Try Claude API path
-            var claudeClient = FindFirstObjectByType<ClaudeAPIClient>();
+            var claudeClient = FindAnyObjectByType<ClaudeAPIClient>();
             if (claudeClient != null && claudeClient.IsConfigured)
             {
                 _awaitingAI = true;

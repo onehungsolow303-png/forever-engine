@@ -13,7 +13,9 @@ namespace ForeverEngine.Demo.Overworld
 
         // Hex geometry
         private const float HEX_SIZE = 1f;
+#pragma warning disable CS0414
         private static readonly float HEX_WIDTH = HEX_SIZE * 1.5f;
+#pragma warning restore CS0414
         private static readonly float HEX_HEIGHT = HEX_SIZE * Mathf.Sqrt(3f);
 
         private static readonly Color COLOR_PLAINS = new Color(0.45f, 0.55f, 0.3f);

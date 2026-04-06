@@ -107,10 +107,10 @@ namespace ForeverEngine.MonoBehaviour.Input
                     }
 
                     // Re-render tiles and fog
-                    var tileRenderer = UnityEngine.Object.FindFirstObjectByType<TileRenderer>();
+                    var tileRenderer = UnityEngine.Object.FindAnyObjectByType<TileRenderer>();
                     if (tileRenderer != null) tileRenderer.RenderLevel(tComp.ToZ);
 
-                    var fogRenderer = UnityEngine.Object.FindFirstObjectByType<FogRenderer>();
+                    var fogRenderer = UnityEngine.Object.FindAnyObjectByType<FogRenderer>();
                     if (fogRenderer != null) fogRenderer.Initialize(store.Width, store.Height);
 
                     string dir = tComp.TransitionType == 1 ? "up" : "down";

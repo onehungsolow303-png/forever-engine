@@ -70,7 +70,7 @@ namespace ForeverEngine.MonoBehaviour.Bootstrap
             // TileRenderer (needs Grid + Tilemap)
             if (TileRenderer == null)
             {
-                TileRenderer = FindFirstObjectByType<TileRenderer>();
+                TileRenderer = FindAnyObjectByType<TileRenderer>();
                 if (TileRenderer == null)
                 {
                     var gridGO = new GameObject("Grid");
@@ -86,7 +86,7 @@ namespace ForeverEngine.MonoBehaviour.Bootstrap
             // EntityRenderer
             if (EntityRenderer == null)
             {
-                EntityRenderer = FindFirstObjectByType<EntityRenderer>();
+                EntityRenderer = FindAnyObjectByType<EntityRenderer>();
                 if (EntityRenderer == null)
                     EntityRenderer = new GameObject("EntityRenderer").AddComponent<EntityRenderer>();
             }
@@ -94,17 +94,17 @@ namespace ForeverEngine.MonoBehaviour.Bootstrap
             // FogRenderer
             if (FogRenderer == null)
             {
-                FogRenderer = FindFirstObjectByType<FogRenderer>();
+                FogRenderer = FindAnyObjectByType<FogRenderer>();
                 if (FogRenderer == null)
                     FogRenderer = new GameObject("FogRenderer").AddComponent<FogRenderer>();
             }
 
             // InputManager
-            if (FindFirstObjectByType<InputManager>() == null)
+            if (FindAnyObjectByType<InputManager>() == null)
                 new GameObject("InputManager").AddComponent<InputManager>();
 
             // PlayerMovement
-            if (FindFirstObjectByType<PlayerMovement>() == null)
+            if (FindAnyObjectByType<PlayerMovement>() == null)
                 new GameObject("PlayerMovement").AddComponent<PlayerMovement>();
 
             Debug.Log("[GameBootstrap] Components ensured");

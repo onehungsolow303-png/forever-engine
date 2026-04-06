@@ -60,8 +60,6 @@ namespace ForeverEngine.RPG.Spells
             // Check for single class vs multiclass
             bool isMulticlass = classLevels.Count > 1;
             int effectiveCasterLevel = 0;
-            bool hasPactMagic = false;
-
             foreach (var cl in classLevels)
             {
                 if (cl.ClassRef == null) continue;
@@ -78,7 +76,6 @@ namespace ForeverEngine.RPG.Spells
                         effectiveCasterLevel += cl.Level / 3;
                         break;
                     case SpellcastingType.Pact:
-                        hasPactMagic = true;
                         var pact = SpellSlotTable.GetPactMagicSlots(cl.Level);
                         PactSlotCount = pact.slotCount;
                         PactSlotLevel = pact.slotLevel;
