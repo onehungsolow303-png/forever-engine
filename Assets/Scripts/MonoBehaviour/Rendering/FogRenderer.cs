@@ -1,4 +1,5 @@
 using UnityEngine;
+using Unity.Entities;
 using ForeverEngine.ECS.Data;
 
 namespace ForeverEngine.MonoBehaviour.Rendering
@@ -59,6 +60,11 @@ namespace ForeverEngine.MonoBehaviour.Rendering
         private void LateUpdate()
         {
             if (!_enabled) return;
+
+            // Complete any in-flight fog jobs before reading FogGrid
+            var world = World.DefaultGameObjectInjectionWorld;
+            if (world != null && world.IsCreated)
+                world.EntityManager.CompleteAllTrackedJobs();
 
             var store = MapDataStore.Instance;
             if (store == null || !store.FogGrid.IsCreated) return;
