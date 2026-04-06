@@ -68,6 +68,9 @@ namespace ForeverEngine.Demo.Overworld
             if (gm.LastBattleWon)
             {
                 gm.Player.Gold += gm.LastBattleGoldEarned;
+                // Partial heal after victory (short rest)
+                int healAmount = gm.Player.MaxHP / 4;
+                gm.Player.HP = System.Math.Min(gm.Player.HP + healAmount, gm.Player.MaxHP);
                 gm.LastBattleWon = false;
             }
 
@@ -162,12 +165,12 @@ namespace ForeverEngine.Demo.Overworld
 
             float chance = tile.Type switch
             {
-                TileType.Plains => 0.05f,
-                TileType.Forest => 0.15f,
-                TileType.Road => 0.25f, // Ruins
+                TileType.Plains => 0.03f,
+                TileType.Forest => 0.08f,
+                TileType.Road => 0.12f, // Ruins
                 _ => 0f
             };
-            if (IsNight) chance += 0.15f;
+            if (IsNight) chance += 0.08f;
 
             if (Random.Range(0f, 1f) < chance)
             {
