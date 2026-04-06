@@ -9,6 +9,11 @@ using ForeverEngine.Demo.Battle;
 using ForeverEngine.Demo.Encounters;
 using ForeverEngine.Demo.Locations;
 using ForeverEngine.AI.GameMaster;
+using ForeverEngine.MonoBehaviour.Bootstrap;
+using ForeverEngine.MonoBehaviour.Rendering;
+using ForeverEngine.MonoBehaviour.Input;
+using ForeverEngine.MonoBehaviour.Camera;
+using UnityEngine.Tilemaps;
 
 namespace ForeverEngine.Editor
 {
@@ -20,7 +25,8 @@ namespace ForeverEngine.Editor
             BuildMainMenu();
             BuildOverworld();
             BuildBattleMap();
-            Debug.Log("[DemoSceneBuilder] All 3 demo scenes created!");
+            BuildGame();
+            Debug.Log("[DemoSceneBuilder] All 4 demo scenes created!");
         }
 
         private static void BuildMainMenu()
@@ -123,6 +129,62 @@ namespace ForeverEngine.Editor
 
             EditorSceneManager.SaveScene(scene, "Assets/Scenes/BattleMap.unity");
             Debug.Log("[DemoSceneBuilder] BattleMap scene created");
+        }
+
+        private static void BuildGame()
+        {
+            var scene = EditorSceneManager.NewScene(NewSceneSetup.EmptyScene, NewSceneMode.Single);
+
+            // Camera with CameraController
+            var camGO = new GameObject("Main Camera");
+            var cam = camGO.AddComponent<UnityEngine.Camera>();
+            cam.orthographic = true;
+            cam.orthographicSize = 5;
+            cam.clearFlags = CameraClearFlags.SolidColor;
+            cam.backgroundColor = new Color(0.05f, 0.05f, 0.08f);
+            camGO.transform.position = new Vector3(0, 0, -10);
+            camGO.tag = "MainCamera";
+            var cameraCtrl = camGO.AddComponent<CameraController>();
+
+            // Grid + Tilemap for TileRenderer
+            var gridGO = new GameObject("Grid");
+            gridGO.AddComponent<Grid>();
+            var tilemapGO = new GameObject("Tilemap");
+            tilemapGO.transform.SetParent(gridGO.transform);
+            var tilemap = tilemapGO.AddComponent<Tilemap>();
+            tilemapGO.AddComponent<TilemapRenderer>();
+            var tileRenderer = tilemapGO.AddComponent<TileRenderer>();
+
+            // Entity Renderer
+            var entityGO = new GameObject("EntityRenderer");
+            var entityRenderer = entityGO.AddComponent<EntityRenderer>();
+
+            // Fog Renderer
+            var fogGO = new GameObject("FogRenderer");
+            var fogRenderer = fogGO.AddComponent<FogRenderer>();
+
+            // Input
+            var inputGO = new GameObject("InputManager");
+            inputGO.AddComponent<InputManager>();
+
+            // Player Movement
+            var moveGO = new GameObject("PlayerMovement");
+            moveGO.AddComponent<PlayerMovement>();
+
+            // GameBootstrap — wire all references
+            var bootstrapGO = new GameObject("GameBootstrap");
+            var bootstrap = bootstrapGO.AddComponent<GameBootstrap>();
+
+            // Use SerializedObject to set private SerializeField references
+            var so = new SerializedObject(bootstrap);
+            so.FindProperty("CameraController").objectReferenceValue = cameraCtrl;
+            so.FindProperty("TileRenderer").objectReferenceValue = tileRenderer;
+            so.FindProperty("EntityRenderer").objectReferenceValue = entityRenderer;
+            so.FindProperty("FogRenderer").objectReferenceValue = fogRenderer;
+            so.ApplyModifiedPropertiesWithoutUndo();
+
+            EditorSceneManager.SaveScene(scene, "Assets/Scenes/Game.unity");
+            Debug.Log("[DemoSceneBuilder] Game scene created");
         }
 
         /// <summary>
