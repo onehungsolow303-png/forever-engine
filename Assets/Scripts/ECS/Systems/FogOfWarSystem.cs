@@ -50,7 +50,9 @@ namespace ForeverEngine.ECS.Systems
                 };
                 var rayHandle = rayJob.Schedule(360, 36, dimHandle);
 
-                state.Dependency = rayHandle;
+                // Complete synchronously so FogRenderer can safely read FogGrid
+                rayHandle.Complete();
+                state.Dependency = default;
             }
         }
     }
