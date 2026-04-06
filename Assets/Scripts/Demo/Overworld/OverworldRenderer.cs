@@ -198,11 +198,16 @@ namespace ForeverEngine.Demo.Overworld
 
         private void CreateHexMaterial()
         {
-            // Try URP unlit first, then built-in Unlit/Color, then Sprites/Default as fallback
-            var shader = Shader.Find("Universal Render Pipeline/Unlit");
-            if (shader == null) shader = Shader.Find("Unlit/Color");
-            if (shader == null) shader = Shader.Find("Sprites/Default");
+            // Create a white pixel texture — required for Sprites/Default and URP shaders
+            var tex = new Texture2D(1, 1);
+            tex.SetPixel(0, 0, Color.white);
+            tex.Apply();
+
+            // Sprites/Default works in URP when it has a texture assigned
+            var shader = Shader.Find("Sprites/Default");
+            if (shader == null) shader = Shader.Find("Universal Render Pipeline/Unlit");
             _hexMaterial = new Material(shader);
+            _hexMaterial.mainTexture = tex;
         }
     }
 }
