@@ -319,6 +319,21 @@ namespace ForeverEngine.Demo.Battle
 
             var castingAbility = RPGBridge.GetCastingAbility(sheet);
 
+            // Compute target's save bonus for spell saves
+            int targetSaveBonus = 0;
+            if (target != null && spell.HasSave)
+            {
+                int saveStat = spell.SaveType switch
+                {
+                    Ability.STR => target.Strength,
+                    Ability.DEX => target.Dexterity,
+                    _ => 10 // CON/INT/WIS/CHA default to 10 for basic enemies
+                };
+                if (target.Sheet != null)
+                    saveStat = target.Sheet.EffectiveAbilities.GetScore(spell.SaveType);
+                targetSaveBonus = DiceRoller.AbilityModifier(saveStat);
+            }
+
             // Build CastContext
             var ctx = new CastContext
             {
@@ -327,7 +342,8 @@ namespace ForeverEngine.Demo.Battle
                 Spell = spell,
                 SlotLevel = slotLevel > 0 ? slotLevel : spell.Level,
                 Metamagic = MetamagicType.None,
-                IsRitual = false
+                IsRitual = false,
+                TargetSaveBonus = targetSaveBonus
             };
 
             var result = SpellCastingPipeline.Cast(

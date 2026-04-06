@@ -135,9 +135,9 @@ namespace ForeverEngine.RPG.Spells
             // 5. If save-based: target saves vs DC
             else if (spell.HasSave)
             {
-                // Roll save for target (simplified — would use target's actual ability + proficiency)
+                // Roll save for target: d20 + target's save bonus vs spell DC
                 int saveRoll = DiceRoller.Roll(1, 20, 0, ref seed);
-                targetSaved = saveRoll >= spellDC;
+                targetSaved = (saveRoll + modifiedCtx.TargetSaveBonus) >= spellDC;
 
                 if (!targetSaved || spell.DamageDiceCount > 0)
                 {

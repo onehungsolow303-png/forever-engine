@@ -14,5 +14,6 @@ namespace ForeverEngine.RPG.Spells
         public int SlotLevel; // Must be >= spell level
         public MetamagicType Metamagic;
         public bool IsRitual; // Cast as ritual (no slot expended, +10 min casting time)
+        public int TargetSaveBonus; // Target's save modifier (ability mod + proficiency if proficient)
     }
 }

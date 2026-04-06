@@ -27,7 +27,7 @@ namespace ForeverEngine.MonoBehaviour.UI
 
             var label = new Label(message);
             label.style.color = color;
-            label.style.fontSize = 12;
+            label.style.fontSize = Mathf.RoundToInt(12 * Screen.height / 1080f);
             label.style.unityFontStyleAndWeight = FontStyle.Normal;
             _logContainer.Add(label);
 
