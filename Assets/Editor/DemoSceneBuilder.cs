@@ -59,6 +59,11 @@ namespace ForeverEngine.Editor
             aiGO.AddComponent<ForeverEngine.AI.Inference.InferenceEngine>();
             aiGO.AddComponent<ClaudeAPIClient>();
 
+            // Sound Manager (persistent)
+            var sfxGO = new GameObject("SoundManager");
+            sfxGO.transform.SetParent(gmGO.transform);
+            sfxGO.AddComponent<ForeverEngine.Demo.Audio.SoundManager>();
+
             EditorSceneManager.SaveScene(scene, "Assets/Scenes/MainMenu.unity");
             Debug.Log("[DemoSceneBuilder] MainMenu scene created");
         }

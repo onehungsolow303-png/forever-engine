@@ -703,14 +703,20 @@ namespace ForeverEngine.Demo.Battle
 
                 Log.Add($"{critStr}{attacker.Name} hits {target.Name}{advStr} for {dmgResult.AfterResistance} {dmgType} damage! (d20={atkResult.NaturalRoll}, total={atkResult.Total} vs AC {target.AC}){resistStr}");
 
-                // Visual feedback: damage number + screen shake
+                // Visual + audio feedback
                 if (_renderer != null)
                     _renderer.ShowDamageNumber(new Vector3(target.X, target.Y, 0), dmgResult.AfterResistance, atkResult.Critical);
+                if (atkResult.Critical)
+                    Audio.SoundManager.Instance?.PlayCrit();
+                else
+                    Audio.SoundManager.Instance?.PlayHit();
                 if (atkResult.Critical || target.HP <= 0)
                 {
                     var cam = FindFirstObjectByType<MonoBehaviour.Camera.CameraController>();
                     cam?.Shake(atkResult.Critical ? 0.25f : 0.15f);
                 }
+                if (target.HP <= 0 && !target.IsPlayer)
+                    Audio.SoundManager.Instance?.PlayDeath();
 
                 // AI events (preserved)
                 if (attacker.IsPlayer) ai?.OnPlayerAttacked(true, dmgResult.AfterResistance, target.Name);
@@ -758,6 +764,7 @@ namespace ForeverEngine.Demo.Battle
             {
                 Log.Add($"{attacker.Name} misses {target.Name}{advStr}. (d20={atkResult.NaturalRoll}, total={atkResult.Total} vs AC {target.AC})");
                 _renderer?.ShowMiss(new Vector3(target.X, target.Y, 0));
+                Audio.SoundManager.Instance?.PlayMiss();
                 if (attacker.IsPlayer) ai?.OnPlayerAttacked(false, 0, target.Name);
             }
 
@@ -798,6 +805,7 @@ namespace ForeverEngine.Demo.Battle
             {
                 BattleOver = true; PlayerWon = true;
                 Log.Add("Victory!");
+                Audio.SoundManager.Instance?.PlayVictory();
                 Demo.AI.DemoAIIntegration.Instance?.OnCombatVictory(_encounterData.GoldReward, _encounterData.XPReward);
                 var gm = GameManager.Instance;
                 if (gm != null)

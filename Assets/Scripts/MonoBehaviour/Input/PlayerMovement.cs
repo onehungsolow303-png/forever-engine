@@ -113,6 +113,7 @@ namespace ForeverEngine.MonoBehaviour.Input
 
                     string dir = tComp.TransitionType == 1 ? "up" : "down";
                     UnityEngine.Debug.Log($"[PlayerMovement] Transitioned {dir} to z={tComp.ToZ}");
+                    ForeverEngine.Demo.Audio.SoundManager.Instance?.PlayStairs();
                     break;
                 }
             }
