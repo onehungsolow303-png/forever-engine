@@ -40,13 +40,13 @@ namespace ForeverEngine.Demo
             _hillDwarf          = Resources.Load<SpeciesData>("RPG/Content/Species/hill_dwarf");
             _lightfootHalfling  = Resources.Load<SpeciesData>("RPG/Content/Species/lightfoot_halfling");
 
-            // Weapons (TODO: generate weapon/armor assets into Resources/RPG/Content/Weapons/)
+            // Weapons (assets in Assets/Resources/RPG/Content/Weapons/)
             _longsword    = Resources.Load<WeaponData>("RPG/Content/Weapons/longsword");
             _quarterstaff = Resources.Load<WeaponData>("RPG/Content/Weapons/quarterstaff");
             _mace         = Resources.Load<WeaponData>("RPG/Content/Weapons/mace");
             _shortsword   = Resources.Load<WeaponData>("RPG/Content/Weapons/shortsword");
 
-            // Armor (TODO: generate weapon/armor assets into Resources/RPG/Content/Armor/)
+            // Armor (assets in Assets/Resources/RPG/Content/Armor/)
             _chainMail = Resources.Load<ArmorData>("RPG/Content/Armor/chain_mail");
             _scaleMail = Resources.Load<ArmorData>("RPG/Content/Armor/scale_mail");
             _leather   = Resources.Load<ArmorData>("RPG/Content/Armor/leather");
