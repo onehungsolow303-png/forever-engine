@@ -82,71 +82,9 @@ namespace ForeverEngine.Demo.Locations
 
         private void GenerateInterior(LocationData loc)
         {
-            var (mapType, biome) = GetLocationProfile(loc);
-            int partyLevel = GameManager.Instance?.Player?.Level ?? 3;
-            int seed = GameManager.Instance?.CurrentSeed ?? 42;
-
-            var request = new MapGenerationRequest
-            {
-                MapType = mapType,
-                Biome = biome,
-                Width = 128,
-                Height = 128,
-                Seed = seed,
-                PartyLevel = partyLevel,
-                PartySize = 1
-            };
-
-            Debug.Log($"[LocationInterior] Generating {mapType}/{biome} 128x128 level:{partyLevel}");
-
-            var result = PipelineCoordinator.Generate(request);
-            if (!result.Success)
-            {
-                ShowPopup(loc.Name, $"Generation failed:\n{result.Error}");
-                return;
-            }
-
-            string outputDir = Path.GetDirectoryName(GetCachePath(loc));
-            string mapPath;
-
-            // Dungeons and castles get 2 floors with stairs
-            if (mapType is "dungeon" or "castle")
-            {
-                var request2 = new MapGenerationRequest
-                {
-                    MapType = mapType,
-                    Biome = biome,
-                    Width = 128,
-                    Height = 128,
-                    Seed = seed + 1000,
-                    PartyLevel = partyLevel,
-                    PartySize = 1
-                };
-
-                var result2 = PipelineCoordinator.Generate(request2);
-                if (result2.Success)
-                {
-                    Debug.Log($"[LocationInterior] Generated 2-floor {mapType}");
-                    mapPath = MapSerializer.Serialize(result, result2, outputDir);
-                }
-                else
-                {
-                    Debug.LogWarning($"[LocationInterior] Floor -1 generation failed, using single floor");
-                    mapPath = MapSerializer.Serialize(result, outputDir);
-                }
-            }
-            else
-            {
-                mapPath = MapSerializer.Serialize(result, outputDir);
-            }
-
-            LoadAndTransition(loc, mapPath);
-        }
-
-        private void LoadAndTransition(LocationData loc, string mapPath)
-        {
-            // Game scene dungeon renderer not yet functional — fall back to battle encounter
-            Debug.Log($"[LocationInterior] Dungeon interior not available, entering battle at {loc.Name}");
+            // TODO: Game scene dungeon rendering has a black screen bug (tracked in memory).
+            // Skip map generation and fall back to battle encounter until fixed.
+            Debug.Log($"[LocationInterior] Entering dungeon battle at {loc.Name}");
             GameManager.Instance.EnterBattle($"dungeon_{loc.Type}_{loc.Id}");
         }
 

@@ -25,7 +25,7 @@ namespace ForeverEngine.Generation.Data
         public static CreatureStatBlock GetStats(string variant)
         {
             if (_creatures == null) Init();
-            if (_creatures.TryGetValue(variant, out var stats)) return stats;
+            if (!string.IsNullOrEmpty(variant) && _creatures.TryGetValue(variant, out var stats)) return stats;
             // Fallback for unknown variants
             return new CreatureStatBlock
             {

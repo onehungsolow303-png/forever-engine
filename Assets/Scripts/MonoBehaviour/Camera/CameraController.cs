@@ -106,7 +106,7 @@ namespace ForeverEngine.MonoBehaviour.Camera
 
         private void ApplyShake()
         {
-            if (_shakeTimer <= 0) return;
+            if (_shakeTimer <= 0 || _shakeDuration <= 0) return;
             _shakeTimer -= Time.deltaTime;
             float t = _shakeTimer / _shakeDuration;
             float offset = _shakeIntensity * t;
