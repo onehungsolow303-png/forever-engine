@@ -28,29 +28,29 @@ namespace ForeverEngine.Demo
         {
             if (_warrior != null) return;
 
-            // Classes
-            _warrior = Resources.Load<ClassData>("RPG/Classes/Warrior");
-            _wizard  = Resources.Load<ClassData>("RPG/Classes/Wizard");
-            _cleric  = Resources.Load<ClassData>("RPG/Classes/Cleric");
-            _rogue   = Resources.Load<ClassData>("RPG/Classes/Rogue");
+            // Classes (assets live in Assets/Resources/RPG/Content/Classes/)
+            _warrior = Resources.Load<ClassData>("RPG/Content/Classes/warrior");
+            _wizard  = Resources.Load<ClassData>("RPG/Content/Classes/wizard");
+            _cleric  = Resources.Load<ClassData>("RPG/Content/Classes/cleric");
+            _rogue   = Resources.Load<ClassData>("RPG/Content/Classes/rogue");
 
-            // Species
-            _human              = Resources.Load<SpeciesData>("RPG/Species/Human");
-            _highElf            = Resources.Load<SpeciesData>("RPG/Species/HighElf");
-            _hillDwarf          = Resources.Load<SpeciesData>("RPG/Species/HillDwarf");
-            _lightfootHalfling  = Resources.Load<SpeciesData>("RPG/Species/LightfootHalfling");
+            // Species (assets live in Assets/Resources/RPG/Content/Species/)
+            _human              = Resources.Load<SpeciesData>("RPG/Content/Species/human");
+            _highElf            = Resources.Load<SpeciesData>("RPG/Content/Species/high_elf");
+            _hillDwarf          = Resources.Load<SpeciesData>("RPG/Content/Species/hill_dwarf");
+            _lightfootHalfling  = Resources.Load<SpeciesData>("RPG/Content/Species/lightfoot_halfling");
 
-            // Weapons
-            _longsword    = Resources.Load<WeaponData>("RPG/Weapons/Longsword");
-            _quarterstaff = Resources.Load<WeaponData>("RPG/Weapons/Quarterstaff");
-            _mace         = Resources.Load<WeaponData>("RPG/Weapons/Mace");
-            _shortsword   = Resources.Load<WeaponData>("RPG/Weapons/Shortsword");
+            // Weapons (TODO: generate weapon/armor assets into Resources/RPG/Content/Weapons/)
+            _longsword    = Resources.Load<WeaponData>("RPG/Content/Weapons/longsword");
+            _quarterstaff = Resources.Load<WeaponData>("RPG/Content/Weapons/quarterstaff");
+            _mace         = Resources.Load<WeaponData>("RPG/Content/Weapons/mace");
+            _shortsword   = Resources.Load<WeaponData>("RPG/Content/Weapons/shortsword");
 
-            // Armor
-            _chainMail = Resources.Load<ArmorData>("RPG/Armor/ChainMail");
-            _scaleMail = Resources.Load<ArmorData>("RPG/Armor/ScaleMail");
-            _leather   = Resources.Load<ArmorData>("RPG/Armor/Leather");
-            _shield    = Resources.Load<ArmorData>("RPG/Armor/Shield");
+            // Armor (TODO: generate weapon/armor assets into Resources/RPG/Content/Armor/)
+            _chainMail = Resources.Load<ArmorData>("RPG/Content/Armor/chain_mail");
+            _scaleMail = Resources.Load<ArmorData>("RPG/Content/Armor/scale_mail");
+            _leather   = Resources.Load<ArmorData>("RPG/Content/Armor/leather");
+            _shield    = Resources.Load<ArmorData>("RPG/Content/Armor/shield");
         }
 
         /// <summary>
@@ -91,18 +91,18 @@ namespace ForeverEngine.Demo
             // Load spells from Resources
             LoadSpellsFromResources(sheet, new[]
             {
-                "RPG/Spells/FlameDart",
-                "RPG/Spells/ArcaneBolt",
-                "RPG/Spells/FrostRay"
+                "RPG/Content/Spells/flame_dart",
+                "RPG/Content/Spells/arcane_bolt",
+                "RPG/Content/Spells/ray_of_frost"
             }, isCantrip: true);
             LoadSpellsFromResources(sheet, new[]
             {
-                "RPG/Spells/FlameBurst",
-                "RPG/Spells/MagicMissile",
-                "RPG/Spells/Shield",
-                "RPG/Spells/Sleep",
-                "RPG/Spells/MageArmor",
-                "RPG/Spells/ThunderWave"
+                "RPG/Content/Spells/flame_burst",
+                "RPG/Content/Spells/arcane_bolt",
+                "RPG/Content/Spells/force_barrier",
+                "RPG/Content/Spells/slumber",
+                "RPG/Content/Spells/mage_armor",
+                "RPG/Content/Spells/shockwave"
             }, isCantrip: false);
 
             return sheet;
@@ -127,14 +127,14 @@ namespace ForeverEngine.Demo
 
             LoadSpellsFromResources(sheet, new[]
             {
-                "RPG/Spells/HolySpark",
-                "RPG/Spells/Glow"
+                "RPG/Content/Spells/holy_spark",
+                "RPG/Content/Spells/glow"
             }, isCantrip: true);
             LoadSpellsFromResources(sheet, new[]
             {
-                "RPG/Spells/MendingTouch",
-                "RPG/Spells/SacredShield",
-                "RPG/Spells/GuidingLight"
+                "RPG/Content/Spells/mending_touch",
+                "RPG/Content/Spells/sanctuary",
+                "RPG/Content/Spells/guiding_bolt"
             }, isCantrip: false);
 
             return sheet;

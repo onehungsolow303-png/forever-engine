@@ -5,6 +5,7 @@ using ForeverEngine.ECS.Utility;
 using ForeverEngine.RPG.Combat;
 using ForeverEngine.RPG.Data;
 using ForeverEngine.RPG.Enums;
+using ForeverEngine.RPG.Items;
 using ForeverEngine.RPG.Spells;
 
 namespace ForeverEngine.Demo.Battle

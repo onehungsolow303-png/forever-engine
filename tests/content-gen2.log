@@ -1,0 +1,1184 @@
+[Licensing::Module] Trying to connect to existing licensing client channel...
+Built from '6000.4/staging' branch; Version is '6000.4.1f1 (8535861f39e1) revision 8729990'; Using compiler version '194234433'; Build Type 'Release'
+OS: 'Windows 11  (10.0.26200) Professional' Language: 'en' Physical Memory: 63063 MB
+BatchMode: 1, IsHumanControllingUs: 0, StartBugReporterOnCrash: 0, Is64bit: 1
+System  architecture: x64
+Process architecture: x64
+Date: 2026-04-05T21:36:27Z
+[Licensing::IpcConnector] Successfully connected to: "LicenseClient-bp303" at "2026-04-05T21:36:27.7648233Z"
+
+COMMAND LINE ARGUMENTS:
+C:\Program Files\Unity\Hub\Editor\6000.4.1f1\Editor\Unity.exe
+-batchmode
+-nographics
+-projectPath
+.
+-executeMethod
+ForeverEngine.Editor.RPG.ContentGenerator.GenerateAll
+-logFile
+tests/content-gen2.log
+-quit
+Successfully changed project path to: C:/Dev/Forever engin
+C:/Dev/Forever engin
+[UnityMemory] Configuration Parameters - Can be set up in boot.config
+    "memorysetup-temp-allocator-size-gi-baking-worker=262144"
+    "memorysetup-temp-allocator-size-gi-baking-worker=262144"
+    "memorysetup-temp-allocator-size-gi-baking-worker=262144"
+    "memorysetup-temp-allocator-size-gi-baking-worker=262144"
+    "memorysetup-temp-allocator-size-gi-baking-worker=262144"
+    "memorysetup-temp-allocator-size-nav-mesh-worker=65536"
+    "memorysetup-temp-allocator-size-audio-worker=65536"
+    "memorysetup-temp-allocator-size-cloud-worker=32768"
+    "memorysetup-temp-allocator-size-gfx=262144"
+    "memorysetup-temp-allocator-size-preload-manager=33554432"
+    "memorysetup-temp-allocator-size-job-worker=262144"
+    "memorysetup-temp-allocator-size-background-worker=32768"
+    "memorysetup-allocator-temp-initial-block-size-main=262144"
+    "memorysetup-allocator-temp-initial-block-size-worker=262144"
+    "memorysetup-bucket-allocator-granularity=16"
+    "memorysetup-bucket-allocator-bucket-count=8"
+    "memorysetup-bucket-allocator-block-size=33554432"
+    "memorysetup-bucket-allocator-block-count=8"
+    "memorysetup-main-allocator-block-size=16777216"
+    "memorysetup-thread-allocator-block-size=16777216"
+    "memorysetup-gfx-main-allocator-block-size=16777216"
+    "memorysetup-gfx-thread-allocator-block-size=16777216"
+    "memorysetup-cache-allocator-block-size=4194304"
+    "memorysetup-typetree-allocator-block-size=2097152"
+    "memorysetup-profiler-bucket-allocator-granularity=16"
+    "memorysetup-profiler-bucket-allocator-bucket-count=8"
+    "memorysetup-profiler-bucket-allocator-block-size=33554432"
+    "memorysetup-profiler-bucket-allocator-block-count=8"
+    "memorysetup-profiler-allocator-block-size=16777216"
+    "memorysetup-profiler-editor-allocator-block-size=1048576"
+    "memorysetup-temp-allocator-size-main=16777216"
+    "memorysetup-job-temp-allocator-block-size=2097152"
+    "memorysetup-job-temp-allocator-block-size-background=1048576"
+    "memorysetup-job-temp-allocator-reduction-small-platforms=262144"
+Player connection [53592]  Target information:
+
+Player connection [53592]  * "[IP] 192.168.1.113 [Port] 55504 [Flags] 2 [Guid] 3853436986 [EditorId] 3853436986 [Version] 1048832 [Id] WindowsEditor(7,DESKTOP-2LJVMIP) [Debug] 1 [PackageName] WindowsEditor [ProjectName] Editor" 
+
+Player connection [53592]  * "[IP] 169.254.194.178 [Port] 55504 [Flags] 2 [Guid] 3853436986 [EditorId] 3853436986 [Version] 1048832 [Id] WindowsEditor(7,DESKTOP-2LJVMIP) [Debug] 1 [PackageName] WindowsEditor [ProjectName] Editor" 
+
+Player connection [53592]  * "[IP] 192.168.55.100 [Port] 55504 [Flags] 2 [Guid] 3853436986 [EditorId] 3853436986 [Version] 1048832 [Id] WindowsEditor(7,DESKTOP-2LJVMIP) [Debug] 1 [PackageName] WindowsEditor [ProjectName] Editor" 
+
+Player connection [53592] Host joined multi-casting on [225.0.0.222:54997]...
+Player connection [53592] Host joined alternative multi-casting on [225.0.0.222:34997]...
+Input System module state changed to: Initialized.
+[Physics::Module] Initialized fallback backend.
+[Physics::Module] Id: 0xdecafbad
+[Package Manager] Connected to IPC stream "Upm-58136" after 0.2 seconds.
+[Licensing::Module] Licensing is not yet initialized.
+[Licensing::Client] Error: HandshakeResponse reported an error:
+	ResponseCode: 505
+	ResponseStatus: Unsupported protocol version '1.18.1'.
+[Licensing::Module] Error: Failed to handshake to channel: "LicenseClient-bp303"
+[Licensing::IpcConnector] LicenseClient-bp303 channel disconnected successfully.
+[Licensing::IpcConnector] Channel LicenseClient-bp303-6000.4.1 doesn't exist
+[Licensing::Module] Successfully launched the LicensingClient (PId: 56436)
+Starting IPC server.
+Waiting for clients to connect on \\.\pipe\Unity-LicenseClient-bp303-6000.4.1, press Ctrl-C to exit.
+[Licensing::IpcConnector] Successfully connected to: "LicenseClient-bp303-6000.4.1" at "2026-04-05T21:36:28.4918313Z"
+[Licensing::Client] Handshaking with LicensingClient:
+  Version:                 1.18.1+9fbee8e
+  Session Id:              2d533170a3db4fc39f96f805eaf5d194
+  Correlation Id:          58afab75e9b03ed8f531f3958101d2db
+  External correlation Id: 7672104141118178531
+  Machine Id:              gstSTUP4QwZYnBaUulASzeuKBU0=
+[Licensing::Module] Successfully connected to LicensingClient on channel: "LicenseClient-bp303-6000.4.1" (connect: 0.16s, validation: 0.03s, handshake: 0.55s)
+[Licensing::IpcConnector] Successfully connected to: "LicenseClient-bp303-6000.4.1-notifications" at "2026-04-05T21:36:29.0683899Z"
+[Licensing::Module] Connected to LicensingClient (PId: 56436, launch time: 0.00, total connection time: 0.74s)
+[Licensing::Module] Error: Access token is unavailable; failed to update
+[Licensing::Client] Successfully resolved entitlement details
+[Licensing::Module] License group:
+  Id: 20067582077754-UnityPersXXXX
+  Product: Unity Personal
+  Type: Assigned
+  Expiration: Unlimited
+[Licensing::Client] Successfully updated license, isAsync: True, time: 0.00
+[Licensing::Client] Successfully resolved entitlement details
+[Licensing::Module] Licensing Background thread has ended after 1.32s
+[Licensing::Module] Licensing is initialized (took 1.02s).
+[Licensing::Client] Successfully resolved entitlement details
+Library Redirect Path: Library/
+[Physics::Module] Selected backend.
+[Physics::Module] Name: PhysX
+[Physics::Module] Id: 0xf2b8ea05
+[Physics::Module] SDK Version: 4.1.2
+[Physics::Module] Integration Version: 1.0.0
+[Physics::Module] Threading Mode: Multi-Threaded
+Initialize engine version: 6000.4.1f1 (8535861f39e1)
+[Subsystems] Discovering subsystems at path C:/Program Files/Unity/Hub/Editor/6000.4.1f1/Editor/Data/Resources/UnitySubsystems
+[Subsystems] Discovering subsystems at path C:/Dev/Forever engin/Assets
+Forcing GfxDevice: Null
+GfxDevice: creating device client; kGfxThreadingModeNonThreaded
+NullGfxDevice:
+    Version:  NULL 1.0 [1.0]
+    Renderer: Null Device
+    Vendor:   Unity Technologies
+Initialize mono
+Mono path[0] = 'C:/Program Files/Unity/Hub/Editor/6000.4.1f1/Editor/Data/Managed'
+Mono path[1] = 'C:/Program Files/Unity/Hub/Editor/6000.4.1f1/Editor/Data/MonoBleedingEdge/lib/mono/unityjit-win32'
+Mono config path = 'C:/Program Files/Unity/Hub/Editor/6000.4.1f1/Editor/Data/MonoBleedingEdge/etc'
+Using monoOptions --debugger-agent=transport=dt_socket,embedding=1,server=y,suspend=n,address=127.0.0.1:56136
+CodeReloadManager initialized
+Using cacheserver namespaces - metadata:defaultmetadata, artifacts:defaultartifacts
+Using cacheserver namespaces - metadata:defaultmetadata, artifacts:defaultartifacts
+ImportWorker Server TCP listen port: 0
+AcceleratorClientConnectionCallback - disconnected - :0
+Begin MonoManager ReloadAssembly
+Registering precompiled unity dll's ...
+Register platform support module: C:/Program Files/Unity/Hub/Editor/6000.4.1f1/Editor/Data/PlaybackEngines/WindowsStandaloneSupport/UnityEditor.WindowsStandalone.Extensions.dll
+Registered in 0.000827 seconds.
+Native extension for WindowsStandalone target not found
+Package Manager log level set to [2]
+ScheduleIndexationOnStartup MainProcess:False IndexOnStartup:False
+Mono: successfully reloaded assembly
+- Finished resetting the current domain, in  0.210 seconds
+Domain Reload Profiling: 466ms
+	BeginReloadAssembly (69ms)
+		CreateAndSetChildDomain (7ms)
+	RebuildCommonClasses (23ms)
+	RebuildNativeTypeToScriptingClass (8ms)
+	initialDomainReloadingComplete (32ms)
+	LoadAllAssembliesAndSetupDomain (124ms)
+		LoadAssemblies (62ms)
+		AnalyzeDomain (117ms)
+			TypeCache.Refresh (115ms)
+				TypeCache.ScanAssembly (108ms)
+	FinalizeReload (211ms)
+		SetupLoadedEditorAssemblies (0ms)
+			InitializePlatformSupportModulesInManaged (24ms)
+			BeforeProcessingInitializeOnLoad (43ms)
+			ProcessInitializeOnLoadAttributes (57ms)
+			ProcessInitializeOnLoadMethodAttributes (50ms)
+[Licensing::Client] Successfully resolved entitlement details
+Application.AssetDatabase Initial Refresh Start
+[Package Manager] Restoring resolved packages state from cache
+[Licensing::Client] Successfully resolved entitlement details
+[Package Manager] Registered 44 packages:
+  Packages from [https://packages.unity.com]:
+    com.unity.burst@1.8.28 (location: C:\Dev\Forever engin\Library\PackageCache\com.unity.burst@07790c2d06d9)
+    com.unity.inputsystem@1.19.0 (location: C:\Dev\Forever engin\Library\PackageCache\com.unity.inputsystem@21a28c3a6c83)
+    com.unity.mathematics@1.3.3 (location: C:\Dev\Forever engin\Library\PackageCache\com.unity.mathematics@19a9377c4ffa)
+    com.unity.ai.inference@2.5.0 (location: C:\Dev\Forever engin\Library\PackageCache\com.unity.ai.inference@e760aa121ec7)
+    com.unity.nuget.mono-cecil@1.11.6 (location: C:\Dev\Forever engin\Library\PackageCache\com.unity.nuget.mono-cecil@ecb9724e46ff)
+    com.unity.profiling.core@1.0.3 (location: C:\Dev\Forever engin\Library\PackageCache\com.unity.profiling.core@8a49f7027d06)
+    com.unity.scriptablebuildpipeline@2.6.1 (location: C:\Dev\Forever engin\Library\PackageCache\com.unity.scriptablebuildpipeline@36e3b5898ee2)
+    com.unity.serialization@3.1.5 (location: C:\Dev\Forever engin\Library\PackageCache\com.unity.serialization@c463b52e88d7)
+    com.unity.test-framework.performance@3.2.0 (location: C:\Dev\Forever engin\Library\PackageCache\com.unity.test-framework.performance@0840f58e4562)
+    com.unity.dt.app-ui@2.1.1 (location: C:\Dev\Forever engin\Library\PackageCache\com.unity.dt.app-ui@8ac7e730dd5d)
+    com.unity.nuget.newtonsoft-json@3.2.2 (location: C:\Dev\Forever engin\Library\PackageCache\com.unity.nuget.newtonsoft-json@4dfd81071c64)
+    com.unity.searcher@4.9.4 (location: C:\Dev\Forever engin\Library\PackageCache\com.unity.searcher@d45a78918735)
+  Built-in packages:
+    com.unity.2d.sprite@1.0.0 (location: C:\Dev\Forever engin\Library\PackageCache\com.unity.2d.sprite@929df5adbb1f)
+    com.unity.2d.tilemap@1.0.0 (location: C:\Dev\Forever engin\Library\PackageCache\com.unity.2d.tilemap@c457c5249013)
+    com.unity.collections@6.4.0 (location: C:\Dev\Forever engin\Library\PackageCache\com.unity.collections@538ace9075bc)
+    com.unity.entities@6.4.0 (location: C:\Dev\Forever engin\Library\PackageCache\com.unity.entities@55bdc42e3b8d)
+    com.unity.render-pipelines.universal@17.4.0 (location: C:\Dev\Forever engin\Library\PackageCache\com.unity.render-pipelines.universal@580a03820d50)
+    com.unity.sentis@2.2.0 (location: C:\Dev\Forever engin\Library\PackageCache\com.unity.sentis@eef1e5173b44)
+    com.unity.test-framework@1.6.0 (location: C:\Dev\Forever engin\Library\PackageCache\com.unity.test-framework@76560ee600cb)
+    com.unity.ui@2.0.0 (location: C:\Dev\Forever engin\Library\PackageCache\com.unity.ui@ccd6582d7949)
+    com.unity.modules.adaptiveperformance@1.0.0 (location: C:\Dev\Forever engin\Library\PackageCache\com.unity.modules.adaptiveperformance)
+    com.unity.modules.vectorgraphics@1.0.0 (location: C:\Dev\Forever engin\Library\PackageCache\com.unity.modules.vectorgraphics)
+    com.unity.modules.uielements@1.0.0 (location: C:\Dev\Forever engin\Library\PackageCache\com.unity.modules.uielements)
+    com.unity.modules.imageconversion@1.0.0 (location: C:\Dev\Forever engin\Library\PackageCache\com.unity.modules.imageconversion)
+    com.unity.modules.imgui@1.0.0 (location: C:\Dev\Forever engin\Library\PackageCache\com.unity.modules.imgui)
+    com.unity.modules.subsystems@1.0.0 (location: C:\Dev\Forever engin\Library\PackageCache\com.unity.modules.subsystems)
+    com.unity.ext.nunit@2.0.5 (location: C:\Dev\Forever engin\Library\PackageCache\com.unity.ext.nunit@d8c07649098d)
+    com.unity.modules.jsonserialize@1.0.0 (location: C:\Dev\Forever engin\Library\PackageCache\com.unity.modules.jsonserialize)
+    com.unity.render-pipelines.core@17.4.0 (location: C:\Dev\Forever engin\Library\PackageCache\com.unity.render-pipelines.core@e6c93b445dd3)
+    com.unity.shadergraph@17.4.0 (location: C:\Dev\Forever engin\Library\PackageCache\com.unity.shadergraph@6ab0d236faac)
+    com.unity.render-pipelines.universal-config@17.4.0 (location: C:\Dev\Forever engin\Library\PackageCache\com.unity.render-pipelines.universal-config@0db4263b9e6b)
+    com.unity.modules.assetbundle@1.0.0 (location: C:\Dev\Forever engin\Library\PackageCache\com.unity.modules.assetbundle)
+    com.unity.modules.audio@1.0.0 (location: C:\Dev\Forever engin\Library\PackageCache\com.unity.modules.audio)
+    com.unity.modules.physics@1.0.0 (location: C:\Dev\Forever engin\Library\PackageCache\com.unity.modules.physics)
+    com.unity.modules.unityanalytics@1.0.0 (location: C:\Dev\Forever engin\Library\PackageCache\com.unity.modules.unityanalytics)
+    com.unity.modules.unitywebrequest@1.0.0 (location: C:\Dev\Forever engin\Library\PackageCache\com.unity.modules.unitywebrequest)
+    com.unity.modules.tilemap@1.0.0 (location: C:\Dev\Forever engin\Library\PackageCache\com.unity.modules.tilemap)
+    com.unity.modules.ui@1.0.0 (location: C:\Dev\Forever engin\Library\PackageCache\com.unity.modules.ui)
+    com.unity.modules.hierarchycore@1.0.0 (location: C:\Dev\Forever engin\Library\PackageCache\com.unity.modules.hierarchycore)
+    com.unity.ugui@2.0.0 (location: C:\Dev\Forever engin\Library\PackageCache\com.unity.ugui@d8a2716f3013)
+    com.unity.modules.terrain@1.0.0 (location: C:\Dev\Forever engin\Library\PackageCache\com.unity.modules.terrain)
+    com.unity.modules.physics2d@1.0.0 (location: C:\Dev\Forever engin\Library\PackageCache\com.unity.modules.physics2d)
+    com.unity.modules.androidjni@1.0.0 (location: C:\Dev\Forever engin\Library\PackageCache\com.unity.modules.androidjni)
+    com.unity.modules.screencapture@1.0.0 (location: C:\Dev\Forever engin\Library\PackageCache\com.unity.modules.screencapture)
+[Subsystems] No new subsystems found in resolved package list.
+[Package Manager] Done registering packages in 0.01 seconds
+Assembly reference Packages/com.unity.entities/Unity.Scenes.Editor/Internals/Properties/Unity.Properties.Internals.asmref has no target assembly definition
+Assembly reference Packages/com.unity.entities/Unity.Scenes.Editor/Internals/Properties/Unity.Properties.Internals.asmref has no target assembly definition
+[ScriptCompilation] Requested script compilation because: AssetDatabase observed changes in script compilation related files
+info: Microsoft.Hosting.Lifetime[14]
+      Now listening on: http://localhost:80
+info: Microsoft.Hosting.Lifetime[0]
+      Application started. Press Ctrl+C to shut down.
+info: Microsoft.Hosting.Lifetime[0]
+      Hosting environment: Production
+info: Microsoft.Hosting.Lifetime[0]
+      Content root path: C:\Dev\Forever engin
+info: Microsoft.AspNetCore.Hosting.Diagnostics[1]
+      Request starting HTTP/2 POST http://ilpp/UnityILPP.PostProcessing/Ping - application/grpc -
+info: Microsoft.AspNetCore.Routing.EndpointMiddleware[0]
+      Executing endpoint 'gRPC - /UnityILPP.PostProcessing/Ping'
+info: Microsoft.AspNetCore.Routing.EndpointMiddleware[1]
+      Executed endpoint 'gRPC - /UnityILPP.PostProcessing/Ping'
+info: Microsoft.AspNetCore.Hosting.Diagnostics[2]
+      Request finished HTTP/2 POST http://ilpp/UnityILPP.PostProcessing/Ping - 200 - application/grpc 18.2150ms
+Starting: C:\Program Files\Unity\Hub\Editor\6000.4.1f1\Editor\Data\Tools\BuildPipeline\bee_backend.exe --ipc --defer-dag-verification --dagfile="Library/Bee/1900b0aE.dag" --continue-on-failure --profile="Library/Bee/backend1.traceevents" ScriptAssemblies
+WorkingDir: C:/Dev/Forever engin
+info: Microsoft.AspNetCore.Hosting.Diagnostics[1]
+      Request starting HTTP/2 POST http://ilpp/UnityILPP.PostProcessing/ConfigurePostProcessors - application/grpc -
+info: Microsoft.AspNetCore.Routing.EndpointMiddleware[0]
+      Executing endpoint 'gRPC - /UnityILPP.PostProcessing/ConfigurePostProcessors'
+warn: Unity.ILPP.Runner.PostProcessingAssemblyLoadContext[0]
+      Assembly system.runtime.interopservices.windowsruntime has duplicate hint path. Ignoring "C:\Program Files\Unity\Hub\Editor\6000.4.1f1\Editor\Data\UnityReferenceAssemblies\unity-4.8-api\Facades\System.Runtime.InteropServices.WindowsRuntime.dll" in favor of "C:\Program Files\Unity\Hub\Editor\6000.4.1f1\Editor\Data\NetStandard\Extensions\2.0.0\System.Runtime.InteropServices.WindowsRuntime.dll"
+warn: Unity.ILPP.Runner.PostProcessingAssemblyLoadContext[0]
+      Assembly system.componentmodel.composition has duplicate hint path. Ignoring "C:\Program Files\Unity\Hub\Editor\6000.4.1f1\Editor\Data\UnityReferenceAssemblies\unity-4.8-api\System.ComponentModel.Composition.dll" in favor of "C:\Program Files\Unity\Hub\Editor\6000.4.1f1\Editor\Data\NetStandard\compat\2.1.0\shims\netfx\System.ComponentModel.Composition.dll"
+DisplayProgressbar: Compiling Scripts
+info: Unity.ILPP.Runner.PostProcessingAssemblyLoadContext[0]
+      Resolved Unity.Burst.Cecil, Version=0.11.4.0, Culture=neutral, PublicKeyToken=50cebf1cceb9d05e with Library\PackageCache\com.unity.burst@07790c2d06d9\Unity.Burst.CodeGen\Unity.Burst.Cecil.dll
+info: Unity.ILPP.Runner.PostProcessingAssemblyLoadContext[0]
+      Resolved Mono.Cecil, Version=0.11.5.0, Culture=neutral, PublicKeyToken=50cebf1cceb9d05e with Library\PackageCache\com.unity.nuget.mono-cecil@ecb9724e46ff\Mono.Cecil.dll
+info: Unity.ILPP.Runner.PostProcessingAssemblyLoadContext[0]
+      Resolved Unity.Entities, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null with Library\Bee\artifacts\1900b0aE.dag\Unity.Entities.dll
+info: Microsoft.AspNetCore.Routing.EndpointMiddleware[1]
+      Executed endpoint 'gRPC - /UnityILPP.PostProcessing/ConfigurePostProcessors'
+info: Microsoft.AspNetCore.Hosting.Diagnostics[2]
+      Request finished HTTP/2 POST http://ilpp/UnityILPP.PostProcessing/ConfigurePostProcessors - 200 - application/grpc 40.0718ms
+info: Microsoft.AspNetCore.Hosting.Diagnostics[1]
+      Request starting HTTP/2 POST http://ilpp/UnityILPP.PostProcessing/PostProcessAssembly - application/grpc -
+info: Microsoft.AspNetCore.Routing.EndpointMiddleware[0]
+      Executing endpoint 'gRPC - /UnityILPP.PostProcessing/PostProcessAssembly'
+info: Unity.ILPP.Runner.PostProcessingPipeline[0]
+      Processing assembly Library/Bee/artifacts/1900b0aE.dag/Assembly-CSharp-Editor.dll, with 138 defines and 350 references
+info: Unity.ILPP.Runner.PostProcessingPipeline[0]
+      processors: Unity.Entities.CodeGen.EntitiesILPostProcessors, Unity.Jobs.CodeGen.JobsILPostProcessor, zzzUnity.Burst.CodeGen.BurstILPostProcessor
+info: Unity.ILPP.Runner.PostProcessingPipeline[0]
+      running Unity.Entities.CodeGen.EntitiesILPostProcessors
+info: Unity.ILPP.Runner.PostProcessingAssemblyLoadContext[0]
+      Resolved Mono.Cecil.Rocks, Version=0.11.5.0, Culture=neutral, PublicKeyToken=50cebf1cceb9d05e with Library\PackageCache\com.unity.nuget.mono-cecil@ecb9724e46ff\Mono.Cecil.Rocks.dll
+info: Unity.ILPP.Runner.PostProcessingAssemblyLoadContext[0]
+      Resolved UnityEngine.CoreModule, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null with C:\Program Files\Unity\Hub\Editor\6000.4.1f1\Editor\Data\Managed\UnityEngine\UnityEngine.CoreModule.dll
+info: Unity.ILPP.Runner.PostProcessingAssemblyLoadContext[0]
+      Resolved Unity.Collections, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null with Library\Bee\artifacts\1900b0aE.dag\Unity.Collections.dll
+info: Unity.ILPP.Runner.PostProcessingAssemblyLoadContext[0]
+      Resolved Unity.Burst, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null with Library\Bee\artifacts\1900b0aE.dag\Unity.Burst.dll
+info: Unity.ILPP.Runner.PostProcessingAssemblyLoadContext[0]
+      Resolved Unity.Cecil.Awesome, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null with Library\PackageCache\com.unity.entities@55bdc42e3b8d\Unity.Entities.CodeGen\Unity.Cecil.Awesome.dll
+  - EILPP : Assembly-CSharp-Editor : : 306ms (~138ms)
+    - EILPP : Assembly-CSharp-Editor : GetAllComponentTypes: 7ms 
+    - EILPP : Assembly-CSharp-Editor : Cloner: 1ms 
+    - EILPP : Assembly-CSharp-Editor : ComponentDataPP: 13ms 
+    - EILPP : Assembly-CSharp-Editor : StaticTypeRegistryPostProcessor: 52ms 
+    - EILPP : Assembly-CSharp-Editor : WriteAssembly: 95ms 
+info: Unity.ILPP.Runner.PostProcessingPipeline[0]
+      running Unity.Jobs.CodeGen.JobsILPostProcessor
+info: Unity.ILPP.Runner.PostProcessingAssemblyLoadContext[0]
+      Resolved UnityEditor.CoreModule, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null with C:\Program Files\Unity\Hub\Editor\6000.4.1f1\Editor\Data\Managed\UnityEngine\UnityEditor.CoreModule.dll
+info: Unity.ILPP.Runner.PostProcessingPipeline[0]
+      running zzzUnity.Burst.CodeGen.BurstILPostProcessor
+info: Unity.ILPP.Runner.PostProcessingAssemblyLoadContext[0]
+      Resolved Unity.Burst.Cecil.Rocks, Version=0.11.4.0, Culture=neutral, PublicKeyToken=50cebf1cceb9d05e with Library\PackageCache\com.unity.burst@07790c2d06d9\Unity.Burst.CodeGen\Unity.Burst.Cecil.Rocks.dll
+info: Microsoft.AspNetCore.Routing.EndpointMiddleware[1]
+      Executed endpoint 'gRPC - /UnityILPP.PostProcessing/PostProcessAssembly'
+info: Microsoft.AspNetCore.Hosting.Diagnostics[2]
+      Request finished HTTP/2 POST http://ilpp/UnityILPP.PostProcessing/PostProcessAssembly - 200 - application/grpc 454.7167ms
+ExitCode: 0 Duration: 2s923ms
+[ 888/1154  0s] ILPP-Configuration Library/ilpp-configuration.nevergeneratedoutput
+[1150/1154  1s] Csc Library/Bee/artifacts/1900b0aE.dag/Assembly-CSharp-Editor.dll (+2 others)
+[1151/1154  0s] ILPostProcess Library/Bee/artifacts/1900b0aE.dag/post-processed/Assembly-CSharp-Editor.dll (+pdb)
+Processing assembly Library/Bee/artifacts/1900b0aE.dag/Assembly-CSharp-Editor.dll, with 138 defines and 350 references
+
+processors: Unity.Entities.CodeGen.EntitiesILPostProcessors, Unity.Jobs.CodeGen.JobsILPostProcessor, zzzUnity.Burst.CodeGen.BurstILPostProcessor
+
+running Unity.Entities.CodeGen.EntitiesILPostProcessors
+
+running Unity.Jobs.CodeGen.JobsILPostProcessor
+
+running zzzUnity.Burst.CodeGen.BurstILPostProcessor
+[1152/1154  0s] CopyFiles Library/ScriptAssemblies/Assembly-CSharp-Editor.pdb
+[1153/1154  0s] CopyFiles Library/ScriptAssemblies/Assembly-CSharp-Editor.dll
+*** Tundra build success (2.91 seconds), 5 items updated, 1154 evaluated
+AssetDatabase: script compilation time: 3.189682s
+Begin MonoManager ReloadAssembly
+Total cache size 152037056
+Assembly Assembly-CSharp-Editor-firstpass.dll at Library/ScriptAssemblies/Assembly-CSharp-Editor-firstpass.dll not valid. Loading of assembly skipped.
+Assembly Assembly-CSharp-firstpass.dll at Library/ScriptAssemblies/Assembly-CSharp-firstpass.dll not valid. Loading of assembly skipped.
+Assembly Assembly-CSharp.dll at Library/ScriptAssemblies/Assembly-CSharp.dll not valid. Loading of assembly skipped.
+Assembly DocCodeSamples.dll at Library/ScriptAssemblies/DocCodeSamples.dll not valid. Loading of assembly skipped.
+Assembly MockTests.dll at Library/ScriptAssemblies/MockTests.dll not valid. Loading of assembly skipped.
+Assembly TestNewCustomAssembly.dll at Library/ScriptAssemblies/TestNewCustomAssembly.dll not valid. Loading of assembly skipped.
+Assembly TypeDependencyCacheTestAssembly.dll at Library/ScriptAssemblies/TypeDependencyCacheTestAssembly.dll not valid. Loading of assembly skipped.
+Assembly Unity.2D.Sprite.Package.EditorTests.dll at Library/ScriptAssemblies/Unity.2D.Sprite.Package.EditorTests.dll not valid. Loading of assembly skipped.
+Assembly Unity.2D.Tilemap.Package.EditorTests.dll at Library/ScriptAssemblies/Unity.2D.Tilemap.Package.EditorTests.dll not valid. Loading of assembly skipped.
+Assembly Unity.AppUI.Editor.Tests.dll at Library/ScriptAssemblies/Unity.AppUI.Editor.Tests.dll not valid. Loading of assembly skipped.
+Assembly Unity.AppUI.Tests.dll at Library/ScriptAssemblies/Unity.AppUI.Tests.dll not valid. Loading of assembly skipped.
+Assembly Unity.Burst.Tests.dll at Library/ScriptAssemblies/Unity.Burst.Tests.dll not valid. Loading of assembly skipped.
+Assembly Unity.Collections.BurstCompatibilityGen.dll at Library/ScriptAssemblies/Unity.Collections.BurstCompatibilityGen.dll not valid. Loading of assembly skipped.
+Assembly Unity.Collections.DocCodeSamples.dll at Library/ScriptAssemblies/Unity.Collections.DocCodeSamples.dll not valid. Loading of assembly skipped.
+Assembly Unity.Collections.PerformanceTests.dll at Library/ScriptAssemblies/Unity.Collections.PerformanceTests.dll not valid. Loading of assembly skipped.
+Assembly Unity.Collections.Tests.dll at Library/ScriptAssemblies/Unity.Collections.Tests.dll not valid. Loading of assembly skipped.
+Assembly Unity.Collections.Tests.Playmode.dll at Library/ScriptAssemblies/Unity.Collections.Tests.Playmode.dll not valid. Loading of assembly skipped.
+Assembly Unity.Entities.CodeGen.Tests.dll at Library/ScriptAssemblies/Unity.Entities.CodeGen.Tests.dll not valid. Loading of assembly skipped.
+Assembly Unity.Entities.ContentDelivery.Tests.dll at Library/ScriptAssemblies/Unity.Entities.ContentDelivery.Tests.dll not valid. Loading of assembly skipped.
+Assembly Unity.Entities.Editor.PerformanceTests.dll at Library/ScriptAssemblies/Unity.Entities.Editor.PerformanceTests.dll not valid. Loading of assembly skipped.
+Assembly Unity.Entities.Editor.Tests.dll at Library/ScriptAssemblies/Unity.Entities.Editor.Tests.dll not valid. Loading of assembly skipped.
+Assembly Unity.Entities.Hybrid.EndToEnd.Tests.dll at Library/ScriptAssemblies/Unity.Entities.Hybrid.EndToEnd.Tests.dll not valid. Loading of assembly skipped.
+Assembly Unity.Entities.Hybrid.PerformanceTests.dll at Library/ScriptAssemblies/Unity.Entities.Hybrid.PerformanceTests.dll not valid. Loading of assembly skipped.
+Assembly Unity.Entities.Hybrid.Tests.dll at Library/ScriptAssemblies/Unity.Entities.Hybrid.Tests.dll not valid. Loading of assembly skipped.
+Assembly Unity.Entities.Hybrid.Tests.ExcludedAssembly.dll at Library/ScriptAssemblies/Unity.Entities.Hybrid.Tests.ExcludedAssembly.dll not valid. Loading of assembly skipped.
+Assembly Unity.Entities.Hybrid.Tests.SeparateAssembly.dll at Library/ScriptAssemblies/Unity.Entities.Hybrid.Tests.SeparateAssembly.dll not valid. Loading of assembly skipped.
+Assembly Unity.Entities.PerformanceTests.dll at Library/ScriptAssemblies/Unity.Entities.PerformanceTests.dll not valid. Loading of assembly skipped.
+Assembly Unity.Entities.TestComponents.dll at Library/ScriptAssemblies/Unity.Entities.TestComponents.dll not valid. Loading of assembly skipped.
+Assembly Unity.Entities.Tests.dll at Library/ScriptAssemblies/Unity.Entities.Tests.dll not valid. Loading of assembly skipped.
+Assembly Unity.Entities.Tests.InAnotherAssembly.dll at Library/ScriptAssemblies/Unity.Entities.Tests.InAnotherAssembly.dll not valid. Loading of assembly skipped.
+Assembly Unity.Entities.Tests.InAnotherEmptyAssembly.dll at Library/ScriptAssemblies/Unity.Entities.Tests.InAnotherEmptyAssembly.dll not valid. Loading of assembly skipped.
+Assembly Unity.InputSystem.IntegrationTests.dll at Library/ScriptAssemblies/Unity.InputSystem.IntegrationTests.dll not valid. Loading of assembly skipped.
+Assembly Unity.Mathematics.Extensions.Tests.dll at Library/ScriptAssemblies/Unity.Mathematics.Extensions.Tests.dll not valid. Loading of assembly skipped.
+Assembly Unity.Mathematics.Tests.dll at Library/ScriptAssemblies/Unity.Mathematics.Tests.dll not valid. Loading of assembly skipped.
+Assembly Unity.Nuget.Mono-Cecil.dll at Library/ScriptAssemblies/Unity.Nuget.Mono-Cecil.dll not valid. Loading of assembly skipped.
+Assembly Unity.PathTracing.Editor.Tests.dll at Library/ScriptAssemblies/Unity.PathTracing.Editor.Tests.dll not valid. Loading of assembly skipped.
+Assembly Unity.PathTracing.Runtime.Tests.dll at Library/ScriptAssemblies/Unity.PathTracing.Runtime.Tests.dll not valid. Loading of assembly skipped.
+Assembly Unity.RenderPipelines.Core.Editor.Tests.dll at Library/ScriptAssemblies/Unity.RenderPipelines.Core.Editor.Tests.dll not valid. Loading of assembly skipped.
+Assembly Unity.RenderPipelines.Core.Runtime.Tests.dll at Library/ScriptAssemblies/Unity.RenderPipelines.Core.Runtime.Tests.dll not valid. Loading of assembly skipped.
+Assembly Unity.RenderPipelines.Universal.Config.Editor.Tests.dll at Library/ScriptAssemblies/Unity.RenderPipelines.Universal.Config.Editor.Tests.dll not valid. Loading of assembly skipped.
+Assembly Unity.RenderPipelines.Universal.Editor.Tests.dll at Library/ScriptAssemblies/Unity.RenderPipelines.Universal.Editor.Tests.dll not valid. Loading of assembly skipped.
+Assembly Unity.RenderPipelines.Universal.Runtime.Tests.dll at Library/ScriptAssemblies/Unity.RenderPipelines.Universal.Runtime.Tests.dll not valid. Loading of assembly skipped.
+Assembly Unity.Scenes.Editor.PerformanceTests.dll at Library/ScriptAssemblies/Unity.Scenes.Editor.PerformanceTests.dll not valid. Loading of assembly skipped.
+Assembly Unity.Scenes.Editor.Tests.dll at Library/ScriptAssemblies/Unity.Scenes.Editor.Tests.dll not valid. Loading of assembly skipped.
+Assembly Unity.Scenes.Hybrid.Tests.dll at Library/ScriptAssemblies/Unity.Scenes.Hybrid.Tests.dll not valid. Loading of assembly skipped.
+Assembly Unity.Scenes.Hybrid.Tests.Editmode.Content.dll at Library/ScriptAssemblies/Unity.Scenes.Hybrid.Tests.Editmode.Content.dll not valid. Loading of assembly skipped.
+Assembly Unity.Scenes.Hybrid.Tests.Playmode.dll at Library/ScriptAssemblies/Unity.Scenes.Hybrid.Tests.Playmode.dll not valid. Loading of assembly skipped.
+Assembly Unity.Scenes.PerformanceTests.dll at Library/ScriptAssemblies/Unity.Scenes.PerformanceTests.dll not valid. Loading of assembly skipped.
+Assembly Unity.Scenes.Tests.dll at Library/ScriptAssemblies/Unity.Scenes.Tests.dll not valid. Loading of assembly skipped.
+Assembly Unity.ScriptableBuildPipeline.Editor.Tests.dll at Library/ScriptAssemblies/Unity.ScriptableBuildPipeline.Editor.Tests.dll not valid. Loading of assembly skipped.
+Assembly Unity.ScriptableBuildPipeline.Tests.dll at Library/ScriptAssemblies/Unity.ScriptableBuildPipeline.Tests.dll not valid. Loading of assembly skipped.
+Assembly Unity.ScriptableBuildPipelineTests.Runtime.Tests.dll at Library/ScriptAssemblies/Unity.ScriptableBuildPipelineTests.Runtime.Tests.dll not valid. Loading of assembly skipped.
+Assembly Unity.Searcher.EditorTests.dll at Library/ScriptAssemblies/Unity.Searcher.EditorTests.dll not valid. Loading of assembly skipped.
+Assembly Unity.Serialization.Tests.dll at Library/ScriptAssemblies/Unity.Serialization.Tests.dll not valid. Loading of assembly skipped.
+Assembly Unity.ShaderGraph.Editor.Tests.dll at Library/ScriptAssemblies/Unity.ShaderGraph.Editor.Tests.dll not valid. Loading of assembly skipped.
+Assembly Unity.TextMeshPro.Editor.Tests.dll at Library/ScriptAssemblies/Unity.TextMeshPro.Editor.Tests.dll not valid. Loading of assembly skipped.
+Assembly Unity.TextMeshPro.Tests.dll at Library/ScriptAssemblies/Unity.TextMeshPro.Tests.dll not valid. Loading of assembly skipped.
+Assembly Unity.Transforms.Hybrid.Tests.dll at Library/ScriptAssemblies/Unity.Transforms.Hybrid.Tests.dll not valid. Loading of assembly skipped.
+Assembly Unity.Transforms.PerformanceTests.dll at Library/ScriptAssemblies/Unity.Transforms.PerformanceTests.dll not valid. Loading of assembly skipped.
+Assembly Unity.Transforms.Tests.dll at Library/ScriptAssemblies/Unity.Transforms.Tests.dll not valid. Loading of assembly skipped.
+Assembly Unity.UnifiedRayTracing.Editor.Tests.dll at Library/ScriptAssemblies/Unity.UnifiedRayTracing.Editor.Tests.dll not valid. Loading of assembly skipped.
+Assembly UnityEditor.UI.Common.Tests.dll at Library/ScriptAssemblies/UnityEditor.UI.Common.Tests.dll not valid. Loading of assembly skipped.
+Assembly UnityEditor.UI.EditorTests.dll at Library/ScriptAssemblies/UnityEditor.UI.EditorTests.dll not valid. Loading of assembly skipped.
+Assembly UnityEngine.UI.Tests.dll at Library/ScriptAssemblies/UnityEngine.UI.Tests.dll not valid. Loading of assembly skipped.
+Symbol file LoadedFromMemory is not a mono symbol file
+Symbol file LoadedFromMemory is not a mono symbol file
+Native extension for WindowsStandalone target not found
+Assembly reference Packages/com.unity.entities/Unity.Scenes.Editor/Internals/Properties/Unity.Properties.Internals.asmref has no target assembly definition
+TypeManager.Initialize took: 80ms
+ScheduleIndexationOnStartup MainProcess:True IndexOnStartup:True
+Mono: successfully reloaded assembly
+- Finished resetting the current domain, in  1.853 seconds
+Domain Reload Profiling: 2610ms
+	BeginReloadAssembly (218ms)
+		DisableScriptedObjects (8ms)
+		CreateAndSetChildDomain (140ms)
+	RebuildCommonClasses (21ms)
+	RebuildNativeTypeToScriptingClass (8ms)
+	initialDomainReloadingComplete (247ms)
+	LoadAllAssembliesAndSetupDomain (263ms)
+		LoadAssemblies (175ms)
+		AnalyzeDomain (135ms)
+			TypeCache.Refresh (101ms)
+				TypeCache.ScanAssembly (93ms)
+			BuildScriptInfoCaches (27ms)
+			ResolveRequiredComponents (5ms)
+	FinalizeReload (1853ms)
+		SetupLoadedEditorAssemblies (0ms)
+			InitializePlatformSupportModulesInManaged (12ms)
+			BeforeProcessingInitializeOnLoad (108ms)
+			ProcessInitializeOnLoadAttributes (1421ms)
+			ProcessInitializeOnLoadMethodAttributes (178ms)
+			AfterProcessingInitializeOnLoad (3ms)
+		AwakeInstancesAfterBackupRestoration (8ms)
+(Values over 0.050ms)
+Asset Pipeline Refresh (id=1b9745992b7cb0b4e8311b551e205471): Total: 6.269 seconds - Initiated by InitialRefreshV2(ForceSynchronousImport)
+	Summary:
+		Imports: total=0 (actual=0, local cache=0, cache server=0)
+		Asset DB Process Time: managed=0 ms, native=2105 ms
+		Asset DB Callback time: managed=169 ms, native=11 ms
+		Scripting: domain reloads=1, domain reload time=759 ms, compile time=3191 ms, other=32 ms
+		Project Asset Count: scripts=1612, non-scripts=4616
+		Asset File Changes: new=0, changed=1, moved=0, deleted=0
+		Scan Filter Count: 0
+	InvokePackagesCallback: 9.518ms
+	ApplyChangesToAssetFolders: 0.306ms
+	Scan: 63.911ms
+	OnSourceAssetsModified: 0.710ms
+	CategorizeScriptCompilationAssets: 21.907ms
+	ProcessAssetsWithTransientArtifactChanges: 37.208ms
+	CategorizeAssets: 44.235ms
+	CompileScripts: 3190.701ms
+	ImportOutOfDateAssets: 1859.392ms (1858.282ms without children)
+		UnloadImportedAssets: 0.113ms
+		EnsureUptoDateAssetsAreRegisteredWithGuidPM: 0.500ms
+		OnDemandSchedulerStart: 0.492ms
+	PostProcessAllAssets: 169.642ms
+		VCAutoAddAssetPostprocess 0.675ms
+		XRBuildSystem.XRAssetImported 0.272ms
+		MonoPostProcessAllAssets: 168.389ms
+			AssetPostprocessor.OnPostprocessAllAssets 87.937ms
+			UniversalRenderPipelineGlobalSettingsPostprocessor.OnPostprocessAllAssets 46.797ms
+			StyleCatalogPostProcessor.OnPostprocessAllAssets 11.400ms
+			BuilderAssetPostprocessor.OnPostprocessAllAssets 3.440ms
+			SceneAssetPostProcessor.OnPostprocessAllAssets 2.431ms
+			SpeedTree9Postprocessor.OnPostprocessAllAssets 1.091ms
+			WindowAssetPostprocessingWatcher.OnPostprocessAllAssets 1.041ms
+			ShaderGraphAssetPostProcessor.OnPostprocessAllAssets 0.895ms
+			AssetChangedListener.OnPostprocessAllAssets 0.805ms
+			RetainedModeAssetPostprocessor.OnPostprocessAllAssets 0.653ms
+			SyncVS.PostprocessSyncProject 0.622ms
+			MaterialPostprocessor.OnPostprocessAllAssets 0.419ms
+			SpriteEditorTexturePostprocessor.OnPostprocessAllAssets 0.311ms
+			TerrainToolbarOverlayPostProcessor.OnPostprocessAllAssets 0.310ms
+			ArtifactBrowserPostProcessor.OnPostprocessAllAssets 0.293ms
+			TMPro_TexturePostProcessor.OnPostprocessAllAssets 0.250ms
+			TextAssetPostProcessor.OnPostprocessAllAssets 0.225ms
+			ModelAssetProcessor.OnPostprocessAllAssets 0.212ms
+			ReferencedClipsPostProcessor.OnPostprocessAllAssets 0.203ms
+			PostProcessor.OnPostprocessAllAssets 0.200ms
+			InputActionAssetPostprocessor.OnPostprocessAllAssets 0.182ms
+			AssetProcessor.OnPostprocessAllAssets 0.179ms
+			InputActionJsonNameModifierAssetProcessor.OnPostprocessAllAssets 0.139ms
+			AudioMixerPostprocessor.OnPostprocessAllAssets 0.131ms
+			AssetEvents.OnPostprocessAllAssets 0.115ms
+			ProjectSettingsPostprocessor.OnPostprocessAllAssets 0.101ms
+			AssetDatabaseCallbacks.OnPostprocessAllAssets 0.092ms
+			SpeedTreePostProcessor.OnPostprocessAllAssets 0.084ms
+			ConfigAssetsTracker.OnPostprocessAllAssets 0.066ms
+			ScenarioDriftAssetsTracker.OnPostprocessAllAssets 0.061ms
+			RenderPipelineGlobalSettingsPostprocessor.OnPostprocessAllAssets 0.053ms
+	PostAssetChangesProfiler: 1.977ms
+	UnloadStreamsBegin: 1.722ms
+	PersistCurrentRevisions: 0.111ms
+	GenerateScriptTypeHashes: 1.620ms
+	GenerateScriptTypeSerializationHashes: 3.252ms
+	Untracked: 865.292ms
+
+Application.AssetDatabase Initial Refresh End
+Shader Hidden/ChartRasterizerHardware is not supported: GPU does not support conservative rasterization
+Scanning for USB devices : 35.612ms
+Initializing Unity extensions:
+[MODES] ModeService[none].Initialize
+[MODES] ModeService[none].LoadModes
+[MODES] Loading mode Default (0) for mode-current-id-Forever engin
+Unloading 269 Unused Serialized files (Serialized files now loaded: 0)
+Unloading 7331 unused Assets / (7.8 MB). Loaded Objects now: 7992.
+Memory consumption went from 264.4 MB to 256.6 MB.
+Total: 8.985000 ms (FindLiveObjects: 0.341000 ms CreateObjectMapping: 0.155700 ms MarkObjects: 5.933900 ms  DeleteObjects: 2.553000 ms)
+
+[ContentGenerator] Starting full content generation...
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace ()
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+ForeverEngine.Editor.RPG.ContentGenerator:GenerateAll () (at Assets/Editor/RPG/ContentGenerator.cs:15)
+
+(Filename: Assets/Editor/RPG/ContentGenerator.cs Line: 15)
+
+[SpellGenerator] Generating 205 spells...
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace ()
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+ForeverEngine.Editor.RPG.SpellGenerator:GenerateAll () (at Assets/Editor/RPG/SpellGenerator.cs:27)
+ForeverEngine.Editor.RPG.ContentGenerator:GenerateAll () (at Assets/Editor/RPG/ContentGenerator.cs:19)
+
+(Filename: Assets/Editor/RPG/SpellGenerator.cs Line: 27)
+
+Start importing Assets/Scripts/RPG/Content/Spells/eldritch_ray.asset using Guid(8be19fb60786b7a4184e08d01a9ce06b) (NativeFormatImporter) -> (Import Result ID: 'aee8cbccb32712989d7f2c7f495c3113') in 0.0154355 seconds [static dependencies only]. Details - ImportResultOutputID=c2d78d7e1857b66a8ebea8e47a8bb446 DependenciesID=e4386a5fa7161d70ef5d4f6b7e0f4cf1 StaticDependenciesID=dbddbd812fbeff91c1fd74163ec78b8e 
+Asset Pipeline Refresh (id=a7dc7b1c10f3f9d40a429205e8d4fb4b): Total: 0.096 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Start importing Assets/Scripts/RPG/Content/Spells/flame_dart.asset using Guid(b5d75ce36574ef941863e7f2f4f19ae9) (NativeFormatImporter) -> (Import Result ID: '67ba948ee1c275dccadd3f7a180a5ca4') in 0.002658 seconds [static dependencies only]. Details - ImportResultOutputID=4d88ea1642ba40f23661fed6b7a25b3b DependenciesID=e2bbb6138293cd1d921dae1e28cbcb15 StaticDependenciesID=290ed96df1247b0d9037d11d0e8da8e2 
+Asset Pipeline Refresh (id=cf6ba6bc5e6f69443a003cdf3cd76f8d): Total: 0.040 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Start importing Assets/Scripts/RPG/Content/Spells/holy_spark.asset using Guid(bc12622e3ec22df4db3c82ecba2423a3) (NativeFormatImporter) -> (Import Result ID: '83de38f09a3f9e6726f2b794e657d46e') in 0.0067874 seconds [static dependencies only]. Details - ImportResultOutputID=089c28bdded143ed810ac7c953e0d7ed DependenciesID=de604d04d852e8f0b6f8671362bd0f62 StaticDependenciesID=50bb7e677c7e426fd370a18b3827e608 
+Asset Pipeline Refresh (id=6031ecd7bc368e243ab6895855db0997): Total: 0.042 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Start importing Assets/Scripts/RPG/Content/Spells/ray_of_frost.asset using Guid(8d47e0c8026997142b2059a2a025aa67) (NativeFormatImporter) -> (Import Result ID: 'c2116e3543358c3c4519ddc1ea767d8e') in 0.0013455 seconds [static dependencies only]. Details - ImportResultOutputID=da927bde0c955f258f5e27b761305162 DependenciesID=4233ab42ad514d9b8dd596da2b4d008c StaticDependenciesID=9a3523f680e54f20def1220b73b7487d 
+Asset Pipeline Refresh (id=55922f89336d8c448aa9c72cc892d259): Total: 0.061 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Start importing Assets/Scripts/RPG/Content/Spells/acid_splash.asset using Guid(11793317af8c0fc488a0c942d752a28e) (NativeFormatImporter) -> (Import Result ID: '14ec61416b08fda338d3bb7294e34768') in 0.0017483 seconds [static dependencies only]. Details - ImportResultOutputID=15ceeb9db6a26ef71d18667f3989cf1e DependenciesID=1818aadb279dfcf3ac1747b4cc12ef4d StaticDependenciesID=b0e561434e3c53b52c0f6014cad512fb 
+Asset Pipeline Refresh (id=a845e3003cc604040b6464353718135c): Total: 0.031 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Start importing Assets/Scripts/RPG/Content/Spells/shocking_grasp.asset using Guid(07f63618edd18d9428d87171fdece270) (NativeFormatImporter) -> (Import Result ID: 'fefe900f8318dc5f4cc189d63ffc91c1') in 0.0012145 seconds [static dependencies only]. Details - ImportResultOutputID=ad5ea698f43e9e2fec3867203f086022 DependenciesID=f44d9a77fa5d0c438e7fbd6d1b44b4ad StaticDependenciesID=7d3479078cef6018decb981e0ba50603 
+Asset Pipeline Refresh (id=11dbbd59c6fcbed4a8917c42407a08d9): Total: 0.032 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Start importing Assets/Scripts/RPG/Content/Spells/poison_spray.asset using Guid(4bd128edb1e6b1e4dbfdd1e1b696bfbc) (NativeFormatImporter) -> (Import Result ID: 'e8a965a5d3472564e4e8f545586c1437') in 0.0015921 seconds [static dependencies only]. Details - ImportResultOutputID=66b8fdb9662b1971aacf827a1514c78b DependenciesID=7a8316d0fe91ea3567e7eaeea785c545 StaticDependenciesID=be65b780a9e34fac334410e49c57635b 
+Asset Pipeline Refresh (id=87a3990dc0b0f64428e62bf329b3450f): Total: 0.032 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Start importing Assets/Scripts/RPG/Content/Spells/toll_the_dead.asset using Guid(498ee8e71c3bc0242a3e0224ac40120f) (NativeFormatImporter) -> (Import Result ID: '9409cfa040af4f5bdfa1abee5c7e0524') in 0.0010628 seconds [static dependencies only]. Details - ImportResultOutputID=6bacad0b8f4d6fc808329a3f50add8b9 DependenciesID=094a96a5c500db5c376dbac58ea74555 StaticDependenciesID=e278c9628d4234b6a5a5554dfff7392a 
+Asset Pipeline Refresh (id=251d066ba7bd3374cb05003c082fb942): Total: 0.028 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Start importing Assets/Scripts/RPG/Content/Spells/chill_touch.asset using Guid(6c8347c5e7c83ec4ea776bf10ad6ef5b) (NativeFormatImporter) -> (Import Result ID: '02270f4e5d70f470e0953633656cad23') in 0.0011522 seconds [static dependencies only]. Details - ImportResultOutputID=d393127139862e272a6478b7a0bb438b DependenciesID=8732410107b1dcaa8ff122dfa1484be8 StaticDependenciesID=1008bfd3535c1e92e2f83005c89a5002 
+Asset Pipeline Refresh (id=013431ff68489eb4b9fbd673aae8d889): Total: 0.026 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Start importing Assets/Scripts/RPG/Content/Spells/thunderclap.asset using Guid(21e52383732a5f749b8555021cab1de5) (NativeFormatImporter) -> (Import Result ID: 'a78354b558135ab153873d44d96cf231') in 0.0012079 seconds [static dependencies only]. Details - ImportResultOutputID=8c4dcb5ce30b82b06caf178403105134 DependenciesID=d17733924fd7cbcd3282ab53008aff4e StaticDependenciesID=3702e7e047123a061e65df415dcbf7d8 
+Asset Pipeline Refresh (id=5988f3c08fcedbe4fa3561a1ea7be696): Total: 0.026 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Start importing Assets/Scripts/RPG/Content/Spells/word_of_radiance.asset using Guid(17eee11a69a052c49a4a17928318ddc4) (NativeFormatImporter) -> (Import Result ID: 'a1fc7f075a185792c5045ec90dba7dc5') in 0.0011012 seconds [static dependencies only]. Details - ImportResultOutputID=eb4b53902736730332bf07331061344f DependenciesID=2e92ddda8944afd14bca4dbfbaf16951 StaticDependenciesID=5712203fa445314656f52f1a2980f201 
+Asset Pipeline Refresh (id=95cdc4fd4eae34b48bdf63d218c69ab5): Total: 0.026 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Start importing Assets/Scripts/RPG/Content/Spells/produce_flame.asset using Guid(475ac182ced895c4b89f3f66184d3a8e) (NativeFormatImporter) -> (Import Result ID: 'e0ff1581584835e93963a78d42745e4f') in 0.0011822 seconds [static dependencies only]. Details - ImportResultOutputID=0abb2dcc20e0ac4472fadd335985323a DependenciesID=612f56b6a8c73bae697a36b9d7303b08 StaticDependenciesID=0e4991961e727ae411c3ac4203bb6c24 
+Asset Pipeline Refresh (id=32eac7d432778d8428bf2376944085a6): Total: 0.027 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Start importing Assets/Scripts/RPG/Content/Spells/thorn_whip.asset using Guid(941f511502c43404a8a8daac2d3559a2) (NativeFormatImporter) -> (Import Result ID: '4280dfb64f6324071c3c8e4cbbf4a90f') in 0.0033603 seconds [static dependencies only]. Details - ImportResultOutputID=9e2dd3e5ab3642b10e766d89f8df8d07 DependenciesID=0d889a09e10193449bc3fa8b497046a6 StaticDependenciesID=5c2e858e8be8e51fb0f085332323472f 
+Asset Pipeline Refresh (id=6c1c96965ffa0844e8f2a1c26dc0335b): Total: 0.049 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Start importing Assets/Scripts/RPG/Content/Spells/blade_ward_strike.asset using Guid(9a35321363ef8f44797e49a5526bf076) (NativeFormatImporter) -> (Import Result ID: '05dfe89eb35c2d5953df9bf6f8e1d2a4') in 0.0011232 seconds [static dependencies only]. Details - ImportResultOutputID=182f1c689a8a5154e16745ab3b3d56e4 DependenciesID=1041d10f72a640d44a933d75a31d5b74 StaticDependenciesID=f54f7123cafeef2ea5187fee6986e59c 
+Asset Pipeline Refresh (id=215c6dc7c714f5748a2940f4b42abfde): Total: 0.032 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Start importing Assets/Scripts/RPG/Content/Spells/glow.asset using Guid(dc3ed53d6ecdc834c81760ebbe427677) (NativeFormatImporter) -> (Import Result ID: '6f84555197cbee9ce5c89879f1aa4c33') in 0.0011108 seconds [static dependencies only]. Details - ImportResultOutputID=4c47d6a0653a78dde666ea5021144f2a DependenciesID=3165c86cf9264e7cbc50a9e848cf0715 StaticDependenciesID=b48036e3facae1117bdf761be96ffccf 
+Asset Pipeline Refresh (id=e7ba06cf8076b3e468a1da121c3e1b19): Total: 0.027 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Start importing Assets/Scripts/RPG/Content/Spells/spectral_hand.asset using Guid(eacf7f1c6aacade4391ff6649c3a8346) (NativeFormatImporter) -> (Import Result ID: 'e6a202a396737a13157e140381f21646') in 0.0018459 seconds [static dependencies only]. Details - ImportResultOutputID=7a4a35b8bf0170a3b57b5842099f9342 DependenciesID=2a44c84b2f41113a960b947763e2a3d1 StaticDependenciesID=693ab73b0e23ce59444c73a0a723963c 
+Asset Pipeline Refresh (id=e59a477d233147d4b998fb8db3edd193): Total: 0.028 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Start importing Assets/Scripts/RPG/Content/Spells/minor_trick.asset using Guid(93e24081c9c42764486a400d9eeb5dc2) (NativeFormatImporter) -> (Import Result ID: '2fdf52ecdae23590c14c650c5435aa53') in 0.0014734 seconds [static dependencies only]. Details - ImportResultOutputID=8faaecbf45c1952c0c49fe0c8f34659c DependenciesID=ba8534db4845a234a9445722dea74dbb StaticDependenciesID=5c47cdece1106f47054ff37f31658caa 
+Asset Pipeline Refresh (id=b23ef058b5a0ecd48b5146531793e167): Total: 0.031 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Start importing Assets/Scripts/RPG/Content/Spells/druidcraft.asset using Guid(0b30fd853f4ef07498d669a35d4d43a0) (NativeFormatImporter) -> (Import Result ID: 'bc17b3f26508180284dce03244b8a526') in 0.0012375 seconds [static dependencies only]. Details - ImportResultOutputID=18b6f041f3dd51f5d5e080816e1c25d8 DependenciesID=2e08f22903c84bbe40c2e4d941301780 StaticDependenciesID=7539d0dc0ae58f251a99bcf7f2fc0b2e 
+Asset Pipeline Refresh (id=2f76ad2eb3a270f4d975189be6d26677): Total: 0.029 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Start importing Assets/Scripts/RPG/Content/Spells/thaumaturgy.asset using Guid(c84aeb1d8ebb92e4bb0976ccfcbb1468) (NativeFormatImporter) -> (Import Result ID: '982993fe140228daf6cdcdca7369d06f') in 0.0013227 seconds [static dependencies only]. Details - ImportResultOutputID=91a090a99da2ffbdc41ec7d333396f44 DependenciesID=800d256e70c7a4ffd4455f779d92ee9d StaticDependenciesID=bf96de9678fc2b8579043bd05a84261c 
+Asset Pipeline Refresh (id=7b9a06f16a11bcb48a1ecd43be28b7be): Total: 0.028 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Start importing Assets/Scripts/RPG/Content/Spells/message.asset using Guid(fb07398d84a8fde43961a6b966c6a90f) (NativeFormatImporter) -> (Import Result ID: 'f04ff20c9f81bae77558b7a987cc5295') in 0.0010431 seconds [static dependencies only]. Details - ImportResultOutputID=2ac8ddfb845450062b20c965ae8dc792 DependenciesID=3cfbe54a512d665afa6cc92ed1a6e8e4 StaticDependenciesID=f56be2dcc0a97e46df10a27ffc3686cf 
+Asset Pipeline Refresh (id=33a13414aeb931644818548181cffa05): Total: 0.027 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Start importing Assets/Scripts/RPG/Content/Spells/mending.asset using Guid(c19df4f1bde7f444abba28cb0433bcd8) (NativeFormatImporter) -> (Import Result ID: 'abebdcd68f74cf977818d4ffbe51b9c8') in 0.0012119 seconds [static dependencies only]. Details - ImportResultOutputID=bf041644f1e8282aa5e9a11d69db5570 DependenciesID=917e45b37fffaa65025c4367c4eb0b8b StaticDependenciesID=432027f8819550a8ca5f7db76792be40 
+Asset Pipeline Refresh (id=cc31feb14252b59469a9c0b81e72b9e3): Total: 0.028 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Start importing Assets/Scripts/RPG/Content/Spells/minor_illusion.asset using Guid(d367cbc272eb2e5448390f8649ae1085) (NativeFormatImporter) -> (Import Result ID: 'b2e3510ed841535dc8472722d0246fde') in 0.0014317 seconds [static dependencies only]. Details - ImportResultOutputID=fcda49383daefdac5280928fa4706922 DependenciesID=211fadee2ec7cacc33c597fb681d3e98 StaticDependenciesID=3a820a9ef1a9d5ba8aefefcc894d9e4c 
+Asset Pipeline Refresh (id=c08bc9e97e2cf7e41b275167b4bb0b37): Total: 0.032 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Start importing Assets/Scripts/RPG/Content/Spells/friends.asset using Guid(10c70b66e3b8ac045b7f12e2e4c5d214) (NativeFormatImporter) -> (Import Result ID: 'a10f63c4c9fa40bdb731526cc8446e5f') in 0.0023959 seconds [static dependencies only]. Details - ImportResultOutputID=4481ec621b251d215d875ac932a18922 DependenciesID=a89fdfc0b5d2763f3963a40b7f695ed5 StaticDependenciesID=8fd8af2bd841b13b9ebee32d32ba59b9 
+Asset Pipeline Refresh (id=8ad1f7ecafab98f4cb60137f9a82ad58): Total: 0.035 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Start importing Assets/Scripts/RPG/Content/Spells/guidance.asset using Guid(49313092a1bd38743bdb04d9e5d715c4) (NativeFormatImporter) -> (Import Result ID: '9a1c7a4b120dc642ec52a759a9feb152') in 0.0018111 seconds [static dependencies only]. Details - ImportResultOutputID=4477e22d078484adf6c14ca388fdde6c DependenciesID=33fa21cec9a65a2d3cb300b86eb844b2 StaticDependenciesID=50a62af40b0d74dec215e1bf4640755d 
+Asset Pipeline Refresh (id=e0d8f3a0aa90d3f4da065e977d5e4a87): Total: 0.030 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Start importing Assets/Scripts/RPG/Content/Spells/resistance.asset using Guid(26acd0912cf9fd543ab1182d04fd66fe) (NativeFormatImporter) -> (Import Result ID: 'cee1ec41764e6ddf8b628e8db9b4ce79') in 0.0013344 seconds [static dependencies only]. Details - ImportResultOutputID=2b84603f941ececcd1a2e04b53a47aec DependenciesID=4f8243293d2715887e16e5e8674fdf83 StaticDependenciesID=5ab588b4a6f28e14b3a924b0c72006fe 
+Asset Pipeline Refresh (id=9bf51c6f1c9fab94e99d9366a11dae98): Total: 0.038 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Start importing Assets/Scripts/RPG/Content/Spells/true_strike.asset using Guid(2aad916f4ed4c68488d97b65da0b72b1) (NativeFormatImporter) -> (Import Result ID: '8b76868a32208e1823f6e2ab42086709') in 0.0015369 seconds [static dependencies only]. Details - ImportResultOutputID=c551d0ada217e25f95e0789d3c038770 DependenciesID=98d0a247cff67f8c9450b5aabd2552e2 StaticDependenciesID=18f1d062041c8c88c839b9d20be25a04 
+Asset Pipeline Refresh (id=a2d3687af913a12408d799c005af84e7): Total: 0.041 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Start importing Assets/Scripts/RPG/Content/Spells/spare_the_dying.asset using Guid(2e6507e8e5fd0f54b87914395a07aa15) (NativeFormatImporter) -> (Import Result ID: '26035945042444f3ccb5908339f71bc2') in 0.0015969 seconds [static dependencies only]. Details - ImportResultOutputID=67e7c444f044d2f2fa6d248c32958595 DependenciesID=c628916929ccb19ef1df57afa1e07006 StaticDependenciesID=6492be3ccf093746a539f95db6318784 
+Asset Pipeline Refresh (id=0b3535fa4ebbc2d4fb1b3e8a4fa66c4e): Total: 0.041 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Start importing Assets/Scripts/RPG/Content/Spells/dancing_lights.asset using Guid(bc515a2914cd3024cad266f61f7d2a68) (NativeFormatImporter) -> (Import Result ID: 'ec64d5adae2e63514859ee8dd62581ee') in 0.0016277 seconds [static dependencies only]. Details - ImportResultOutputID=f195aed1a5cc417c64743e173bcd8267 DependenciesID=ee2f945f769c306af05cd7ec70a71ae7 StaticDependenciesID=b7daac864ccd7944d0d4052f1dea47d9 
+Asset Pipeline Refresh (id=f2f8c2a74a08c564f8d254aff4a9d1dd): Total: 0.117 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Start importing Assets/Scripts/RPG/Content/Spells/shape_water.asset using Guid(bffa57066cb725c488cb22b73a1defe8) (NativeFormatImporter) -> (Import Result ID: '469f48d0d8811a6c5f535cd419622358') in 0.0015009 seconds [static dependencies only]. Details - ImportResultOutputID=6b10d95029f37b3c22151cccb8bb768b DependenciesID=7206c03f388389fb799d354244cfb2d7 StaticDependenciesID=8ae5d1e75df47932eb98349184158983 
+Asset Pipeline Refresh (id=02386a9d0f3367e4ea0dbe228c6e1698): Total: 0.104 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Start importing Assets/Scripts/RPG/Content/Spells/mold_earth.asset using Guid(7456c365eee813247a3fb8e93000a86a) (NativeFormatImporter) -> (Import Result ID: 'a3246ec7b0f379f3e705286996cbf817') in 0.0012322 seconds [static dependencies only]. Details - ImportResultOutputID=86f1a5259d3736950fbe338a4f098826 DependenciesID=46b8efca6ea2ac8d0bda42b5223177db StaticDependenciesID=9f1f28be8fe191ae901671ec4b9d957a 
+Asset Pipeline Refresh (id=bac7ddb14db222e46a44f24ae426e3fa): Total: 0.033 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Start importing Assets/Scripts/RPG/Content/Spells/arcane_bolt.asset using Guid(9e715d7b0d90bef40a70cfe5bad73aa9) (NativeFormatImporter) -> (Import Result ID: 'f24d95db442708a12fe9add51e5d596c') in 0.0013963 seconds [static dependencies only]. Details - ImportResultOutputID=431d5800ec7a4c621674fb03374160f1 DependenciesID=ecce0795098a1eb38d1ddffdba266991 StaticDependenciesID=964883c947661daf45e7e464df9eab87 
+Asset Pipeline Refresh (id=7904e4a9da5e1ca439181bd156e15058): Total: 0.029 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Start importing Assets/Scripts/RPG/Content/Spells/searing_touch.asset using Guid(ab3c8e77a5ff1564694fc42754f14c79) (NativeFormatImporter) -> (Import Result ID: '029e5b6a593f3fdb0b692762c5fa86a7') in 0.0014515 seconds [static dependencies only]. Details - ImportResultOutputID=9b78e4a54c64f997bd4082e2eec2e101 DependenciesID=d1bd560bbc4a86791be57df9b4c7444a StaticDependenciesID=5fa886899fc3f6ce8ff4f61cdfcfa673 
+Asset Pipeline Refresh (id=4fded0a6da1b69144a3ec6d0cdfebdc6): Total: 0.031 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Start importing Assets/Scripts/RPG/Content/Spells/shockwave.asset using Guid(2ecf9c1fc3a82574cbf04f7766601960) (NativeFormatImporter) -> (Import Result ID: 'e4450e9e660388ebdd3d33eabcf6dba4') in 0.0012035 seconds [static dependencies only]. Details - ImportResultOutputID=348e686016891a1a7823c2a2c188c8ac DependenciesID=d9000a4e5fcd9ef2236bdbf2202be50f StaticDependenciesID=2a58761401a6f6a488e2878e2a911a4d 
+Asset Pipeline Refresh (id=048bbab9aea75cd4f89d3bacf9b71115): Total: 0.027 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Start importing Assets/Scripts/RPG/Content/Spells/guiding_bolt.asset using Guid(be7541ed05bd0844095741f37bdbbd87) (NativeFormatImporter) -> (Import Result ID: '5f55b373f4a1c0549011f418e7f80497') in 0.0012134 seconds [static dependencies only]. Details - ImportResultOutputID=6bf886d1fc013591caf818b102a9c14c DependenciesID=eaa19d456ecaed7eebdbb427f076a377 StaticDependenciesID=75a97962b7d38b7317487d30dce84136 
+Asset Pipeline Refresh (id=4cdaea9ebd572344590b50eed57c574b): Total: 0.028 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Start importing Assets/Scripts/RPG/Content/Spells/burning_hands.asset using Guid(79dd7fcd4d9262b4991338faa7e6e26d) (NativeFormatImporter) -> (Import Result ID: 'a7d0d983c2705cc927ea297a0df3385c') in 0.0013357 seconds [static dependencies only]. Details - ImportResultOutputID=0e98dfe77c542dc536a5d46d0ae88d9d DependenciesID=a369cb4b4cac91da96a47a81ff670bdd StaticDependenciesID=8196e32edc5b10fd278728857c50970d 
+Asset Pipeline Refresh (id=5509dabd68d40f14587a88c0984b217b): Total: 0.028 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Start importing Assets/Scripts/RPG/Content/Spells/inflict_wounds.asset using Guid(1bca193ee9aee0f47ae2b533677a7cc3) (NativeFormatImporter) -> (Import Result ID: 'cedae75993075d96e4ce06c56d587cbd') in 0.0014137 seconds [static dependencies only]. Details - ImportResultOutputID=102a601abb5be9d086d2f4efc64de81c DependenciesID=4eb343f5785819bfe233f292ec8270d5 StaticDependenciesID=bb6f319819802adabdeb1741777c182c 
+Asset Pipeline Refresh (id=521a3f979cf12a64aa0142b30bc08fed): Total: 0.028 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Start importing Assets/Scripts/RPG/Content/Spells/chromatic_orb.asset using Guid(bfe048c284c494742995154f05da3a54) (NativeFormatImporter) -> (Import Result ID: '3ed3f7af0a076d5d217f645fc85cda5a') in 0.0014588 seconds [static dependencies only]. Details - ImportResultOutputID=3cc6f1395ac287b54564022c3ce49f38 DependenciesID=89aba7d6da28403d01f941d9c35adf8f StaticDependenciesID=82fcee71aa885a12ae2a9df21b5c5b1f 
+Asset Pipeline Refresh (id=329bf4023226ddd4cb265b598941868f): Total: 0.033 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Start importing Assets/Scripts/RPG/Content/Spells/witch_bolt.asset using Guid(bf3c283297d389947939946f5bcd08e1) (NativeFormatImporter) -> (Import Result ID: '5689a77396d3c33592cfa0b14b5861d8') in 0.0014864 seconds [static dependencies only]. Details - ImportResultOutputID=602da602d1c6fb6d5275b020d43855cc DependenciesID=9d3388fdbb16a531e6a2b5ec37f3f931 StaticDependenciesID=036872a9597fd17d8219af62087d9e2a 
+Asset Pipeline Refresh (id=b2f0c1db21111244cbf6ed28030f2999): Total: 0.032 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Start importing Assets/Scripts/RPG/Content/Spells/ice_knife.asset using Guid(ffb3a71d6560a9446b09642bbb626b3c) (NativeFormatImporter) -> (Import Result ID: '9d4aca3c9d1bb43e002ae9f63fb4ab3c') in 0.0016637 seconds [static dependencies only]. Details - ImportResultOutputID=be57e56dff8893e29ae86a34291b8488 DependenciesID=c0e037eb0f49bcde8a7718d9e8959472 StaticDependenciesID=04d85e10ed4ec9e3e9c76bad89bd1831 
+Asset Pipeline Refresh (id=0f2a3b4fdfc97054dae1400dce3e6346): Total: 0.030 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Start importing Assets/Scripts/RPG/Content/Spells/earth_tremor.asset using Guid(a77716c26528caa46abb2a0508dc0a4b) (NativeFormatImporter) -> (Import Result ID: '1a9a69e3f059da2db1ff5c6338fffa27') in 0.0016581 seconds [static dependencies only]. Details - ImportResultOutputID=1b0cdc68b309cdb986a828d4059a999e DependenciesID=e882945ab026222dbc8c497369e7ae3b StaticDependenciesID=4a7cc01f6d07210e79bcddeb4c08e0e0 
+Asset Pipeline Refresh (id=1147613a7b836c847bb8b9e200b0f0a3): Total: 0.028 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Start importing Assets/Scripts/RPG/Content/Spells/mending_touch.asset using Guid(08d0f13c7e81baa4694fc4af6e9980ea) (NativeFormatImporter) -> (Import Result ID: '1a8ad08cd7d688cd755572378c59af6f') in 0.0020725 seconds [static dependencies only]. Details - ImportResultOutputID=0044896aab7eef65f4976d9e6bff4c27 DependenciesID=d109b9a1069a8816dba41f34e5c7dcc7 StaticDependenciesID=816e79e2c6034bd46fe136d818e9aafd 
+Asset Pipeline Refresh (id=a4e4ed1b61f269146a5065dc3ed2903f): Total: 0.031 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Start importing Assets/Scripts/RPG/Content/Spells/healing_whisper.asset using Guid(e2ab73da9d2f2154fbeae8058a832ea4) (NativeFormatImporter) -> (Import Result ID: 'a54135ab3f310a8d7b9cd3384c8d9381') in 0.0013292 seconds [static dependencies only]. Details - ImportResultOutputID=2cf1e32e997a18528114b1bbc2a70b1c DependenciesID=02b9ee5f20d80bdcdb41dc35202e2cad StaticDependenciesID=f58978bf2f1bd79eb424ac99b8cbe63c 
+Asset Pipeline Refresh (id=192dbb122d239f8488b6045188d9cf23): Total: 0.037 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Start importing Assets/Scripts/RPG/Content/Spells/cure_poison.asset using Guid(15774e86ae34999488d75a5069ea6da7) (NativeFormatImporter) -> (Import Result ID: '410846d013d0749980faa40ad45ab940') in 0.0011139 seconds [static dependencies only]. Details - ImportResultOutputID=0957ef1ce88efffe6ba96ab8852132ea DependenciesID=7f224c29314d562eaa44d92819125068 StaticDependenciesID=ce49cfaa8bbad74938730b4c6185cf77 
+Asset Pipeline Refresh (id=ac36a909906648c47b7cecdd0c194114): Total: 0.027 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Start importing Assets/Scripts/RPG/Content/Spells/goodberry.asset using Guid(7b4f448e1124c1e4fb0ccf7acbef0440) (NativeFormatImporter) -> (Import Result ID: 'bb211d5dee27db516036cb79adebb18a') in 0.0012436 seconds [static dependencies only]. Details - ImportResultOutputID=f0ede0fad584196dd8c4701b3a2d2cca DependenciesID=1f260abdee80b19b5958331031467a21 StaticDependenciesID=acda0f4128db9e2959817ab69789d473 
+Asset Pipeline Refresh (id=a3fed323bdaba304bb34e7ff7c0e9f5b): Total: 0.027 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Start importing Assets/Scripts/RPG/Content/Spells/arcane_ward.asset using Guid(0c3af1a0392b8c14e9c6b73083b167ec) (NativeFormatImporter) -> (Import Result ID: '448fe94ba85b4372d33bfa218b7367ce') in 0.0012796 seconds [static dependencies only]. Details - ImportResultOutputID=8a7dd09189e9dfeba643e62eba7b579f DependenciesID=f880dcdb6147f746bc628ac04a8f19bc StaticDependenciesID=d0e1e040936e798f2b71c681b09edc43 
+Asset Pipeline Refresh (id=1eabd97ebd49f6a46a8ef7458406c6d1): Total: 0.027 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Start importing Assets/Scripts/RPG/Content/Spells/bless_spell.asset using Guid(5478fe9ddc30107459110bce3e77ee27) (NativeFormatImporter) -> (Import Result ID: '0684d3996e5ef052335c510b4da44dc1') in 0.0013882 seconds [static dependencies only]. Details - ImportResultOutputID=c11aa17be87c603c63c9f11d73c32804 DependenciesID=eee62f25e5956aec072329e5c99d4a13 StaticDependenciesID=d8e69c3b1709e7d8197f02a6773f868c 
+Asset Pipeline Refresh (id=41b8dfb136b8a8243a988b1838d16a69): Total: 0.031 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Start importing Assets/Scripts/RPG/Content/Spells/bane_spell.asset using Guid(d9aea18a3a500e842ba94de67102b461) (NativeFormatImporter) -> (Import Result ID: '1405e219c62ec1fc31c7be445d2804ac') in 0.0014948 seconds [static dependencies only]. Details - ImportResultOutputID=6761789e5c9a0053e9592faef5f27b11 DependenciesID=0b370aa697c83cc4783212a3690e073a StaticDependenciesID=2290a8c8c2a9e5f35ee05d15efae78f3 
+Asset Pipeline Refresh (id=643292535c938ef45a99cb7bd4ba685d): Total: 0.031 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Start importing Assets/Scripts/RPG/Content/Spells/sense_magic.asset using Guid(0b89cf1e20c7ba143b84bd8c573df810) (NativeFormatImporter) -> (Import Result ID: '2b1e923f4b3255b5f90a494ab3363d83') in 0.001099 seconds [static dependencies only]. Details - ImportResultOutputID=fb959f3bf201d49e6d18e4e88f32cd74 DependenciesID=6bc50b29136f59dccaf350c2f3a180fb StaticDependenciesID=50f5b3b5220d2699c4760d885e0b1043 
+Asset Pipeline Refresh (id=186269d566fbfee41877961fe0835006): Total: 0.027 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Start importing Assets/Scripts/RPG/Content/Spells/arcane_insight.asset using Guid(9884f6805c7abf840b0fd44f84c7dbb0) (NativeFormatImporter) -> (Import Result ID: '9acaac27647557aaa53121b763f22a68') in 0.0011367 seconds [static dependencies only]. Details - ImportResultOutputID=5299ba4d81a82dee4e67137d60df78e9 DependenciesID=5c0f51103e1bb3815be1e3b3add429a3 StaticDependenciesID=74b80a90b0451d0c14b30cea12d24fb8 
+Asset Pipeline Refresh (id=a51a75a046e7a4449bdc998256581931): Total: 0.027 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Start importing Assets/Scripts/RPG/Content/Spells/feather_fall.asset using Guid(554f1aabc7250684db8da68dc9c2d3c3) (NativeFormatImporter) -> (Import Result ID: 'cacd71d9e212710421c8107fd88b1e93') in 0.0011215 seconds [static dependencies only]. Details - ImportResultOutputID=603a6ac96f160bb9433ff67af6c79fa1 DependenciesID=e14aad4633b37abf5657034f5681bebf StaticDependenciesID=bd98c836eda5667841f46c00cebd0f6d 
+Asset Pipeline Refresh (id=f2d31b4e423577149893496a2113b9a8): Total: 0.028 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Start importing Assets/Scripts/RPG/Content/Spells/comprehend_lang.asset using Guid(0d201e2d2d87f4847bd6144ac652dfd4) (NativeFormatImporter) -> (Import Result ID: '0c58836eef7542e7cd73144377acf7fe') in 0.0015081 seconds [static dependencies only]. Details - ImportResultOutputID=482d8488e5e86cf126264e67fce497dc DependenciesID=7d1562d7db6b2b128ecfc78fb9c117f2 StaticDependenciesID=44511a1c257094e84b32002d2595629f 
+Asset Pipeline Refresh (id=1229254007dec824b8eb589c851125c8): Total: 0.028 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Start importing Assets/Scripts/RPG/Content/Spells/disguise_self.asset using Guid(289144f53d2d7a149b62cf4247c9ba74) (NativeFormatImporter) -> (Import Result ID: '8c9cfc8f62d5d3284592c25124b47b52') in 0.0018893 seconds [static dependencies only]. Details - ImportResultOutputID=7b7ee8c1df85e418859b67f75156f92b DependenciesID=41691d78bd71de680004bbf54dd0368d StaticDependenciesID=5ffc2327f5f6c289317eb968ed63bb22 
+Asset Pipeline Refresh (id=c96d6775d33dd694f857ba59d0e47fde): Total: 0.031 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Start importing Assets/Scripts/RPG/Content/Spells/expeditious_retreat.asset using Guid(96110b792e43f32488eaf0e2e4ed20a1) (NativeFormatImporter) -> (Import Result ID: '0ed3eeff5e19a6f9cccc4ca0b32ceab8') in 0.0019599 seconds [static dependencies only]. Details - ImportResultOutputID=958b22be4a417cf7e20f56fd10b1a0b3 DependenciesID=e5ff5f67b2060042f3538b666557fd5e StaticDependenciesID=3dcaf8076ddb9cca0708a51d8c4854ec 
+Asset Pipeline Refresh (id=68455cd14b3f8b8469ac5aba6b16431c): Total: 0.037 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+C:\Dev\Forever engin\Assets\Scripts\ECS\Systems\TrapDetectionSystem.cs(130,13): Burst error BC1016: The managed function `Unity.Collections.FixedString32Bytes.ToString(Unity.Collections.FixedString32Bytes* this)` is not supported
+
+ at ForeverEngine.ECS.Systems.TrapDetectionSystem.TriggerTrap(ForeverEngine.ECS.Systems.TrapDetectionSystem* this, ref Unity.Entities.EntityCommandBuffer ecb, Unity.Entities.Entity trapEntity, Unity.Entities.RefRW`1<ForeverEngine.ECS.Components.TrapComponent>* trap, Unity.Entities.Entity playerEntity, ForeverEngine.ECS.Components.StatsComponent* playerStats, ForeverEngine.ECS.Components.CharacterSheetComponent* playerSheet) (at C:\Dev\Forever engin\Assets\Scripts\ECS\Systems\TrapDetectionSystem.cs:130)
+ at ForeverEngine.ECS.Systems.TrapDetectionSystem.OnUpdate(ForeverEngine.ECS.Systems.TrapDetectionSystem* this, ref Unity.Entities.SystemState state) (at C:\Dev\Forever engin\Assets\Scripts\ECS\Systems\TrapDetectionSystem.cs:102)
+ at ForeverEngine.ECS.Systems.TrapDetectionSystem.__codegen__OnUpdate$BurstManaged(System.IntPtr self, System.IntPtr state)
+ at ForeverEngine.ECS.Systems.TrapDetectionSystem.ForeverEngine.ECS.Systems.__codegen__OnUpdate_00000455$BurstDirectCall.Invoke(System.IntPtr self, System.IntPtr state)
+ at ForeverEngine.ECS.Systems.TrapDetectionSystem.__codegen__OnUpdate(System.IntPtr self, System.IntPtr state)
+
+
+While compiling job:
+Unity.Jobs.IJobExtensions+JobStruct`1[[ForeverEngine.ECS.Jobs.CombatJob, ForeverEngine, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null]], UnityEngine.CoreModule, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null::Execute(ForeverEngine.ECS.Jobs.CombatJob&, ForeverEngine, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null|System.IntPtr, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089|System.IntPtr, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089|Unity.Jobs.LowLevel.Unsafe.JobRanges&, UnityEngine.CoreModule, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null|System.Int32, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089)
+Unity.Jobs.IJobParallelForExtensions+ParallelForJobStruct`1[[ForeverEngine.Genres.RTS.RTSFogOfWar+DimJob, ForeverEngine, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null]], UnityEngine.CoreModule, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null::Execute(ForeverEngine.Genres.RTS.RTSFogOfWar+DimJob&, ForeverEngine, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null|System.IntPtr, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089|System.IntPtr, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089|Unity.Jobs.LowLevel.Unsafe.JobRanges&, UnityEngine.CoreModule, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null|System.Int32, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089)
+ForeverEngine.ECS.Systems.EncounterTriggerSystem, ForeverEngine, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null::__codegen__OnUpdate(System.IntPtr, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089|System.IntPtr, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089)
+ForeverEngine.ECS.Utility.DiceRoller, ForeverEngine, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null::Roll(System.Int32, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089|System.Int32, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089|System.Int32, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089|System.UInt32&, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089)
+ForeverEngine.ECS.Systems.TrapDetectionSystem, ForeverEngine, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null::__codegen__OnUpdate(System.IntPtr, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089|System.IntPtr, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089)
+ForeverEngine.ECS.Systems.RestSystem, ForeverEngine, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null::__codegen__OnUpdate(System.IntPtr, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089|System.IntPtr, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089)
+ForeverEngine.ECS.Utility.DiceRoller, ForeverEngine, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null::AbilityModifier(System.Int32, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089)
+Unity.Jobs.IJobParallelForExtensions+ParallelForJobStruct`1[[ForeverEngine.ECS.Jobs.AIDecisionJob, ForeverEngine, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null]], UnityEngine.CoreModule, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null::Execute(ForeverEngine.ECS.Jobs.AIDecisionJob&, ForeverEngine, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null|System.IntPtr, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089|System.IntPtr, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089|Unity.Jobs.LowLevel.Unsafe.JobRanges&, UnityEngine.CoreModule, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null|System.Int32, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089)
+Unity.Jobs.IJobParallelForExtensions+ParallelForJobStruct`1[[ForeverEngine.ECS.Jobs.FogRaycastJob, ForeverEngine, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null]], UnityEngine.CoreModule, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null::Execute(ForeverEngine.ECS.Jobs.FogRaycastJob&, ForeverEngine, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null|System.IntPtr, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089|System.IntPtr, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089|Unity.Jobs.LowLevel.Unsafe.JobRanges&, UnityEngine.CoreModule, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null|System.Int32, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089)
+ForeverEngine.ECS.Utility.DiceRoller, ForeverEngine, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null::Xorshift32(System.UInt32, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089)
+ForeverEngine.ECS.Systems.ConditionSystem, ForeverEngine, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null::__codegen__OnUpdate(System.IntPtr, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089|System.IntPtr, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089)
+Unity.Jobs.IJobParallelForExtensions+ParallelForJobStruct`1[[ForeverEngine.Genres.RTS.RTSFogOfWar+RevealJob, ForeverEngine, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null]], UnityEngine.CoreModule, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null::Execute(ForeverEngine.Genres.RTS.RTSFogOfWar+RevealJob&, ForeverEngine, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null|System.IntPtr, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089|System.IntPtr, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089|Unity.Jobs.LowLevel.Unsafe.JobRanges&, UnityEngine.CoreModule, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null|System.Int32, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089)
+Unity.Jobs.IJobParallelForExtensions+ParallelForJobStruct`1[[ForeverEngine.ECS.Jobs.PathfindJob, ForeverEngine, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null]], UnityEngine.CoreModule, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null::Execute(ForeverEngine.ECS.Jobs.PathfindJob&, ForeverEngine, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null|System.IntPtr, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089|System.IntPtr, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089|Unity.Jobs.LowLevel.Unsafe.JobRanges&, UnityEngine.CoreModule, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null|System.Int32, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089)
+Unity.Jobs.IJobParallelForExtensions+ParallelForJobStruct`1[[ForeverEngine.ECS.Jobs.FogDimJob, ForeverEngine, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null]], UnityEngine.CoreModule, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null::Execute(ForeverEngine.ECS.Jobs.FogDimJob&, ForeverEngine, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null|System.IntPtr, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089|System.IntPtr, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089|Unity.Jobs.LowLevel.Unsafe.JobRanges&, UnityEngine.CoreModule, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null|System.Int32, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089)
+Start importing Assets/Scripts/RPG/Content/Spells/mage_armor.asset using Guid(cd553482adcf90044ac0fb62cc2de01d) (NativeFormatImporter) -> (Import Result ID: '9d44c9c8fdeb876167630f01aca0fb2a') in 0.0020321 seconds [static dependencies only]. Details - ImportResultOutputID=17b36e998e23101c74c8c533c387cbe7 DependenciesID=8f313f3337c7aa8901af0a66b35d5ec6 StaticDependenciesID=fbf1e8d0fa63ae7ff60bfdb6ceff3105 
+Asset Pipeline Refresh (id=1d7ea0642c736dd4a91da440a783f6cc): Total: 0.031 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Start importing Assets/Scripts/RPG/Content/Spells/sanctuary.asset using Guid(5815883ad0bf9764f8a18ed64a3a6886) (NativeFormatImporter) -> (Import Result ID: '874ce22d21258cf483a7cd37e76bdc99') in 0.002139 seconds [static dependencies only]. Details - ImportResultOutputID=94f17f99502becbbfd5e812abc78c5b6 DependenciesID=0ba6e84a0b6ccb8a1da73745703aac21 StaticDependenciesID=3faa9b8548de07df1c1a6086153074a9 
+Asset Pipeline Refresh (id=1cc731ff91939da46a3f6f0164aa6ba8): Total: 0.035 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Start importing Assets/Scripts/RPG/Content/Spells/longstrider.asset using Guid(7b9ddf2d2c946c34caa78557279fb567) (NativeFormatImporter) -> (Import Result ID: '7d9e94785757c5ca8490d827b11bbb53') in 0.0015807 seconds [static dependencies only]. Details - ImportResultOutputID=ba339f2a3e22762119fbd47d777364bb DependenciesID=9001b0cc4daae2a39fcb1d4a0d293c21 StaticDependenciesID=f965d05f70ea213ec66cd681c37fb37e 
+Asset Pipeline Refresh (id=bb4c212b4c8bc274fa7f0facedf66cef): Total: 0.031 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Start importing Assets/Scripts/RPG/Content/Spells/slumber.asset using Guid(9aa6513411b90954b860d7ddbcc5f6d1) (NativeFormatImporter) -> (Import Result ID: '18ec0e170c593a133e385322140ec4a5') in 0.0015839 seconds [static dependencies only]. Details - ImportResultOutputID=785f302a6f0c9b7412222f88437d9c6b DependenciesID=0a7de9ec463ac1c2957612736b1bd686 StaticDependenciesID=f9da7215e8e98d1d9261f8c28ae18f89 
+Asset Pipeline Refresh (id=64b40de1dd42dd148849134c6ad394da): Total: 0.029 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Start importing Assets/Scripts/RPG/Content/Spells/grasping_vines.asset using Guid(6ed61255a1249ce42a2821b8baf38533) (NativeFormatImporter) -> (Import Result ID: 'a7ad0ad94b50322c4701afd6b925cbe7') in 0.0014023 seconds [static dependencies only]. Details - ImportResultOutputID=72e7d244b251dca5a75d0df43ff06cc8 DependenciesID=ee7b56721c08ebe67be7cc850b34eed0 StaticDependenciesID=d12e4f0d7de5e42020cbf5bdb5bc3dd2 
+Asset Pipeline Refresh (id=e1736f1ade5dcb14ea50d27573d56af2): Total: 0.028 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Start importing Assets/Scripts/RPG/Content/Spells/faerie_fire.asset using Guid(873dd835e31ec1b428d37b26ce82902e) (NativeFormatImporter) -> (Import Result ID: '8b90ac848aa0fea5a4744cc6556f436b') in 0.0016853 seconds [static dependencies only]. Details - ImportResultOutputID=2642eb736b99626906c10cb71d5a5cb0 DependenciesID=636a66a763ffbaabb39c9bed7b485983 StaticDependenciesID=397ec687a2512a5bd4f4de5564be9f8b 
+Asset Pipeline Refresh (id=5ca70e2e62b91c543aa2ba233ce8dee5): Total: 0.029 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Start importing Assets/Scripts/RPG/Content/Spells/command_spell.asset using Guid(ece2e38d80d52cf4b9409781a813b6db) (NativeFormatImporter) -> (Import Result ID: '5bacf7ff28eb7dce9f28d8369063b321') in 0.0020616 seconds [static dependencies only]. Details - ImportResultOutputID=bc268e542e55de1cf528dab61d7a2553 DependenciesID=e01be924de42ad5038a3d792511057b4 StaticDependenciesID=bc62174e84fa8620a3d59f3d70390706 
+Asset Pipeline Refresh (id=505595ece342d774d98fc8bb1d57a8b7): Total: 0.030 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Start importing Assets/Scripts/RPG/Content/Spells/fog_cloud.asset using Guid(fc39d409c16f57a4f87d4efd4e7c5fac) (NativeFormatImporter) -> (Import Result ID: '1293296103fd8ea3450211b34ee00717') in 0.0016809 seconds [static dependencies only]. Details - ImportResultOutputID=c0271faf6142b05c023da0fccaa859fa DependenciesID=95bfa3a6e3d92f63c56d1e2f5eb1772d StaticDependenciesID=338be6e93d88dd63f29135417aa911c5 
+Asset Pipeline Refresh (id=c238340f39d19554588de85dc499814f): Total: 0.032 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Start importing Assets/Scripts/RPG/Content/Spells/tashas_laughter.asset using Guid(b424fcfe5f6ca664b96a29598b322a47) (NativeFormatImporter) -> (Import Result ID: '5970547371774a4c7d746650ca902dab') in 0.001518 seconds [static dependencies only]. Details - ImportResultOutputID=3be9412084718058493bce1e380e44fb DependenciesID=75f27ab36607c3f82247a1567b4a3338 StaticDependenciesID=45e78e5138912d76bf3b268383617fad 
+Asset Pipeline Refresh (id=a7bc2f831eb90c44586151b357c58670): Total: 0.030 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Start importing Assets/Scripts/RPG/Content/Spells/hex.asset using Guid(e9ee3fdd462702f478192e3d8af6a115) (NativeFormatImporter) -> (Import Result ID: '44c22888add0a6c00d1f464677199a7d') in 0.0015652 seconds [static dependencies only]. Details - ImportResultOutputID=f7fcd81413ab64c3f76e40b83dc7155e DependenciesID=7785d2a91d3e408a12ebee63c3b1c692 StaticDependenciesID=abd87c9b328c4bd06c8f2afac89386f8 
+Asset Pipeline Refresh (id=21d5698a98c621440b3c19b7699eab65): Total: 0.030 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Start importing Assets/Scripts/RPG/Content/Spells/hunters_mark.asset using Guid(308e41c1d8cc8e34fbb18e661dd668cb) (NativeFormatImporter) -> (Import Result ID: '1d813988b6aa4c58d207d77a00e7d7a3') in 0.0015549 seconds [static dependencies only]. Details - ImportResultOutputID=71d7cb42d6f4461e958c8e27ca5d3219 DependenciesID=26fbd3765e071c2a6e32d0c1d81337fe StaticDependenciesID=9e9d3a36e7b37d84cbd765418d1fca21 
+Asset Pipeline Refresh (id=84c791c28fba4244b8b81d441adcb7e5): Total: 0.029 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Start importing Assets/Scripts/RPG/Content/Spells/ray_of_sickness.asset using Guid(49646ca6d71ecdd44a7e05e1fecc96a6) (NativeFormatImporter) -> (Import Result ID: 'f95289f8f149d937fcc344666d2e339a') in 0.0014802 seconds [static dependencies only]. Details - ImportResultOutputID=5bf0aad889a479fad9c238cf904fbd89 DependenciesID=ba091082710efe31944c1d377226f9e4 StaticDependenciesID=eabfa8f87a89e27f694aa78af36deee0 
+Asset Pipeline Refresh (id=4b1976a4f44930644aae81c972a164b5): Total: 0.029 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Start importing Assets/Scripts/RPG/Content/Spells/searing_rays.asset using Guid(e9c450f287a3dc440a28dd9a6eb254ce) (NativeFormatImporter) -> (Import Result ID: '3bd7c9527579127b8cbf8cab779abd97') in 0.0015732 seconds [static dependencies only]. Details - ImportResultOutputID=3800c83597b79a7af73b4a32695aeb65 DependenciesID=919eb54332eaecfdb882b441957f0668 StaticDependenciesID=1dfb3cc557dd2174ff111d64c029db3b 
+Asset Pipeline Refresh (id=7f757516c7b7eec40aebf9dfb550d895): Total: 0.036 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Start importing Assets/Scripts/RPG/Content/Spells/sonic_blast.asset using Guid(569b089050c0e8e4e80da1f222d640dc) (NativeFormatImporter) -> (Import Result ID: '712615ebda0e43b7c30fac226e9d69af') in 0.001125 seconds [static dependencies only]. Details - ImportResultOutputID=752f5643f619a17a388f788f97b3e097 DependenciesID=70c4c21a005e4423d9e1c4146604facf StaticDependenciesID=b1e51e64a07d696d8f9ef7d8f661481f 
+Asset Pipeline Refresh (id=a9ef7175d5997ea44a2117b3cf21bce7): Total: 0.028 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Start importing Assets/Scripts/RPG/Content/Spells/flame_blade.asset using Guid(3e694494ed6d9624fb8f156b16172294) (NativeFormatImporter) -> (Import Result ID: '63d04a78ad553560c81ee5d630bae153') in 0.0011861 seconds [static dependencies only]. Details - ImportResultOutputID=e3d8e548fd74b7c4d063a2ba41256a8f DependenciesID=726e11d39bf57be5ee7b77e02943896d StaticDependenciesID=d7805898ceac71ef75a641ddacbbe58d 
+Asset Pipeline Refresh (id=516f2eecf7801f04bb18adc468950ebe): Total: 0.026 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Start importing Assets/Scripts/RPG/Content/Spells/spiritual_weapon.asset using Guid(2fc36cf280233c54eb72ead452648f0c) (NativeFormatImporter) -> (Import Result ID: 'ec561605f70ff717f93a11aa0c00f27e') in 0.0013337 seconds [static dependencies only]. Details - ImportResultOutputID=1de6e3bc3f66e3e0a172dd1ace4bf8ea DependenciesID=85dc93be3b0a277c93f74e263da3aee1 StaticDependenciesID=d6b43ac4f53e46f207546ebcdc2a9664 
+Asset Pipeline Refresh (id=15f4d79a2eb652d45bb63219a3badaff): Total: 0.026 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Start importing Assets/Scripts/RPG/Content/Spells/moonbeam.asset using Guid(5d73b9c23a62aff43acc34c4b75d6be2) (NativeFormatImporter) -> (Import Result ID: '4b4dde91d75be5bb4e496b468d0e07a5') in 0.0011584 seconds [static dependencies only]. Details - ImportResultOutputID=db66fe7f8ccfa9f41289929e35d61654 DependenciesID=f7615fef1977c56ad81fbe9daee4b42c StaticDependenciesID=031f3aee0144b35a3bccf545287aba7d 
+Asset Pipeline Refresh (id=e6330ff91285d9c4586aebe03fb67904): Total: 0.026 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Start importing Assets/Scripts/RPG/Content/Spells/cloud_of_daggers.asset using Guid(ad339555dfc80824b9765d71077613fa) (NativeFormatImporter) -> (Import Result ID: '7ee62db42f35479ed1bb80e9e34c41dc') in 0.0011336 seconds [static dependencies only]. Details - ImportResultOutputID=a045452eb0bf4f4e36455e69e03f1a98 DependenciesID=38677cf107ab2e4c3ec688a641eba66b StaticDependenciesID=39cd3cf3a192ec211e9fdf039897c891 
+Asset Pipeline Refresh (id=c253cb693d4db724c93922dc63f63904): Total: 0.026 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Start importing Assets/Scripts/RPG/Content/Spells/acid_arrow.asset using Guid(df23ccd59dc68e04d98d452ee4c232be) (NativeFormatImporter) -> (Import Result ID: '1d526a08605d1120badc444ec3bd9401') in 0.0011632 seconds [static dependencies only]. Details - ImportResultOutputID=cf61ba172cbeabfabc1d8d03022796a8 DependenciesID=0c503d21baac494132d5b34e4851f8d1 StaticDependenciesID=a6d6c3cca784d1ccd776011096f80f52 
+Asset Pipeline Refresh (id=d5b0aa854a39e03469a4e75f5dbe47b2): Total: 0.026 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Start importing Assets/Scripts/RPG/Content/Spells/lesser_restoration.asset using Guid(f0594300b28db9b478f07f8834f4720b) (NativeFormatImporter) -> (Import Result ID: '852282f050b4d6ede758477377c9c300') in 0.0012204 seconds [static dependencies only]. Details - ImportResultOutputID=41cef2ee12feb94e4268ff08436bd2a3 DependenciesID=cc56cb81a0f0dcdf261a45b0b8b92669 StaticDependenciesID=17b8a91ab4e7bb28cf3afd4fd040f204 
+Asset Pipeline Refresh (id=897e79f51ba0615488990d60b2faaad9): Total: 0.026 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Start importing Assets/Scripts/RPG/Content/Spells/prayer_of_healing.asset using Guid(d58983a38d654c446a8de6db925f870c) (NativeFormatImporter) -> (Import Result ID: 'a96f42a06e9e0a706fad6cc80a7a7d04') in 0.0012331 seconds [static dependencies only]. Details - ImportResultOutputID=925436849d604e34d5665f14bb9b41e6 DependenciesID=cbd7347275dd0e6ebf90119953e7810f StaticDependenciesID=09e9190c8690de3806aa2ab431036a10 
+Asset Pipeline Refresh (id=81df88ecb25a08643831412790f36add): Total: 0.027 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Start importing Assets/Scripts/RPG/Content/Spells/healing_spirit.asset using Guid(0edbebc0d1cc5d74b8c7a3545f1127b5) (NativeFormatImporter) -> (Import Result ID: '9ac588176091ae1aa424db1ca71c726f') in 0.0011109 seconds [static dependencies only]. Details - ImportResultOutputID=08f5e93d4aa1f541ce85318c7ea4c7fe DependenciesID=6e9eaaec6efacfd28e7194f78b7843b0 StaticDependenciesID=cc30ce9fed20faea2bcc90196004792d 
+Asset Pipeline Refresh (id=cf5b3c33797da4741a4c65cc447f1910): Total: 0.026 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Start importing Assets/Scripts/RPG/Content/Spells/gentle_repose.asset using Guid(a4b8991b0d7e0ab49b34fc095badd2e6) (NativeFormatImporter) -> (Import Result ID: '74c6728c4009be837fd52cff0902fc9f') in 0.0012387 seconds [static dependencies only]. Details - ImportResultOutputID=a073967bbf23a48c9b4aefaeb869fe6f DependenciesID=1de0e273ca6bda65c3e6dd3c0e73e2a8 StaticDependenciesID=eaab3dc4a6a8e3dcef6a9978612400d0 
+Asset Pipeline Refresh (id=37076d0c9786d4644837f757c2e214e2): Total: 0.025 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Start importing Assets/Scripts/RPG/Content/Spells/vanish.asset using Guid(125b9eb7d6c894a4fa65bc0abc88df6c) (NativeFormatImporter) -> (Import Result ID: 'e45b0aec7aa8ab05baed4afa1ac3d7f6') in 0.0012499 seconds [static dependencies only]. Details - ImportResultOutputID=847197964d7eee6247539ae6072d713e DependenciesID=405efec8edacb8b2466f832e4b455566 StaticDependenciesID=be650ba1542a348e952c52c65aed4704 
+Asset Pipeline Refresh (id=6ac54d11eb860a74fa3433a63e228477): Total: 0.027 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Start importing Assets/Scripts/RPG/Content/Spells/open_lock.asset using Guid(4efe70af23620de418a4a8f447da34f6) (NativeFormatImporter) -> (Import Result ID: '04a5109f29432351119b4a3173012279') in 0.0010625 seconds [static dependencies only]. Details - ImportResultOutputID=eedf75dda6bd06e525ecadd8120839bd DependenciesID=91c1e05b2775191e843550f92de3aa0e StaticDependenciesID=e2570b7a474b8ad1901dcee15887f9be 
+Asset Pipeline Refresh (id=1c52254fcf0748f468f31d4521a75122): Total: 0.025 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Start importing Assets/Scripts/RPG/Content/Spells/blink_step.asset using Guid(2978bcaf153e5204aab6b47a14ee057e) (NativeFormatImporter) -> (Import Result ID: '9fd98690a29df7a07267ef536a61cddc') in 0.0012068 seconds [static dependencies only]. Details - ImportResultOutputID=7021e07b934be3b087d1ac7117e1c6e1 DependenciesID=24c96dcb870952fe7e3f1ea7deb5e450 StaticDependenciesID=838b533f69bcc8f4035bfe7be3fbf286 
+Asset Pipeline Refresh (id=c92710be541054b44af6f4e1bbd4f847): Total: 0.026 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Start importing Assets/Scripts/RPG/Content/Spells/darkvision_spell.asset using Guid(b58de3297ce502c4cad81319de6b8abf) (NativeFormatImporter) -> (Import Result ID: '41de5f58f1c4917faa13523cb46ec5c1') in 0.0010979 seconds [static dependencies only]. Details - ImportResultOutputID=d3b608fdaa66a6e07db81cddb62b00f7 DependenciesID=be07d08eb7f6bf8812a9428dd8ef80ce StaticDependenciesID=7a9d55ef6d959b46fdffc68fe77c828f 
+Asset Pipeline Refresh (id=7692f5e4205280646a37195be188c9fb): Total: 0.025 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Start importing Assets/Scripts/RPG/Content/Spells/see_invisibility.asset using Guid(ad7bb6d81b5387148b7a88e72ec55e8d) (NativeFormatImporter) -> (Import Result ID: 'c0758c1dbfc0c11012d6e169b93164b8') in 0.0011275 seconds [static dependencies only]. Details - ImportResultOutputID=89ccca6e3f9dc84ecb56aee8c6ae6598 DependenciesID=a6071ba200ee8386ae1f183bcfbc63b8 StaticDependenciesID=c632e9e590191d409db5516fcd729c94 
+Asset Pipeline Refresh (id=bbe6feb0837d80742b2244ed4a7e96ff): Total: 0.026 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Start importing Assets/Scripts/RPG/Content/Spells/spider_climb.asset using Guid(4e036bae3ff2abb4398fbf736d09fc29) (NativeFormatImporter) -> (Import Result ID: '5dec636474ad4723397086a72b403a0a') in 0.0013667 seconds [static dependencies only]. Details - ImportResultOutputID=cf32c19b7daedda096a0ac15be6f4b52 DependenciesID=853d13ebcd6934e37a898f4e89f61271 StaticDependenciesID=e3b6207eaa354620573eeca99fe04529 
+Asset Pipeline Refresh (id=d30879f613d30e344a487bcc05103dc5): Total: 0.026 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Start importing Assets/Scripts/RPG/Content/Spells/levitate.asset using Guid(03e2d81492764d14e99c49c788ff28de) (NativeFormatImporter) -> (Import Result ID: '6ce60f85f5e248340dabc775497d8b87') in 0.0012327 seconds [static dependencies only]. Details - ImportResultOutputID=f049d3241140540de57c85ba344c7840 DependenciesID=e763f75075574c911e57f8c8f1f8c51e StaticDependenciesID=7af65824e9fc1524bbe21161d03518cb 
+Asset Pipeline Refresh (id=98d955c4f575c3746a2fc40690ba4267): Total: 0.031 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Start importing Assets/Scripts/RPG/Content/Spells/mirror_image.asset using Guid(0fdc7fed66cb8ab48b47f6dcb999eeb5) (NativeFormatImporter) -> (Import Result ID: '1142f72ae316e00fa467aa1a34fc14ac') in 0.001271 seconds [static dependencies only]. Details - ImportResultOutputID=de554a71cd80fdffcdc77ade2f4cb558 DependenciesID=b2a3740a0ff4d3d175f23b3c948603b8 StaticDependenciesID=b163b82d0e31b38ca96361beaf389053 
+Asset Pipeline Refresh (id=aa61756677075fb46b4c13b7eb549247): Total: 0.027 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Start importing Assets/Scripts/RPG/Content/Spells/blur_spell.asset using Guid(149281ecfb89e054393990273fd70dbe) (NativeFormatImporter) -> (Import Result ID: '3fcf98eecbd7479373888205e433354c') in 0.0013913 seconds [static dependencies only]. Details - ImportResultOutputID=cb542aaa1d99082db9ac6677b87df273 DependenciesID=2d60df00a570d133fe156688ac7ef2e4 StaticDependenciesID=83baebdf81dbce3f502c196b041e844f 
+Asset Pipeline Refresh (id=442deaa01b94f3c4c8c12804d36bbf41): Total: 0.026 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Start importing Assets/Scripts/RPG/Content/Spells/enhance_ability.asset using Guid(c1dd1e2cfbe7b9149a7e31735ed3a525) (NativeFormatImporter) -> (Import Result ID: '5ea88b3df73f075d575252467085c0e8') in 0.001416 seconds [static dependencies only]. Details - ImportResultOutputID=3c5b36647c7337389a897f7a34b820d2 DependenciesID=170dbae7bfaedd3c458ac1fa53d18769 StaticDependenciesID=0d36677781e366554c86d9773b16ea98 
+Asset Pipeline Refresh (id=c845098298526ee448117b95fd034841): Total: 0.025 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Start importing Assets/Scripts/RPG/Content/Spells/paralyze.asset using Guid(81652100abad3994eb60abe4b278386a) (NativeFormatImporter) -> (Import Result ID: 'f14aa623ac06fabe7fb2a55c198c2ab9') in 0.0010918 seconds [static dependencies only]. Details - ImportResultOutputID=cc323778d1f9d23ed0dcc3a31e5eba5f DependenciesID=69207bde0c0b287ca2d86a02ead007ae StaticDependenciesID=1f1552a21122f0f08a193f2bcfc04f47 
+Asset Pipeline Refresh (id=0c0390ac429903d4692b047a318408ec): Total: 0.024 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Start importing Assets/Scripts/RPG/Content/Spells/spider_silk.asset using Guid(e29ecce9521518247a2aa9a709a0a488) (NativeFormatImporter) -> (Import Result ID: '0cc7c4bdb7a9944d5d84437811ac11f9') in 0.0011821 seconds [static dependencies only]. Details - ImportResultOutputID=2aeb8cc41d812f038212ea37cf2a5c8f DependenciesID=44b17e9e44a3b7253b4dff5cb750adb0 StaticDependenciesID=e1e351d5cf59e51a0c9a7b1ecc4cd33f 
+Asset Pipeline Refresh (id=c45f427584f9386478bb9ba8d531b95a): Total: 0.026 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Start importing Assets/Scripts/RPG/Content/Spells/spike_growth.asset using Guid(3f15f585832fb614b849d960c90d5009) (NativeFormatImporter) -> (Import Result ID: '50cb6212b5c0ca61254a0f7f1412f99e') in 0.0013899 seconds [static dependencies only]. Details - ImportResultOutputID=9cf5373616b28e5c67042e1dc937891b DependenciesID=8dfa8aab499388d999c2bfe4107b867a StaticDependenciesID=660a8ed79b06da1765e7c81b150f0031 
+Asset Pipeline Refresh (id=3e7322ef4b938b54aaa853fbe1796b4c): Total: 0.028 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Start importing Assets/Scripts/RPG/Content/Spells/silence_spell.asset using Guid(dfe620d74e2c1914f961c13b8782bf7b) (NativeFormatImporter) -> (Import Result ID: '27a91fdb7a8a5249107e2728d3bcc959') in 0.0012702 seconds [static dependencies only]. Details - ImportResultOutputID=9ecae04e35851ed1cebaa0f6e0a84c2e DependenciesID=e15d13a38cb0dc4c339d3dfd67a61e08 StaticDependenciesID=20fb0721787b0972aebc5d4ff9a0e347 
+Asset Pipeline Refresh (id=186589ae79e25b943aacd3d75c4ae6de): Total: 0.029 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Start importing Assets/Scripts/RPG/Content/Spells/darkness_spell.asset using Guid(7354d882700b6214581b652dc4165b90) (NativeFormatImporter) -> (Import Result ID: '5ececf08a9677c7c7f92f7714226d274') in 0.0012482 seconds [static dependencies only]. Details - ImportResultOutputID=29c326593c0476894c05771d73f01e9a DependenciesID=325918b40015047cbfcc669e1a22d6ca StaticDependenciesID=39d8e29973dc2e60a3e217f6daa1ec06 
+Asset Pipeline Refresh (id=75fc74bae31456d4b81ff746dddb7929): Total: 0.027 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Start importing Assets/Scripts/RPG/Content/Spells/blindness_deafness.asset using Guid(10b2e55644097f645a0e2025dd19b4f6) (NativeFormatImporter) -> (Import Result ID: 'e55561b9b6fc7bea32af2d6cd410d182') in 0.0011375 seconds [static dependencies only]. Details - ImportResultOutputID=1ae80c50a304d1f46312527b6e99fc02 DependenciesID=699831ac1ecaa5b1372a84f7d3c92597 StaticDependenciesID=f0b795ba83ea945579db28251db048f6 
+Asset Pipeline Refresh (id=2613986344cc23b4db7e317c497e693c): Total: 0.026 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Start importing Assets/Scripts/RPG/Content/Spells/heat_metal.asset using Guid(ccf94eb854185d94382514ffeb200ea8) (NativeFormatImporter) -> (Import Result ID: '99027b9e75f3df1e9f4eb6b94db0fc05') in 0.0011084 seconds [static dependencies only]. Details - ImportResultOutputID=30de62729bee521c23e6d63c7d721746 DependenciesID=637512e773536a4c3eb85edf605aa489 StaticDependenciesID=15acad9c2c93cd416065060ff9f658cf 
+Asset Pipeline Refresh (id=0a550a27e022703428dc2923f53e9ae5): Total: 0.025 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Start importing Assets/Scripts/RPG/Content/Spells/crown_of_madness.asset using Guid(1a30668ef1bf7a64c82ea590d86eecce) (NativeFormatImporter) -> (Import Result ID: '9bd488b0acde0ae7c4eeb5965f9509eb') in 0.001154 seconds [static dependencies only]. Details - ImportResultOutputID=7810c21b0070bc602912b8956ec54dd3 DependenciesID=049729b8c0bbd3b47b03a2fb4481e5e3 StaticDependenciesID=d8f18d623823c14392b3d0b78d7501d9 
+Asset Pipeline Refresh (id=2b0833e9bbedbe4468723329f6280050): Total: 0.027 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Start importing Assets/Scripts/RPG/Content/Spells/suggestion_spell.asset using Guid(dc41fe177829bd54e943a2b4ce4e774c) (NativeFormatImporter) -> (Import Result ID: '0321dafca3397d0286f2a0a0f4767e02') in 0.0010827 seconds [static dependencies only]. Details - ImportResultOutputID=45614676147af0ec15a48287871209e5 DependenciesID=10c22ed409b90e619fe06a27905685bf StaticDependenciesID=e1885e865aacda02f01e8772b6175142 
+Asset Pipeline Refresh (id=45360f9d07662bd48be3e3f3e1752991): Total: 0.026 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Start importing Assets/Scripts/RPG/Content/Spells/flame_burst.asset using Guid(3dc1b3612ab4e8644a88020d3fe3e870) (NativeFormatImporter) -> (Import Result ID: '521df808521ac4e3d4aac9a6fea21d74') in 0.0012431 seconds [static dependencies only]. Details - ImportResultOutputID=4c232f5830aaadf8fa507cb128db7aac DependenciesID=97c75060f69ff37d6002dfb8378db25b StaticDependenciesID=1ccef1b85bd8c06f045c553dca65ec32 
+Asset Pipeline Refresh (id=edb9f4c05c80be84db8e69fc57897a5e): Total: 0.026 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Start importing Assets/Scripts/RPG/Content/Spells/thunder_lance.asset using Guid(2e7e3d59c965af44280424fce2b38a1e) (NativeFormatImporter) -> (Import Result ID: '8a4ff8c7d837823bdfc905bb304d404a') in 0.0011123 seconds [static dependencies only]. Details - ImportResultOutputID=6b4878895954fdf5f8c1ae69961c4253 DependenciesID=f51b3e230cec905e7474b0f91f998f9a StaticDependenciesID=ffa983534c05d652e2324d21dfc19426 
+Asset Pipeline Refresh (id=5087797765a562e438348e15daecfa08): Total: 0.027 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Start importing Assets/Scripts/RPG/Content/Spells/radiant_sentinels.asset using Guid(bcae94ff138942840a17985120108b58) (NativeFormatImporter) -> (Import Result ID: 'eb55d8706b17592c9accff4b8fa2f33b') in 0.0011833 seconds [static dependencies only]. Details - ImportResultOutputID=792862d88fb7ba7ba87bbb74608c11d9 DependenciesID=ea34d7988cf90d71d08829cbaad3d10e StaticDependenciesID=f0ce12d9ba491a62304040fc26cbe864 
+Asset Pipeline Refresh (id=04406085f8850124a9837233fe05fee2): Total: 0.026 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Start importing Assets/Scripts/RPG/Content/Spells/vampiric_touch.asset using Guid(f8faaa1826697da4fae2e8bed057f6b3) (NativeFormatImporter) -> (Import Result ID: 'fe800e8852d45a29b57a4071d2eb0092') in 0.00109 seconds [static dependencies only]. Details - ImportResultOutputID=58a3464dadfbe759a0f6a9514ac00467 DependenciesID=48d990b3c10aeb3a2006e2839202d124 StaticDependenciesID=a6038e40763e0e7aab129b2b99ddca38 
+Asset Pipeline Refresh (id=c81856dce15b81c4dac1991515b49a90): Total: 0.025 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Start importing Assets/Scripts/RPG/Content/Spells/erupting_earth.asset using Guid(4de3d0468ed2da046802240d6b99167c) (NativeFormatImporter) -> (Import Result ID: 'b8bae470ebc1ec8317365861cadd8436') in 0.0011444 seconds [static dependencies only]. Details - ImportResultOutputID=b7eba5d8e6cad44c66d63731d14c892b DependenciesID=6bffccfcda93e7149280340b8d9babdc StaticDependenciesID=ede61665022b1e30fb845248a22f8cb7 
+Asset Pipeline Refresh (id=bb92091154c2b3846bbedd3463f534ac): Total: 0.026 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Start importing Assets/Scripts/RPG/Content/Spells/blinding_smite.asset using Guid(6699ed59e3e4f0047a2fa062ea8f56b3) (NativeFormatImporter) -> (Import Result ID: '1e1296af903682f9468e55ee3adaadbd') in 0.0011693 seconds [static dependencies only]. Details - ImportResultOutputID=9d7a9bf21b52f1d8d371ca4789940e9a DependenciesID=b8404b192e57a9a1b9d8d457ede508a5 StaticDependenciesID=d43cfda3e4a2aa86d25df40339d56649 
+Asset Pipeline Refresh (id=900dea23d27578c43a3768e1270af200): Total: 0.026 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Start importing Assets/Scripts/RPG/Content/Spells/hunger_of_hadar.asset using Guid(438a7de42a5be364da50cd9091559257) (NativeFormatImporter) -> (Import Result ID: 'd5bc1d39566cd60ffacbfd9d6285db49') in 0.001117 seconds [static dependencies only]. Details - ImportResultOutputID=ebbf5a7c2a8323f7b1f02ad32cc3d1c2 DependenciesID=0df4046cc192fc67d9c6764b2980bc66 StaticDependenciesID=cd5880d241f8ae13fe9f0d48253614a4 
+Asset Pipeline Refresh (id=b0abc65b39e2c9a4d9b38e7bcde77c89): Total: 0.027 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Start importing Assets/Scripts/RPG/Content/Spells/resurgence.asset using Guid(2e914c37086d65848969c18f11ac7a02) (NativeFormatImporter) -> (Import Result ID: 'aeb724b2877749335052f518663af784') in 0.0012576 seconds [static dependencies only]. Details - ImportResultOutputID=d89361c33828a334202244f7361e24c0 DependenciesID=f07e8fee28a2296884e1fd3c5f9ea2ff StaticDependenciesID=ca24946176b6dd27df22206669e22d83 
+Asset Pipeline Refresh (id=3e200612557da7f4fb71fb66a2985b81): Total: 0.026 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Start importing Assets/Scripts/RPG/Content/Spells/mass_healing_word.asset using Guid(a171d3eabf747384993ec517391de477) (NativeFormatImporter) -> (Import Result ID: 'e856e4496d34d3571ab3fa9285e7e4f9') in 0.001047 seconds [static dependencies only]. Details - ImportResultOutputID=12c493636724e18714e61c71db37630e DependenciesID=31ffdabbaa1eee287f493d534ac8b979 StaticDependenciesID=35608ee40f8269322dafbc5a687bc3ac 
+Asset Pipeline Refresh (id=1fe7ef3b6eb0975498fbff87f0aa8f24): Total: 0.025 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Start importing Assets/Scripts/RPG/Content/Spells/spell_break.asset using Guid(9b48595b6beead144af0ff3cfd7c4147) (NativeFormatImporter) -> (Import Result ID: '09e5f5f8d2283f80d519fb8dec138a5a') in 0.0016363 seconds [static dependencies only]. Details - ImportResultOutputID=187afebdd19a96ef63e778d515d1abe3 DependenciesID=1b6e23628ec85b2a132c3638e1f3b716 StaticDependenciesID=cecb2dcec105e0c6af0f4c60a867f562 
+Asset Pipeline Refresh (id=d1240d2baa9d05344bba060086fb3bee): Total: 0.027 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Start importing Assets/Scripts/RPG/Content/Spells/nullify.asset using Guid(b859d30fc7ebfd541b02304f8f287064) (NativeFormatImporter) -> (Import Result ID: '1ac9029ae7aed210a4c587e4375bbbe8') in 0.0011346 seconds [static dependencies only]. Details - ImportResultOutputID=9379926063e34d533441f2f6495e3b45 DependenciesID=49a5606648f8edd0dcbcceb71b10dbd7 StaticDependenciesID=e4e6f37f380d7c49dd30a0346c463e4d 
+Asset Pipeline Refresh (id=365152097f34e294999a76bb70d2b1a1): Total: 0.026 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Start importing Assets/Scripts/RPG/Content/Spells/soar.asset using Guid(543c861fec256b44b9143db5db787f59) (NativeFormatImporter) -> (Import Result ID: '2b00d82d727a9390262e2737d187137b') in 0.0013627 seconds [static dependencies only]. Details - ImportResultOutputID=d1c6436efdc3b6cd71006e2c9b51a260 DependenciesID=d2d8bc5d84da18295eff143ebf4979b4 StaticDependenciesID=b1bce1c80389e9aca331b2fe421a399e 
+Asset Pipeline Refresh (id=617dbc2cb8a750f4891c7cec3fd7070a): Total: 0.028 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Start importing Assets/Scripts/RPG/Content/Spells/quicken.asset using Guid(dbeeee23304d31f4787cd1e3fdaca20b) (NativeFormatImporter) -> (Import Result ID: 'e595a8250aee936367c7bef75c6e0a45') in 0.0010852 seconds [static dependencies only]. Details - ImportResultOutputID=caeea83fe4f38e961cb116518e99f306 DependenciesID=9574b887e9ff9d28b8e4e13ec313ae31 StaticDependenciesID=e7f39669e5963ff5ec83155e75ecb30d 
+Asset Pipeline Refresh (id=d180c5e03f6df6a479d31fd67cae3ef0): Total: 0.028 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Start importing Assets/Scripts/RPG/Content/Spells/sending.asset using Guid(9a915fb2eebf9da41bdff8ecf7528f83) (NativeFormatImporter) -> (Import Result ID: '1c287bd9a8fdc0dec621fadfb8250268') in 0.001195 seconds [static dependencies only]. Details - ImportResultOutputID=b697981c937ba19d2025d81852b626df DependenciesID=f6110560bf93f0898c435f81d6bce9b1 StaticDependenciesID=c6c8e129785e35a6df29cee3d4a0fb6b 
+Asset Pipeline Refresh (id=53c422b819d99f74c8e25bafeda9f437): Total: 0.026 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Start importing Assets/Scripts/RPG/Content/Spells/water_breathing.asset using Guid(1da2db28ffa52bf49bd96f5048be7c61) (NativeFormatImporter) -> (Import Result ID: 'e798549e187f1b7d8dbcbec206339f8f') in 0.0013039 seconds [static dependencies only]. Details - ImportResultOutputID=4f158c6158ccb54c511ef38047079659 DependenciesID=9f8257d8fbe85b3f1ac9d431cc05fd3d StaticDependenciesID=18a214009b070dea4df84da43711cb9e 
+Asset Pipeline Refresh (id=5a483bd6d998caa43b0f1b716cfa040d): Total: 0.026 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Start importing Assets/Scripts/RPG/Content/Spells/remove_curse.asset using Guid(f444db7136e416c4aacc0351ee9dc75e) (NativeFormatImporter) -> (Import Result ID: 'ac07281abb237376d524855f5d85b114') in 0.001168 seconds [static dependencies only]. Details - ImportResultOutputID=5b407238201816eb56df778a869c71e0 DependenciesID=19a249a1ac2bca08e413754aeeaba88f StaticDependenciesID=68cfe3ba3a605416aa319703d480af6b 
+Asset Pipeline Refresh (id=20aafac905e35db489f30c97ca7f35f9): Total: 0.027 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Start importing Assets/Scripts/RPG/Content/Spells/tongues.asset using Guid(1b30728f2db19374192485b2a5142bc2) (NativeFormatImporter) -> (Import Result ID: '52b23dd396d79795d51049b55aca2680') in 0.0012444 seconds [static dependencies only]. Details - ImportResultOutputID=7016af22a15dcd32e09399f4f8d73872 DependenciesID=527de00834706fd8a4179a6453f041cc StaticDependenciesID=82bc99fad84ca09f3c9ab043e3ef6054 
+Asset Pipeline Refresh (id=ebc3202b8ee1d2744910483212c4c0cc): Total: 0.027 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Start importing Assets/Scripts/RPG/Content/Spells/protection_from_energy.asset using Guid(6dce83708cdec474490420370826444f) (NativeFormatImporter) -> (Import Result ID: 'fc72429f79e1be8c4c2b5c782b675fdc') in 0.0011191 seconds [static dependencies only]. Details - ImportResultOutputID=a2ab4ebd91e06a5c6b66ba9c49e3b9ce DependenciesID=461eb0c65c18f8db902c4387a75230b7 StaticDependenciesID=be3496180ab06f3db11a6976ddba0972 
+Asset Pipeline Refresh (id=6d28d17b374860d419273936a87095b2): Total: 0.025 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Start importing Assets/Scripts/RPG/Content/Spells/mesmerize.asset using Guid(5c834ca40e9bd494989a62cb86d4dc82) (NativeFormatImporter) -> (Import Result ID: '59fcca053504071eceaa29849de758ba') in 0.0010832 seconds [static dependencies only]. Details - ImportResultOutputID=07eff00c93aee68499b98c34d390b949 DependenciesID=e30f5be0fd93fefbdc1a587e1f141481 StaticDependenciesID=918590217b0f1263b8393cc51a569545 
+Asset Pipeline Refresh (id=bfad269647c395b4285099a5e23ca806): Total: 0.025 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Start importing Assets/Scripts/RPG/Content/Spells/lethargy.asset using Guid(729c30cbbe54ce240aaefa7a0d3990c4) (NativeFormatImporter) -> (Import Result ID: '2357b07fb2b9a505dbf32feb061b09ff') in 0.0011481 seconds [static dependencies only]. Details - ImportResultOutputID=bd5e609f0e28e3960a469f8390df0911 DependenciesID=e839e0e7eb29b5e09b6e58e2321ff07d StaticDependenciesID=46bbaf31d2f6eb3558b98d320e22b8b4 
+Asset Pipeline Refresh (id=73438b80ff523ab41b7f4b5cda5b4910): Total: 0.026 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Start importing Assets/Scripts/RPG/Content/Spells/stinking_cloud.asset using Guid(75c88716748811645ad6bbf750956b16) (NativeFormatImporter) -> (Import Result ID: '58774afb6d6a5725b2b9936142fd895c') in 0.0011605 seconds [static dependencies only]. Details - ImportResultOutputID=cf2051ca578d82bf9a98cdbc622c08ee DependenciesID=83402fb8dcac83660f5708210f643f9a StaticDependenciesID=94e8d765d8877bdb577101deebd8b9c1 
+Asset Pipeline Refresh (id=dc27918612944d246954af4ea33fb8f4): Total: 0.026 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Start importing Assets/Scripts/RPG/Content/Spells/bestow_curse.asset using Guid(573da961ab643ab4d969df7bbafb9124) (NativeFormatImporter) -> (Import Result ID: '450e3f08ba519cc6d3d372a8bf589147') in 0.0011229 seconds [static dependencies only]. Details - ImportResultOutputID=1b3788b7c0886f7a37f377c80ee3a776 DependenciesID=5420a5151ea2b6c7a4dca03c14cd0889 StaticDependenciesID=df9df16519bd8461c936db648a3601be 
+Asset Pipeline Refresh (id=7fc1631db1efe4d498334930177516d9): Total: 0.026 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Start importing Assets/Scripts/RPG/Content/Spells/plant_growth.asset using Guid(02303b935984f3841b1e1d7951d12dda) (NativeFormatImporter) -> (Import Result ID: '7c9dd87a845ff2cfe6c9a5d3c9405255') in 0.0013302 seconds [static dependencies only]. Details - ImportResultOutputID=291159e6206c5a8e314119e6013e5b14 DependenciesID=140b24d4200ebf1e754d1884f052051c StaticDependenciesID=22160c74985e78bf38b8130fd679b6bc 
+Asset Pipeline Refresh (id=3dbd8adc95ab5fa4daa3de7ce0065c92): Total: 0.026 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Start importing Assets/Scripts/RPG/Content/Spells/fear_spell.asset using Guid(1a0c516f35f9bc8469c031090a849271) (NativeFormatImporter) -> (Import Result ID: '50b975c7557462306c2eb179ca852f90') in 0.001341 seconds [static dependencies only]. Details - ImportResultOutputID=f7eda35c5576f30c0fcb07fca3e9867e DependenciesID=ca97fa7086de76712faf3b9ed366613c StaticDependenciesID=2ed9a541553d61dfd8a8173992ed6811 
+Asset Pipeline Refresh (id=d0b2cc12b0ca7cd43804e30af546eef2): Total: 0.027 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Start importing Assets/Scripts/RPG/Content/Spells/sleet_storm.asset using Guid(ac65e886f95add34ab4c51ce7f10663f) (NativeFormatImporter) -> (Import Result ID: '5f7e288f2682cf7f925b9a00dfde38b9') in 0.0011408 seconds [static dependencies only]. Details - ImportResultOutputID=8d283e64dc9950e16204d94f0b43a6c4 DependenciesID=b1ef3b7d3b8f4713e1d3917ea07904c6 StaticDependenciesID=f64c3524146e9fb453995b34174ea434 
+Asset Pipeline Refresh (id=80963fb25abd9314fa141964ee7614bd): Total: 0.026 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Start importing Assets/Scripts/RPG/Content/Spells/frozen_tempest.asset using Guid(aa5289679f1811349825eebae2fcdb80) (NativeFormatImporter) -> (Import Result ID: 'b7f4b371808632fdfd27c03c23dc677b') in 0.0014056 seconds [static dependencies only]. Details - ImportResultOutputID=95205afbe541aa4091b50213ea9d341f DependenciesID=e95f33f8adadc6811adb36fddabaab00 StaticDependenciesID=e12c74c97e6b6bc585ec78e487a34521 
+Asset Pipeline Refresh (id=01f02535f291f0e4782b8af6a4c1f77d): Total: 0.028 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Start importing Assets/Scripts/RPG/Content/Spells/wither.asset using Guid(c3d3c12f4df244a4d9c7a28072be10ca) (NativeFormatImporter) -> (Import Result ID: '19f9270014026ff63809e114d05d5b97') in 0.0013173 seconds [static dependencies only]. Details - ImportResultOutputID=25673b9f551302dd8d4e9649c4326941 DependenciesID=1d3c4f407887e63d6a7bdd9a47737a51 StaticDependenciesID=f01eb43895d4d2925ff6cca9cbc8da43 
+Asset Pipeline Refresh (id=aa7e6b2913b2df6438b7f2a82e414933): Total: 0.027 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Start importing Assets/Scripts/RPG/Content/Spells/vitriolic_sphere.asset using Guid(36c019543346e2c4497cf4ca7f6d8d75) (NativeFormatImporter) -> (Import Result ID: '2d03f92de1520946e62927add6b94462') in 0.0013815 seconds [static dependencies only]. Details - ImportResultOutputID=2d23e4aa016d604b3ca47f55720b6335 DependenciesID=577aa7174319830b2a08d50fbe97f043 StaticDependenciesID=a450c20deb43b286e23f8d955f1cc536 
+Asset Pipeline Refresh (id=6894789da45532e48a9dd4c6da85f027): Total: 0.026 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Start importing Assets/Scripts/RPG/Content/Spells/phantasmal_killer.asset using Guid(82cec647808f3bf4f85b8cf148f4df79) (NativeFormatImporter) -> (Import Result ID: '3a46dfe11847d35581e2f70bad87514b') in 0.0011107 seconds [static dependencies only]. Details - ImportResultOutputID=c928fdb37f0b365c498e6b2d3410ba05 DependenciesID=a4d3d92c635636daec1ab649ea883e11 StaticDependenciesID=d37c1f1a2fb5fd4abb73ff9c0fc0ec04 
+Asset Pipeline Refresh (id=69e5e5cf84886df45bc79f2c5a679317): Total: 0.027 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Start importing Assets/Scripts/RPG/Content/Spells/fire_shield_dmg.asset using Guid(dbce79f5496abbd4f92d83a9d99d8c11) (NativeFormatImporter) -> (Import Result ID: '78fe69186090d77fbbb4e190af31a9ba') in 0.0011688 seconds [static dependencies only]. Details - ImportResultOutputID=7f35f14d39d7394c6bf2603c3bae0487 DependenciesID=db659e55e4cf0c45b9801f955b30af40 StaticDependenciesID=78161114ad1e44719799b1619c809cfd 
+Asset Pipeline Refresh (id=23b973fb82626e04db3241af1cf3526e): Total: 0.026 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Start importing Assets/Scripts/RPG/Content/Spells/death_ward.asset using Guid(35582bac5fa8099419f19ec4bc9b91f4) (NativeFormatImporter) -> (Import Result ID: 'fb0b10234f5e453f7accb3189ff5375d') in 0.0011226 seconds [static dependencies only]. Details - ImportResultOutputID=36c12577cf07b81e716b66662a45329f DependenciesID=3e2062d8771052b119315ad6fb70c225 StaticDependenciesID=2ff841ded0636de8dbd0cabfd44af401 
+Asset Pipeline Refresh (id=4cd92b357807e9144b2bfe67b84311ea): Total: 0.025 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Start importing Assets/Scripts/RPG/Content/Spells/aura_of_life.asset using Guid(75e8df3622ef68246b64e57b35ef2b3f) (NativeFormatImporter) -> (Import Result ID: '101580401a36d5cb07b50cfdd1d04030') in 0.0011616 seconds [static dependencies only]. Details - ImportResultOutputID=e1a88c550a6ed89de29469e670adfafa DependenciesID=841eeec81197861bb0b143957d1149fd StaticDependenciesID=47d6996d0cf591db962576e0183907d3 
+Asset Pipeline Refresh (id=8641c432b0e26184bb2a04f416e88f1b): Total: 0.025 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Start importing Assets/Scripts/RPG/Content/Spells/exile.asset using Guid(5c364e2358022e640836ffe61b68d86e) (NativeFormatImporter) -> (Import Result ID: 'a35404a67f6c0853c6afa737536cdca7') in 0.0014233 seconds [static dependencies only]. Details - ImportResultOutputID=829ee3f5fc8426eb55e90c85c9a80e3f DependenciesID=bca92f6779d91ccb2d401e43f6171c9b StaticDependenciesID=09bbc7d519e94b7acd752f4ab2b6743c 
+Asset Pipeline Refresh (id=20b25294c58b7f84192c773cf93547a8): Total: 0.029 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Start importing Assets/Scripts/RPG/Content/Spells/portal_step.asset using Guid(701b6b006c59f3f43b106ef0cce4ff88) (NativeFormatImporter) -> (Import Result ID: 'ec43bd24ace1651f239a477b136d61f2') in 0.0013906 seconds [static dependencies only]. Details - ImportResultOutputID=b43df7749946119a87918fe6ca20f1e7 DependenciesID=a95d79c9e87b4188fb86973b20dbd75f StaticDependenciesID=a11ade3498c98335f60444b189a244ff 
+Asset Pipeline Refresh (id=3fa08128828037a4081f9a49d2abf0a8): Total: 0.031 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Start importing Assets/Scripts/RPG/Content/Spells/shapeshift.asset using Guid(ddb496744ac016c4ebce80b13f6563c7) (NativeFormatImporter) -> (Import Result ID: 'e914daba3972450aefb69ae677382b31') in 0.0012946 seconds [static dependencies only]. Details - ImportResultOutputID=9842375b2d919567e3261a091838741d DependenciesID=7d48a42de264954e79185b4344385c83 StaticDependenciesID=90c708b00e275969449d32adb7662ddc 
+Asset Pipeline Refresh (id=3a842a16013469c49be47f03bf15cfec): Total: 0.029 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Start importing Assets/Scripts/RPG/Content/Spells/greater_invisibility.asset using Guid(05aa60a991ac82c44a14483f5011afaf) (NativeFormatImporter) -> (Import Result ID: 'e1998fe5373d0a59fb0c43bb20ada663') in 0.0013034 seconds [static dependencies only]. Details - ImportResultOutputID=b12d943847aaf02375309cf57df03307 DependenciesID=9964df961cd53b311867ee06679f653e StaticDependenciesID=11973408fc4d114b86f8c158daa5a87d 
+Asset Pipeline Refresh (id=168b1bae5a8f62e4c97188dc033aa611): Total: 0.028 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Start importing Assets/Scripts/RPG/Content/Spells/stoneskin.asset using Guid(4acb2a7c5ec234f4fbe8e8a467eea309) (NativeFormatImporter) -> (Import Result ID: '2b08d5e27dd7038a1a260c5326d65898') in 0.001264 seconds [static dependencies only]. Details - ImportResultOutputID=2dae685f93942b50efa39dd7feef73bc DependenciesID=f4755cd279edf034c749cc73ade21609 StaticDependenciesID=a30793b06d42cdfaf55c1f8f5adc5267 
+Asset Pipeline Refresh (id=4f7c4fa5137a2b34fb670807e33c220a): Total: 0.028 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Start importing Assets/Scripts/RPG/Content/Spells/freedom_of_movement.asset using Guid(498f0060aa43f6142ba7dbcddce7bbfe) (NativeFormatImporter) -> (Import Result ID: '337d232f8f8a8c3b900bd05f7a098ee5') in 0.0011451 seconds [static dependencies only]. Details - ImportResultOutputID=1955f0ed8ebe90c270db44b8d5fe4f3e DependenciesID=833194e7010c98e1a64c7fe6b1ff5277 StaticDependenciesID=50eacf3338ef681925b3a82148e181a2 
+Asset Pipeline Refresh (id=f9c02f18a98b0214ea51e01f2ca7389b): Total: 0.027 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Start importing Assets/Scripts/RPG/Content/Spells/locate_creature.asset using Guid(4768cb7893f5bc24c90f76805409903b) (NativeFormatImporter) -> (Import Result ID: '603bd317d4db34b030204931d115c9c8') in 0.0012723 seconds [static dependencies only]. Details - ImportResultOutputID=0b40f7a5caa356099b6843445d9c19d5 DependenciesID=58835b259fd81dc766b14f919d311787 StaticDependenciesID=1a7e88d46acd01ccdfc629c47d180565 
+Asset Pipeline Refresh (id=7c704f3f47dbd4149837bb2fafde5d88): Total: 0.027 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Start importing Assets/Scripts/RPG/Content/Spells/bewilderment.asset using Guid(c275a83b65a4b224dbc0a6da500f0469) (NativeFormatImporter) -> (Import Result ID: '788f66cdff3c3d093e0f97a7350e4564') in 0.0013003 seconds [static dependencies only]. Details - ImportResultOutputID=8510ed414167831d60265a8a704ee041 DependenciesID=dde1eaafc15202ab30510dc4d4f9db36 StaticDependenciesID=963ce92004a5dc65a831e015a226a19f 
+Asset Pipeline Refresh (id=6ac4550c69667eb4e9f3694e737f530d): Total: 0.027 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Start importing Assets/Scripts/RPG/Content/Spells/flame_wall.asset using Guid(6f938a63c4e45a343a02eb58d07ea1bc) (NativeFormatImporter) -> (Import Result ID: 'fc244583c8bf30fdc67700073c54c524') in 0.0011611 seconds [static dependencies only]. Details - ImportResultOutputID=e021af96bd82b53868da6c5020741d2b DependenciesID=7e5e3f3cb29cc8a6f62c4b3640a2e404 StaticDependenciesID=58f78f366a334c8cfdc15164d512d0b5 
+Asset Pipeline Refresh (id=6ac7fff09514d054381bc3f7e5314978): Total: 0.026 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Start importing Assets/Scripts/RPG/Content/Spells/black_tentacles.asset using Guid(69ae9b35133b8f94a9a85b29bdaddeb8) (NativeFormatImporter) -> (Import Result ID: '661c128c272cebfa0ff1dc6f0d8f8d31') in 0.0011067 seconds [static dependencies only]. Details - ImportResultOutputID=fee9295a1bceae93175a2fd1a45fe376 DependenciesID=aadee1af780d64943b9bc014f5582499 StaticDependenciesID=a6308fbeee3f033610b9b8e37cac9e1c 
+Asset Pipeline Refresh (id=744645a48b531244a926ffb748fdff56): Total: 0.026 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Start importing Assets/Scripts/RPG/Content/Spells/dominate_beast.asset using Guid(0eefe947db1e73c48b9ce0de757510d3) (NativeFormatImporter) -> (Import Result ID: 'dd502f1908c1b6a8c6b7ec84f60b3443') in 0.0011333 seconds [static dependencies only]. Details - ImportResultOutputID=eaa7f60f1d429bbc7b8612105a9a2e64 DependenciesID=760204e4f2fdab575159aacb04d99850 StaticDependenciesID=e44c2086b12a8d7d131981c289c13173 
+Asset Pipeline Refresh (id=df44308f6e803f64c8106cb599105ed9): Total: 0.026 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Start importing Assets/Scripts/RPG/Content/Spells/compulsion.asset using Guid(e47ee8e94442a89429fe01b3b6bd2816) (NativeFormatImporter) -> (Import Result ID: '00b71e820e1dc5f110a5d40c5112a401') in 0.0011136 seconds [static dependencies only]. Details - ImportResultOutputID=c8527f37cb4d1cd87c3a5754520ecddd DependenciesID=eb2e4bc22c76aa5f1237a1c302924623 StaticDependenciesID=184c63d025d56cb40ff3c7106e2699d7 
+Asset Pipeline Refresh (id=8f4fa82773fa32146943c815d97feb5a): Total: 0.026 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Start importing Assets/Scripts/RPG/Content/Spells/storm_sphere.asset using Guid(50080f12c42b1a94680168ba05bba42f) (NativeFormatImporter) -> (Import Result ID: '5501cd2d74e171af2f77a93d3eefe508') in 0.0012721 seconds [static dependencies only]. Details - ImportResultOutputID=1d00f4811aef2e929be8854c7814abad DependenciesID=3fb5f70eeca0c0d9724aba466d0e0db1 StaticDependenciesID=ada175f9a6055e9f0041bc675bfe1216 
+Asset Pipeline Refresh (id=098705e1028ffe9488fa5d897efb3dfb): Total: 0.027 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Start importing Assets/Scripts/RPG/Content/Spells/frost_cone.asset using Guid(346cc9a5ab87ed845ad6f53ccd9cbc2f) (NativeFormatImporter) -> (Import Result ID: '226248ee9ebb35dbe8d2c57dac420b10') in 0.0010689 seconds [static dependencies only]. Details - ImportResultOutputID=cb909aa8d015bcdb92737915cb5ebb51 DependenciesID=77ead64b88c71cd7960a400222c3a19f StaticDependenciesID=4211ad5572a5ae7889c4d516af4f3d57 
+Asset Pipeline Refresh (id=1fda0ce5f2251b34bbb5bea530f9213a): Total: 0.027 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Start importing Assets/Scripts/RPG/Content/Spells/heavens_fire.asset using Guid(26cbd0a3dd1bd3e40b7112cb0a8d6d84) (NativeFormatImporter) -> (Import Result ID: '7a6c54d89d7375372cb13ce0e47f7f4a') in 0.0011286 seconds [static dependencies only]. Details - ImportResultOutputID=66a6545f5967876c12aadd73644ff5f3 DependenciesID=097f93930a65af51c694c0328a90ce08 StaticDependenciesID=4c188b8d46c028f17d3f90e013d6cf52 
+Asset Pipeline Refresh (id=698ebe438402d3f4ea5a6025c8046063): Total: 0.027 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Start importing Assets/Scripts/RPG/Content/Spells/destructive_wave.asset using Guid(bc459843f460f134ab6d90d01e1cbc5d) (NativeFormatImporter) -> (Import Result ID: 'b26b737fe017499a1358ec106c9d8419') in 0.0011537 seconds [static dependencies only]. Details - ImportResultOutputID=ae67291fd09ec04d5884b399ed705699 DependenciesID=09749a1fc7fd6a59278bcacbbe32ffca StaticDependenciesID=c8c3536911119084781f0a240fe5bd80 
+Asset Pipeline Refresh (id=2e57a3363d79b1f408c1d3f6df1396c1): Total: 0.027 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Start importing Assets/Scripts/RPG/Content/Spells/insect_plague.asset using Guid(78710cab7aa662f4bbb09fb0104a19a4) (NativeFormatImporter) -> (Import Result ID: 'a4dd75b96b503d869ab1fb6d04dbb4fe') in 0.0012491 seconds [static dependencies only]. Details - ImportResultOutputID=d5e935d1c7f64e52c3018611ebc686a5 DependenciesID=220e6e70a42feeddf39ca9d05dcb8d28 StaticDependenciesID=64cf052ebcd2baea05cb46e46998518c 
+Asset Pipeline Refresh (id=bf5167a16a19428459ddc3a9bf338f6b): Total: 0.028 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Start importing Assets/Scripts/RPG/Content/Spells/cloudkill.asset using Guid(eb21052e47f6ad74aa8562bab523a7a6) (NativeFormatImporter) -> (Import Result ID: '03a727e4821c8ebf6d0f2e1c6a12237b') in 0.0013374 seconds [static dependencies only]. Details - ImportResultOutputID=3b9dfc8a3de45e7b7def3b2ba94a7491 DependenciesID=4144126bbeb00a9d9007934492646269 StaticDependenciesID=0d166023dde03f3b742d7a2084d62df4 
+Asset Pipeline Refresh (id=aedd49e48e3e4d64da70646a9d375a22): Total: 0.027 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Start importing Assets/Scripts/RPG/Content/Spells/mass_mending.asset using Guid(72b1669553cf257498e46e006b2b1f4b) (NativeFormatImporter) -> (Import Result ID: 'f6dd93416b759551a2357c4e5e2dbf90') in 0.0011363 seconds [static dependencies only]. Details - ImportResultOutputID=a1193305344f892b475e4895c406940e DependenciesID=9286a30c1176771eff2130990fc72146 StaticDependenciesID=38bb0640cb4930e0bc3eeee27a93c4ca 
+Asset Pipeline Refresh (id=3127e3fa0ba46fa4e96f280174061beb): Total: 0.026 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Start importing Assets/Scripts/RPG/Content/Spells/resurrection_call.asset using Guid(6393f8d522b642d499cb7ad278ab9609) (NativeFormatImporter) -> (Import Result ID: '3c1e15145b3006e8cf96102f66c4171d') in 0.0012432 seconds [static dependencies only]. Details - ImportResultOutputID=68a2ff497489f34b47d1c75e025b2678 DependenciesID=0b2fc8fbc5b2b210ebd8f8218d2ccf0c StaticDependenciesID=2dfd67b44831718e59afa5d82c2e471e 
+Asset Pipeline Refresh (id=e2ff722056e8afc46b814485ac87f84f): Total: 0.027 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Start importing Assets/Scripts/RPG/Content/Spells/greater_restoration.asset using Guid(24f0e96ff1cfba745bff6dda4ea13482) (NativeFormatImporter) -> (Import Result ID: 'a2873fa11f122824913099a890400b4e') in 0.0013111 seconds [static dependencies only]. Details - ImportResultOutputID=82624dbc584e400f65a23f0f04031807 DependenciesID=a6d26129abd20f08b5ac073793fa201a StaticDependenciesID=a9b45ce14afdb9f85a0119dd7dbaf7af 
+Asset Pipeline Refresh (id=a3c367c291728f547862eaaf84350c96): Total: 0.026 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Start importing Assets/Scripts/RPG/Content/Spells/mass_healing_whisper.asset using Guid(be3b87dce6c657949b7fc292f1e4e0b3) (NativeFormatImporter) -> (Import Result ID: 'ac159f6f5d44df112b58790f26b4f62c') in 0.0014905 seconds [static dependencies only]. Details - ImportResultOutputID=c278606b82ef81335c511bef5378faaa DependenciesID=9300468e964a7f78d03a236c03e79eff StaticDependenciesID=af346d0605a7b79943fa78183c84f16b 
+Asset Pipeline Refresh (id=da92255ffe318d448882b7dd8035c0e3): Total: 0.027 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Start importing Assets/Scripts/RPG/Content/Spells/warp_circle.asset using Guid(bf0c5bb544ebb1a40b899dc07c3b6274) (NativeFormatImporter) -> (Import Result ID: 'deffb73f13941bfbbc17a990e01c278e') in 0.0013843 seconds [static dependencies only]. Details - ImportResultOutputID=3d075250f9d2825f6dc3cd31b1dd729f DependenciesID=a28b1835fb55245e1e29dee442f3dcc1 StaticDependenciesID=65e5b567506049ad5bff3230cead6199 
+Asset Pipeline Refresh (id=61fdba9076b0f9d4ca870bc9ce24d66e): Total: 0.026 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Start importing Assets/Scripts/RPG/Content/Spells/far_sight.asset using Guid(35a70ff271691924dbe410deba85ae7a) (NativeFormatImporter) -> (Import Result ID: 'dd4dd9baa3f8c81f3765926d307e0687') in 0.0011747 seconds [static dependencies only]. Details - ImportResultOutputID=3c6934448a07095f5b940bcd6380bdc5 DependenciesID=3d8ab19d0e4d4e3b692f05e622d334c8 StaticDependenciesID=eca9dd270ec3ba75285162f4143b4620 
+Asset Pipeline Refresh (id=a41e1056da943864cb2aaa1c3f17c6ec): Total: 0.026 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Start importing Assets/Scripts/RPG/Content/Spells/passwall.asset using Guid(21961a6f04361a249a8a5197dcccd7c7) (NativeFormatImporter) -> (Import Result ID: 'b9b997f08ea3088be0f34646eebfc2e7') in 0.0011881 seconds [static dependencies only]. Details - ImportResultOutputID=bc485e460e3571404cdc9f279baea6ac DependenciesID=b4ffdc9c42a8567265ebf73ed232c678 StaticDependenciesID=a7a63d7a47704c654728b63b0f4572b7 
+Asset Pipeline Refresh (id=3f30a189751ae574aab8d30200ed0c34): Total: 0.026 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Start importing Assets/Scripts/RPG/Content/Spells/legend_lore.asset using Guid(60f48274f56f99c459f377e6c90363f7) (NativeFormatImporter) -> (Import Result ID: 'a2de134c6e87503d6950a612dda25596') in 0.0012002 seconds [static dependencies only]. Details - ImportResultOutputID=884e1abc479e94aca8b76954301ed334 DependenciesID=3a6d520f629dd1c924a445642d9fd3c5 StaticDependenciesID=eac2f6f6a29ceb8650c4899c5d058220 
+Asset Pipeline Refresh (id=fd1299713822009449536b64491642f4): Total: 0.026 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Start importing Assets/Scripts/RPG/Content/Spells/planar_binding.asset using Guid(5da7004d2bd23964db32bbd800b78c01) (NativeFormatImporter) -> (Import Result ID: 'd0f0af421d91ef74dff477d2c544bcf1') in 0.0013459 seconds [static dependencies only]. Details - ImportResultOutputID=bee5290246fe727e8e637092192887e2 DependenciesID=b96e7183cfd6a7ad117f5fe017800fa3 StaticDependenciesID=9f59d9369846a25b8c5af1d5718ba369 
+Asset Pipeline Refresh (id=39e003c3459d5894abfe475f4ed04eea): Total: 0.029 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Start importing Assets/Scripts/RPG/Content/Spells/animate_objects.asset using Guid(e3a2c3dab6bb9f24bb408a4b9afa98dd) (NativeFormatImporter) -> (Import Result ID: '356992082aae06352f6a9f4c4379667f') in 0.0024074 seconds [static dependencies only]. Details - ImportResultOutputID=c3179562ace0e71e91df1cfb2b98a968 DependenciesID=8f89d52eeff3adbc336554dc085163f3 StaticDependenciesID=ff661212a330508ff7794a5bda9b2c07 
+Asset Pipeline Refresh (id=2ae1bb59a32d513418efe4988f445f24): Total: 0.032 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Start importing Assets/Scripts/RPG/Content/Spells/greater_paralyze.asset using Guid(ca2c313c4ab31ef4ebddd074784f21df) (NativeFormatImporter) -> (Import Result ID: '2d735a5a624e4b4b4fb14fec58095278') in 0.0012437 seconds [static dependencies only]. Details - ImportResultOutputID=ce7db246335055b27c352e42398ced34 DependenciesID=a7e4fcf77d2d470717d04735d81705bd StaticDependenciesID=35ff7b24eb708b40160be87ef9ff7935 
+Asset Pipeline Refresh (id=869ede503b6f0024ea4f02e3ae5afe85): Total: 0.028 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Start importing Assets/Scripts/RPG/Content/Spells/force_barrier.asset using Guid(ec5d9147765a0ee4e8b047947e6ab9ae) (NativeFormatImporter) -> (Import Result ID: 'e15e94c349ef4b1ddda7cdcfb8cb27ed') in 0.0011392 seconds [static dependencies only]. Details - ImportResultOutputID=34eca8bfd98d79ec1530c9b7bf6e7873 DependenciesID=5049f5348e95e5d4fbe7ad32265724ba StaticDependenciesID=0aa7c3ee6f0e7854d4cae1e1dd601c44 
+Asset Pipeline Refresh (id=814ea8b6e9caabf4799cd083d80df012): Total: 0.027 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Start importing Assets/Scripts/RPG/Content/Spells/wall_of_stone.asset using Guid(59e69cb9985af6e40a50146c71896e3d) (NativeFormatImporter) -> (Import Result ID: '42cfe8823012c9aa3ec47b906ffae6bf') in 0.0012337 seconds [static dependencies only]. Details - ImportResultOutputID=8ddcedd8499648c0eff684d4b8a39b31 DependenciesID=94cc2791f87ecf652de24f13219ad389 StaticDependenciesID=501b29de1e6118267b77c7f096d3ff40 
+Asset Pipeline Refresh (id=1fd96bcc735b98840906cf199d833048): Total: 0.028 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Start importing Assets/Scripts/RPG/Content/Spells/contagion.asset using Guid(ce483c4de9769c743bf1877fa6ba6b9a) (NativeFormatImporter) -> (Import Result ID: '7fcd966da3a9fe5666281f1d8becce51') in 0.0011677 seconds [static dependencies only]. Details - ImportResultOutputID=81a73b92e5a8f699b4f0ac056e587827 DependenciesID=7f1f56deec3fbd36c5d64a6262f6570d StaticDependenciesID=5e0fc687e42a763fa865ec163c79a2da 
+Asset Pipeline Refresh (id=973cd6784ce38424fbc53d368b3966a9): Total: 0.027 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Start importing Assets/Scripts/RPG/Content/Spells/dominate_person.asset using Guid(cce62d38f95392047a37ef5840645cf4) (NativeFormatImporter) -> (Import Result ID: '39b485715eb89d82ce27096a3e6cb070') in 0.0012863 seconds [static dependencies only]. Details - ImportResultOutputID=4534abdb49f4d7d37a805f1f7bf4c6fd DependenciesID=2bdbbd5ea66751295763c0697aea9d2a StaticDependenciesID=f098b1cbf7ae77a8e049ac1679e8911a 
+Asset Pipeline Refresh (id=b213d1d63d9e2cb47b6b25f24a9a4248): Total: 0.027 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Start importing Assets/Scripts/RPG/Content/Spells/arc_storm.asset using Guid(46e684ef75a09c6469969df278457eb4) (NativeFormatImporter) -> (Import Result ID: '342bfb0dbd09be151ed3b1470fdc35bf') in 0.0015098 seconds [static dependencies only]. Details - ImportResultOutputID=b4db27365d577543da1d26c5f514a728 DependenciesID=66ba43c3bb5982423428e8a5b5687aef StaticDependenciesID=d5306bfb1f7b20883618e3c12f0685b7 
+Asset Pipeline Refresh (id=b67952a700e1c2a40be006a207fd3b48): Total: 0.029 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Start importing Assets/Scripts/RPG/Content/Spells/annihilate.asset using Guid(eb0b427bb0bec0c4792bc2828fb89d48) (NativeFormatImporter) -> (Import Result ID: 'e3740055986843c1cb575ec418283528') in 0.0014463 seconds [static dependencies only]. Details - ImportResultOutputID=efa1ab4883575e6fb6263fb5b997157d DependenciesID=69f19d27be02b10c1871ae4124e1a579 StaticDependenciesID=c5efd9858c4447184cb6ee66523520e9 
+Asset Pipeline Refresh (id=cb4d38ac9d2adaf43a230d4c218b4085): Total: 0.031 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Start importing Assets/Scripts/RPG/Content/Spells/bane_touch.asset using Guid(9a59cb253accc43428400b3232f206de) (NativeFormatImporter) -> (Import Result ID: 'ce667fdc6e22e0657f46e268ff2edb9f') in 0.0013074 seconds [static dependencies only]. Details - ImportResultOutputID=d90a1db0f4703bc62f6dc8d7295b887a DependenciesID=94355b56e3863c130c92c3231a998e87 StaticDependenciesID=e17e20a1254b9b7cece50f71c8a8583c 
+Asset Pipeline Refresh (id=8171d27fb2962c0408fa7882977a75df): Total: 0.029 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Start importing Assets/Scripts/RPG/Content/Spells/sunbeam.asset using Guid(8ad6446c41fe8104d9101de4b193baab) (NativeFormatImporter) -> (Import Result ID: 'f79bd31f8c350b27a46b577f4e171f86') in 0.0014513 seconds [static dependencies only]. Details - ImportResultOutputID=e3b0e26f5b32a1df419228b83aaf6586 DependenciesID=2447a769b0412e7ad1883769fd861c76 StaticDependenciesID=88d6604d655f89a148957b90736f5481 
+Asset Pipeline Refresh (id=dedd7f9f073ce464db74ecb2bf609e2d): Total: 0.028 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Start importing Assets/Scripts/RPG/Content/Spells/restoration_6.asset using Guid(6f87e9e95a9c8db4a86055c2c5f0ed17) (NativeFormatImporter) -> (Import Result ID: '4dc957ec12b8425a17e1d1e902aecd62') in 0.0013628 seconds [static dependencies only]. Details - ImportResultOutputID=747b0c6f95f16eafbc31cdd0e082d145 DependenciesID=15b36e9d570f0ab2d9ee2c9b74114f0c StaticDependenciesID=df36e9ec9ce23c0c7e0dbe2a7c8d42f2 
+Asset Pipeline Refresh (id=320b3f092dd8521449fd4a0fe6a86e53): Total: 0.030 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Start importing Assets/Scripts/RPG/Content/Spells/champions_feast.asset using Guid(dec6f01b1d3848d4d9c72709ca97f8f2) (NativeFormatImporter) -> (Import Result ID: 'a1d56aee1bcd74a68fc26e5d044f0e13') in 0.0014471 seconds [static dependencies only]. Details - ImportResultOutputID=a542d8eb01dc5b62443aed433965549a DependenciesID=dddcff9b7d66a3e5e1661324f5a7581c StaticDependenciesID=7efaa79cc57dcba5e896ba4fd78ff99c 
+Asset Pipeline Refresh (id=41d2801bbff48d8459bb9c4ac1d42f93): Total: 0.031 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Start importing Assets/Scripts/RPG/Content/Spells/heal_word.asset using Guid(bef858790449ec84ead2816aff3dd0f7) (NativeFormatImporter) -> (Import Result ID: '18ecac81f07f9e96f3cef71ec17d8eab') in 0.0013339 seconds [static dependencies only]. Details - ImportResultOutputID=02641ef9cb0c8188a3a716f7819e599d DependenciesID=875446cee57e42d5dfbad2db7411c508 StaticDependenciesID=5234c785ed2f651c8387853fbfac955d 
+Asset Pipeline Refresh (id=bfdb17e4a7464b14fa36f0f22ebbcbf7): Total: 0.029 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Start importing Assets/Scripts/RPG/Content/Spells/spell_aegis.asset using Guid(3115740877c9eb441a0fcf0c1d071359) (NativeFormatImporter) -> (Import Result ID: '9c514e53afe3909c21cdb81e047844fd') in 0.0012455 seconds [static dependencies only]. Details - ImportResultOutputID=254d9f759de2cf661ba421364d64657e DependenciesID=b215843ab63e67c29f9a52b964f781f1 StaticDependenciesID=de67e94354bb0a0b30d3e8654978b09e 
+Asset Pipeline Refresh (id=116ab3176ccd8ba4ba4f2663c6bfd9b4): Total: 0.028 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Start importing Assets/Scripts/RPG/Content/Spells/truesight_spell.asset using Guid(9e6baeee8b6675f4f8190142663600b8) (NativeFormatImporter) -> (Import Result ID: '23fffb2a50f8973e2a0d3392dd005165') in 0.001232 seconds [static dependencies only]. Details - ImportResultOutputID=b4d74e202a05c0e9f8f832f059cde4e2 DependenciesID=955e687ef68adeee04f8a131ed3aca90 StaticDependenciesID=6b3352cc1720a190fd27b1671f9913bf 
+Asset Pipeline Refresh (id=a3c69995262f4de4f948655f8a405290): Total: 0.027 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Start importing Assets/Scripts/RPG/Content/Spells/wind_walk.asset using Guid(b67a593b6a86e7a4cb2334cc11a2b80a) (NativeFormatImporter) -> (Import Result ID: '7e1d19ba14ea414c1ef32018013c12ec') in 0.0010205 seconds [static dependencies only]. Details - ImportResultOutputID=0fc7108a957981cb58be91b070fe8bff DependenciesID=512f3cdf42aa932b8d5828bb15e75593 StaticDependenciesID=4caf875394ddc1db172cacfb050280c1 
+Asset Pipeline Refresh (id=cbb69beb532b9164c90bc5f002464528): Total: 0.027 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Start importing Assets/Scripts/RPG/Content/Spells/find_the_path.asset using Guid(35daf1aea808c874da526cb00051da7f) (NativeFormatImporter) -> (Import Result ID: '1f38a0a59a0626ecc9e909352971f372') in 0.0014769 seconds [static dependencies only]. Details - ImportResultOutputID=10db421c0e31a00eed9ce81e4be5f7ac DependenciesID=a9c60d33eda072463bce5ac959965fbc StaticDependenciesID=cbfdc98aadaa952428e8a85deccb5b43 
+Asset Pipeline Refresh (id=a0a1ed4c5b369824ab50068d03d32cd6): Total: 0.030 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Start importing Assets/Scripts/RPG/Content/Spells/mass_command.asset using Guid(ab112faa61ae7174a8bcace0fa65efb1) (NativeFormatImporter) -> (Import Result ID: 'dbb23a013082ef93fd719405ba4c9835') in 0.0015714 seconds [static dependencies only]. Details - ImportResultOutputID=c87da415fa7d1e3be4df1c2798bd5dcf DependenciesID=c721871b0cca0f0c486eb3c2bec48981 StaticDependenciesID=c51e85e910a01199f29183b86d81cb07 
+Asset Pipeline Refresh (id=4b6ff6158dc349d41bb6301e93c69969): Total: 0.030 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Start importing Assets/Scripts/RPG/Content/Spells/compelled_dance.asset using Guid(d91ca0b8eb2d5ba48b3cf3d1c9633b20) (NativeFormatImporter) -> (Import Result ID: 'c346e301d3cd8774a782c705615590ce') in 0.0012619 seconds [static dependencies only]. Details - ImportResultOutputID=4b25a8e35841aff9820da86c81ecead2 DependenciesID=6f3ec598c1b392844bfd0ff11b37a7b2 StaticDependenciesID=9dcaafc11639f5ee0418a243a89b3e52 
+Asset Pipeline Refresh (id=980d7373e801cae4f9b794ca9cc457e1): Total: 0.027 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Start importing Assets/Scripts/RPG/Content/Spells/wall_of_ice.asset using Guid(6416f00ce805bba40bccfdc03678c06c) (NativeFormatImporter) -> (Import Result ID: 'baecaba989ea9f8f9b6c251c7d16d2f6') in 0.0011887 seconds [static dependencies only]. Details - ImportResultOutputID=6a879a8cf71534b559c58514b795ece7 DependenciesID=c050f5892cac522e5ab602e0ac7a177d StaticDependenciesID=479c09609444baa15eb31ce87a1ee041 
+Asset Pipeline Refresh (id=f513136b380642b4585899ccf3cb7bfb): Total: 0.027 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Start importing Assets/Scripts/RPG/Content/Spells/wall_of_thorns.asset using Guid(e026bb88074a92b4a82d34f540b46dee) (NativeFormatImporter) -> (Import Result ID: '574876fef5db19d07c4ec27cfb3a6422') in 0.0011144 seconds [static dependencies only]. Details - ImportResultOutputID=e642e6345c97b815288c69b02220c340 DependenciesID=8846a1066f7e34849daf9efa16a2e515 StaticDependenciesID=9ccd60ff154688574d4f898a6951a5bb 
+Asset Pipeline Refresh (id=9b01b74e32a003545b74d012032ebe90): Total: 0.026 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Start importing Assets/Scripts/RPG/Content/Spells/death_grasp.asset using Guid(94e41e470cfb98540b74e3f629e225aa) (NativeFormatImporter) -> (Import Result ID: 'a2582bb36a3102a418a4662e7bd0bfb7') in 0.0015769 seconds [static dependencies only]. Details - ImportResultOutputID=500e41bcea42d0fd4154b46df2ca9394 DependenciesID=75853cf6aede65431df3659012735e97 StaticDependenciesID=ac7252155987416cdbf5e38b40348cd3 
+Asset Pipeline Refresh (id=be1ceb59821d8574d9c4215dc7b74653): Total: 0.026 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Start importing Assets/Scripts/RPG/Content/Spells/inferno.asset using Guid(d45d0b31a43535d4c8daa8fc3f55a3dd) (NativeFormatImporter) -> (Import Result ID: 'c88f795e226d56f7a6695cae693222b4') in 0.0013661 seconds [static dependencies only]. Details - ImportResultOutputID=ff4d6cac915c2714d0b993064d0832ce DependenciesID=5118a015512fbab7dac953cef3b4854b StaticDependenciesID=92a373fb216250d483ea0fc5082fdce9 
+Asset Pipeline Refresh (id=fa9caa6122e4cb14b8e59cd2d59aee15): Total: 0.030 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Start importing Assets/Scripts/RPG/Content/Spells/prismatic_spray.asset using Guid(5a2f5b26d083086449e8f9d0b6501717) (NativeFormatImporter) -> (Import Result ID: 'd74ac18070e2c01c7d640339917aff89') in 0.0010742 seconds [static dependencies only]. Details - ImportResultOutputID=5de3840bf2dc07bbd64c58f83ec6acac DependenciesID=ce6d1eda23218e379e6ee67105cddac0 StaticDependenciesID=8e08bca34229b6809e14ef49caa77aca 
+Asset Pipeline Refresh (id=61a31c1dfacccc045bc80ba57c84e049): Total: 0.028 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Start importing Assets/Scripts/RPG/Content/Spells/regrowth.asset using Guid(f179e501587ed0542a921312f3233751) (NativeFormatImporter) -> (Import Result ID: '5ffe096035bea0420c884fa33864f179') in 0.0011902 seconds [static dependencies only]. Details - ImportResultOutputID=a94cb463906d1f90b95a919cce0f27ca DependenciesID=6cd7aa22bcb6962cc2a94a93016cab00 StaticDependenciesID=195fdbf2753d6555e5928e5f61acc4c5 
+Asset Pipeline Refresh (id=8e8bfc4c953c5e54ea55b0f8bb237fec): Total: 0.027 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Start importing Assets/Scripts/RPG/Content/Spells/greater_resurrection_call.asset using Guid(a79965f0cd9fac145965960fb7bd8589) (NativeFormatImporter) -> (Import Result ID: '36cce806fa103557db937dbae1b6b226') in 0.0011245 seconds [static dependencies only]. Details - ImportResultOutputID=1a50ecfb2f49a18351936b1b3be45091 DependenciesID=f00516b6551477c01290b885b374e9a1 StaticDependenciesID=be0732230ac0c764d218c7e49ee0c329 
+Asset Pipeline Refresh (id=85fb7770f9f432542824897c676d21bb): Total: 0.026 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Start importing Assets/Scripts/RPG/Content/Spells/greater_warp.asset using Guid(81dbf606bc25d4f48a11995973a94836) (NativeFormatImporter) -> (Import Result ID: '9a31a3f5cab7b586a5331a04edf71acf') in 0.0012606 seconds [static dependencies only]. Details - ImportResultOutputID=65a5d81647c75ec0ae14180a88687a3e DependenciesID=446005e50d9bcf3575eed865ffdf329d StaticDependenciesID=fe61e33e38bc5bece23f30c11b098ce6 
+Asset Pipeline Refresh (id=a13c52d2788d19b428a717e85e12fbad): Total: 0.026 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Start importing Assets/Scripts/RPG/Content/Spells/realm_shift.asset using Guid(6f54813787e29bd41b404e43126950de) (NativeFormatImporter) -> (Import Result ID: 'de58ec3d5fe82d86898591f6712fdcc4') in 0.001478 seconds [static dependencies only]. Details - ImportResultOutputID=cf9c7c12e98d7ed3e8be64db225c4f44 DependenciesID=45bc594a4e397479f7437eb2b46d8b95 StaticDependenciesID=5903794b3ec9a8735584d614be3c3445 
+Asset Pipeline Refresh (id=32c6f47a4e455654a9bbd74327df7041): Total: 0.030 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Start importing Assets/Scripts/RPG/Content/Spells/etherealness.asset using Guid(6c34f06da6760f84ea569c39c5f3ce05) (NativeFormatImporter) -> (Import Result ID: '51a7f427111870ec4677a9a99b6d6c5d') in 0.0011865 seconds [static dependencies only]. Details - ImportResultOutputID=3068ea8cf59cd5cac02e01def654305e DependenciesID=d0d667b73652ee21c625b7d7790a4230 StaticDependenciesID=597c52adbdce273fe603d9e1a908ecc3 
+Asset Pipeline Refresh (id=79d26591b1555ca4190b533c7cea784a): Total: 0.029 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Start importing Assets/Scripts/RPG/Content/Spells/symbol_spell.asset using Guid(212ff0f9b7202aa40a03b6ae599ee6e4) (NativeFormatImporter) -> (Import Result ID: '99128a660a80b88835a627f21d3e9684') in 0.0011807 seconds [static dependencies only]. Details - ImportResultOutputID=a8f2ee2599d453df3e5c686feb6cf3da DependenciesID=8abdaae9fe88b341134f77bb358e2dc9 StaticDependenciesID=175597f5e964e4793dff06487703b2fd 
+Asset Pipeline Refresh (id=e2e8aea7801a41148b5b6f5499fc1c1d): Total: 0.026 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Start importing Assets/Scripts/RPG/Content/Spells/prison_of_force.asset using Guid(84076f47de166f6428ee7b840649414c) (NativeFormatImporter) -> (Import Result ID: 'ef598016da843b45eee91d2493a70eed') in 0.0011827 seconds [static dependencies only]. Details - ImportResultOutputID=42a9e3d68db33c9944d77505ba54c8a8 DependenciesID=7f2a1887c6b3ecc71c1d62546bd9d828 StaticDependenciesID=3bcfda0a5c6b0756c2ee7131e0bdf808 
+Asset Pipeline Refresh (id=93c27156b3cc2c8478bd5de80bb060de): Total: 0.027 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Start importing Assets/Scripts/RPG/Content/Spells/gravity_reversal.asset using Guid(5cb3c2699691f3b43a97bb04dec58857) (NativeFormatImporter) -> (Import Result ID: 'c84f181e7b12755e566a2ee4b1c64951') in 0.0012977 seconds [static dependencies only]. Details - ImportResultOutputID=4305a19e36b7be3efc18f895ce28c83c DependenciesID=4d58df984ef909a970ff6091564e9ddf StaticDependenciesID=63da51fd40be4a4033f692c27c6aaa3c 
+Asset Pipeline Refresh (id=12d0526bc852bec4d9391747cddd2192): Total: 0.027 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Start importing Assets/Scripts/RPG/Content/Spells/divine_word.asset using Guid(fcfeb48489ba877498e5f42e050f9bc9) (NativeFormatImporter) -> (Import Result ID: 'a112f511b2cf63652210976e5934b6bd') in 0.001684 seconds [static dependencies only]. Details - ImportResultOutputID=236187e29edd9befa09254a8bd32dff2 DependenciesID=c529151ccf48b4159e4fb177844f631e StaticDependenciesID=00caa7e29912a0a9ecbed00ac837665f 
+Asset Pipeline Refresh (id=14cbb2c66eee32b4199002685e3c2300): Total: 0.029 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Start importing Assets/Scripts/RPG/Content/Spells/solar_flare.asset using Guid(351bed710cfd12e4c95bc0276a2610d5) (NativeFormatImporter) -> (Import Result ID: 'c23db9762e330948b2cc57d8b888c648') in 0.0014928 seconds [static dependencies only]. Details - ImportResultOutputID=499c87b4dbe7810239ea33389ba3c674 DependenciesID=73ad6c2e314abf98e8592f73223b88eb StaticDependenciesID=9ed4ce2c334ff5ca21011133b50f5dc6 
+Asset Pipeline Refresh (id=b97688e79f8f3f14195c252df7abbe23): Total: 0.031 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Start importing Assets/Scripts/RPG/Content/Spells/cataclysm.asset using Guid(25ab3520c485a9e44ac709fd9eb6696e) (NativeFormatImporter) -> (Import Result ID: 'c152af2f9b51b8f44eacad6421ea0fcd') in 0.0011854 seconds [static dependencies only]. Details - ImportResultOutputID=eea15fe1f18931a38c6e94a5366a5fa0 DependenciesID=0d25b63c45962611a84447f79b7ffbb7 StaticDependenciesID=26d6443d4f4ea9e2b8e4aa7fb9fbb926 
+Asset Pipeline Refresh (id=f799bd97bfdcd1c41bec776f1feaadb3): Total: 0.028 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Start importing Assets/Scripts/RPG/Content/Spells/abi_dalzims_horrid_wilting.asset using Guid(b1ef27ece276d264cbd7a764fe519850) (NativeFormatImporter) -> (Import Result ID: '444e71b130c8c8ab84a1be192e1259f8') in 0.001247 seconds [static dependencies only]. Details - ImportResultOutputID=4e9f01c3ee0fba51df49cb2fdd350fbd DependenciesID=92233d220ddae06fac06cf9efbf12cba StaticDependenciesID=21884e9940ac6891c92f147da510f16a 
+Asset Pipeline Refresh (id=c69efc92a4a91504a851f2ccf41bb5a8): Total: 0.028 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Start importing Assets/Scripts/RPG/Content/Spells/pocket_realm.asset using Guid(ba0ced78a66aeed42b648cc20a360557) (NativeFormatImporter) -> (Import Result ID: 'f264f3059c78d41b3c4b2865596d8e46') in 0.0011758 seconds [static dependencies only]. Details - ImportResultOutputID=2d7426644f4e8c0e054df5915a94fdc4 DependenciesID=84f997e5820fec74d6b13750eb6a8144 StaticDependenciesID=4c4dfd29e538ceb138d8713c83d8e4d5 
+Asset Pipeline Refresh (id=59b1b803b180e3e43a2b70533602bd01): Total: 0.028 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Start importing Assets/Scripts/RPG/Content/Spells/labyrinth.asset using Guid(06776798534877447824a9afb4edc7ec) (NativeFormatImporter) -> (Import Result ID: '6c96d6694dbbea01e5976acfa09ca98c') in 0.0014609 seconds [static dependencies only]. Details - ImportResultOutputID=f65873f5c7a120cac7f4a563921682b4 DependenciesID=8a30c89b39f05adcf8e7f8ba96d161b7 StaticDependenciesID=9142a8d50e70665d2bafe085ce35dbee 
+Asset Pipeline Refresh (id=0c21531447d28174b9c44191cb5d21f9): Total: 0.030 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Start importing Assets/Scripts/RPG/Content/Spells/thought_shield.asset using Guid(411ecf5b230760c489a22b9aadff1524) (NativeFormatImporter) -> (Import Result ID: '3624af4c2eefac48cfdc36b449c95ea5') in 0.0014397 seconds [static dependencies only]. Details - ImportResultOutputID=2b774d5aa05aea584485c339cae55f6b DependenciesID=256e9da9b91c4eb5428a16c12be5b305 StaticDependenciesID=4a1af4acfe4ad0dee04b1f38d270cbd2 
+Asset Pipeline Refresh (id=ff3fe4f543079714987d1dcdb1de4663): Total: 0.030 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Start importing Assets/Scripts/RPG/Content/Spells/dominate_creature.asset using Guid(01740c974e7d58f49b5e759a329d1dcd) (NativeFormatImporter) -> (Import Result ID: 'ee0a2929f96e5237ad89ec2d47578ed4') in 0.001108 seconds [static dependencies only]. Details - ImportResultOutputID=c5de5b030b766a2413880120505a6756 DependenciesID=04dda485199d2a973930c8149472588f StaticDependenciesID=f6b2f7ae97e562ae0dd1f48f1659cd69 
+Asset Pipeline Refresh (id=5f64fe2823c91c748955dcfca468da7d): Total: 0.029 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Start importing Assets/Scripts/RPG/Content/Spells/word_of_stunning.asset using Guid(3251df7d7b3c4bc47a1ef66bc16c4d58) (NativeFormatImporter) -> (Import Result ID: 'e5f29d253acf207e64182e3798d11ddc') in 0.0011019 seconds [static dependencies only]. Details - ImportResultOutputID=c331c4ff22af8eeebcb5cdca080e0d96 DependenciesID=9f4375770904f5056967ed20acee6e67 StaticDependenciesID=647c249926acffe044d9d065bff938f0 
+Asset Pipeline Refresh (id=62e3e3de193037747ac31b1c8e4aca3c): Total: 0.026 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Start importing Assets/Scripts/RPG/Content/Spells/mind_shatter.asset using Guid(8c0ee8d5076d0a2478c4fadb41d9d657) (NativeFormatImporter) -> (Import Result ID: 'c0a22d216ae5e7d0374303b689517756') in 0.0011794 seconds [static dependencies only]. Details - ImportResultOutputID=ea5048325c73e8724eeb9983cf1a09f1 DependenciesID=4750db28b3bb5b5b4b8661b823135720 StaticDependenciesID=4ac064945d636c056eefb01b6ff6d26c 
+Asset Pipeline Refresh (id=2908f720c395e5f43b4f836f8ff3776f): Total: 0.027 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Start importing Assets/Scripts/RPG/Content/Spells/antipathy_sympathy.asset using Guid(f1a95009d1d64a940981576c55c20b06) (NativeFormatImporter) -> (Import Result ID: 'e975cde8e2dde61dababfe978828103c') in 0.0014532 seconds [static dependencies only]. Details - ImportResultOutputID=c87f544e7805a0ee408dbba35cdf07b1 DependenciesID=07090240bf6e20e1b7179a28a51d8c97 StaticDependenciesID=9540ce521a8bf68df6a0d0de23c0d7a9 
+Asset Pipeline Refresh (id=c062022a4b457f847b014f69db839098): Total: 0.027 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Start importing Assets/Scripts/RPG/Content/Spells/cataclysmic_barrage.asset using Guid(4ef9d6d8e159c2a49a630424090e6d9e) (NativeFormatImporter) -> (Import Result ID: 'dc5ae290718ec0f049130bc349c139cb') in 0.001276 seconds [static dependencies only]. Details - ImportResultOutputID=42317fe96fae197cffd0ac87cbb51d34 DependenciesID=8327ed5a7b3d35f52156a35c0225f088 StaticDependenciesID=9a2627df48953695d1dc0577104e4f56 
+Asset Pipeline Refresh (id=a5b81173f59390144a77dcbb26a1b83d): Total: 0.028 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Start importing Assets/Scripts/RPG/Content/Spells/word_of_death.asset using Guid(777542ca0b2753648aed4949986d800c) (NativeFormatImporter) -> (Import Result ID: 'e9204e02cb3215eeca7f2bdff823c550') in 0.0016809 seconds [static dependencies only]. Details - ImportResultOutputID=63dcb55a4b9ab9a391cc67a6566ac8b0 DependenciesID=02256a83fb94730dbb4d77161cd3f208 StaticDependenciesID=376d89bc38eb7b850b84d4b999390eba 
+Asset Pipeline Refresh (id=d37c1acad6006cf48a722b2f8274bb61): Total: 0.029 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Start importing Assets/Scripts/RPG/Content/Spells/mass_restoration.asset using Guid(cd9decf42b9ec5f4ba5a4ab4f98e65e8) (NativeFormatImporter) -> (Import Result ID: '93e8f0aec6e39407e97d32b0758278e9') in 0.0011791 seconds [static dependencies only]. Details - ImportResultOutputID=1ee38a819fa22332c203e674e958815f DependenciesID=a8f0fcb2c484032c93c4fe0bd31702c2 StaticDependenciesID=0c510b576c9afcb986185d3a11130452 
+Asset Pipeline Refresh (id=40b4ec77ddc900f49acf04d04181c554): Total: 0.028 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Start importing Assets/Scripts/RPG/Content/Spells/true_rebirth.asset using Guid(73331f19706eccf498da18ffcd1f2d56) (NativeFormatImporter) -> (Import Result ID: 'c490b84cea30238721c21dd740a952b8') in 0.0013884 seconds [static dependencies only]. Details - ImportResultOutputID=7056affae9dfc886ef277298168c8ff7 DependenciesID=9bc18984cff02f61bd2941309159ed88 StaticDependenciesID=a98889879a5ce609a5b110e863b1420d 
+Asset Pipeline Refresh (id=905c93151dc7140439ebc449dd661cd8): Total: 0.028 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Start importing Assets/Scripts/RPG/Content/Spells/miracle.asset using Guid(a703ac400e7f24849bb02064a1dd7dca) (NativeFormatImporter) -> (Import Result ID: '022d3b16e4bd58dac95f71ae5dfe1516') in 0.0012329 seconds [static dependencies only]. Details - ImportResultOutputID=65272c6e706e6e240c3f74f9dafcb180 DependenciesID=8922cd20450c7721a2234af66a179831 StaticDependenciesID=2e9cebb4deeea5b1ad1c329a783b1188 
+Asset Pipeline Refresh (id=2657d0591a3261a448d20555f743c081): Total: 0.029 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Start importing Assets/Scripts/RPG/Content/Spells/planar_gate.asset using Guid(faa332dc8fca1b946a5bf08ac69bec62) (NativeFormatImporter) -> (Import Result ID: '6a8b00cdacd4c614be094d4b6b64b64a') in 0.0012794 seconds [static dependencies only]. Details - ImportResultOutputID=06d859f4a3fc228e68c5b24dad3e687e DependenciesID=812b6443201a11046585f292dd26de8a StaticDependenciesID=f0395bf041b7cd9a02895c88490537bc 
+Asset Pipeline Refresh (id=2e9ad1dc410c2aa479cd0826066e8074): Total: 0.027 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Start importing Assets/Scripts/RPG/Content/Spells/prescience.asset using Guid(fc0fd8ee1dbe2a441a4c3ef0072c5a9a) (NativeFormatImporter) -> (Import Result ID: 'e2c592e63fa3cb8d4d5d1a8b7797fdd3') in 0.0012762 seconds [static dependencies only]. Details - ImportResultOutputID=51d16b41906c2f969b0f877002b860b9 DependenciesID=641439eda40cab1d62b710548e70ebff StaticDependenciesID=82424ced6473a09d98036558512ff4c2 
+Asset Pipeline Refresh (id=80ba7252bd5d0e1468c6e0608c4088cb): Total: 0.028 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Start importing Assets/Scripts/RPG/Content/Spells/temporal_halt.asset using Guid(e8c896640a026f346bc55805e3f2ec4d) (NativeFormatImporter) -> (Import Result ID: '70fa9d02f1d60374d186c07da997c6b8') in 0.0012524 seconds [static dependencies only]. Details - ImportResultOutputID=b3d5adb8705670f8684a140bf6d6cbde DependenciesID=283ba0fba84ac1a64c4c5ba1c36d5894 StaticDependenciesID=59497d8c1a86082641a90bbbd9ba36e9 
+Asset Pipeline Refresh (id=bd871c2632d3d02479b46ee08d78d7f6): Total: 0.030 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Start importing ProjectSettings/EditorBuildSettings.asset using Guid(0000000000000000b000000000000000) (LibraryAssetImporter) -> (Import Result ID: 'b193fe072b98a8e27a5acc25cd25c169') in 0.0014018 seconds [static dependencies only]. Details - ImportResultOutputID=d777934f36c664454d62eda103573334 DependenciesID=4a886119ee4ec9d225c573c3adff8b35 StaticDependenciesID=0c90b95644bc5e6fedfbab29b88386f8 
+Asset Pipeline Refresh (id=88d6dee6fc9fb8541a67f3ad3c437ca8): Total: 0.011 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+[SpellGenerator] Generated 205 spell assets
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace ()
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+ForeverEngine.Editor.RPG.SpellGenerator:GenerateAll () (at Assets/Editor/RPG/SpellGenerator.cs:361)
+ForeverEngine.Editor.RPG.ContentGenerator:GenerateAll () (at Assets/Editor/RPG/ContentGenerator.cs:19)
+
+(Filename: Assets/Editor/RPG/SpellGenerator.cs Line: 361)
+
+[ClassGenerator] Generating 12 classes...
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace ()
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+ForeverEngine.Editor.RPG.ClassGenerator:GenerateAll () (at Assets/Editor/RPG/ClassGenerator.cs:15)
+ForeverEngine.Editor.RPG.ContentGenerator:GenerateAll () (at Assets/Editor/RPG/ContentGenerator.cs:20)
+
+(Filename: Assets/Editor/RPG/ClassGenerator.cs Line: 15)
+
+Start importing Assets/Scripts/RPG/Content/Classes/warrior.asset using Guid(46b92d50bc937744abdb3148e8471fb5) (NativeFormatImporter) -> (Import Result ID: '61488a5fe028a81d12bb5340e43cc89f') in 0.0010424 seconds [static dependencies only]. Details - ImportResultOutputID=9924ee185f2c1c0eefa759b01c763245 DependenciesID=b8833b91f2a2209d1e96ca71a4f21d80 StaticDependenciesID=c006401d34ea474df18bf0a1157230cf 
+Asset Pipeline Refresh (id=ac6939db59d1bdc469884a4b2bcbcb2b): Total: 0.026 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Start importing Assets/Scripts/RPG/Content/Classes/wizard.asset using Guid(9c8842370e2c3b24b914532c93344415) (NativeFormatImporter) -> (Import Result ID: 'fc88c4d8db42b0500c8498e1e80e60d6') in 0.0011328 seconds [static dependencies only]. Details - ImportResultOutputID=7bed33149bdfdd19b35d20395758b143 DependenciesID=270e4c0fd1c4c410b231b168ed5dc9a0 StaticDependenciesID=97d561fd1a48ab233615e5d3830e0fa4 
+Asset Pipeline Refresh (id=90338878b5c55f8428368e0f1c6dc87d): Total: 0.026 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Start importing Assets/Scripts/RPG/Content/Classes/rogue.asset using Guid(598938b7f35043a47832cb72d4ca361c) (NativeFormatImporter) -> (Import Result ID: 'b7c6a6027883ed1202ef5ca722431da8') in 0.0012555 seconds [static dependencies only]. Details - ImportResultOutputID=cf207494051f339369f86184a3e572bc DependenciesID=655764a96b447fbecde4a142da98bba2 StaticDependenciesID=57a246d4f101d3a74283554380b15d51 
+Asset Pipeline Refresh (id=531c3835c5bf2624abea30dd93daf952): Total: 0.026 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Start importing Assets/Scripts/RPG/Content/Classes/cleric.asset using Guid(1780f3e3738faf2469ad5a238f5f9c3d) (NativeFormatImporter) -> (Import Result ID: '29209c534f9647d206bd79ab632a212e') in 0.0011209 seconds [static dependencies only]. Details - ImportResultOutputID=37a0b4868ea9d89a2b1d619141f255e1 DependenciesID=f4298f7eccb87a197c6b1a0911c8e5fc StaticDependenciesID=8d344addb26eae5a33246c84063dbc6e 
+Asset Pipeline Refresh (id=f2657552e41a6404a9870569829a487e): Total: 0.026 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Start importing Assets/Scripts/RPG/Content/Classes/druid.asset using Guid(8859994a69d34c1479295e75ea2fed30) (NativeFormatImporter) -> (Import Result ID: 'b8d408b06b15faa27cb18ec463ea1eed') in 0.0011659 seconds [static dependencies only]. Details - ImportResultOutputID=300d0d535e04eacf4496cded5bab1fe7 DependenciesID=da6e28bfa32b413de3554f0c35be7e33 StaticDependenciesID=e712dc5af6aa1a3bf0c9132fa6ed4c33 
+Asset Pipeline Refresh (id=156a8e08579df174e9b26b2339b85fae): Total: 0.026 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Start importing Assets/Scripts/RPG/Content/Classes/bard.asset using Guid(6fc14db594b6e224b819469b934ee9bc) (NativeFormatImporter) -> (Import Result ID: '44f67d6230f144d3e94f97512269a427') in 0.0015029 seconds [static dependencies only]. Details - ImportResultOutputID=74f18a45a509abb18a8d589c6877a376 DependenciesID=89b8a9b434009aab7e1afaa33e8b06b4 StaticDependenciesID=8adb262076a70d0bbe1ae095a144244a 
+Asset Pipeline Refresh (id=f22260a8fe015644e989e9243c8b163a): Total: 0.026 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Start importing Assets/Scripts/RPG/Content/Classes/ranger.asset using Guid(67bd4d4ea96b40b4cb61fa6c1fe7d1fa) (NativeFormatImporter) -> (Import Result ID: '6dd61aa9aefae4fcabde9995b1526706') in 0.0012184 seconds [static dependencies only]. Details - ImportResultOutputID=4fa807ab37e5c4422e4917b7a3e964e3 DependenciesID=2226636c0c5a9cc6205774a3ee2d088d StaticDependenciesID=d73fdabd9a67c699e1f04c68b5a71ca8 
+Asset Pipeline Refresh (id=82de00becedbd2a46bb26fc4d2e5c433): Total: 0.027 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Start importing Assets/Scripts/RPG/Content/Classes/paladin.asset using Guid(89e4ee8e713b5a74082b8aaa07980766) (NativeFormatImporter) -> (Import Result ID: 'fc8e8a5d55864a86c3f74d9fa343a651') in 0.0012297 seconds [static dependencies only]. Details - ImportResultOutputID=34e161035558cd2af25e4608c699455c DependenciesID=aee9d054360237ffad0512927b7fa4aa StaticDependenciesID=b322fd30f2ecd2af53e0c4831b470afd 
+Asset Pipeline Refresh (id=02f0e5234ef73924b827c5af2a2826c7): Total: 0.027 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Start importing Assets/Scripts/RPG/Content/Classes/sorcerer.asset using Guid(ef3c9cfacd7244f41a874205ae073ad1) (NativeFormatImporter) -> (Import Result ID: 'e7a8ea4a2da962210c681d8b1428b999') in 0.0011856 seconds [static dependencies only]. Details - ImportResultOutputID=dc4c58185b3975e5e41715af13631692 DependenciesID=a6ce87c648aa6d1ba8bcb8bed1fd9ed5 StaticDependenciesID=1495a16ba4a6c0c948f352cde82c0fb3 
+Asset Pipeline Refresh (id=8ddf1b0f4a4e1134cb2e454b1c691810): Total: 0.027 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Start importing Assets/Scripts/RPG/Content/Classes/warlock.asset using Guid(a608dc2252d898e48b7f6ee5dc66918e) (NativeFormatImporter) -> (Import Result ID: '4b830862bea63e6d150cff164c62e8d1') in 0.0012844 seconds [static dependencies only]. Details - ImportResultOutputID=380fa5e6f14e426d7543b153d626a398 DependenciesID=159c9e71acffd211dbb8b51dc35d7262 StaticDependenciesID=9b51027d98e512a87eb4c13b958456e7 
+Asset Pipeline Refresh (id=ab21423168cc15143b189015b1de48be): Total: 0.028 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Start importing Assets/Scripts/RPG/Content/Classes/monk.asset using Guid(c992347377919854ca05d925a532fb26) (NativeFormatImporter) -> (Import Result ID: '743da61472218c632b11858a6bf5497a') in 0.0012393 seconds [static dependencies only]. Details - ImportResultOutputID=9d0e9dfec36c035e9eebddec095a65c8 DependenciesID=04b71ebca7740c9c7faeb76a93cd3255 StaticDependenciesID=40251bb3be243b1960a20cab4bc4b515 
+Asset Pipeline Refresh (id=140008a3fe3561b428d60907d50c19fc): Total: 0.027 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Start importing Assets/Scripts/RPG/Content/Classes/barbarian.asset using Guid(5092219aef18fd74393e47082c558cc3) (NativeFormatImporter) -> (Import Result ID: '4513b369e27900585d8059ab1f8a6efa') in 0.0011346 seconds [static dependencies only]. Details - ImportResultOutputID=797bd3f81c0207bce194fcdd02f0e43b DependenciesID=9dd96143eefd9d7fb2326a7a6613f316 StaticDependenciesID=7e1cc53d2dde58719963e8636272c7ee 
+Asset Pipeline Refresh (id=36844dfe87fbc1c4995fdc12ef7bac89): Total: 0.027 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+[ClassGenerator] Generated 12 class assets
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace ()
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+ForeverEngine.Editor.RPG.ClassGenerator:GenerateAll () (at Assets/Editor/RPG/ClassGenerator.cs:42)
+ForeverEngine.Editor.RPG.ContentGenerator:GenerateAll () (at Assets/Editor/RPG/ContentGenerator.cs:20)
+
+(Filename: Assets/Editor/RPG/ClassGenerator.cs Line: 42)
+
+[SpeciesGenerator] Generating 15 species...
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace ()
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+ForeverEngine.Editor.RPG.SpeciesGenerator:GenerateAll () (at Assets/Editor/RPG/SpeciesGenerator.cs:17)
+ForeverEngine.Editor.RPG.ContentGenerator:GenerateAll () (at Assets/Editor/RPG/ContentGenerator.cs:21)
+
+(Filename: Assets/Editor/RPG/SpeciesGenerator.cs Line: 17)
+
+Start importing Assets/Scripts/RPG/Content/Species/human.asset using Guid(1eeffb16e0296234881850ead9b30994) (NativeFormatImporter) -> (Import Result ID: '85d9a4fce8a5a58327089c8c8005c3fc') in 0.0011629 seconds [static dependencies only]. Details - ImportResultOutputID=7d96a30a7ff054c1c4c9131a8013bdee DependenciesID=0eef4833d62572557f97791ac32994d3 StaticDependenciesID=f5385236b30fbec826a95a7399be0b7e 
+Asset Pipeline Refresh (id=8c6d137e32af11c4abe826cf5015e24b): Total: 0.026 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Start importing Assets/Scripts/RPG/Content/Species/high_elf.asset using Guid(eb44d260637720e439e329f519525348) (NativeFormatImporter) -> (Import Result ID: '1af02b8f52bb8a7f8e87cc677fdeb624') in 0.0011126 seconds [static dependencies only]. Details - ImportResultOutputID=e11d13c4c3038b7b5ff215e2768b43b2 DependenciesID=39102e0af6b0b4a70250c8fe35eed597 StaticDependenciesID=00debf1056dace8af58507fa3dbb7676 
+Asset Pipeline Refresh (id=3aad9b0adc961d04fb25656f69fc074a): Total: 0.026 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Start importing Assets/Scripts/RPG/Content/Species/wood_elf.asset using Guid(b952bc658efdadb49a27d86919ebc37c) (NativeFormatImporter) -> (Import Result ID: '5bea328db7ab4fabc7f08d12b20c003a') in 0.0012749 seconds [static dependencies only]. Details - ImportResultOutputID=8bcda13c943be77cb88a7810d5db581a DependenciesID=008daa2e052840103ed7396f7f88bf4b StaticDependenciesID=b9a1d3e8465d1f7ce5bfc9f1b79459be 
+Asset Pipeline Refresh (id=8f7f2669eaebb624cbe39af851f158db): Total: 0.026 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Start importing Assets/Scripts/RPG/Content/Species/dark_elf.asset using Guid(6abdcc6a2974088469f59a32acac32f7) (NativeFormatImporter) -> (Import Result ID: 'e4d2428e4062141e825bd9b9f2aa821f') in 0.0010603 seconds [static dependencies only]. Details - ImportResultOutputID=63cc311519481cd9e9a6a19fcc4fc7bb DependenciesID=408660ddd665522d38dce152f0ed3163 StaticDependenciesID=9258fdc8776c76f92d1884cae5f89344 
+Asset Pipeline Refresh (id=0a825426d85de4149b471d6bc3851b34): Total: 0.025 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Start importing Assets/Scripts/RPG/Content/Species/mountain_dwarf.asset using Guid(0a414f3651344d4478c5f89e4392130a) (NativeFormatImporter) -> (Import Result ID: 'bf6e4fed1ebef0ed2b6d165ecc534219') in 0.0013466 seconds [static dependencies only]. Details - ImportResultOutputID=7d8288715dfb6da737dbe3a9da254385 DependenciesID=85a7c20b9e863f5b8713d23df2196c42 StaticDependenciesID=50023fd0c6eb1282ebad000f88290cfd 
+Asset Pipeline Refresh (id=09331d2db8a08354a87c188f8f9f5f1c): Total: 0.026 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Start importing Assets/Scripts/RPG/Content/Species/hill_dwarf.asset using Guid(f33e49f498ecd6941901bce2cb5bd61e) (NativeFormatImporter) -> (Import Result ID: 'c4f544ba6bc073bfdf93ae444880a7b9') in 0.00113 seconds [static dependencies only]. Details - ImportResultOutputID=e0873e839e264ff8ec0a1c5ac09b6bbd DependenciesID=ea130ddc8968d083f7bb94a243d26b0c StaticDependenciesID=5c0541e32e33a4198483a9e190789ccf 
+Asset Pipeline Refresh (id=9f17a68532609ea4fbe929fa348dce35): Total: 0.027 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Start importing Assets/Scripts/RPG/Content/Species/lightfoot_halfling.asset using Guid(d10cd31e68cbd554d881cb38c493ea91) (NativeFormatImporter) -> (Import Result ID: 'da1bb7f03fd14be32ef90505ee289e16') in 0.001052 seconds [static dependencies only]. Details - ImportResultOutputID=21b656ab116fdb09acc8e6b8c07ca9f9 DependenciesID=74fc54fb64ea5d85aae1a3d8d86d284c StaticDependenciesID=5355075f46fdda9a2b09246b0589589d 
+Asset Pipeline Refresh (id=6823b4a149323f84680b419e1b82fefd): Total: 0.026 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Start importing Assets/Scripts/RPG/Content/Species/stout_halfling.asset using Guid(1292ca0d7d062324aae2759b8b9e85c3) (NativeFormatImporter) -> (Import Result ID: '01be5aed950e56767f28b226f2bdb1a7') in 0.0012793 seconds [static dependencies only]. Details - ImportResultOutputID=b985a107f2726cb87f63eef8a96ee2b8 DependenciesID=56329505968b1e28e6ac054d32d7d30d StaticDependenciesID=2308fa97bb69562e0434e5c60bc68d72 
+Asset Pipeline Refresh (id=16216b30fa332734c869f7e8f45b66ee): Total: 0.026 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Start importing Assets/Scripts/RPG/Content/Species/dragonborn.asset using Guid(4af1047bb88f580469c9edafbda72e6c) (NativeFormatImporter) -> (Import Result ID: 'e83ed1318d9ff1f2bdf84ad6fc0203d3') in 0.0012326 seconds [static dependencies only]. Details - ImportResultOutputID=2a2315b7140d6a676c81bb52101bf130 DependenciesID=18e320217795cd7627d0029029166361 StaticDependenciesID=eeda54ae4b04a51eee88d39012b7c17f 
+Asset Pipeline Refresh (id=6531166bcb9c1614498da93c2c147860): Total: 0.028 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Start importing Assets/Scripts/RPG/Content/Species/tiefling.asset using Guid(4622d5a9ad12c544d954c2f32d6b9340) (NativeFormatImporter) -> (Import Result ID: 'cfa0665fecef277547c042735a647ac7') in 0.001143 seconds [static dependencies only]. Details - ImportResultOutputID=833bf45ae79e0a43e11bda4e710c1057 DependenciesID=5f77d084218183947e9bd09fadfedb8c StaticDependenciesID=337f39b80031db36f4da1f946132a553 
+Asset Pipeline Refresh (id=5e1b917e6b811a849a34bad360820bfd): Total: 0.027 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Start importing Assets/Scripts/RPG/Content/Species/half_orc.asset using Guid(e7348833edc186146a86e709b01ce774) (NativeFormatImporter) -> (Import Result ID: '89ea304ba1e737e0e34659bb18f04e3b') in 0.0010369 seconds [static dependencies only]. Details - ImportResultOutputID=44462dd7f8610a9c2a2bd6c73625a804 DependenciesID=5770fe2d6ec9d09c9d608eda9ef0ec7f StaticDependenciesID=4119c7790601e7c0cdba413ff658b64c 
+Asset Pipeline Refresh (id=9e579fe267e51be41b4bbc2a8ad998c2): Total: 0.027 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Start importing Assets/Scripts/RPG/Content/Species/forest_gnome.asset using Guid(1a7e0dac673ef9149b4919c56f2742e5) (NativeFormatImporter) -> (Import Result ID: '8ce55233d1b1556b3730fb052b34e62d') in 0.0010925 seconds [static dependencies only]. Details - ImportResultOutputID=240ceabb6d52c49c7f3f32e011986565 DependenciesID=cd7215af5ee065c3e5e4314d8c757830 StaticDependenciesID=8705267f0098293fd6d179bd829afc80 
+Asset Pipeline Refresh (id=91b29d0608de6b44fafc7af5e2780637): Total: 0.026 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Start importing Assets/Scripts/RPG/Content/Species/rock_gnome.asset using Guid(fbae77528b940eb4ab3618c7de1a00b8) (NativeFormatImporter) -> (Import Result ID: '38377f34693b0fae354e8a1e67c70823') in 0.0011659 seconds [static dependencies only]. Details - ImportResultOutputID=c6f6a602eb15ca11cf7e5d0006d383c8 DependenciesID=08c20e6adab376462927022d6ef8f6bd StaticDependenciesID=0441ba2b0354a924e09645a9807ed53a 
+Asset Pipeline Refresh (id=6ea611db3f32ea04897cd17067d6bea1): Total: 0.026 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Start importing Assets/Scripts/RPG/Content/Species/half_elf.asset using Guid(fdfcac52b24e213449ab60320ffc7709) (NativeFormatImporter) -> (Import Result ID: '9f8d7dfacad771d11f7da666c003704c') in 0.0013296 seconds [static dependencies only]. Details - ImportResultOutputID=946c8306263d5086401d9431a463282a DependenciesID=20892b60c74e0284ca053c2153b46850 StaticDependenciesID=150e6c94c86b871c9cac34bce29fcec4 
+Asset Pipeline Refresh (id=653bddd72dedc7241bad47424d1cd72f): Total: 0.050 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Start importing Assets/Scripts/RPG/Content/Species/changeling.asset using Guid(19e91174de5f25d41a2c6148cd068317) (NativeFormatImporter) -> (Import Result ID: '7b39a9bde56bc32c72bf3c62dc88c6f4') in 0.0011888 seconds [static dependencies only]. Details - ImportResultOutputID=6a6f8e30122b753e33a33c8bd7228b64 DependenciesID=a704df52147b4002a4d9fae6152ec10f StaticDependenciesID=f2b7428d777516baf31a5bc23f396ed0 
+Asset Pipeline Refresh (id=268d4b20b34219244ad0203720aaeb94): Total: 0.031 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+[SpeciesGenerator] Generated 15 species assets
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace ()
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+ForeverEngine.Editor.RPG.SpeciesGenerator:GenerateAll () (at Assets/Editor/RPG/SpeciesGenerator.cs:218)
+ForeverEngine.Editor.RPG.ContentGenerator:GenerateAll () (at Assets/Editor/RPG/ContentGenerator.cs:21)
+
+(Filename: Assets/Editor/RPG/SpeciesGenerator.cs Line: 218)
+
+Asset Pipeline Refresh (id=6b1641174ce3f3247a4e5ebc25e0d0a3): Total: 0.009 seconds - Initiated by RefreshV2(NoUpdateAssetOptions)
+[ContentGenerator] Generated 12 ClassData assets
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace ()
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+ForeverEngine.Editor.RPG.ContentGenerator:Validate () (at Assets/Editor/RPG/ContentGenerator.cs:56)
+ForeverEngine.Editor.RPG.ContentGenerator:GenerateAll () (at Assets/Editor/RPG/ContentGenerator.cs:26)
+
+(Filename: Assets/Editor/RPG/ContentGenerator.cs Line: 56)
+
+[ContentGenerator] Generated 15 SpeciesData assets
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace ()
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+ForeverEngine.Editor.RPG.ContentGenerator:Validate () (at Assets/Editor/RPG/ContentGenerator.cs:57)
+ForeverEngine.Editor.RPG.ContentGenerator:GenerateAll () (at Assets/Editor/RPG/ContentGenerator.cs:26)
+
+(Filename: Assets/Editor/RPG/ContentGenerator.cs Line: 57)
+
+[ContentGenerator] Generated 205 SpellData assets
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace ()
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+ForeverEngine.Editor.RPG.ContentGenerator:Validate () (at Assets/Editor/RPG/ContentGenerator.cs:58)
+ForeverEngine.Editor.RPG.ContentGenerator:GenerateAll () (at Assets/Editor/RPG/ContentGenerator.cs:26)
+
+(Filename: Assets/Editor/RPG/ContentGenerator.cs Line: 58)
+
+[ContentGenerator] Dark Elf has null innate spell at index 0
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace ()
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:LogError (object)
+ForeverEngine.Editor.RPG.ContentGenerator:Validate () (at Assets/Editor/RPG/ContentGenerator.cs:101)
+ForeverEngine.Editor.RPG.ContentGenerator:GenerateAll () (at Assets/Editor/RPG/ContentGenerator.cs:26)
+
+(Filename: Assets/Editor/RPG/ContentGenerator.cs Line: 101)
+
+[ContentGenerator] Forest Gnome has null innate spell at index 0
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace ()
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:LogError (object)
+ForeverEngine.Editor.RPG.ContentGenerator:Validate () (at Assets/Editor/RPG/ContentGenerator.cs:101)
+ForeverEngine.Editor.RPG.ContentGenerator:GenerateAll () (at Assets/Editor/RPG/ContentGenerator.cs:26)
+
+(Filename: Assets/Editor/RPG/ContentGenerator.cs Line: 101)
+
+[ContentGenerator] High Elf has null innate spell at index 0
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace ()
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:LogError (object)
+ForeverEngine.Editor.RPG.ContentGenerator:Validate () (at Assets/Editor/RPG/ContentGenerator.cs:101)
+ForeverEngine.Editor.RPG.ContentGenerator:GenerateAll () (at Assets/Editor/RPG/ContentGenerator.cs:26)
+
+(Filename: Assets/Editor/RPG/ContentGenerator.cs Line: 101)
+
+[ContentGenerator] Tiefling has null innate spell at index 0
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace ()
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:LogError (object)
+ForeverEngine.Editor.RPG.ContentGenerator:Validate () (at Assets/Editor/RPG/ContentGenerator.cs:101)
+ForeverEngine.Editor.RPG.ContentGenerator:GenerateAll () (at Assets/Editor/RPG/ContentGenerator.cs:26)
+
+(Filename: Assets/Editor/RPG/ContentGenerator.cs Line: 101)
+
+[ContentGenerator] Validation: 232 total assets, 4 errors
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace ()
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+ForeverEngine.Editor.RPG.ContentGenerator:Validate () (at Assets/Editor/RPG/ContentGenerator.cs:109)
+ForeverEngine.Editor.RPG.ContentGenerator:GenerateAll () (at Assets/Editor/RPG/ContentGenerator.cs:26)
+
+(Filename: Assets/Editor/RPG/ContentGenerator.cs Line: 109)
+
+[ContentGenerator] Content generation complete.
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace ()
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+ForeverEngine.Editor.RPG.ContentGenerator:GenerateAll () (at Assets/Editor/RPG/ContentGenerator.cs:28)
+
+(Filename: Assets/Editor/RPG/ContentGenerator.cs Line: 28)
+
+Batchmode quit successfully invoked - shutting down!
+Unloading 0 Unused Serialized files (Serialized files now loaded: 0)
+Unloading 247 unused Assets / (0.6 MB). Loaded Objects now: 7997.
+Memory consumption went from 217.4 MB to 216.8 MB.
+Total: 6.041800 ms (FindLiveObjects: 0.132900 ms CreateObjectMapping: 0.080400 ms MarkObjects: 5.266100 ms  DeleteObjects: 0.561600 ms)
+
+[Physics::Module] Cleanup current backend.
+[Physics::Module] Id: 0xf2b8ea05
+Input System module state changed to: ShutdownInProgress.
+Input Polling Thread exited.
+Input System module state changed to: Shutdown.
+[Licensing::IpcConnector] LicenseClient-bp303-6000.4.1-notifications channel disconnected successfully.
+[Licensing::IpcConnector] LicenseClient-bp303-6000.4.1 channel disconnected successfully.
+AcceleratorClientConnectionCallback - disconnected - :0
+Shut down.
+Cleanup mono
+CodeReloadManager destroyed
+abort_threads: Failed aborting id: 000000000000E1A8, mono_thread_manage will ignore it
+
+abort_threads: Failed aborting id: 0000000000007FE0, mono_thread_manage will ignore it
+
+abort_threads: Failed aborting id: 000000000000E1A8, mono_thread_manage will ignore it
+
+abort_threads: Failed aborting id: 0000000000007FE0, mono_thread_manage will ignore it
+
+debugger-agent: Unable to listen on 3096
+Exiting batchmode successfully now!
+Exiting without the bug reporter. Application will terminate with return code 0

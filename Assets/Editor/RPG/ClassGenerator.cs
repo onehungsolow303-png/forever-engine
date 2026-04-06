@@ -7,17 +7,19 @@ namespace ForeverEngine.Editor.RPG
 {
     public static class ClassGenerator
     {
-        private const string Dir = "Assets/Scripts/RPG/Content/Classes";
+        private const string Dir = "Assets/Resources/RPG/Content/Classes";
 
         [MenuItem("Forever Engine/RPG/Generate Classes")]
         public static void GenerateAll()
         {
             Debug.Log("[ClassGenerator] Generating 12 classes...");
 
-            if (!AssetDatabase.IsValidFolder("Assets/Scripts/RPG/Content"))
-                AssetDatabase.CreateFolder("Assets/Scripts/RPG", "Content");
+            if (!AssetDatabase.IsValidFolder("Assets/Resources/RPG"))
+                AssetDatabase.CreateFolder("Assets/Resources", "RPG");
+            if (!AssetDatabase.IsValidFolder("Assets/Resources/RPG/Content"))
+                AssetDatabase.CreateFolder("Assets/Resources/RPG", "Content");
             if (!AssetDatabase.IsValidFolder(Dir))
-                AssetDatabase.CreateFolder("Assets/Scripts/RPG/Content", "Classes");
+                AssetDatabase.CreateFolder("Assets/Resources/RPG/Content", "Classes");
 
             // Delete existing
             var existing = AssetDatabase.FindAssets("t:ClassData", new[] { Dir });

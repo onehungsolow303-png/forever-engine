@@ -23,7 +23,7 @@ namespace ForeverEngine.RPG.Spells
             _byId = new Dictionary<string, SpellData>();
             _byName = new Dictionary<string, SpellData>();
 
-            var all = Resources.LoadAll<SpellData>("RPG/Spells");
+            var all = Resources.LoadAll<SpellData>("RPG/Content/Spells");
             if (all != null)
             {
                 foreach (var spell in all)

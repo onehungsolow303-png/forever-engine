@@ -7,7 +7,7 @@ namespace ForeverEngine.Editor.RPG
 {
     public static class SpellGenerator
     {
-        private const string Dir = "Assets/Scripts/RPG/Content/Spells";
+        private const string Dir = "Assets/Resources/RPG/Content/Spells";
 
         // Shorthand aliases
         private const ClassFlag War = ClassFlag.Warrior;
@@ -27,10 +27,12 @@ namespace ForeverEngine.Editor.RPG
             Debug.Log("[SpellGenerator] Generating 205 spells...");
 
             // Ensure directory exists
-            if (!AssetDatabase.IsValidFolder("Assets/Scripts/RPG/Content"))
-                AssetDatabase.CreateFolder("Assets/Scripts/RPG", "Content");
+            if (!AssetDatabase.IsValidFolder("Assets/Resources/RPG"))
+                AssetDatabase.CreateFolder("Assets/Resources", "RPG");
+            if (!AssetDatabase.IsValidFolder("Assets/Resources/RPG/Content"))
+                AssetDatabase.CreateFolder("Assets/Resources/RPG", "Content");
             if (!AssetDatabase.IsValidFolder(Dir))
-                AssetDatabase.CreateFolder("Assets/Scripts/RPG/Content", "Spells");
+                AssetDatabase.CreateFolder("Assets/Resources/RPG/Content", "Spells");
 
             // Delete existing spell assets
             var existing = AssetDatabase.FindAssets("t:SpellData", new[] { Dir });

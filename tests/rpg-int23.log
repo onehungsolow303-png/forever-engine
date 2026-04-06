@@ -1,0 +1,21 @@
+[Licensing::Module] Trying to connect to existing licensing client channel...
+Built from '6000.4/staging' branch; Version is '6000.4.1f1 (8535861f39e1) revision 8729990'; Using compiler version '194234433'; Build Type 'Release'
+OS: 'Windows 11  (10.0.26200) Professional' Language: 'en' Physical Memory: 63063 MB
+[Licensing::IpcConnector] Successfully connected to: "LicenseClient-bp303" at "2026-04-05T22:21:15.1345974Z"
+BatchMode: 1, IsHumanControllingUs: 0, StartBugReporterOnCrash: 0, Is64bit: 1
+System  architecture: x64
+Process architecture: x64
+Date: 2026-04-05T22:21:15Z
+
+COMMAND LINE ARGUMENTS:
+C:\Program Files\Unity\Hub\Editor\6000.4.1f1\Editor\Unity.exe
+-batchmode
+-nographics
+-projectPath
+.
+-logFile
+tests/rpg-int23.log
+-quit
+Successfully changed project path to: C:/Dev/Forever engin
+C:/Dev/Forever engin
+Exiting without the bug reporter. Application will terminate with return code 1

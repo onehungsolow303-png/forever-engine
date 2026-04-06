@@ -1,0 +1,1139 @@
+[Licensing::Module] Trying to connect to existing licensing client channel...
+Built from '6000.4/staging' branch; Version is '6000.4.1f1 (8535861f39e1) revision 8729990'; Using compiler version '194234433'; Build Type 'Release'
+OS: 'Windows 11  (10.0.26200) Professional' Language: 'en' Physical Memory: 63063 MB
+[Licensing::IpcConnector] Successfully connected to: "LicenseClient-bp303" at "2026-04-05T21:37:38.5955745Z"
+BatchMode: 1, IsHumanControllingUs: 0, StartBugReporterOnCrash: 0, Is64bit: 1
+System  architecture: x64
+Process architecture: x64
+Date: 2026-04-05T21:37:38Z
+
+COMMAND LINE ARGUMENTS:
+C:\Program Files\Unity\Hub\Editor\6000.4.1f1\Editor\Unity.exe
+-batchmode
+-nographics
+-projectPath
+.
+-executeMethod
+ForeverEngine.Editor.RPG.ContentGenerator.GenerateAll
+-logFile
+tests/content-gen3.log
+-quit
+Successfully changed project path to: C:/Dev/Forever engin
+C:/Dev/Forever engin
+[UnityMemory] Configuration Parameters - Can be set up in boot.config
+    "memorysetup-temp-allocator-size-gi-baking-worker=262144"
+    "memorysetup-temp-allocator-size-gi-baking-worker=262144"
+    "memorysetup-temp-allocator-size-gi-baking-worker=262144"
+    "memorysetup-temp-allocator-size-gi-baking-worker=262144"
+    "memorysetup-temp-allocator-size-gi-baking-worker=262144"
+    "memorysetup-temp-allocator-size-nav-mesh-worker=65536"
+    "memorysetup-temp-allocator-size-audio-worker=65536"
+    "memorysetup-temp-allocator-size-cloud-worker=32768"
+    "memorysetup-temp-allocator-size-gfx=262144"
+    "memorysetup-temp-allocator-size-preload-manager=33554432"
+    "memorysetup-temp-allocator-size-job-worker=262144"
+    "memorysetup-temp-allocator-size-background-worker=32768"
+    "memorysetup-allocator-temp-initial-block-size-main=262144"
+    "memorysetup-allocator-temp-initial-block-size-worker=262144"
+    "memorysetup-bucket-allocator-granularity=16"
+    "memorysetup-bucket-allocator-bucket-count=8"
+    "memorysetup-bucket-allocator-block-size=33554432"
+    "memorysetup-bucket-allocator-block-count=8"
+    "memorysetup-main-allocator-block-size=16777216"
+    "memorysetup-thread-allocator-block-size=16777216"
+    "memorysetup-gfx-main-allocator-block-size=16777216"
+    "memorysetup-gfx-thread-allocator-block-size=16777216"
+    "memorysetup-cache-allocator-block-size=4194304"
+    "memorysetup-typetree-allocator-block-size=2097152"
+    "memorysetup-profiler-bucket-allocator-granularity=16"
+    "memorysetup-profiler-bucket-allocator-bucket-count=8"
+    "memorysetup-profiler-bucket-allocator-block-size=33554432"
+    "memorysetup-profiler-bucket-allocator-block-count=8"
+    "memorysetup-profiler-allocator-block-size=16777216"
+    "memorysetup-profiler-editor-allocator-block-size=1048576"
+    "memorysetup-temp-allocator-size-main=16777216"
+    "memorysetup-job-temp-allocator-block-size=2097152"
+    "memorysetup-job-temp-allocator-block-size-background=1048576"
+    "memorysetup-job-temp-allocator-reduction-small-platforms=262144"
+Player connection [58268]  Target information:
+
+Player connection [58268]  * "[IP] 192.168.1.113 [Port] 55504 [Flags] 2 [Guid] 3650066452 [EditorId] 3650066452 [Version] 1048832 [Id] WindowsEditor(7,DESKTOP-2LJVMIP) [Debug] 1 [PackageName] WindowsEditor [ProjectName] Editor" 
+
+Player connection [58268]  * "[IP] 169.254.194.178 [Port] 55504 [Flags] 2 [Guid] 3650066452 [EditorId] 3650066452 [Version] 1048832 [Id] WindowsEditor(7,DESKTOP-2LJVMIP) [Debug] 1 [PackageName] WindowsEditor [ProjectName] Editor" 
+
+Player connection [58268]  * "[IP] 192.168.55.100 [Port] 55504 [Flags] 2 [Guid] 3650066452 [EditorId] 3650066452 [Version] 1048832 [Id] WindowsEditor(7,DESKTOP-2LJVMIP) [Debug] 1 [PackageName] WindowsEditor [ProjectName] Editor" 
+
+Player connection [58268] Host joined multi-casting on [225.0.0.222:54997]...
+Player connection [58268] Host joined alternative multi-casting on [225.0.0.222:34997]...
+Input System module state changed to: Initialized.
+[Physics::Module] Initialized fallback backend.
+[Physics::Module] Id: 0xdecafbad
+[Package Manager] Connected to IPC stream "Upm-51400" after 0.2 seconds.
+[Licensing::Module] Licensing is not yet initialized.
+[Licensing::Client] Error: HandshakeResponse reported an error:
+	ResponseCode: 505
+	ResponseStatus: Unsupported protocol version '1.18.1'.
+[Licensing::Module] Error: Failed to handshake to channel: "LicenseClient-bp303"
+[Licensing::IpcConnector] LicenseClient-bp303 channel disconnected successfully.
+[Licensing::IpcConnector] Channel LicenseClient-bp303-6000.4.1 doesn't exist
+[Licensing::Module] Successfully launched the LicensingClient (PId: 55396)
+Starting IPC server.
+Waiting for clients to connect on \\.\pipe\Unity-LicenseClient-bp303-6000.4.1, press Ctrl-C to exit.
+[Licensing::IpcConnector] Successfully connected to: "LicenseClient-bp303-6000.4.1" at "2026-04-05T21:37:39.3671543Z"
+[Licensing::Client] Handshaking with LicensingClient:
+  Version:                 1.18.1+9fbee8e
+  Session Id:              f054183d849a4b20a8df033358285e70
+  Correlation Id:          c6520fba523cfd8345d35351233b1c8b
+  External correlation Id: 693125840589746224
+  Machine Id:              gstSTUP4QwZYnBaUulASzeuKBU0=
+[Licensing::Module] Successfully connected to LicensingClient on channel: "LicenseClient-bp303-6000.4.1" (connect: 0.16s, validation: 0.03s, handshake: 0.55s)
+[Licensing::IpcConnector] Successfully connected to: "LicenseClient-bp303-6000.4.1-notifications" at "2026-04-05T21:37:39.945755Z"
+[Licensing::Module] Connected to LicensingClient (PId: 55396, launch time: 0.00, total connection time: 0.74s)
+[Licensing::Module] Error: Access token is unavailable; failed to update
+[Licensing::Client] Successfully resolved entitlement details
+[Licensing::Module] License group:
+  Id: 20067582077754-UnityPersXXXX
+  Product: Unity Personal
+  Type: Assigned
+  Expiration: Unlimited
+[Licensing::Client] Successfully updated license, isAsync: True, time: 0.00
+[Licensing::Client] Successfully resolved entitlement details
+[Licensing::Module] Licensing Background thread has ended after 1.36s
+[Licensing::Module] Licensing is initialized (took 1.04s).
+[Licensing::Client] Successfully resolved entitlement details
+Library Redirect Path: Library/
+[Physics::Module] Selected backend.
+[Physics::Module] Name: PhysX
+[Physics::Module] Id: 0xf2b8ea05
+[Physics::Module] SDK Version: 4.1.2
+[Physics::Module] Integration Version: 1.0.0
+[Physics::Module] Threading Mode: Multi-Threaded
+Initialize engine version: 6000.4.1f1 (8535861f39e1)
+[Subsystems] Discovering subsystems at path C:/Program Files/Unity/Hub/Editor/6000.4.1f1/Editor/Data/Resources/UnitySubsystems
+[Subsystems] Discovering subsystems at path C:/Dev/Forever engin/Assets
+Forcing GfxDevice: Null
+GfxDevice: creating device client; kGfxThreadingModeNonThreaded
+NullGfxDevice:
+    Version:  NULL 1.0 [1.0]
+    Renderer: Null Device
+    Vendor:   Unity Technologies
+Initialize mono
+Mono path[0] = 'C:/Program Files/Unity/Hub/Editor/6000.4.1f1/Editor/Data/Managed'
+Mono path[1] = 'C:/Program Files/Unity/Hub/Editor/6000.4.1f1/Editor/Data/MonoBleedingEdge/lib/mono/unityjit-win32'
+Mono config path = 'C:/Program Files/Unity/Hub/Editor/6000.4.1f1/Editor/Data/MonoBleedingEdge/etc'
+Using monoOptions --debugger-agent=transport=dt_socket,embedding=1,server=y,suspend=n,address=127.0.0.1:56400
+CodeReloadManager initialized
+Using cacheserver namespaces - metadata:defaultmetadata, artifacts:defaultartifacts
+Using cacheserver namespaces - metadata:defaultmetadata, artifacts:defaultartifacts
+ImportWorker Server TCP listen port: 0
+AcceleratorClientConnectionCallback - disconnected - :0
+Begin MonoManager ReloadAssembly
+Registering precompiled unity dll's ...
+Register platform support module: C:/Program Files/Unity/Hub/Editor/6000.4.1f1/Editor/Data/PlaybackEngines/WindowsStandaloneSupport/UnityEditor.WindowsStandalone.Extensions.dll
+Registered in 0.000906 seconds.
+Native extension for WindowsStandalone target not found
+Package Manager log level set to [2]
+ScheduleIndexationOnStartup MainProcess:False IndexOnStartup:False
+Mono: successfully reloaded assembly
+- Finished resetting the current domain, in  0.227 seconds
+Domain Reload Profiling: 478ms
+	BeginReloadAssembly (68ms)
+		CreateAndSetChildDomain (3ms)
+	RebuildCommonClasses (22ms)
+	RebuildNativeTypeToScriptingClass (7ms)
+	initialDomainReloadingComplete (35ms)
+	LoadAllAssembliesAndSetupDomain (117ms)
+		LoadAssemblies (64ms)
+		AnalyzeDomain (111ms)
+			TypeCache.Refresh (110ms)
+				TypeCache.ScanAssembly (102ms)
+	FinalizeReload (228ms)
+		SetupLoadedEditorAssemblies (0ms)
+			InitializePlatformSupportModulesInManaged (26ms)
+			BeforeProcessingInitializeOnLoad (48ms)
+			ProcessInitializeOnLoadAttributes (61ms)
+			ProcessInitializeOnLoadMethodAttributes (53ms)
+[Licensing::Client] Successfully resolved entitlement details
+Application.AssetDatabase Initial Refresh Start
+[Package Manager] Restoring resolved packages state from cache
+[Licensing::Client] Successfully resolved entitlement details
+[Package Manager] Registered 44 packages:
+  Packages from [https://packages.unity.com]:
+    com.unity.burst@1.8.28 (location: C:\Dev\Forever engin\Library\PackageCache\com.unity.burst@07790c2d06d9)
+    com.unity.inputsystem@1.19.0 (location: C:\Dev\Forever engin\Library\PackageCache\com.unity.inputsystem@21a28c3a6c83)
+    com.unity.mathematics@1.3.3 (location: C:\Dev\Forever engin\Library\PackageCache\com.unity.mathematics@19a9377c4ffa)
+    com.unity.ai.inference@2.5.0 (location: C:\Dev\Forever engin\Library\PackageCache\com.unity.ai.inference@e760aa121ec7)
+    com.unity.nuget.mono-cecil@1.11.6 (location: C:\Dev\Forever engin\Library\PackageCache\com.unity.nuget.mono-cecil@ecb9724e46ff)
+    com.unity.profiling.core@1.0.3 (location: C:\Dev\Forever engin\Library\PackageCache\com.unity.profiling.core@8a49f7027d06)
+    com.unity.scriptablebuildpipeline@2.6.1 (location: C:\Dev\Forever engin\Library\PackageCache\com.unity.scriptablebuildpipeline@36e3b5898ee2)
+    com.unity.serialization@3.1.5 (location: C:\Dev\Forever engin\Library\PackageCache\com.unity.serialization@c463b52e88d7)
+    com.unity.test-framework.performance@3.2.0 (location: C:\Dev\Forever engin\Library\PackageCache\com.unity.test-framework.performance@0840f58e4562)
+    com.unity.dt.app-ui@2.1.1 (location: C:\Dev\Forever engin\Library\PackageCache\com.unity.dt.app-ui@8ac7e730dd5d)
+    com.unity.nuget.newtonsoft-json@3.2.2 (location: C:\Dev\Forever engin\Library\PackageCache\com.unity.nuget.newtonsoft-json@4dfd81071c64)
+    com.unity.searcher@4.9.4 (location: C:\Dev\Forever engin\Library\PackageCache\com.unity.searcher@d45a78918735)
+  Built-in packages:
+    com.unity.2d.sprite@1.0.0 (location: C:\Dev\Forever engin\Library\PackageCache\com.unity.2d.sprite@929df5adbb1f)
+    com.unity.2d.tilemap@1.0.0 (location: C:\Dev\Forever engin\Library\PackageCache\com.unity.2d.tilemap@c457c5249013)
+    com.unity.collections@6.4.0 (location: C:\Dev\Forever engin\Library\PackageCache\com.unity.collections@538ace9075bc)
+    com.unity.entities@6.4.0 (location: C:\Dev\Forever engin\Library\PackageCache\com.unity.entities@55bdc42e3b8d)
+    com.unity.render-pipelines.universal@17.4.0 (location: C:\Dev\Forever engin\Library\PackageCache\com.unity.render-pipelines.universal@580a03820d50)
+    com.unity.sentis@2.2.0 (location: C:\Dev\Forever engin\Library\PackageCache\com.unity.sentis@eef1e5173b44)
+    com.unity.test-framework@1.6.0 (location: C:\Dev\Forever engin\Library\PackageCache\com.unity.test-framework@76560ee600cb)
+    com.unity.ui@2.0.0 (location: C:\Dev\Forever engin\Library\PackageCache\com.unity.ui@ccd6582d7949)
+    com.unity.modules.adaptiveperformance@1.0.0 (location: C:\Dev\Forever engin\Library\PackageCache\com.unity.modules.adaptiveperformance)
+    com.unity.modules.vectorgraphics@1.0.0 (location: C:\Dev\Forever engin\Library\PackageCache\com.unity.modules.vectorgraphics)
+    com.unity.modules.uielements@1.0.0 (location: C:\Dev\Forever engin\Library\PackageCache\com.unity.modules.uielements)
+    com.unity.modules.imageconversion@1.0.0 (location: C:\Dev\Forever engin\Library\PackageCache\com.unity.modules.imageconversion)
+    com.unity.modules.imgui@1.0.0 (location: C:\Dev\Forever engin\Library\PackageCache\com.unity.modules.imgui)
+    com.unity.modules.subsystems@1.0.0 (location: C:\Dev\Forever engin\Library\PackageCache\com.unity.modules.subsystems)
+    com.unity.ext.nunit@2.0.5 (location: C:\Dev\Forever engin\Library\PackageCache\com.unity.ext.nunit@d8c07649098d)
+    com.unity.modules.jsonserialize@1.0.0 (location: C:\Dev\Forever engin\Library\PackageCache\com.unity.modules.jsonserialize)
+    com.unity.render-pipelines.core@17.4.0 (location: C:\Dev\Forever engin\Library\PackageCache\com.unity.render-pipelines.core@e6c93b445dd3)
+    com.unity.shadergraph@17.4.0 (location: C:\Dev\Forever engin\Library\PackageCache\com.unity.shadergraph@6ab0d236faac)
+    com.unity.render-pipelines.universal-config@17.4.0 (location: C:\Dev\Forever engin\Library\PackageCache\com.unity.render-pipelines.universal-config@0db4263b9e6b)
+    com.unity.modules.assetbundle@1.0.0 (location: C:\Dev\Forever engin\Library\PackageCache\com.unity.modules.assetbundle)
+    com.unity.modules.audio@1.0.0 (location: C:\Dev\Forever engin\Library\PackageCache\com.unity.modules.audio)
+    com.unity.modules.physics@1.0.0 (location: C:\Dev\Forever engin\Library\PackageCache\com.unity.modules.physics)
+    com.unity.modules.unityanalytics@1.0.0 (location: C:\Dev\Forever engin\Library\PackageCache\com.unity.modules.unityanalytics)
+    com.unity.modules.unitywebrequest@1.0.0 (location: C:\Dev\Forever engin\Library\PackageCache\com.unity.modules.unitywebrequest)
+    com.unity.modules.tilemap@1.0.0 (location: C:\Dev\Forever engin\Library\PackageCache\com.unity.modules.tilemap)
+    com.unity.modules.ui@1.0.0 (location: C:\Dev\Forever engin\Library\PackageCache\com.unity.modules.ui)
+    com.unity.modules.hierarchycore@1.0.0 (location: C:\Dev\Forever engin\Library\PackageCache\com.unity.modules.hierarchycore)
+    com.unity.ugui@2.0.0 (location: C:\Dev\Forever engin\Library\PackageCache\com.unity.ugui@d8a2716f3013)
+    com.unity.modules.terrain@1.0.0 (location: C:\Dev\Forever engin\Library\PackageCache\com.unity.modules.terrain)
+    com.unity.modules.physics2d@1.0.0 (location: C:\Dev\Forever engin\Library\PackageCache\com.unity.modules.physics2d)
+    com.unity.modules.androidjni@1.0.0 (location: C:\Dev\Forever engin\Library\PackageCache\com.unity.modules.androidjni)
+    com.unity.modules.screencapture@1.0.0 (location: C:\Dev\Forever engin\Library\PackageCache\com.unity.modules.screencapture)
+[Subsystems] No new subsystems found in resolved package list.
+[Package Manager] Done registering packages in 0.01 seconds
+Assembly reference Packages/com.unity.entities/Unity.Scenes.Editor/Internals/Properties/Unity.Properties.Internals.asmref has no target assembly definition
+Assembly reference Packages/com.unity.entities/Unity.Scenes.Editor/Internals/Properties/Unity.Properties.Internals.asmref has no target assembly definition
+[ScriptCompilation] Requested script compilation because: AssetDatabase observed changes in script compilation related files
+info: Microsoft.Hosting.Lifetime[14]
+      Now listening on: http://localhost:80
+info: Microsoft.Hosting.Lifetime[0]
+      Application started. Press Ctrl+C to shut down.
+info: Microsoft.Hosting.Lifetime[0]
+      Hosting environment: Production
+info: Microsoft.Hosting.Lifetime[0]
+      Content root path: C:\Dev\Forever engin
+info: Microsoft.AspNetCore.Hosting.Diagnostics[1]
+      Request starting HTTP/2 POST http://ilpp/UnityILPP.PostProcessing/Ping - application/grpc -
+info: Microsoft.AspNetCore.Routing.EndpointMiddleware[0]
+      Executing endpoint 'gRPC - /UnityILPP.PostProcessing/Ping'
+info: Microsoft.AspNetCore.Routing.EndpointMiddleware[1]
+      Executed endpoint 'gRPC - /UnityILPP.PostProcessing/Ping'
+info: Microsoft.AspNetCore.Hosting.Diagnostics[2]
+      Request finished HTTP/2 POST http://ilpp/UnityILPP.PostProcessing/Ping - 200 - application/grpc 17.4766ms
+Starting: C:\Program Files\Unity\Hub\Editor\6000.4.1f1\Editor\Data\Tools\BuildPipeline\bee_backend.exe --ipc --defer-dag-verification --dagfile="Library/Bee/1900b0aE.dag" --continue-on-failure --profile="Library/Bee/backend1.traceevents" ScriptAssemblies
+WorkingDir: C:/Dev/Forever engin
+info: Microsoft.AspNetCore.Hosting.Diagnostics[1]
+      Request starting HTTP/2 POST http://ilpp/UnityILPP.PostProcessing/ConfigurePostProcessors - application/grpc -
+info: Microsoft.AspNetCore.Routing.EndpointMiddleware[0]
+      Executing endpoint 'gRPC - /UnityILPP.PostProcessing/ConfigurePostProcessors'
+warn: Unity.ILPP.Runner.PostProcessingAssemblyLoadContext[0]
+      Assembly system.runtime.interopservices.windowsruntime has duplicate hint path. Ignoring "C:\Program Files\Unity\Hub\Editor\6000.4.1f1\Editor\Data\UnityReferenceAssemblies\unity-4.8-api\Facades\System.Runtime.InteropServices.WindowsRuntime.dll" in favor of "C:\Program Files\Unity\Hub\Editor\6000.4.1f1\Editor\Data\NetStandard\Extensions\2.0.0\System.Runtime.InteropServices.WindowsRuntime.dll"
+warn: Unity.ILPP.Runner.PostProcessingAssemblyLoadContext[0]
+      Assembly system.componentmodel.composition has duplicate hint path. Ignoring "C:\Program Files\Unity\Hub\Editor\6000.4.1f1\Editor\Data\UnityReferenceAssemblies\unity-4.8-api\System.ComponentModel.Composition.dll" in favor of "C:\Program Files\Unity\Hub\Editor\6000.4.1f1\Editor\Data\NetStandard\compat\2.1.0\shims\netfx\System.ComponentModel.Composition.dll"
+DisplayProgressbar: Compiling Scripts
+info: Unity.ILPP.Runner.PostProcessingAssemblyLoadContext[0]
+      Resolved Unity.Burst.Cecil, Version=0.11.4.0, Culture=neutral, PublicKeyToken=50cebf1cceb9d05e with Library\PackageCache\com.unity.burst@07790c2d06d9\Unity.Burst.CodeGen\Unity.Burst.Cecil.dll
+info: Unity.ILPP.Runner.PostProcessingAssemblyLoadContext[0]
+      Resolved Mono.Cecil, Version=0.11.5.0, Culture=neutral, PublicKeyToken=50cebf1cceb9d05e with Library\PackageCache\com.unity.nuget.mono-cecil@ecb9724e46ff\Mono.Cecil.dll
+info: Unity.ILPP.Runner.PostProcessingAssemblyLoadContext[0]
+      Resolved Unity.Entities, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null with Library\Bee\artifacts\1900b0aE.dag\Unity.Entities.dll
+info: Microsoft.AspNetCore.Routing.EndpointMiddleware[1]
+      Executed endpoint 'gRPC - /UnityILPP.PostProcessing/ConfigurePostProcessors'
+info: Microsoft.AspNetCore.Hosting.Diagnostics[2]
+      Request finished HTTP/2 POST http://ilpp/UnityILPP.PostProcessing/ConfigurePostProcessors - 200 - application/grpc 41.2798ms
+info: Microsoft.AspNetCore.Hosting.Diagnostics[1]
+      Request starting HTTP/2 POST http://ilpp/UnityILPP.PostProcessing/PostProcessAssembly - application/grpc -
+info: Microsoft.AspNetCore.Routing.EndpointMiddleware[0]
+      Executing endpoint 'gRPC - /UnityILPP.PostProcessing/PostProcessAssembly'
+info: Unity.ILPP.Runner.PostProcessingPipeline[0]
+      Processing assembly Library/Bee/artifacts/1900b0aE.dag/Assembly-CSharp-Editor.dll, with 138 defines and 350 references
+info: Unity.ILPP.Runner.PostProcessingPipeline[0]
+      processors: Unity.Entities.CodeGen.EntitiesILPostProcessors, Unity.Jobs.CodeGen.JobsILPostProcessor, zzzUnity.Burst.CodeGen.BurstILPostProcessor
+info: Unity.ILPP.Runner.PostProcessingPipeline[0]
+      running Unity.Entities.CodeGen.EntitiesILPostProcessors
+info: Unity.ILPP.Runner.PostProcessingAssemblyLoadContext[0]
+      Resolved Mono.Cecil.Rocks, Version=0.11.5.0, Culture=neutral, PublicKeyToken=50cebf1cceb9d05e with Library\PackageCache\com.unity.nuget.mono-cecil@ecb9724e46ff\Mono.Cecil.Rocks.dll
+info: Unity.ILPP.Runner.PostProcessingAssemblyLoadContext[0]
+      Resolved UnityEngine.CoreModule, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null with C:\Program Files\Unity\Hub\Editor\6000.4.1f1\Editor\Data\Managed\UnityEngine\UnityEngine.CoreModule.dll
+info: Unity.ILPP.Runner.PostProcessingAssemblyLoadContext[0]
+      Resolved Unity.Collections, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null with Library\Bee\artifacts\1900b0aE.dag\Unity.Collections.dll
+info: Unity.ILPP.Runner.PostProcessingAssemblyLoadContext[0]
+      Resolved Unity.Burst, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null with Library\Bee\artifacts\1900b0aE.dag\Unity.Burst.dll
+info: Unity.ILPP.Runner.PostProcessingAssemblyLoadContext[0]
+      Resolved Unity.Cecil.Awesome, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null with Library\PackageCache\com.unity.entities@55bdc42e3b8d\Unity.Entities.CodeGen\Unity.Cecil.Awesome.dll
+  - EILPP : Assembly-CSharp-Editor : : 309ms (~138ms)
+    - EILPP : Assembly-CSharp-Editor : GetAllComponentTypes: 7ms 
+    - EILPP : Assembly-CSharp-Editor : Cloner: 1ms 
+    - EILPP : Assembly-CSharp-Editor : ComponentDataPP: 13ms 
+    - EILPP : Assembly-CSharp-Editor : StaticTypeRegistryPostProcessor: 54ms 
+    - EILPP : Assembly-CSharp-Editor : WriteAssembly: 96ms 
+info: Unity.ILPP.Runner.PostProcessingPipeline[0]
+      running Unity.Jobs.CodeGen.JobsILPostProcessor
+info: Unity.ILPP.Runner.PostProcessingAssemblyLoadContext[0]
+      Resolved UnityEditor.CoreModule, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null with C:\Program Files\Unity\Hub\Editor\6000.4.1f1\Editor\Data\Managed\UnityEngine\UnityEditor.CoreModule.dll
+info: Unity.ILPP.Runner.PostProcessingPipeline[0]
+      running zzzUnity.Burst.CodeGen.BurstILPostProcessor
+info: Unity.ILPP.Runner.PostProcessingAssemblyLoadContext[0]
+      Resolved Unity.Burst.Cecil.Rocks, Version=0.11.4.0, Culture=neutral, PublicKeyToken=50cebf1cceb9d05e with Library\PackageCache\com.unity.burst@07790c2d06d9\Unity.Burst.CodeGen\Unity.Burst.Cecil.Rocks.dll
+info: Microsoft.AspNetCore.Routing.EndpointMiddleware[1]
+      Executed endpoint 'gRPC - /UnityILPP.PostProcessing/PostProcessAssembly'
+info: Microsoft.AspNetCore.Hosting.Diagnostics[2]
+      Request finished HTTP/2 POST http://ilpp/UnityILPP.PostProcessing/PostProcessAssembly - 200 - application/grpc 460.4692ms
+ExitCode: 0 Duration: 2s886ms
+[ 888/1154  0s] ILPP-Configuration Library/ilpp-configuration.nevergeneratedoutput
+[1150/1154  1s] Csc Library/Bee/artifacts/1900b0aE.dag/Assembly-CSharp-Editor.dll (+2 others)
+[1151/1154  0s] ILPostProcess Library/Bee/artifacts/1900b0aE.dag/post-processed/Assembly-CSharp-Editor.dll (+pdb)
+Processing assembly Library/Bee/artifacts/1900b0aE.dag/Assembly-CSharp-Editor.dll, with 138 defines and 350 references
+
+processors: Unity.Entities.CodeGen.EntitiesILPostProcessors, Unity.Jobs.CodeGen.JobsILPostProcessor, zzzUnity.Burst.CodeGen.BurstILPostProcessor
+
+running Unity.Entities.CodeGen.EntitiesILPostProcessors
+
+running Unity.Jobs.CodeGen.JobsILPostProcessor
+
+running zzzUnity.Burst.CodeGen.BurstILPostProcessor
+[1152/1154  0s] CopyFiles Library/ScriptAssemblies/Assembly-CSharp-Editor.pdb
+[1153/1154  0s] CopyFiles Library/ScriptAssemblies/Assembly-CSharp-Editor.dll
+*** Tundra build success (2.87 seconds), 5 items updated, 1154 evaluated
+AssetDatabase: script compilation time: 3.160263s
+Begin MonoManager ReloadAssembly
+Assembly Assembly-CSharp-Editor-firstpass.dll at Library/ScriptAssemblies/Assembly-CSharp-Editor-firstpass.dll not valid. Loading of assembly skipped.
+Assembly Assembly-CSharp-firstpass.dll at Library/ScriptAssemblies/Assembly-CSharp-firstpass.dll not valid. Loading of assembly skipped.
+Assembly Assembly-CSharp.dll at Library/ScriptAssemblies/Assembly-CSharp.dll not valid. Loading of assembly skipped.
+Assembly DocCodeSamples.dll at Library/ScriptAssemblies/DocCodeSamples.dll not valid. Loading of assembly skipped.
+Assembly MockTests.dll at Library/ScriptAssemblies/MockTests.dll not valid. Loading of assembly skipped.
+Assembly TestNewCustomAssembly.dll at Library/ScriptAssemblies/TestNewCustomAssembly.dll not valid. Loading of assembly skipped.
+Assembly TypeDependencyCacheTestAssembly.dll at Library/ScriptAssemblies/TypeDependencyCacheTestAssembly.dll not valid. Loading of assembly skipped.
+Assembly Unity.2D.Sprite.Package.EditorTests.dll at Library/ScriptAssemblies/Unity.2D.Sprite.Package.EditorTests.dll not valid. Loading of assembly skipped.
+Assembly Unity.2D.Tilemap.Package.EditorTests.dll at Library/ScriptAssemblies/Unity.2D.Tilemap.Package.EditorTests.dll not valid. Loading of assembly skipped.
+Assembly Unity.AppUI.Editor.Tests.dll at Library/ScriptAssemblies/Unity.AppUI.Editor.Tests.dll not valid. Loading of assembly skipped.
+Assembly Unity.AppUI.Tests.dll at Library/ScriptAssemblies/Unity.AppUI.Tests.dll not valid. Loading of assembly skipped.
+Assembly Unity.Burst.Tests.dll at Library/ScriptAssemblies/Unity.Burst.Tests.dll not valid. Loading of assembly skipped.
+Assembly Unity.Collections.BurstCompatibilityGen.dll at Library/ScriptAssemblies/Unity.Collections.BurstCompatibilityGen.dll not valid. Loading of assembly skipped.
+Assembly Unity.Collections.DocCodeSamples.dll at Library/ScriptAssemblies/Unity.Collections.DocCodeSamples.dll not valid. Loading of assembly skipped.
+Assembly Unity.Collections.PerformanceTests.dll at Library/ScriptAssemblies/Unity.Collections.PerformanceTests.dll not valid. Loading of assembly skipped.
+Assembly Unity.Collections.Tests.dll at Library/ScriptAssemblies/Unity.Collections.Tests.dll not valid. Loading of assembly skipped.
+Assembly Unity.Collections.Tests.Playmode.dll at Library/ScriptAssemblies/Unity.Collections.Tests.Playmode.dll not valid. Loading of assembly skipped.
+Assembly Unity.Entities.CodeGen.Tests.dll at Library/ScriptAssemblies/Unity.Entities.CodeGen.Tests.dll not valid. Loading of assembly skipped.
+Assembly Unity.Entities.ContentDelivery.Tests.dll at Library/ScriptAssemblies/Unity.Entities.ContentDelivery.Tests.dll not valid. Loading of assembly skipped.
+Assembly Unity.Entities.Editor.PerformanceTests.dll at Library/ScriptAssemblies/Unity.Entities.Editor.PerformanceTests.dll not valid. Loading of assembly skipped.
+Assembly Unity.Entities.Editor.Tests.dll at Library/ScriptAssemblies/Unity.Entities.Editor.Tests.dll not valid. Loading of assembly skipped.
+Assembly Unity.Entities.Hybrid.EndToEnd.Tests.dll at Library/ScriptAssemblies/Unity.Entities.Hybrid.EndToEnd.Tests.dll not valid. Loading of assembly skipped.
+Assembly Unity.Entities.Hybrid.PerformanceTests.dll at Library/ScriptAssemblies/Unity.Entities.Hybrid.PerformanceTests.dll not valid. Loading of assembly skipped.
+Assembly Unity.Entities.Hybrid.Tests.dll at Library/ScriptAssemblies/Unity.Entities.Hybrid.Tests.dll not valid. Loading of assembly skipped.
+Assembly Unity.Entities.Hybrid.Tests.ExcludedAssembly.dll at Library/ScriptAssemblies/Unity.Entities.Hybrid.Tests.ExcludedAssembly.dll not valid. Loading of assembly skipped.
+Assembly Unity.Entities.Hybrid.Tests.SeparateAssembly.dll at Library/ScriptAssemblies/Unity.Entities.Hybrid.Tests.SeparateAssembly.dll not valid. Loading of assembly skipped.
+Assembly Unity.Entities.PerformanceTests.dll at Library/ScriptAssemblies/Unity.Entities.PerformanceTests.dll not valid. Loading of assembly skipped.
+Assembly Unity.Entities.TestComponents.dll at Library/ScriptAssemblies/Unity.Entities.TestComponents.dll not valid. Loading of assembly skipped.
+Assembly Unity.Entities.Tests.dll at Library/ScriptAssemblies/Unity.Entities.Tests.dll not valid. Loading of assembly skipped.
+Assembly Unity.Entities.Tests.InAnotherAssembly.dll at Library/ScriptAssemblies/Unity.Entities.Tests.InAnotherAssembly.dll not valid. Loading of assembly skipped.
+Assembly Unity.Entities.Tests.InAnotherEmptyAssembly.dll at Library/ScriptAssemblies/Unity.Entities.Tests.InAnotherEmptyAssembly.dll not valid. Loading of assembly skipped.
+Assembly Unity.InputSystem.IntegrationTests.dll at Library/ScriptAssemblies/Unity.InputSystem.IntegrationTests.dll not valid. Loading of assembly skipped.
+Assembly Unity.Mathematics.Extensions.Tests.dll at Library/ScriptAssemblies/Unity.Mathematics.Extensions.Tests.dll not valid. Loading of assembly skipped.
+Assembly Unity.Mathematics.Tests.dll at Library/ScriptAssemblies/Unity.Mathematics.Tests.dll not valid. Loading of assembly skipped.
+Assembly Unity.Nuget.Mono-Cecil.dll at Library/ScriptAssemblies/Unity.Nuget.Mono-Cecil.dll not valid. Loading of assembly skipped.
+Assembly Unity.PathTracing.Editor.Tests.dll at Library/ScriptAssemblies/Unity.PathTracing.Editor.Tests.dll not valid. Loading of assembly skipped.
+Assembly Unity.PathTracing.Runtime.Tests.dll at Library/ScriptAssemblies/Unity.PathTracing.Runtime.Tests.dll not valid. Loading of assembly skipped.
+Assembly Unity.RenderPipelines.Core.Editor.Tests.dll at Library/ScriptAssemblies/Unity.RenderPipelines.Core.Editor.Tests.dll not valid. Loading of assembly skipped.
+Assembly Unity.RenderPipelines.Core.Runtime.Tests.dll at Library/ScriptAssemblies/Unity.RenderPipelines.Core.Runtime.Tests.dll not valid. Loading of assembly skipped.
+Assembly Unity.RenderPipelines.Universal.Config.Editor.Tests.dll at Library/ScriptAssemblies/Unity.RenderPipelines.Universal.Config.Editor.Tests.dll not valid. Loading of assembly skipped.
+Assembly Unity.RenderPipelines.Universal.Editor.Tests.dll at Library/ScriptAssemblies/Unity.RenderPipelines.Universal.Editor.Tests.dll not valid. Loading of assembly skipped.
+Assembly Unity.RenderPipelines.Universal.Runtime.Tests.dll at Library/ScriptAssemblies/Unity.RenderPipelines.Universal.Runtime.Tests.dll not valid. Loading of assembly skipped.
+Assembly Unity.Scenes.Editor.PerformanceTests.dll at Library/ScriptAssemblies/Unity.Scenes.Editor.PerformanceTests.dll not valid. Loading of assembly skipped.
+Assembly Unity.Scenes.Editor.Tests.dll at Library/ScriptAssemblies/Unity.Scenes.Editor.Tests.dll not valid. Loading of assembly skipped.
+Assembly Unity.Scenes.Hybrid.Tests.dll at Library/ScriptAssemblies/Unity.Scenes.Hybrid.Tests.dll not valid. Loading of assembly skipped.
+Assembly Unity.Scenes.Hybrid.Tests.Editmode.Content.dll at Library/ScriptAssemblies/Unity.Scenes.Hybrid.Tests.Editmode.Content.dll not valid. Loading of assembly skipped.
+Assembly Unity.Scenes.Hybrid.Tests.Playmode.dll at Library/ScriptAssemblies/Unity.Scenes.Hybrid.Tests.Playmode.dll not valid. Loading of assembly skipped.
+Assembly Unity.Scenes.PerformanceTests.dll at Library/ScriptAssemblies/Unity.Scenes.PerformanceTests.dll not valid. Loading of assembly skipped.
+Assembly Unity.Scenes.Tests.dll at Library/ScriptAssemblies/Unity.Scenes.Tests.dll not valid. Loading of assembly skipped.
+Assembly Unity.ScriptableBuildPipeline.Editor.Tests.dll at Library/ScriptAssemblies/Unity.ScriptableBuildPipeline.Editor.Tests.dll not valid. Loading of assembly skipped.
+Assembly Unity.ScriptableBuildPipeline.Tests.dll at Library/ScriptAssemblies/Unity.ScriptableBuildPipeline.Tests.dll not valid. Loading of assembly skipped.
+Assembly Unity.ScriptableBuildPipelineTests.Runtime.Tests.dll at Library/ScriptAssemblies/Unity.ScriptableBuildPipelineTests.Runtime.Tests.dll not valid. Loading of assembly skipped.
+Assembly Unity.Searcher.EditorTests.dll at Library/ScriptAssemblies/Unity.Searcher.EditorTests.dll not valid. Loading of assembly skipped.
+Assembly Unity.Serialization.Tests.dll at Library/ScriptAssemblies/Unity.Serialization.Tests.dll not valid. Loading of assembly skipped.
+Assembly Unity.ShaderGraph.Editor.Tests.dll at Library/ScriptAssemblies/Unity.ShaderGraph.Editor.Tests.dll not valid. Loading of assembly skipped.
+Assembly Unity.TextMeshPro.Editor.Tests.dll at Library/ScriptAssemblies/Unity.TextMeshPro.Editor.Tests.dll not valid. Loading of assembly skipped.
+Assembly Unity.TextMeshPro.Tests.dll at Library/ScriptAssemblies/Unity.TextMeshPro.Tests.dll not valid. Loading of assembly skipped.
+Assembly Unity.Transforms.Hybrid.Tests.dll at Library/ScriptAssemblies/Unity.Transforms.Hybrid.Tests.dll not valid. Loading of assembly skipped.
+Assembly Unity.Transforms.PerformanceTests.dll at Library/ScriptAssemblies/Unity.Transforms.PerformanceTests.dll not valid. Loading of assembly skipped.
+Assembly Unity.Transforms.Tests.dll at Library/ScriptAssemblies/Unity.Transforms.Tests.dll not valid. Loading of assembly skipped.
+Assembly Unity.UnifiedRayTracing.Editor.Tests.dll at Library/ScriptAssemblies/Unity.UnifiedRayTracing.Editor.Tests.dll not valid. Loading of assembly skipped.
+Assembly UnityEditor.UI.Common.Tests.dll at Library/ScriptAssemblies/UnityEditor.UI.Common.Tests.dll not valid. Loading of assembly skipped.
+Assembly UnityEditor.UI.EditorTests.dll at Library/ScriptAssemblies/UnityEditor.UI.EditorTests.dll not valid. Loading of assembly skipped.
+Assembly UnityEngine.UI.Tests.dll at Library/ScriptAssemblies/UnityEngine.UI.Tests.dll not valid. Loading of assembly skipped.
+Symbol file LoadedFromMemory is not a mono symbol file
+Symbol file LoadedFromMemory is not a mono symbol file
+Native extension for WindowsStandalone target not found
+Assembly reference Packages/com.unity.entities/Unity.Scenes.Editor/Internals/Properties/Unity.Properties.Internals.asmref has no target assembly definition
+TypeManager.Initialize took: 74ms
+ScheduleIndexationOnStartup MainProcess:True IndexOnStartup:True
+Mono: successfully reloaded assembly
+- Finished resetting the current domain, in  1.857 seconds
+Domain Reload Profiling: 2638ms
+	BeginReloadAssembly (225ms)
+		DisableScriptedObjects (6ms)
+		CreateAndSetChildDomain (147ms)
+	RebuildCommonClasses (20ms)
+	RebuildNativeTypeToScriptingClass (8ms)
+	initialDomainReloadingComplete (250ms)
+	LoadAllAssembliesAndSetupDomain (279ms)
+		LoadAssemblies (180ms)
+		AnalyzeDomain (145ms)
+			TypeCache.Refresh (112ms)
+				TypeCache.ScanAssembly (104ms)
+			BuildScriptInfoCaches (26ms)
+			ResolveRequiredComponents (6ms)
+	FinalizeReload (1857ms)
+		SetupLoadedEditorAssemblies (0ms)
+			InitializePlatformSupportModulesInManaged (12ms)
+			BeforeProcessingInitializeOnLoad (129ms)
+			ProcessInitializeOnLoadAttributes (1484ms)
+			ProcessInitializeOnLoadMethodAttributes (127ms)
+			AfterProcessingInitializeOnLoad (3ms)
+		AwakeInstancesAfterBackupRestoration (5ms)
+(Values over 0.050ms)
+Asset Pipeline Refresh (id=d214b5e8d133d8f458e1956c61a39ded): Total: 6.350 seconds - Initiated by InitialRefreshV2(ForceSynchronousImport)
+	Summary:
+		Imports: total=0 (actual=0, local cache=0, cache server=0)
+		Asset DB Process Time: managed=0 ms, native=2112 ms
+		Asset DB Callback time: managed=244 ms, native=13 ms
+		Scripting: domain reloads=1, domain reload time=784 ms, compile time=3161 ms, other=32 ms
+		Project Asset Count: scripts=1612, non-scripts=4848
+		Asset File Changes: new=0, changed=1, moved=0, deleted=0
+		Scan Filter Count: 0
+	InvokePackagesCallback: 9.766ms
+	ApplyChangesToAssetFolders: 0.318ms
+	Scan: 56.218ms
+	OnSourceAssetsModified: 0.692ms
+	CategorizeScriptCompilationAssets: 21.462ms
+	ProcessAssetsWithTransientArtifactChanges: 41.156ms
+	CategorizeAssets: 46.246ms
+	CompileScripts: 3161.232ms
+	ImportOutOfDateAssets: 1866.266ms (1862.182ms without children)
+		UnloadImportedAssets: 0.116ms
+		EnsureUptoDateAssetsAreRegisteredWithGuidPM: 0.626ms
+		OnDemandSchedulerStart: 3.334ms
+	PostProcessAllAssets: 246.428ms
+		VCAutoAddAssetPostprocess 1.761ms
+		XRBuildSystem.XRAssetImported 0.293ms
+		MonoPostProcessAllAssets: 243.992ms
+			AssetPostprocessor.OnPostprocessAllAssets 120.640ms
+			StyleCatalogPostProcessor.OnPostprocessAllAssets 40.992ms
+			UniversalRenderPipelineGlobalSettingsPostprocessor.OnPostprocessAllAssets 35.532ms
+			BuilderAssetPostprocessor.OnPostprocessAllAssets 10.175ms
+			SceneAssetPostProcessor.OnPostprocessAllAssets 4.571ms
+			WindowAssetPostprocessingWatcher.OnPostprocessAllAssets 2.202ms
+			ShaderGraphAssetPostProcessor.OnPostprocessAllAssets 1.297ms
+			ReferencedClipsPostProcessor.OnPostprocessAllAssets 1.197ms
+			SpeedTree9Postprocessor.OnPostprocessAllAssets 1.137ms
+			AssetChangedListener.OnPostprocessAllAssets 0.794ms
+			AssetEvents.OnPostprocessAllAssets 0.757ms
+			SyncVS.PostprocessSyncProject 0.754ms
+			RetainedModeAssetPostprocessor.OnPostprocessAllAssets 0.700ms
+			SpriteEditorTexturePostprocessor.OnPostprocessAllAssets 0.461ms
+			MaterialPostprocessor.OnPostprocessAllAssets 0.423ms
+			AudioMixerPostprocessor.OnPostprocessAllAssets 0.348ms
+			ArtifactBrowserPostProcessor.OnPostprocessAllAssets 0.337ms
+			TMPro_TexturePostProcessor.OnPostprocessAllAssets 0.285ms
+			InputActionAssetPostprocessor.OnPostprocessAllAssets 0.228ms
+			TextAssetPostProcessor.OnPostprocessAllAssets 0.207ms
+			PostProcessor.OnPostprocessAllAssets 0.200ms
+			ModelAssetProcessor.OnPostprocessAllAssets 0.193ms
+			AssetProcessor.OnPostprocessAllAssets 0.189ms
+			InputActionJsonNameModifierAssetProcessor.OnPostprocessAllAssets 0.162ms
+			TerrainToolbarOverlayPostProcessor.OnPostprocessAllAssets 0.135ms
+			AssetDatabaseCallbacks.OnPostprocessAllAssets 0.116ms
+			ProjectSettingsPostprocessor.OnPostprocessAllAssets 0.111ms
+			ConfigAssetsTracker.OnPostprocessAllAssets 0.089ms
+			SpeedTreePostProcessor.OnPostprocessAllAssets 0.086ms
+			RenderPipelineGlobalSettingsPostprocessor.OnPostprocessAllAssets 0.056ms
+			ScenarioDriftAssetsTracker.OnPostprocessAllAssets 0.056ms
+	PostAssetChangesProfiler: 2.102ms
+	UnloadStreamsBegin: 1.696ms
+	PersistCurrentRevisions: 0.123ms
+	GenerateScriptTypeHashes: 1.718ms
+	GenerateScriptTypeSerializationHashes: 3.567ms
+	Untracked: 893.904ms
+
+Application.AssetDatabase Initial Refresh End
+Shader Hidden/ChartRasterizerHardware is not supported: GPU does not support conservative rasterization
+Scanning for USB devices : 36.343ms
+Initializing Unity extensions:
+[MODES] ModeService[none].Initialize
+[MODES] ModeService[none].LoadModes
+[MODES] Loading mode Default (0) for mode-current-id-Forever engin
+Unloading 269 Unused Serialized files (Serialized files now loaded: 0)
+Unloading 7331 unused Assets / (8.6 MB). Loaded Objects now: 7992.
+Memory consumption went from 270.1 MB to 261.5 MB.
+Total: 10.307100 ms (FindLiveObjects: 0.600000 ms CreateObjectMapping: 0.187600 ms MarkObjects: 6.446700 ms  DeleteObjects: 3.071100 ms)
+
+[ContentGenerator] Starting full content generation...
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace ()
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+ForeverEngine.Editor.RPG.ContentGenerator:GenerateAll () (at Assets/Editor/RPG/ContentGenerator.cs:15)
+
+(Filename: Assets/Editor/RPG/ContentGenerator.cs Line: 15)
+
+[SpellGenerator] Generating 205 spells...
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace ()
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+ForeverEngine.Editor.RPG.SpellGenerator:GenerateAll () (at Assets/Editor/RPG/SpellGenerator.cs:27)
+ForeverEngine.Editor.RPG.ContentGenerator:GenerateAll () (at Assets/Editor/RPG/ContentGenerator.cs:19)
+
+(Filename: Assets/Editor/RPG/SpellGenerator.cs Line: 27)
+
+Asset Pipeline Refresh (id=2ea573a25bebf794b821556853990a8b): Total: 0.069 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=64e5c75624a2313498a90586f64f65c1): Total: 0.032 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=3d7444a2f21fa8245862ffbc3be4d6bf): Total: 0.032 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=c60a6024db3946b4c829e4f88d4a325d): Total: 0.028 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=13a5c60a2cfc3af4282a054458d30efd): Total: 0.026 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=c00d070743f7c664fb0ab1490ae6a3d5): Total: 0.035 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=dbe33b81965a94f40ab9f69c1b3a66d1): Total: 0.032 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=73b8f8dbda795f841b96c2b74d93a55e): Total: 0.034 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=9f638857aa2991545b472a69d5e8b604): Total: 0.028 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=34f3e04e6c518be4ca79797f3c3aba9f): Total: 0.031 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=117f736af327b464b96f2414a0c2455d): Total: 0.029 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=27d2b9ac358fd2f409fbe45076825f5f): Total: 0.030 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=2cfba46a779fa5940bd20d12b0f0d46c): Total: 0.031 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=61e4ee5f262756943bef2ee8caaebc2e): Total: 0.041 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=bf3e24479f643f2489055c7970897c1a): Total: 0.028 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=a3f1aa227d15e8e45b8eeade64cde224): Total: 0.029 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=232093b9eb44d114080a91d62690fc96): Total: 0.033 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=fb3c5056e0924c74f9427c4296d2bffc): Total: 0.028 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=dd577fbc41a28de44aa6fe284f7df085): Total: 0.025 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=6d78492d07b02bc41aea1769cef8f6f2): Total: 0.026 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=ddd8b9eebe3140f4aa415f44608e0368): Total: 0.026 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=22d0abd76584a584094fe9826a893c74): Total: 0.031 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=fdb9ed309c972cf48a93275f7d849ba7): Total: 0.030 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=83e3e2e9c83629043949d2c5f4fdbea8): Total: 0.027 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=e2e410ad34f0cfa419b8d8edaefbddae): Total: 0.026 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=bc875399cf42b2846a2abf1899c8a885): Total: 0.028 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=927f34b2f36a43342833cca32e61b288): Total: 0.027 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=a5fbeb2bc203a1f40a89f5149afd6089): Total: 0.029 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=78ab27729b7886d4e98b68f1e7785db8): Total: 0.031 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=d99908d66347cde468eac2aeeade6f25): Total: 0.027 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=05564a1e313eae04db7888a074f185b9): Total: 0.027 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=d471c6530013afa488ff65d7d1707ad2): Total: 0.037 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=9d8022c45bdde074897bf0ab56589227): Total: 0.029 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=e65dddf2685c1c1479d7948f99ed1ae5): Total: 0.028 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=dfea9b23845594a4c8ea7d83c01c9a16): Total: 0.028 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=f9b1808e9aa68884791b7b16bb8ce874): Total: 0.026 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=d176598f6b49ec84faaa688fe0656c93): Total: 0.025 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=daaf64f1053ef204b8b6dcc6a77c7558): Total: 0.029 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=583a178b922679849a3d067b6711ab98): Total: 0.027 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=c901a00e97d2d484cb19cbdc5e990614): Total: 0.028 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=e789e7c3404e0da42a8169991481c74d): Total: 0.027 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=1579a7fecb41c9348900ad7469595b15): Total: 0.028 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=ba56122b967d6fb4dae7269fd72da787): Total: 0.026 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=47feb289edb6e3f42844bc994cff990b): Total: 0.025 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=220e99d0f501aa14b9d7a948aca298bf): Total: 0.025 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=0e6b449a15f7ae5408193e801c14d48c): Total: 0.024 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=47b8301a886279d4bb0ec7391f4f4652): Total: 0.025 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=cd4f7f11be76ff64188b28412c756bb0): Total: 0.025 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=e2308c60f3ab228478238003cf5609c2): Total: 0.024 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+C:\Dev\Forever engin\Assets\Scripts\ECS\Systems\TrapDetectionSystem.cs(130,13): Burst error BC1016: The managed function `Unity.Collections.FixedString32Bytes.ToString(Unity.Collections.FixedString32Bytes* this)` is not supported
+
+ at ForeverEngine.ECS.Systems.TrapDetectionSystem.TriggerTrap(ForeverEngine.ECS.Systems.TrapDetectionSystem* this, ref Unity.Entities.EntityCommandBuffer ecb, Unity.Entities.Entity trapEntity, Unity.Entities.RefRW`1<ForeverEngine.ECS.Components.TrapComponent>* trap, Unity.Entities.Entity playerEntity, ForeverEngine.ECS.Components.StatsComponent* playerStats, ForeverEngine.ECS.Components.CharacterSheetComponent* playerSheet) (at C:\Dev\Forever engin\Assets\Scripts\ECS\Systems\TrapDetectionSystem.cs:130)
+ at ForeverEngine.ECS.Systems.TrapDetectionSystem.OnUpdate(ForeverEngine.ECS.Systems.TrapDetectionSystem* this, ref Unity.Entities.SystemState state) (at C:\Dev\Forever engin\Assets\Scripts\ECS\Systems\TrapDetectionSystem.cs:102)
+ at ForeverEngine.ECS.Systems.TrapDetectionSystem.__codegen__OnUpdate$BurstManaged(System.IntPtr self, System.IntPtr state)
+ at ForeverEngine.ECS.Systems.TrapDetectionSystem.ForeverEngine.ECS.Systems.__codegen__OnUpdate_00000455$BurstDirectCall.Invoke(System.IntPtr self, System.IntPtr state)
+ at ForeverEngine.ECS.Systems.TrapDetectionSystem.__codegen__OnUpdate(System.IntPtr self, System.IntPtr state)
+
+
+While compiling job:
+Unity.Jobs.IJobExtensions+JobStruct`1[[ForeverEngine.ECS.Jobs.CombatJob, ForeverEngine, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null]], UnityEngine.CoreModule, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null::Execute(ForeverEngine.ECS.Jobs.CombatJob&, ForeverEngine, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null|System.IntPtr, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089|System.IntPtr, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089|Unity.Jobs.LowLevel.Unsafe.JobRanges&, UnityEngine.CoreModule, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null|System.Int32, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089)
+Unity.Jobs.IJobParallelForExtensions+ParallelForJobStruct`1[[ForeverEngine.Genres.RTS.RTSFogOfWar+DimJob, ForeverEngine, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null]], UnityEngine.CoreModule, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null::Execute(ForeverEngine.Genres.RTS.RTSFogOfWar+DimJob&, ForeverEngine, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null|System.IntPtr, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089|System.IntPtr, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089|Unity.Jobs.LowLevel.Unsafe.JobRanges&, UnityEngine.CoreModule, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null|System.Int32, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089)
+ForeverEngine.ECS.Systems.EncounterTriggerSystem, ForeverEngine, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null::__codegen__OnUpdate(System.IntPtr, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089|System.IntPtr, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089)
+ForeverEngine.ECS.Utility.DiceRoller, ForeverEngine, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null::Roll(System.Int32, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089|System.Int32, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089|System.Int32, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089|System.UInt32&, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089)
+ForeverEngine.ECS.Systems.TrapDetectionSystem, ForeverEngine, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null::__codegen__OnUpdate(System.IntPtr, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089|System.IntPtr, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089)
+ForeverEngine.ECS.Systems.RestSystem, ForeverEngine, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null::__codegen__OnUpdate(System.IntPtr, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089|System.IntPtr, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089)
+ForeverEngine.ECS.Utility.DiceRoller, ForeverEngine, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null::AbilityModifier(System.Int32, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089)
+Unity.Jobs.IJobParallelForExtensions+ParallelForJobStruct`1[[ForeverEngine.ECS.Jobs.AIDecisionJob, ForeverEngine, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null]], UnityEngine.CoreModule, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null::Execute(ForeverEngine.ECS.Jobs.AIDecisionJob&, ForeverEngine, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null|System.IntPtr, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089|System.IntPtr, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089|Unity.Jobs.LowLevel.Unsafe.JobRanges&, UnityEngine.CoreModule, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null|System.Int32, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089)
+Unity.Jobs.IJobParallelForExtensions+ParallelForJobStruct`1[[ForeverEngine.ECS.Jobs.FogRaycastJob, ForeverEngine, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null]], UnityEngine.CoreModule, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null::Execute(ForeverEngine.ECS.Jobs.FogRaycastJob&, ForeverEngine, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null|System.IntPtr, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089|System.IntPtr, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089|Unity.Jobs.LowLevel.Unsafe.JobRanges&, UnityEngine.CoreModule, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null|System.Int32, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089)
+ForeverEngine.ECS.Utility.DiceRoller, ForeverEngine, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null::Xorshift32(System.UInt32, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089)
+ForeverEngine.ECS.Systems.ConditionSystem, ForeverEngine, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null::__codegen__OnUpdate(System.IntPtr, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089|System.IntPtr, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089)
+Unity.Jobs.IJobParallelForExtensions+ParallelForJobStruct`1[[ForeverEngine.Genres.RTS.RTSFogOfWar+RevealJob, ForeverEngine, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null]], UnityEngine.CoreModule, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null::Execute(ForeverEngine.Genres.RTS.RTSFogOfWar+RevealJob&, ForeverEngine, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null|System.IntPtr, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089|System.IntPtr, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089|Unity.Jobs.LowLevel.Unsafe.JobRanges&, UnityEngine.CoreModule, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null|System.Int32, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089)
+Unity.Jobs.IJobParallelForExtensions+ParallelForJobStruct`1[[ForeverEngine.ECS.Jobs.PathfindJob, ForeverEngine, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null]], UnityEngine.CoreModule, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null::Execute(ForeverEngine.ECS.Jobs.PathfindJob&, ForeverEngine, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null|System.IntPtr, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089|System.IntPtr, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089|Unity.Jobs.LowLevel.Unsafe.JobRanges&, UnityEngine.CoreModule, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null|System.Int32, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089)
+Unity.Jobs.IJobParallelForExtensions+ParallelForJobStruct`1[[ForeverEngine.ECS.Jobs.FogDimJob, ForeverEngine, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null]], UnityEngine.CoreModule, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null::Execute(ForeverEngine.ECS.Jobs.FogDimJob&, ForeverEngine, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null|System.IntPtr, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089|System.IntPtr, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089|Unity.Jobs.LowLevel.Unsafe.JobRanges&, UnityEngine.CoreModule, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null|System.Int32, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089)
+Asset Pipeline Refresh (id=e7dd4913b4915c141a4786162ffdb34a): Total: 0.024 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=5be71dd578040c3419f5320df29ae27a): Total: 0.026 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=2f3b50e7572e2704e96e4cdc46988043): Total: 0.024 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=0049bc513f9fb9049a446b2554065162): Total: 0.025 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=450a5b96bc3ed96459a68a251a586e8d): Total: 0.026 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=fd5af54657f05844e870545d219db798): Total: 0.024 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=ea99829d35c9e8b4bbae8898c07c75c5): Total: 0.023 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=fdb032d3d7b55af419e3da3433c1e5ac): Total: 0.026 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=456cce827f59f2d47bf2d6573970b9ad): Total: 0.023 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=8e63154c589971e4198fa5e68e25d477): Total: 0.024 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=8b61ab4dc911a2543a875e892bf3c087): Total: 0.024 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=8b7feda33959dcd46ae7b6f4ffe21c39): Total: 0.024 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=3f411ef0063aaac42b8bc3cbf641788e): Total: 0.024 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=a0af8cdfafaa2524db6751e754f68366): Total: 0.025 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=37a9fd6276bc2f94fb28deb19de02047): Total: 0.025 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=5c58bc19652c8cf46a338e0790d1fd73): Total: 0.025 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=4e1931b79ae075f4b974cf2658edaac3): Total: 0.028 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=7f40adbc6c2a0a446b2a99a36c074b75): Total: 0.025 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=fd92babe721ca144b89af20421bebdc0): Total: 0.026 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=15cecb153c243fd498feabfd91f53f8d): Total: 0.025 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=cf44a4841cda599428b77749a17b5996): Total: 0.029 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=825b94bf24ea3364cb7997e747e4db9b): Total: 0.030 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=9813fa4d08ac07d40b473e57808644ac): Total: 0.037 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=12adeb73c5f9b0e46b0ade134ba28a5e): Total: 0.031 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=34279a2160947c04c821558b23b64ef5): Total: 0.118 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=81b60b423a9795a40b890c1eb771c80f): Total: 0.080 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=7e910fff706f74b4289d9f7e05c5c6a4): Total: 0.039 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=98fc583ad16bf6d4d8556835bf98ffe6): Total: 0.031 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=f30218467dd19cf439bdcf57bdf96f9e): Total: 0.027 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=5c4acd49e25277b4aab78b4d8eef8661): Total: 0.026 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=0cff1c803b1973b43b8dd0405b40be6a): Total: 0.026 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=54781755d32bf844dae0d29cc787ef90): Total: 0.026 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=3400e41ccfe916242adc77be898ca8c1): Total: 0.029 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=05ff2d6d0fedb23458bac720a89820a4): Total: 0.027 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=0336f3ed2116bc14993434a3aad80624): Total: 0.024 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=aa4aac417a9625d40aada5e58ab767ae): Total: 0.025 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=a3237aff5b1a6044e80d8accc8445190): Total: 0.025 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=282dcd78bb2b9dc46a27d240917d8141): Total: 0.027 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=2c80464fbd7d4f64884cfffdcfa46391): Total: 0.031 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=a1c883115c779334ca419d6c2ef2ab77): Total: 0.025 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=0cdfeee36d9b57749bfb7ea45c0449d3): Total: 0.024 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=1bcbd907d85c7824193288565b520e39): Total: 0.025 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=3efe281ba33e8ff4cba77551d8335715): Total: 0.024 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=05ff74d7a90f5474e8c310497a4776a4): Total: 0.028 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=dd8ad34a82ab71c43b431a4bd59ad7ba): Total: 0.029 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=fad0cbde34185d045a7311c51ce93cff): Total: 0.026 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=9c417be69daf97546a0218015bcf013d): Total: 0.024 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=15de17b9b8818354a8b3516ed71f53c5): Total: 0.024 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=7a0b2695078b8e544884424536ee5a32): Total: 0.027 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=8727d5c151bb1004184aafef5427de7f): Total: 0.032 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=e225d26c5ed056c4983e24473fe3f39b): Total: 0.029 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=802b60a1f4b38a24aa287f6889640769): Total: 0.029 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=618e44bb04b929e429db1129b6c4205d): Total: 0.029 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=f8ece4bcbf7207f41b4679a300d5aa34): Total: 0.034 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=bcea9322211112a4ab7b2d9092e745bb): Total: 0.036 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=046eefff5f59f0e4886dae1e0c414e40): Total: 0.031 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=0b2aa76cba3aedf4da28565e49206a9d): Total: 0.030 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=323f5d78063335c408f54d8870c38195): Total: 0.032 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=d638e54765d76e64883894d603e196c7): Total: 0.036 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=063b6ea0835a02847a38489d284b8220): Total: 0.035 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=9dd3a1a952f88b445bd964dbef190d54): Total: 0.031 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=e7b1d17e955c3914b9e5205021243994): Total: 0.027 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=1fb6c9c2c0bce054295968bf904b4aeb): Total: 0.026 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=9e659736653c1a4438b7ff5e044ef384): Total: 0.029 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=0b3afc4d2c0b17d4393a5cba10035bf1): Total: 0.032 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=8524af4ef44bfe443adc4aad3a15f769): Total: 0.029 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=5d828279ea182b143972de4e73c01f37): Total: 0.027 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=234f465d6d1599142b28a923f76d1dbd): Total: 0.028 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=00518bf2a7a613c488c97becacca1c80): Total: 0.028 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=1ca3824e5443bcb45b33a221c4be026b): Total: 0.027 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=aa2e9ec77af79334db340f204b2ba026): Total: 0.029 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=d66dd6b5c0e38f84da9534c9d1fa52d4): Total: 0.031 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=73eebeb67f13f9f499bf846e41c7cd2e): Total: 0.028 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=55cebcf4a94890642adf40ab0a5ffea0): Total: 0.028 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=c156a43af4b34f54b9030976e1658734): Total: 0.030 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=ae90fb90e7afd6e4c8fe16d5fd7f392b): Total: 0.030 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=b6cbe85c978fab04b9dab878bc38527b): Total: 0.029 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=6eab8dbd9b81189418a14504c6b7a244): Total: 0.026 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=3fb43985e8bddc44885103bec43f384c): Total: 0.026 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=f9025181fd1f6294296ee28db40a0340): Total: 0.026 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=f561cf3cda0cc074bab5e67631cd257f): Total: 0.026 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=69aa83c4c7be47c4cb87021c0660638c): Total: 0.026 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=a381a3d1c1ec8d94aaee1e841d91071b): Total: 0.026 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=d9c200549be5584409732e9586cf8a24): Total: 0.024 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=f29a495d22bcdf6439822f4da0cb5e51): Total: 0.026 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=ccb92bf652dbf9e4fb890e2cd0edd06a): Total: 0.028 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=9efdbe35e7946dd4a96421fc85ae3a92): Total: 0.026 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=69685e26fb29cce4980bbfac0cc8d8ab): Total: 0.027 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=beb408b217ef2f44388893170c6d87aa): Total: 0.025 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=fcee14f9c8cfab242af2bea882ac3dc8): Total: 0.025 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=dddd7e5364dc685459019492887d7d85): Total: 0.025 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=7f9a79ba8841dde40a63f56001058c63): Total: 0.025 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=90363a66d5e096d4b93b25ed0de82dd5): Total: 0.025 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=735f6ce12b442a64f88811b9a21811f8): Total: 0.024 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=9af5170f8b62c0f4b85e782da1373667): Total: 0.024 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=6fd301f2c48e5834fa818bdde394320b): Total: 0.026 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=fc85e35648f539746bb0fe2827952c24): Total: 0.033 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=49b13ccccd671bb4392df5abf8dd16e7): Total: 0.028 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=f109060a883a62a43826121447b31f35): Total: 0.024 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=502b72f602a2c8c4aaccfe5f75249f7f): Total: 0.025 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=e1337fd207ebb6946886f487ce8da4c9): Total: 0.024 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=af1e9572c1fde834292b53aad585225b): Total: 0.025 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=e0d41602f0b2026498d6dd09f041c5e2): Total: 0.024 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=80d84f51be33a6942869033ab33d6b6c): Total: 0.024 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=b9a9270450643f54ca52dbe3246cef1e): Total: 0.025 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=879fd8532dec5b846a3bb743447650f6): Total: 0.023 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=12a5e4dc9ada4f34ca561b5723fe238d): Total: 0.025 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=6b0cdb15f7fabb84e80be46135ab3106): Total: 0.025 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=8f86d459c0d900a42a23152eb2fd3d33): Total: 0.024 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=c533131ff5ea7cb46aff84990ce9892c): Total: 0.025 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=e90bf17456725db4094e7e79f5c1b931): Total: 0.025 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=f12db0f70158c994c8807534079e02be): Total: 0.023 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=7f4b70400f333e54a904f6335e658578): Total: 0.024 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=1ccfb046353148f4baad37a5910e4a1a): Total: 0.024 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=113784f2b9751ef41b66bb2621d28925): Total: 0.024 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=4ed3313db4ec7bb44b4c97bcf937a416): Total: 0.024 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=563407058be2b514493d52fa135f058a): Total: 0.024 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=f57313d4c0383ce4bbd2edd1510273ed): Total: 0.023 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=ec0bc97bce884cc4e9499915fca0a441): Total: 0.023 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=431bdd84153e98c4999b7983d228cd32): Total: 0.025 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=9ac4ab18e1d2be948a0e8f9bf9bfd713): Total: 0.025 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=1876d53f5a199b545b1e1dae2d7b87da): Total: 0.025 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=cbfe8efc91f6ac94eac6f639f7cc52a8): Total: 0.024 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=f027f9912cda66b4e98130496493ccd0): Total: 0.024 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=199b577b68ea0b942bb7f92afa6181b4): Total: 0.023 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=9fcb9fdee89b56a489a2bc83026f722f): Total: 0.026 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=181157223154d804bbb9f73e8d158f2d): Total: 0.028 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=343a1c7e07a361f42b86a36d68521375): Total: 0.027 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=f65106e9ffd9bb242b93b2517ddb9f56): Total: 0.025 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=31b642cef4f5b9a43b4698d9900dc923): Total: 0.024 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=f2033360e8e67da418fdcae60f6c8a46): Total: 0.024 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=b8011c1d1fa65504fbc915aa28d7efe6): Total: 0.025 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=e149e386e4f4805419441d4018cfd3ac): Total: 0.024 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=0f9bf3e01b652f74983036fc0630643c): Total: 0.023 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=5e0c0391318d3a748a786093faa170ac): Total: 0.023 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=4cae059cb79f12d4ab024d86b580c3c0): Total: 0.023 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=ca358fba9d896344384109547e03ce65): Total: 0.024 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=5524ecf4245c6fd4cacefe8f17e8853b): Total: 0.024 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=dc5556ad0b001884b98987ab41da6bb7): Total: 0.024 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=900e3293abd24c549abf33b8da31fb73): Total: 0.023 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=dba0293ae7c1815438dcc3034ba9d902): Total: 0.024 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=eedc6f0998f780c41bc19ad2727a3ef1): Total: 0.025 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=64fb19e62e745564b8241cc75b676be0): Total: 0.023 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=8abc4bab800501249958c9d6249e7ea3): Total: 0.023 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=ca569d67164bcda479e127fe88df3196): Total: 0.024 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=82f79ae15d3b8e848ae6ea2f3508f90e): Total: 0.023 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=89daff68871423148b498689b388b871): Total: 0.023 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=3f7e390b9d5c4d545865f0226ebaecfc): Total: 0.025 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=5fbd9c6f771c40043ba7f636d180d06d): Total: 0.023 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=6a449e2a6228eb94cbb9a41fbaad74de): Total: 0.041 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=967a527f9a3efe74b9eae576959d2b66): Total: 0.026 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=584de9030b5569644b4966f9562e99bd): Total: 0.024 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=93ebd7a925babb54e8cf447a1b8f4a04): Total: 0.023 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=fb151a71e8e050a41a7f6c6ce743bc75): Total: 0.024 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=003b9c6df9f200f4196499fc1c5fba71): Total: 0.023 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=010abe0929966f840b60f5501278b786): Total: 0.024 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=b8df19dcc647c6d4caa74e166042f608): Total: 0.025 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=bbf4909d83264ac489234f71e8f019b7): Total: 0.020 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=014a75b39dc19624691faf13e28e4433): Total: 0.022 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=47a3d2c94fe22de4ca19cc208f8cca8d): Total: 0.021 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=9560c87db8bc49342b1447349310c6c5): Total: 0.020 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=a57c39cf20acd9945a2effb840b37d48): Total: 0.020 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=b2eee9b4bdfd6a44280639f3c4628e4c): Total: 0.026 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=0e315f25e23b77240a1c629977aa9cd0): Total: 0.021 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=92afbbfa3ff147d45a425c2c191a8d7d): Total: 0.023 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=85af59866698d384a8fb95b0a437f898): Total: 0.021 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=497e1739adeffe14b915656d25943069): Total: 0.021 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=e1d54add477844047ade52ad6ab0f617): Total: 0.021 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=1c62fb07749b72f41b4dbd905d597463): Total: 0.021 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=765b5eeabd97e654285043fcc1ce1b8f): Total: 0.027 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=dccfc3649133c524e969f4fd606a886a): Total: 0.022 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=e69b5bf42dd2dc94aab3d71530a9a832): Total: 0.021 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=74d0451af2554454da8854a6219f4f60): Total: 0.024 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=57eaa2322153f1741871be2b321f3601): Total: 0.021 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=568a0e9f800bb4b42a1fd18e75c97835): Total: 0.021 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=d50446ed39b822c4a820ffb7f54b5cc3): Total: 0.021 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=619d9be601c949541a53d190ede4a75f): Total: 0.020 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=d2b01fea8ef392241b87f63fa462ae59): Total: 0.019 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=4826711c6df21404d9bccd853fe0dc1d): Total: 0.020 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=22fcce98bdcca1248b8eed939bfa84a1): Total: 0.024 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=676a9760fdc4e44418e2d83f4ef8efd1): Total: 0.024 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=af83a90f59089394cb673f687d8b5394): Total: 0.023 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=8606dfd68c6fa484b8177d4feadfe9b6): Total: 0.024 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=c30c7cd1e27ea9642a1b7f5f0fa0e69e): Total: 0.021 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=dc152da3ff7f4fd4f92cfc19c961c841): Total: 0.024 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=8f8ef412280cfef44ad5e286950503d9): Total: 0.022 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=9469b76b5797c4a4da47f9eecc262dcb): Total: 0.020 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=908f433f06300a84496c0e1799bf262a): Total: 0.021 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=3c1309947a43be64f968b20afc526f69): Total: 0.022 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=74d5534690ce9a64b827987baec614c9): Total: 0.025 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=34c90f71286f17e4192a68a5e0177252): Total: 0.020 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=2a492d878afe28848ae52adb53de5078): Total: 0.020 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=ec1dcdb03b2e85349bbd0a42bddd614c): Total: 0.023 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=46727d2a21e413541b3e21bb4769f148): Total: 0.020 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=2a2beed1e64580c48a4d347c851f8fcd): Total: 0.020 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=e9e00113a8e7c594abcbfc39e4bc0ccd): Total: 0.020 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=5a61c160bc63f12418c3dd19928cf941): Total: 0.024 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=31b611e13ab02a042a652fb78cf1f78b): Total: 0.020 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=dd99f8ec7961b40479d2bb730ac0afc6): Total: 0.020 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=4a0bf13d71eb900439cbdfcbe16d23d9): Total: 0.020 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=faa4a02546285244c92f027d8f75e31a): Total: 0.020 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=1b9eb356392130b42b9052b24083c4f6): Total: 0.021 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=5e2934f28d21e5b4aa299f46f05c2810): Total: 0.020 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=7a0f83c59906ba8419fef7a8fa8964ab): Total: 0.020 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=0de88defbde35bf43adb6d7126a694d9): Total: 0.020 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=72c59279977c9e94daa67d16064d9641): Total: 0.020 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=3c58cf63a2256f9449bee39b0cf166cb): Total: 0.020 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=e2da26dae52c6ca49a32cd69f27270f1): Total: 0.020 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=225f338735d1ac24abae499ebb86acd0): Total: 0.022 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=fab5c5cadc3ecff45aa5eb66ee762d9a): Total: 0.025 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=7d449593f8a52ea489ecebf5bdecf0a3): Total: 0.024 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=94f9e6fd3fddd7f4ca7d3dd6d40b90fd): Total: 0.022 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=5877bbde459175a46b5ee2887cd51530): Total: 0.020 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=ddd151cb900de4f46a3ade2d9b52e7a0): Total: 0.021 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=84e0afcc1aab30a499703b756e616b3f): Total: 0.020 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=17d4ca3ae15a5414d9789adf899ea303): Total: 0.022 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=70f48070dca57e94d84417fbc6de1842): Total: 0.027 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=66fb9cba4359ecf428aa8d8aa5bfc105): Total: 0.022 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=66d4f3acfd739794b8c082111d8282b2): Total: 0.021 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=9a6cd49bb146e5c43bd8b716bb912556): Total: 0.020 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=1158930eda4033442a94974c3ef40f5f): Total: 0.023 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=d35d5bf49694fb8449f36626c558cd0a): Total: 0.023 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=72790daff630d7d41ab50dfa6d751c58): Total: 0.023 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=65fe7e706ef7450498daa8e828d035c0): Total: 0.020 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=12ac2a374f7730244a3eaf8ae107f9f8): Total: 0.022 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=b381a03f3b61ce4479184a75779a15f4): Total: 0.021 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=d142f2674a381ce40bdc6b3770dfa24c): Total: 0.020 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=069895ac651b58a41bf92b26c11ebc96): Total: 0.020 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=cd4e6a09b0fb8054f9cd7adc342c3930): Total: 0.021 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=7e5fdaf5652f8c341b1b9b6007a4cc70): Total: 0.021 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=4ea6fa150def5c143ad03fe8e69a6de4): Total: 0.020 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=83c60a4b318ff7f49aec26fe9ebeeae9): Total: 0.020 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=29c3a059b8ab7e44cb108c36dfc49c87): Total: 0.025 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=0ecdc61363e022248b31812e4cc42ece): Total: 0.020 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=d6e0b7ba1f1716b428f9dd4a9f2d9e61): Total: 0.020 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=a21fa2a0a8c4498458a68beda75330b9): Total: 0.023 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=4dd8445df644aa4498197f166e68be47): Total: 0.020 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=63df8f807dcf4b74084f52439060589a): Total: 0.021 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=12346795ec209504eb1c4f2a7366d2a3): Total: 0.020 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=a174655bef8fd7d4b96db33924a9e7ed): Total: 0.020 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=fdc3697403025a9499ea3308e21b493e): Total: 0.021 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=066bff175f6be4942b3e1e312bbe0976): Total: 0.024 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=a41b599356ae5114c97ffa3270cec2c5): Total: 0.020 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=eae4e66c4aa3a7c4da95593ef44db8fa): Total: 0.023 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=8844e3f9d1af3e944b1c6c215ea3b638): Total: 0.019 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=8c84cb04bb47f3b43afa3d4f97b295d1): Total: 0.019 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=7d63c85efd25a894fa62aab64edd364c): Total: 0.020 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=fd127d8b6de999a4bb5faf01b0f06b10): Total: 0.020 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=b454bc38ddad2bd4098c23d341551104): Total: 0.021 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=1f673ada558f57349a7ba7b0d7991582): Total: 0.024 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=9e6459a27b4663b4ca39da0ce5dfab22): Total: 0.022 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=72ab9dbdddcbd604a9bb944d1e905a78): Total: 0.025 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=80c44ae36f488a749b3d9a074793d619): Total: 0.021 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=404fe6c0cfb674f448e214ac35fdeb17): Total: 0.021 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=bee24b82c342f374ca8132d1265c1f88): Total: 0.020 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=2fc3d2bcec4975f4c864e9abab1fb22d): Total: 0.019 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=ce95a0e79cb2cfd42a1b24aaf26178c3): Total: 0.026 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=f905dda4bf8609743bc88e50fc128200): Total: 0.024 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=3466dd8339867f04ba2575cccd5d6ecf): Total: 0.022 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=9ba030474c32a8a4fa37db492efe774a): Total: 0.025 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=8f27119e5bd1b314298b6fd1aef25502): Total: 0.026 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=f0a58696218b0ed40b4ed5c955983e9b): Total: 0.023 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=fd6330b78d0f18945801f71b0a3cf8a0): Total: 0.025 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=0e1f3486f20377042842f130e1b64fb1): Total: 0.020 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=29578929b01e2d14aa0491bc254030b1): Total: 0.021 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=e06f9bd41274bf046b255d2cb591019b): Total: 0.019 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=c256351805d97494891ac5d1a1ad154e): Total: 0.020 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=8718133654102f34f8fd4e5433f7d578): Total: 0.020 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=bca584720ac33be4f8208378655e15b9): Total: 0.021 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=4b08723a990c7d54297195aa18584a64): Total: 0.020 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=06c6bcc6421d2d74b8d090a06ba05ea1): Total: 0.020 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=9535ab4e325c8bb43bf1d5540603b970): Total: 0.020 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=b4776376139b6e946a24fa251b977640): Total: 0.020 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=044b570e9709aa147b4e9ea370ee2ed1): Total: 0.020 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=530927ac26627764891285bd382a88b2): Total: 0.024 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=b610423f8006a8d459d81dd643f0efad): Total: 0.021 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=3b6da2b06502a41409376ab9aefb466c): Total: 0.021 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=0bac527e8eb5e2242b459793b1637e3b): Total: 0.020 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=164de1a937d9f8649a3b5f4bffa94768): Total: 0.020 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=d72678e402b4bee40a472689d89eec31): Total: 0.024 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=10c200a4dacf6ae41bf21235beb99bff): Total: 0.022 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=105c040ac48166e4b84c3dfba1bf8f61): Total: 0.020 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=3dbe5ecb24b4dc542b7cd08d52e26ca7): Total: 0.019 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=650ddb29b9f24004eacc3b4a8640901f): Total: 0.023 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=de545bec6f70e6b4091c9fea140c9618): Total: 0.025 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=40d8121276a2c794eabf11b3276082d3): Total: 0.024 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=045f7656f277648438c2f654e3830a5c): Total: 0.021 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=d18e5d0f7af52c24282a657a1ec14d47): Total: 0.020 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=8b6c825afc97cbe4585da6e80553e20e): Total: 0.021 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=c59e990b53e45054f9630e6c6980d51b): Total: 0.022 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=c4b6a2f8df8483546b5876e61cf79fda): Total: 0.029 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=599e1dc4d90a3ef48839760359f803a1): Total: 0.026 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=626c73b901217124e9c00ac27c61e62d): Total: 0.025 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=52c7fbbc76262bc4196cd824f6458a83): Total: 0.021 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=161ac8aa1aa98b248838f176794f033e): Total: 0.024 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=cea0581eaf301294ca8e77049d969aea): Total: 0.023 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=2a42f084232e52f47965fd57a2401400): Total: 0.025 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=525175bc62bd7404ab1b9d8c3fa6db12): Total: 0.023 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=13f0409b5ef72a64a99f74bc0af2b961): Total: 0.024 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=a82f99a881bc4d9448dc5a9225958aae): Total: 0.023 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=4eed74a6f80b07842b0981a69f6ae31b): Total: 0.021 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=49a92fee0a7904d468c0d5b263ca62e2): Total: 0.025 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=aa004a8e08372224a9cafa0039a5704a): Total: 0.024 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=e0875dddf40da914b904dfa98aeb482e): Total: 0.027 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=57df94cddc9eb36488ff2c17a598eb66): Total: 0.023 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=dd4fdec8f889ea948b32f6d610011b98): Total: 0.023 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=547f710ce7dca494080d82ed18a04f89): Total: 0.023 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=03d5f23275cd89f46ad1717bb537385d): Total: 0.022 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=f10e7d9c81db3a54fb83d8343e3a087a): Total: 0.029 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=0df3bd6d490ccff4398ecbadde477d39): Total: 0.023 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=06d268a58d42d3045a2301ff57db60b9): Total: 0.025 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=ce7fee47e6086c742a7c8033864fb123): Total: 0.021 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=749dfe2dba3a4d34d97252ef4970bc00): Total: 0.023 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=0263bec750690704bbd1400c30e319a8): Total: 0.021 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=3583fc4fe1d472c4485edc692572af50): Total: 0.025 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=9d03748702ea07b47be63102af2811a9): Total: 0.023 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=52d850e91c085484d85ad2f69d6545b5): Total: 0.020 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=d7967213307d1ee479286948e3677273): Total: 0.020 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=23fc89ceee2d8fe49a06fa093fd8afea): Total: 0.021 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=1b1cc380bb3543345ad2361b2416617d): Total: 0.022 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=799a76a3e5d34cf4e9acc8bc32bef755): Total: 0.023 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=b5fee7fae606e434997ff631257e88d3): Total: 0.027 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=b93fc113bea78844c8b504599b4d9e5e): Total: 0.022 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=cca08b5411e909040b391e14c062e5e9): Total: 0.022 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=db0b1742fdff1644eafd217bcfa4fb3a): Total: 0.020 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=3213f0afd65e67346b96de37933f2ed6): Total: 0.025 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=fd2222dfa4a004c44b61438a70ee5202): Total: 0.024 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=497a7e3be4a2c8e45815c1637c4e7b18): Total: 0.028 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=cf4845fb5fe288c4b90258aaff0efd29): Total: 0.022 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=ffc6bae6358a33d4c8c856269c9deb2e): Total: 0.020 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=d495d858820d6994a89e9475b645fa70): Total: 0.020 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=f44935c2e1a367446b855339488a1047): Total: 0.023 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=51a32fa54c3b11a46b3e75a4b958e622): Total: 0.023 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=6d60632b53645754ea38a947ff20d1f4): Total: 0.028 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=f983435efdee12647a232907a20802df): Total: 0.022 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=9e559c363755f4940bb4262db540d734): Total: 0.020 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=ee16696ef7c661345b6ca97976cce840): Total: 0.021 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=5483f064f1db9cf48a418067714a1036): Total: 0.022 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=36bd7948e11e94e4ea5f06913f305aa5): Total: 0.022 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=e06f83db1908e564fabba2402ad2fe5a): Total: 0.026 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=bd680133a72dac244ae7f07d2d936da0): Total: 0.024 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=4d840e12253402f49b6ebfb78cbb9cae): Total: 0.022 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=b4f0a6c0880cd0642bacaed0094010b1): Total: 0.021 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=4911983eff44962429dd91800115394b): Total: 0.021 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=fa5418e411f5c64418fe8097d5f66637): Total: 0.022 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=718c6b08e4f47c947a93462f039da785): Total: 0.025 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=db16207bd47930a4a8c4c7db1c38f373): Total: 0.025 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=7cf8c3ee76f4588409eec627bc8b911b): Total: 0.024 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=8157471258722a64994b4635b493b874): Total: 0.022 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=a5b88e544b2561646934d91200789e6d): Total: 0.022 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=c310bb63164666d47bcc619d085ab70c): Total: 0.022 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=3f3e9266b55798d4d905a3e1add1017e): Total: 0.021 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=7619a91916cfe4b48bd8c5d2bbb98060): Total: 0.020 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=331cb08c6b4edfb42ac822feffa21184): Total: 0.021 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=52e012ed323c70f45bf087818e3d584a): Total: 0.021 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=37393672e131cb04fb8ac0f2f4dbfc8f): Total: 0.024 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=7d4ed239a3f652345bfbec61b17254bc): Total: 0.020 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=debae7407ee9a474b90f251d00c3298e): Total: 0.021 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=d9c88c735916d2849b6ba3daeb3d7f9e): Total: 0.023 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=2ab4105e19d9e9e4d8c3b55b717c3943): Total: 0.022 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=4c9b5cdc1437739478aaee4a7d7d74ce): Total: 0.024 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Start importing ProjectSettings/EditorBuildSettings.asset using Guid(0000000000000000b000000000000000) (LibraryAssetImporter) -> (Import Result ID: 'b193fe072b98a8e27a5acc25cd25c169') in 0.0039513 seconds [static dependencies only]. Details - ImportResultOutputID=d777934f36c664454d62eda103573334 DependenciesID=4a886119ee4ec9d225c573c3adff8b35 StaticDependenciesID=0c90b95644bc5e6fedfbab29b88386f8 
+Asset Pipeline Refresh (id=6455af160d2c4be47aee4a86017a376d): Total: 0.013 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+[SpellGenerator] Generated 205 spell assets
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace ()
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+ForeverEngine.Editor.RPG.SpellGenerator:GenerateAll () (at Assets/Editor/RPG/SpellGenerator.cs:361)
+ForeverEngine.Editor.RPG.ContentGenerator:GenerateAll () (at Assets/Editor/RPG/ContentGenerator.cs:19)
+
+(Filename: Assets/Editor/RPG/SpellGenerator.cs Line: 361)
+
+[ClassGenerator] Generating 12 classes...
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace ()
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+ForeverEngine.Editor.RPG.ClassGenerator:GenerateAll () (at Assets/Editor/RPG/ClassGenerator.cs:15)
+ForeverEngine.Editor.RPG.ContentGenerator:GenerateAll () (at Assets/Editor/RPG/ContentGenerator.cs:20)
+
+(Filename: Assets/Editor/RPG/ClassGenerator.cs Line: 15)
+
+Asset Pipeline Refresh (id=affa3cc1a43998f4e9b2148cba393348): Total: 0.021 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=5698f76b13cd9134f9a9cdf9b29b3382): Total: 0.024 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=6d698dc3d743e524aaf520b1b989207d): Total: 0.024 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=dc2d5ab862d833b46853ccd0fcdc3dd1): Total: 0.023 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=80f913ea50592a0458786912331cc6c1): Total: 0.025 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=f83c1b2208d19d24e9ddaa7fbac53bbc): Total: 0.025 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=bbc4a66ab45cf3c4289053a231d54d12): Total: 0.025 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=4f4c6060056d4984e8b84688503dbfba): Total: 0.024 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=ed9e610672b92064995d0fe5de108b82): Total: 0.026 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=2a41fd805fc77094e96b3ed953c7d59c): Total: 0.030 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=fe6e1876b59fed44cb40c3a056970753): Total: 0.033 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=2158e825532fc2844ab7264b0276b985): Total: 0.032 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=6db23650ff4f2b241a9c1f8358085a48): Total: 0.032 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=d0e7a873ab16a2747acd8792be052560): Total: 0.026 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=9765dfa59a72f1a44a1fc34f06c3e23b): Total: 0.032 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=cfbe702b16490ae49bfe4d44b4f3d3b6): Total: 0.027 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=333d3120960129447bf4120e0b708e44): Total: 0.027 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=5d1549133e9d8d54fa22fabd71baa7a7): Total: 0.027 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=fd862425a0e864848a24514c4966f09c): Total: 0.024 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=048915b505b62094d9e87aa40446b168): Total: 0.023 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=0598e792d59b93544a646de9a38a135a): Total: 0.025 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=18448e63777339e439328fcf49ffa917): Total: 0.022 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=44644fd0682c4934cad8927b32ddf82d): Total: 0.022 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=e1bcf4295353a30479dbef97e4c2ffed): Total: 0.022 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+[ClassGenerator] Generated 12 class assets
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace ()
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+ForeverEngine.Editor.RPG.ClassGenerator:GenerateAll () (at Assets/Editor/RPG/ClassGenerator.cs:42)
+ForeverEngine.Editor.RPG.ContentGenerator:GenerateAll () (at Assets/Editor/RPG/ContentGenerator.cs:20)
+
+(Filename: Assets/Editor/RPG/ClassGenerator.cs Line: 42)
+
+[SpeciesGenerator] Generating 15 species...
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace ()
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+ForeverEngine.Editor.RPG.SpeciesGenerator:GenerateAll () (at Assets/Editor/RPG/SpeciesGenerator.cs:17)
+ForeverEngine.Editor.RPG.ContentGenerator:GenerateAll () (at Assets/Editor/RPG/ContentGenerator.cs:21)
+
+(Filename: Assets/Editor/RPG/SpeciesGenerator.cs Line: 17)
+
+Asset Pipeline Refresh (id=c93805066fbf47a4d8806b68d83975a4): Total: 0.023 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=64f19a73b4b6a9a4084f66dcec873a4a): Total: 0.030 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=5ffc50cee311ef34a9ff686cf3ef13ec): Total: 0.032 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=0c29ae413ae1e844eb56d247233d1234): Total: 0.031 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=c36e2c7aaa42e304e913ed0d2b4c024a): Total: 0.029 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=c170477a4b4fa2843aa7062160c099b2): Total: 0.026 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=3be8990973d690a408b12cd58d236e7f): Total: 0.024 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=0b2161db9b82f5d47af7875f5f0db78d): Total: 0.024 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=31d32a6d500f3cc44b32e9845010e5c8): Total: 0.024 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=dd165fc9f81c273428c362b23882aa48): Total: 0.025 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=1c4b20ece64b7cd4caf094b09245e636): Total: 0.025 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=87e8f5a8e12d2e04c8470ede967973e6): Total: 0.024 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=5c0461d3bf0b3b8409beb80cc14f11d4): Total: 0.024 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=ec0dd9bc2a3fc344396ad82474f109b8): Total: 0.026 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=6c1bf8170e010624681a9c1ce8bf97ed): Total: 0.025 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=22ee01f46c154a24b80aaec44c990c0e): Total: 0.044 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Start importing Assets/Scripts/RPG/Content/Species/high_elf.asset using Guid(eb44d260637720e439e329f519525348) (NativeFormatImporter) -> (Import Result ID: 'a8310cca645c23e468728d49b94bc98b') in 0.0014498 seconds [static dependencies only]. Details - ImportResultOutputID=e11d13c4c3038b7b5ff215e2768b43b2 DependenciesID=7f32e912f32c5275d78c495d2c51a667 StaticDependenciesID=10c74202de724693ee642c6df5c03429 
+Asset Pipeline Refresh (id=23b22f2d65154954dbded6de924b1737): Total: 0.026 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=c5ab40bb2875d054a9ddf4a54afe458e): Total: 0.021 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Start importing Assets/Scripts/RPG/Content/Species/dark_elf.asset using Guid(6abdcc6a2974088469f59a32acac32f7) (NativeFormatImporter) -> (Import Result ID: '4e99a7f712ef7c1dff195fac883ccc3f') in 0.0011853 seconds [static dependencies only]. Details - ImportResultOutputID=63cc311519481cd9e9a6a19fcc4fc7bb DependenciesID=263b37f65e60d157914b0e9978a92424 StaticDependenciesID=368cbade0524b60c31bf902b48895811 
+Asset Pipeline Refresh (id=aea2fee3e368a8b4ea4ea7939d71fc4c): Total: 0.023 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=9a8dafbd129bb0f4791cda723a1bee09): Total: 0.026 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=702505f511204e74da9544f08bae4eef): Total: 0.026 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=bff206e9e0bb2f4488292f70585a13ea): Total: 0.022 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=df57adf970dbff54f9fd4a11a432bc49): Total: 0.022 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=2fca69f2b485bfe429d933b26a49a417): Total: 0.026 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Start importing Assets/Scripts/RPG/Content/Species/tiefling.asset using Guid(4622d5a9ad12c544d954c2f32d6b9340) (NativeFormatImporter) -> (Import Result ID: 'cbd976f6efe169e8f8a54d317e5c15ea') in 0.0012002 seconds [static dependencies only]. Details - ImportResultOutputID=833bf45ae79e0a43e11bda4e710c1057 DependenciesID=598ac7bb230710cda560c7bdd0695bb6 StaticDependenciesID=bfdb33ed45ed403521df6c9b1fb91cb3 
+Asset Pipeline Refresh (id=6c9fcf931fc36314b95c5d59294335e8): Total: 0.023 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=2aee12f716266dc4581779d32c5666f2): Total: 0.023 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Start importing Assets/Scripts/RPG/Content/Species/forest_gnome.asset using Guid(1a7e0dac673ef9149b4919c56f2742e5) (NativeFormatImporter) -> (Import Result ID: '6db13324a5ea6cbf896ba14a5d168700') in 0.0011859 seconds [static dependencies only]. Details - ImportResultOutputID=240ceabb6d52c49c7f3f32e011986565 DependenciesID=c889d21fe97ad9be1b8c79dac440a8fc StaticDependenciesID=3fa4a75c8a5bcac2cf063aa9d3153a9e 
+Asset Pipeline Refresh (id=9be48500d066bbd469f5455ff857e422): Total: 0.024 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=0452ccb26fbbcde49b373300dc51def1): Total: 0.021 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=82c802ba0f674784c9c05feaeb11dd95): Total: 0.023 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=f797f41545a0b314ab62a4ef60760034): Total: 0.021 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+[SpeciesGenerator] Generated 15 species assets
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace ()
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+ForeverEngine.Editor.RPG.SpeciesGenerator:GenerateAll () (at Assets/Editor/RPG/SpeciesGenerator.cs:218)
+ForeverEngine.Editor.RPG.ContentGenerator:GenerateAll () (at Assets/Editor/RPG/ContentGenerator.cs:21)
+
+(Filename: Assets/Editor/RPG/SpeciesGenerator.cs Line: 218)
+
+Asset Pipeline Refresh (id=e5e67f0fd40815d44948fa297ea7e706): Total: 0.009 seconds - Initiated by RefreshV2(NoUpdateAssetOptions)
+[ContentGenerator] Generated 12 ClassData assets
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace ()
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+ForeverEngine.Editor.RPG.ContentGenerator:Validate () (at Assets/Editor/RPG/ContentGenerator.cs:56)
+ForeverEngine.Editor.RPG.ContentGenerator:GenerateAll () (at Assets/Editor/RPG/ContentGenerator.cs:26)
+
+(Filename: Assets/Editor/RPG/ContentGenerator.cs Line: 56)
+
+[ContentGenerator] Generated 15 SpeciesData assets
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace ()
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+ForeverEngine.Editor.RPG.ContentGenerator:Validate () (at Assets/Editor/RPG/ContentGenerator.cs:57)
+ForeverEngine.Editor.RPG.ContentGenerator:GenerateAll () (at Assets/Editor/RPG/ContentGenerator.cs:26)
+
+(Filename: Assets/Editor/RPG/ContentGenerator.cs Line: 57)
+
+[ContentGenerator] Generated 205 SpellData assets
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace ()
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+ForeverEngine.Editor.RPG.ContentGenerator:Validate () (at Assets/Editor/RPG/ContentGenerator.cs:58)
+ForeverEngine.Editor.RPG.ContentGenerator:GenerateAll () (at Assets/Editor/RPG/ContentGenerator.cs:26)
+
+(Filename: Assets/Editor/RPG/ContentGenerator.cs Line: 58)
+
+[ContentGenerator] Validation: 232 total assets, 0 errors
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace ()
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+ForeverEngine.Editor.RPG.ContentGenerator:Validate () (at Assets/Editor/RPG/ContentGenerator.cs:109)
+ForeverEngine.Editor.RPG.ContentGenerator:GenerateAll () (at Assets/Editor/RPG/ContentGenerator.cs:26)
+
+(Filename: Assets/Editor/RPG/ContentGenerator.cs Line: 109)
+
+[ContentGenerator] Content generation complete.
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace ()
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+ForeverEngine.Editor.RPG.ContentGenerator:GenerateAll () (at Assets/Editor/RPG/ContentGenerator.cs:28)
+
+(Filename: Assets/Editor/RPG/ContentGenerator.cs Line: 28)
+
+Batchmode quit successfully invoked - shutting down!
+Unloading 0 Unused Serialized files (Serialized files now loaded: 0)
+Unloading 247 unused Assets / (0.6 MB). Loaded Objects now: 7997.
+Memory consumption went from 219.3 MB to 218.7 MB.
+Total: 5.919900 ms (FindLiveObjects: 0.128700 ms CreateObjectMapping: 0.076000 ms MarkObjects: 5.258700 ms  DeleteObjects: 0.455900 ms)
+
+[Physics::Module] Cleanup current backend.
+[Physics::Module] Id: 0xf2b8ea05
+Input System module state changed to: ShutdownInProgress.
+Input Polling Thread exited.
+Input System module state changed to: Shutdown.
+[Licensing::IpcConnector] LicenseClient-bp303-6000.4.1-notifications channel disconnected successfully.
+[Licensing::IpcConnector] LicenseClient-bp303-6000.4.1 channel disconnected successfully.
+AcceleratorClientConnectionCallback - disconnected - :0
+Cleanup mono
+CodeReloadManager destroyed
+Shut down.
+abort_threads: Failed aborting id: 000000000000D940, mono_thread_manage will ignore it
+
+abort_threads: Failed aborting id: 000000000000DCB8, mono_thread_manage will ignore it
+
+abort_threads: Failed aborting id: 000000000000D940, mono_thread_manage will ignore it
+
+abort_threads: Failed aborting id: 000000000000DCB8, mono_thread_manage will ignore it
+
+debugger-agent: Unable to listen on 3096
+Exiting batchmode successfully now!
+Exiting without the bug reporter. Application will terminate with return code 0

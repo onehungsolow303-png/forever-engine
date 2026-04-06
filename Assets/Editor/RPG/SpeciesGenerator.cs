@@ -8,18 +8,20 @@ namespace ForeverEngine.Editor.RPG
 {
     public static class SpeciesGenerator
     {
-        private const string Dir = "Assets/Scripts/RPG/Content/Species";
-        private const string SpellDir = "Assets/Scripts/RPG/Content/Spells";
+        private const string Dir = "Assets/Resources/RPG/Content/Species";
+        private const string SpellDir = "Assets/Resources/RPG/Content/Spells";
 
         [MenuItem("Forever Engine/RPG/Generate Species")]
         public static void GenerateAll()
         {
             Debug.Log("[SpeciesGenerator] Generating 15 species...");
 
-            if (!AssetDatabase.IsValidFolder("Assets/Scripts/RPG/Content"))
-                AssetDatabase.CreateFolder("Assets/Scripts/RPG", "Content");
+            if (!AssetDatabase.IsValidFolder("Assets/Resources/RPG"))
+                AssetDatabase.CreateFolder("Assets/Resources", "RPG");
+            if (!AssetDatabase.IsValidFolder("Assets/Resources/RPG/Content"))
+                AssetDatabase.CreateFolder("Assets/Resources/RPG", "Content");
             if (!AssetDatabase.IsValidFolder(Dir))
-                AssetDatabase.CreateFolder("Assets/Scripts/RPG/Content", "Species");
+                AssetDatabase.CreateFolder("Assets/Resources/RPG/Content", "Species");
 
             // Delete existing
             var existing = AssetDatabase.FindAssets("t:SpeciesData", new[] { Dir });
