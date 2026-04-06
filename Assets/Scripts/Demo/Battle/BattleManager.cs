@@ -805,6 +805,13 @@ namespace ForeverEngine.Demo.Battle
                     gm.LastBattleWon = true;
                     gm.LastBattleGoldEarned = _encounterData.GoldReward;
                     gm.LastBattleXPEarned = _encounterData.XPReward;
+
+                    // Generate loot drops (use XP reward as CR proxy)
+                    var loot = LootGenerator.GenerateLoot(_encounterData.XPReward, _encounterData.GoldReward);
+                    UI.LootScreen.GoldEarned = _encounterData.GoldReward;
+                    UI.LootScreen.XPEarned = _encounterData.XPReward;
+                    UI.LootScreen.ItemsFound = loot;
+                    UI.LootScreen.Show = true;
                     // Persist damage taken back to CharacterSheet and PlayerData
                     if (gm.Character != null)
                     {
