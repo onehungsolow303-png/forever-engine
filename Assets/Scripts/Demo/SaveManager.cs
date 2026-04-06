@@ -37,7 +37,12 @@ namespace ForeverEngine.Demo
                 string json = File.ReadAllText(SavePath);
                 var data = JsonUtility.FromJson<SaveData>(json);
                 var player = data.ToPlayer();
-                Debug.Log($"[SaveManager] Loaded from {SavePath}");
+
+                // Restore seed to GameManager
+                if (GameManager.Instance != null)
+                    GameManager.Instance.CurrentSeed = data.CurrentSeed;
+
+                Debug.Log($"[SaveManager] Loaded from {SavePath} (seed={data.CurrentSeed})");
                 return player;
             }
             catch (System.Exception e)

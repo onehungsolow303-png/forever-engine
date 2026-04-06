@@ -56,10 +56,15 @@ namespace ForeverEngine.Generation
             WriteTerrainPng(floor0.Terrain, Path.Combine(outputDir, png0));
             WriteTerrainPng(floorMinus1.Terrain, Path.Combine(outputDir, pngM1));
 
-            // Find stairs position: use last room center on floor 0
-            var stairsRoom = floor0.Layout.Nodes[floor0.Layout.Nodes.Count - 1];
-            int stairsX = stairsRoom.X + stairsRoom.W / 2;
-            int stairsY = stairsRoom.Y + stairsRoom.H / 2;
+            // Find stairs position: use last room center on floor 0, fallback to map center
+            int stairsX = floor0.Request.Width / 2;
+            int stairsY = floor0.Request.Height / 2;
+            if (floor0.Layout != null && floor0.Layout.Nodes.Count > 0)
+            {
+                var stairsRoom = floor0.Layout.Nodes[floor0.Layout.Nodes.Count - 1];
+                stairsX = stairsRoom.X + stairsRoom.W / 2;
+                stairsY = stairsRoom.Y + stairsRoom.H / 2;
+            }
 
             // Build z-levels
             var zLevel0 = BuildZLevel(floor0, png0);

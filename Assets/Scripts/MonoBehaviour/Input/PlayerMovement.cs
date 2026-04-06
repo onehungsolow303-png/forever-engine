@@ -13,6 +13,8 @@ namespace ForeverEngine.MonoBehaviour.Input
         private EntityManager _em;
         private EntityQuery _playerQuery;
         private EntityQuery _transitionQuery;
+        private EntityQuery _gameStateQuery;
+        private EntityQuery _mapSingletonQuery;
 
         private void Start()
         {
@@ -21,6 +23,8 @@ namespace ForeverEngine.MonoBehaviour.Input
                 typeof(PlayerTag), typeof(PositionComponent), typeof(CombatStateComponent));
             _transitionQuery = _em.CreateEntityQuery(
                 typeof(TransitionComponent), typeof(PositionComponent));
+            _gameStateQuery = _em.CreateEntityQuery(typeof(GameStateSingleton));
+            _mapSingletonQuery = _em.CreateEntityQuery(typeof(MapDataSingleton));
         }
 
         private void Update()
@@ -31,10 +35,9 @@ namespace ForeverEngine.MonoBehaviour.Input
             var store = MapDataStore.Instance;
             if (store == null) return;
 
-            var stateQuery = _em.CreateEntityQuery(typeof(GameStateSingleton));
-            if (stateQuery.IsEmpty) return;
+            if (_gameStateQuery.IsEmpty) return;
 
-            var gameState = stateQuery.GetSingleton<GameStateSingleton>();
+            var gameState = _gameStateQuery.GetSingleton<GameStateSingleton>();
             if (gameState.CurrentState != GameState.Exploration &&
                 gameState.CurrentState != GameState.Combat)
                 return;
@@ -96,12 +99,11 @@ namespace ForeverEngine.MonoBehaviour.Input
                     _em.SetComponentData(playerEntity, playerPos);
 
                     // Update map singleton
-                    var stateQuery = _em.CreateEntityQuery(typeof(MapDataSingleton));
-                    if (!stateQuery.IsEmpty)
+                    if (!_mapSingletonQuery.IsEmpty)
                     {
-                        var mapSingleton = stateQuery.GetSingleton<MapDataSingleton>();
+                        var mapSingleton = _mapSingletonQuery.GetSingleton<MapDataSingleton>();
                         mapSingleton.CurrentZ = tComp.ToZ;
-                        stateQuery.SetSingleton(mapSingleton);
+                        _mapSingletonQuery.SetSingleton(mapSingleton);
                     }
 
                     // Re-render tiles and fog

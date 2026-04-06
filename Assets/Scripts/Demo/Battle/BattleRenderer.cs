@@ -24,8 +24,8 @@ namespace ForeverEngine.Demo.Battle
         // Condition tint colors
         private static readonly Color TINT_POISON = new Color(0.2f, 0.8f, 0.2f, 0.3f);
         private static readonly Color TINT_STUN = new Color(1f, 1f, 0.2f, 0.3f);
-        private static readonly Color TINT_FROZEN = new Color(0.4f, 0.7f, 1f, 0.3f);
-        private static readonly Color TINT_BURNING = new Color(1f, 0.4f, 0.1f, 0.3f);
+        private static readonly Color TINT_PARALYZED = new Color(0.4f, 0.7f, 1f, 0.3f);
+        private static readonly Color TINT_FRIGHTENED = new Color(0.5f, 0.2f, 0.6f, 0.3f);
 
         private const float TOKEN_RADIUS = 0.45f;
         private const float HP_BAR_LERP_SPEED = 4f;
@@ -171,9 +171,9 @@ namespace ForeverEngine.Demo.Battle
                         else if ((active & RPG.Enums.Condition.Stunned) != 0)
                             tintColor = TINT_STUN;
                         else if ((active & RPG.Enums.Condition.Paralyzed) != 0)
-                            tintColor = TINT_FROZEN;
+                            tintColor = TINT_PARALYZED;
                         else if ((active & RPG.Enums.Condition.Frightened) != 0)
-                            tintColor = TINT_BURNING;
+                            tintColor = TINT_FRIGHTENED;
                         tintMR.material.color = tintColor;
                     }
                 }
@@ -199,7 +199,7 @@ namespace ForeverEngine.Demo.Battle
             tm.color = isCrit ? Color.yellow : Color.white;
             tm.fontStyle = isCrit ? FontStyle.Bold : FontStyle.Normal;
 
-            _damageNumbers.Add(new DamageNumber { GO = go, Timer = 1.2f, StartY = worldPos.y + 0.3f });
+            _damageNumbers.Add(new DamageNumber { GO = go, Timer = 1.2f, InitialTimer = 1.2f, StartY = worldPos.y + 0.3f });
         }
 
         public void ShowMiss(Vector3 worldPos)
@@ -215,7 +215,7 @@ namespace ForeverEngine.Demo.Battle
             tm.anchor = TextAnchor.MiddleCenter;
             tm.color = new Color(0.7f, 0.7f, 0.7f);
 
-            _damageNumbers.Add(new DamageNumber { GO = go, Timer = 0.8f, StartY = worldPos.y + 0.3f });
+            _damageNumbers.Add(new DamageNumber { GO = go, Timer = 0.8f, InitialTimer = 0.8f, StartY = worldPos.y + 0.3f });
         }
 
         private void UpdateDamageNumbers(float dt)
@@ -232,7 +232,7 @@ namespace ForeverEngine.Demo.Battle
                 }
 
                 // Float upward and fade
-                float progress = 1f - dn.Timer / 1.2f;
+                float progress = 1f - dn.Timer / dn.InitialTimer;
                 var pos = dn.GO.transform.position;
                 pos.y = dn.StartY + progress * 0.8f;
                 dn.GO.transform.position = pos;
@@ -252,6 +252,7 @@ namespace ForeverEngine.Demo.Battle
         private struct DamageNumber
         {
             public GameObject GO;
+            public float InitialTimer;
             public float Timer;
             public float StartY;
         }

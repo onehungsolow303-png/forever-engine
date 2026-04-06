@@ -65,17 +65,9 @@ namespace ForeverEngine.Demo.Locations
                 return;
             }
 
-            // Check cache
-            string cachePath = GetCachePath(loc);
-            if (File.Exists(cachePath))
-            {
-                Debug.Log($"[LocationInterior] Cache hit: {cachePath}");
-                LoadAndTransition(loc, cachePath);
-                return;
-            }
-
-            // Generate via C# pipeline
-            GenerateInterior(loc);
+            // Dungeon interior renderer not yet functional — fall back to battle encounter
+            Debug.Log($"[LocationInterior] Entering battle at {loc.Name}");
+            GameManager.Instance.EnterBattle($"dungeon_{loc.Type}_{loc.Id}");
         }
 
         // ── Interior generation ───────────────────────────────────────────────

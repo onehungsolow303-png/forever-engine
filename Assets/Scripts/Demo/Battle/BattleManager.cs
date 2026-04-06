@@ -38,7 +38,7 @@ namespace ForeverEngine.Demo.Battle
 
         private void Update()
         {
-            if (_renderer == null) _renderer = FindFirstObjectByType<BattleRenderer>();
+            if (_renderer == null) _renderer = FindAnyObjectByType<BattleRenderer>();
             if (_renderer != null) _renderer.UpdateVisuals(Combatants, CurrentTurn);
 
             // Player input during their turn
@@ -712,7 +712,7 @@ namespace ForeverEngine.Demo.Battle
                     Audio.SoundManager.Instance?.PlayHit();
                 if (atkResult.Critical || target.HP <= 0)
                 {
-                    var cam = FindFirstObjectByType<MonoBehaviour.Camera.CameraController>();
+                    var cam = FindAnyObjectByType<MonoBehaviour.Camera.CameraController>();
                     cam?.Shake(atkResult.Critical ? 0.25f : 0.15f);
                 }
                 if (target.HP <= 0 && !target.IsPlayer)
