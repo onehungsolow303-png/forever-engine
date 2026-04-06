@@ -129,11 +129,12 @@ namespace ForeverEngine.Generation
                 });
             }
 
-            // Enemy encounters — scaled defaults per spec
+            // Enemy encounters — real D&D 5e stats from CreatureDatabase
             if (pop.Encounters != null)
             {
                 foreach (var enc in pop.Encounters)
                 {
+                    var cs = CreatureDatabase.GetStats(enc.Variant);
                     spawns.Add(new SSpawn
                     {
                         name = enc.Variant ?? "creature",
@@ -141,15 +142,19 @@ namespace ForeverEngine.Generation
                         y = enc.Y,
                         z = 0,
                         token_type = "enemy",
-                        ai_behavior = "chase",
+                        ai_behavior = cs.AiBehavior,
                         stats = new SStats
                         {
-                            hp = partyLevel * 4 + 4,
-                            ac = 10 + partyLevel / 2,
-                            strength = 10, dexterity = 10, constitution = 10,
-                            intelligence = 10, wisdom = 10, charisma = 10,
-                            speed = 6,
-                            atk_dice = $"1d6+{partyLevel / 2}"
+                            hp = cs.HP,
+                            ac = cs.AC,
+                            strength = cs.STR,
+                            dexterity = cs.DEX,
+                            constitution = cs.CON,
+                            intelligence = cs.INT,
+                            wisdom = cs.WIS,
+                            charisma = cs.CHA,
+                            speed = cs.Speed,
+                            atk_dice = cs.AtkDice
                         }
                     });
                 }
