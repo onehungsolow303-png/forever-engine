@@ -22,10 +22,10 @@ namespace ForeverEngine.Editor
         [MenuItem("Forever Engine/Build Demo Scenes")]
         public static void BuildAll()
         {
-            BuildMainMenu();
             BuildOverworld();
             BuildBattleMap();
             BuildGame();
+            BuildMainMenu(); // Last so editor opens to MainMenu
             Debug.Log("[DemoSceneBuilder] All 4 demo scenes created!");
         }
 
