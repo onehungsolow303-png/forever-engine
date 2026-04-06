@@ -224,6 +224,8 @@ namespace ForeverEngine.Demo.Locations
                     gm.Player.FullRest();
                     Debug.Log($"[LocationInterior] Rested at {loc.Name}");
                 }
+
+                SaveManager.Save();
             }
         }
     }

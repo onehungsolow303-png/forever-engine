@@ -60,10 +60,19 @@ namespace ForeverEngine.Demo.UI
                 _showCharSelect = true;
             }
 
-            if (GUI.Button(new Rect(x, y + 50, btnW, btnH), "Continue"))
+            if (SaveManager.HasSave && GUI.Button(new Rect(x, y + 50, btnW, btnH), "Continue"))
             {
-                var sm = ForeverEngine.MonoBehaviour.SaveLoad.SaveManager.Instance;
-                if (sm != null) sm.Load("quicksave");
+                if (GameManager.Instance == null)
+                {
+                    var go = new GameObject("GameManager");
+                    go.AddComponent<GameManager>();
+                }
+                var player = SaveManager.Load();
+                if (player != null)
+                {
+                    GameManager.Instance.Player = player;
+                    UnityEngine.SceneManagement.SceneManager.LoadScene("Overworld");
+                }
             }
 
             if (GUI.Button(new Rect(x, y + 100, btnW, btnH), "Quit"))

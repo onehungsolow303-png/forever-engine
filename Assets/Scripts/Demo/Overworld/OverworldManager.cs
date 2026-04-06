@@ -71,6 +71,7 @@ namespace ForeverEngine.Demo.Overworld
                 // Full heal after victory
                 gm.Player.HP = gm.Player.MaxHP;
                 gm.LastBattleWon = false;
+                SaveManager.Save();
             }
 
             // Initial visual update

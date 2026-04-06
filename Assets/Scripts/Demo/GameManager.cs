@@ -9,10 +9,10 @@ namespace ForeverEngine.Demo
     {
         public static GameManager Instance { get; private set; }
 
-        public PlayerData Player { get; private set; }
+        public PlayerData Player { get; set; }
         public CharacterData CharacterData { get; private set; }
         public CharacterSheet Character { get; set; }
-        public int CurrentSeed { get; private set; } = 42;
+        public int CurrentSeed { get; set; } = 42;
         public string PendingEncounterId { get; set; }
         public string PendingLocationId { get; set; }
         public string PendingMapDataPath { get; set; }
