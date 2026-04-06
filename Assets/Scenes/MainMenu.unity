@@ -119,7 +119,7 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
---- !u!1 &412877786
+--- !u!1 &152107949
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -127,199 +127,8 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 412877788}
-  - component: {fileID: 412877787}
-  m_Layer: 0
-  m_Name: GameManager
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &412877787
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 412877786}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b925cc821d8910c43be6eb653401b79c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: ForeverEngine::ForeverEngine.Demo.GameManager
---- !u!4 &412877788
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 412877786}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children:
-  - {fileID: 792254531}
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &792254530
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 792254531}
-  - component: {fileID: 792254539}
-  - component: {fileID: 792254538}
-  - component: {fileID: 792254537}
-  - component: {fileID: 792254536}
-  - component: {fileID: 792254535}
-  - component: {fileID: 792254534}
-  - component: {fileID: 792254533}
-  - component: {fileID: 792254532}
-  m_Layer: 0
-  m_Name: AI_Systems
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &792254531
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 792254530}
-  serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 412877788}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &792254532
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 792254530}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 05e450d4857a20149bd0eea916202c46, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: ForeverEngine::ForeverEngine.AI.Inference.InferenceEngine
-  _backend: 256
-  _modelAsset: {fileID: 0}
---- !u!114 &792254533
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 792254530}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e6733c8782144304a8bfe4d3cf692d38, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: ForeverEngine::ForeverEngine.AI.SelfHealing.PerformanceRegulator
-  _targetFrameTimeMs: 16.6
-  _consecutiveThreshold: 10
---- !u!114 &792254534
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 792254530}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: cd4ea32a0334d234ea44a3c615cee105, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: ForeverEngine::ForeverEngine.AI.SelfHealing.SystemMonitor
---- !u!114 &792254535
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 792254530}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 791840b80f27c7749ac1ae1244877a76, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: ForeverEngine::ForeverEngine.AI.Memory.MemoryManager
-  Semantic: {fileID: 0}
-  _shortTermDecay: 10
-  _maxEpisodes: 500
-  _maxLongTermEvents: 10000
---- !u!114 &792254536
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 792254530}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 11eabb151d111b541a60b7746863ffc5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: ForeverEngine::ForeverEngine.AI.PlayerModeling.PlayerProfiler
-  _updateInterval: 30
---- !u!114 &792254537
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 792254530}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1aef3556b60cd7448bc717948a5b4891, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: ForeverEngine::ForeverEngine.AI.Learning.DynamicDifficulty
-  _config: {fileID: 0}
---- !u!114 &792254538
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 792254530}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d37d07763c0443b47ae6724d22b21471, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: ForeverEngine::ForeverEngine.AI.Director.AIDirector
-  _config: {fileID: 0}
---- !u!114 &792254539
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 792254530}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6dfdf00ff98710a44b7652b0e106b8b8, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: ForeverEngine::ForeverEngine.Demo.AI.DemoAIIntegration
---- !u!1 &862046549
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 862046551}
-  - component: {fileID: 862046550}
+  - component: {fileID: 152107951}
+  - component: {fileID: 152107950}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -327,13 +136,13 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!20 &862046550
+--- !u!20 &152107950
 Camera:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 862046549}
+  m_GameObject: {fileID: 152107949}
   m_Enabled: 1
   serializedVersion: 2
   m_ClearFlags: 2
@@ -378,13 +187,13 @@ Camera:
   m_OcclusionCulling: 1
   m_StereoConvergence: 10
   m_StereoSeparation: 0.022
---- !u!4 &862046551
+--- !u!4 &152107951
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 862046549}
+  m_GameObject: {fileID: 152107949}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
@@ -393,7 +202,7 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &1517131164
+--- !u!1 &460595927
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -401,8 +210,199 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 1517131166}
-  - component: {fileID: 1517131165}
+  - component: {fileID: 460595929}
+  - component: {fileID: 460595928}
+  m_Layer: 0
+  m_Name: GameManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &460595928
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 460595927}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b925cc821d8910c43be6eb653401b79c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: ForeverEngine::ForeverEngine.Demo.GameManager
+--- !u!4 &460595929
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 460595927}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 1408902080}
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1408902079
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1408902080}
+  - component: {fileID: 1408902088}
+  - component: {fileID: 1408902087}
+  - component: {fileID: 1408902086}
+  - component: {fileID: 1408902085}
+  - component: {fileID: 1408902084}
+  - component: {fileID: 1408902083}
+  - component: {fileID: 1408902082}
+  - component: {fileID: 1408902081}
+  m_Layer: 0
+  m_Name: AI_Systems
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1408902080
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1408902079}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 460595929}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1408902081
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1408902079}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 05e450d4857a20149bd0eea916202c46, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: ForeverEngine::ForeverEngine.AI.Inference.InferenceEngine
+  _backend: 256
+  _modelAsset: {fileID: 0}
+--- !u!114 &1408902082
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1408902079}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e6733c8782144304a8bfe4d3cf692d38, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: ForeverEngine::ForeverEngine.AI.SelfHealing.PerformanceRegulator
+  _targetFrameTimeMs: 16.6
+  _consecutiveThreshold: 10
+--- !u!114 &1408902083
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1408902079}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cd4ea32a0334d234ea44a3c615cee105, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: ForeverEngine::ForeverEngine.AI.SelfHealing.SystemMonitor
+--- !u!114 &1408902084
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1408902079}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 791840b80f27c7749ac1ae1244877a76, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: ForeverEngine::ForeverEngine.AI.Memory.MemoryManager
+  Semantic: {fileID: 0}
+  _shortTermDecay: 10
+  _maxEpisodes: 500
+  _maxLongTermEvents: 10000
+--- !u!114 &1408902085
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1408902079}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 11eabb151d111b541a60b7746863ffc5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: ForeverEngine::ForeverEngine.AI.PlayerModeling.PlayerProfiler
+  _updateInterval: 30
+--- !u!114 &1408902086
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1408902079}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1aef3556b60cd7448bc717948a5b4891, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: ForeverEngine::ForeverEngine.AI.Learning.DynamicDifficulty
+  _config: {fileID: 0}
+--- !u!114 &1408902087
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1408902079}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d37d07763c0443b47ae6724d22b21471, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: ForeverEngine::ForeverEngine.AI.Director.AIDirector
+  _config: {fileID: 0}
+--- !u!114 &1408902088
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1408902079}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6dfdf00ff98710a44b7652b0e106b8b8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: ForeverEngine::ForeverEngine.Demo.AI.DemoAIIntegration
+--- !u!1 &1513814737
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1513814739}
+  - component: {fileID: 1513814738}
   m_Layer: 0
   m_Name: MainMenu
   m_TagString: Untagged
@@ -410,25 +410,25 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &1517131165
+--- !u!114 &1513814738
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1517131164}
+  m_GameObject: {fileID: 1513814737}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 911cdd2dbe9b6c9489b36fcb869ac151, type: 3}
   m_Name: 
   m_EditorClassIdentifier: ForeverEngine::ForeverEngine.Demo.UI.DemoMainMenu
---- !u!4 &1517131166
+--- !u!4 &1513814739
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1517131164}
+  m_GameObject: {fileID: 1513814737}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
@@ -441,6 +441,6 @@ Transform:
 SceneRoots:
   m_ObjectHideFlags: 0
   m_Roots:
-  - {fileID: 862046551}
-  - {fileID: 1517131166}
-  - {fileID: 412877788}
+  - {fileID: 152107951}
+  - {fileID: 1513814739}
+  - {fileID: 460595929}
