@@ -1,10 +1,10 @@
 using UnityEngine;
+using UnityEngine.Tilemaps;
 using Unity.Entities;
 using ForeverEngine.Demo;
 using ForeverEngine.ECS.Data;
 using ForeverEngine.MonoBehaviour.Rendering;
 using ForeverEngine.MonoBehaviour.Input;
-using ForeverEngine.MonoBehaviour.UI;
 using ForeverEngine.MonoBehaviour.Camera;
 
 namespace ForeverEngine.MonoBehaviour.Bootstrap
@@ -15,20 +15,19 @@ namespace ForeverEngine.MonoBehaviour.Bootstrap
         [Tooltip("Path to map_data.json from Map Generator output")]
         public string MapDataPath;
 
-        [Header("References")]
-        public GameConfig GameConfig;
+        [Header("References (auto-created if null)")]
         public CameraController CameraController;
         public TileRenderer TileRenderer;
         public EntityRenderer EntityRenderer;
         public FogRenderer FogRenderer;
-        public HUDManager HUDManager;
-        public CombatLogUI CombatLogUI;
 
         private EntityManager _entityManager;
         private MapDataStore _mapDataStore;
 
         private void Start()
         {
+            EnsureComponents();
+
             _entityManager = World.DefaultGameObjectInjectionWorld.EntityManager;
 
             string pendingPath = GameManager.Instance?.PendingMapDataPath;
@@ -41,6 +40,74 @@ namespace ForeverEngine.MonoBehaviour.Bootstrap
                 LoadMap(MapDataPath);
             else
                 Debug.Log("[ForeverEngine] No map path. Use File > Open to load a map.");
+        }
+
+        /// <summary>
+        /// Create any missing required components at runtime.
+        /// </summary>
+        private void EnsureComponents()
+        {
+            // Camera
+            if (CameraController == null)
+            {
+                var camGO = UnityEngine.Camera.main?.gameObject;
+                if (camGO == null)
+                {
+                    camGO = new GameObject("Main Camera");
+                    var cam = camGO.AddComponent<UnityEngine.Camera>();
+                    cam.orthographic = true;
+                    cam.orthographicSize = 5;
+                    cam.clearFlags = CameraClearFlags.SolidColor;
+                    cam.backgroundColor = new Color(0.05f, 0.05f, 0.08f);
+                    camGO.transform.position = new Vector3(0, 0, -10);
+                    camGO.tag = "MainCamera";
+                }
+                CameraController = camGO.GetComponent<CameraController>();
+                if (CameraController == null)
+                    CameraController = camGO.AddComponent<CameraController>();
+            }
+
+            // TileRenderer (needs Grid + Tilemap)
+            if (TileRenderer == null)
+            {
+                TileRenderer = FindFirstObjectByType<TileRenderer>();
+                if (TileRenderer == null)
+                {
+                    var gridGO = new GameObject("Grid");
+                    gridGO.AddComponent<Grid>();
+                    var tmGO = new GameObject("Tilemap");
+                    tmGO.transform.SetParent(gridGO.transform);
+                    tmGO.AddComponent<Tilemap>();
+                    tmGO.AddComponent<TilemapRenderer>();
+                    TileRenderer = tmGO.AddComponent<TileRenderer>();
+                }
+            }
+
+            // EntityRenderer
+            if (EntityRenderer == null)
+            {
+                EntityRenderer = FindFirstObjectByType<EntityRenderer>();
+                if (EntityRenderer == null)
+                    EntityRenderer = new GameObject("EntityRenderer").AddComponent<EntityRenderer>();
+            }
+
+            // FogRenderer
+            if (FogRenderer == null)
+            {
+                FogRenderer = FindFirstObjectByType<FogRenderer>();
+                if (FogRenderer == null)
+                    FogRenderer = new GameObject("FogRenderer").AddComponent<FogRenderer>();
+            }
+
+            // InputManager
+            if (FindFirstObjectByType<InputManager>() == null)
+                new GameObject("InputManager").AddComponent<InputManager>();
+
+            // PlayerMovement
+            if (FindFirstObjectByType<PlayerMovement>() == null)
+                new GameObject("PlayerMovement").AddComponent<PlayerMovement>();
+
+            Debug.Log("[GameBootstrap] Components ensured");
         }
 
         public void LoadMap(string mapDataJsonPath)
@@ -64,7 +131,6 @@ namespace ForeverEngine.MonoBehaviour.Bootstrap
             if (CameraController != null)
             {
                 CameraController.SnapTo(playerSpawn.x + 0.5f, playerSpawn.y + 0.5f);
-                // Find the player GameObject (created by EntityRenderer) and set as target
                 StartCoroutine(FindAndFollowPlayer());
             }
 
@@ -73,13 +139,11 @@ namespace ForeverEngine.MonoBehaviour.Bootstrap
 
         private System.Collections.IEnumerator FindAndFollowPlayer()
         {
-            // Wait a frame for EntityRenderer to create GameObjects
             yield return null;
             yield return null;
 
             if (EntityRenderer != null)
             {
-                // Camera follows the entity container — player token will be a child
                 var playerGO = GameObject.FindWithTag("Player");
                 if (playerGO != null && CameraController != null)
                     CameraController.SetTarget(playerGO.transform);
