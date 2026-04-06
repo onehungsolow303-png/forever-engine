@@ -4,6 +4,7 @@ using Unity.Mathematics;
 using ForeverEngine.ECS.Components;
 using ForeverEngine.ECS.Data;
 using ForeverEngine.ECS.Systems;
+using ForeverEngine.MonoBehaviour.Rendering;
 
 namespace ForeverEngine.MonoBehaviour.Input
 {
@@ -11,12 +12,15 @@ namespace ForeverEngine.MonoBehaviour.Input
     {
         private EntityManager _em;
         private EntityQuery _playerQuery;
+        private EntityQuery _transitionQuery;
 
         private void Start()
         {
             _em = World.DefaultGameObjectInjectionWorld.EntityManager;
             _playerQuery = _em.CreateEntityQuery(
                 typeof(PlayerTag), typeof(PositionComponent), typeof(CombatStateComponent));
+            _transitionQuery = _em.CreateEntityQuery(
+                typeof(TransitionComponent), typeof(PositionComponent));
         }
 
         private void Update()
@@ -62,11 +66,57 @@ namespace ForeverEngine.MonoBehaviour.Input
             pos.Y = newY;
             _em.SetComponentData(playerEntity, pos);
 
+            // Check for z-level transition at new position
+            CheckTransition(playerEntity, pos);
+
             if (gameState.CurrentState == GameState.Combat)
             {
                 combat.MovementRemaining--;
                 _em.SetComponentData(playerEntity, combat);
             }
+        }
+        private void CheckTransition(Entity playerEntity, PositionComponent playerPos)
+        {
+            var transitions = _transitionQuery.ToEntityArray(Unity.Collections.Allocator.Temp);
+            for (int i = 0; i < transitions.Length; i++)
+            {
+                var tPos = _em.GetComponentData<PositionComponent>(transitions[i]);
+                var tComp = _em.GetComponentData<TransitionComponent>(transitions[i]);
+
+                if (tPos.X == playerPos.X && tPos.Y == playerPos.Y && tComp.FromZ == playerPos.Z)
+                {
+                    var store = MapDataStore.Instance;
+                    if (store == null || !store.HasLevel(tComp.ToZ)) continue;
+
+                    // Swap to new z-level
+                    store.SwapToLevel(tComp.ToZ);
+
+                    // Update player Z
+                    playerPos.Z = tComp.ToZ;
+                    _em.SetComponentData(playerEntity, playerPos);
+
+                    // Update map singleton
+                    var stateQuery = _em.CreateEntityQuery(typeof(MapDataSingleton));
+                    if (!stateQuery.IsEmpty)
+                    {
+                        var mapSingleton = stateQuery.GetSingleton<MapDataSingleton>();
+                        mapSingleton.CurrentZ = tComp.ToZ;
+                        stateQuery.SetSingleton(mapSingleton);
+                    }
+
+                    // Re-render tiles and fog
+                    var tileRenderer = UnityEngine.Object.FindFirstObjectByType<TileRenderer>();
+                    if (tileRenderer != null) tileRenderer.RenderLevel(tComp.ToZ);
+
+                    var fogRenderer = UnityEngine.Object.FindFirstObjectByType<FogRenderer>();
+                    if (fogRenderer != null) fogRenderer.Initialize(store.Width, store.Height);
+
+                    string dir = tComp.TransitionType == 1 ? "up" : "down";
+                    UnityEngine.Debug.Log($"[PlayerMovement] Transitioned {dir} to z={tComp.ToZ}");
+                    break;
+                }
+            }
+            transitions.Dispose();
         }
     }
 }
