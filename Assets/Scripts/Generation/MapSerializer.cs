@@ -39,6 +39,94 @@ namespace ForeverEngine.Generation
             return jsonPath;
         }
 
+        /// <summary>
+        /// Serializes two floors (z=0 and z=-1) with stairs transitions.
+        /// Returns the path to the written MapData.json.
+        /// </summary>
+        public static string Serialize(
+            PipelineCoordinator.GenerationResult floor0,
+            PipelineCoordinator.GenerationResult floorMinus1,
+            string outputDir)
+        {
+            Directory.CreateDirectory(outputDir);
+
+            // Build terrain PNGs for both floors
+            string png0 = "terrain_z0.png";
+            string pngM1 = "terrain_z-1.png";
+            WriteTerrainPng(floor0.Terrain, Path.Combine(outputDir, png0));
+            WriteTerrainPng(floorMinus1.Terrain, Path.Combine(outputDir, pngM1));
+
+            // Find stairs position: use last room center on floor 0
+            var stairsRoom = floor0.Layout.Nodes[floor0.Layout.Nodes.Count - 1];
+            int stairsX = stairsRoom.X + stairsRoom.W / 2;
+            int stairsY = stairsRoom.Y + stairsRoom.H / 2;
+
+            // Build z-levels
+            var zLevel0 = BuildZLevel(floor0, png0);
+            zLevel0.z = 0;
+
+            var zLevelM1 = BuildZLevelAtZ(floorMinus1, pngM1, -1);
+
+            // Build transitions (stairs down on z=0, stairs up on z=-1)
+            var transitions = new[]
+            {
+                new STransition { x = stairsX, y = stairsY, from_z = 0, to_z = -1, type = "stairs_down" },
+                new STransition { x = stairsX, y = stairsY, from_z = -1, to_z = 0, type = "stairs_up" }
+            };
+
+            // Combine spawns from both floors (player only on floor 0)
+            var allSpawns = new List<SSpawn>();
+            allSpawns.AddRange(BuildSpawns(floor0.Population, floor0.Request.PartyLevel));
+            // Floor -1 enemies (no player spawn)
+            if (floorMinus1.Population.Encounters != null)
+            {
+                foreach (var enc in floorMinus1.Population.Encounters)
+                {
+                    var cs = CreatureDatabase.GetStats(enc.Variant);
+                    allSpawns.Add(new SSpawn
+                    {
+                        name = enc.Variant ?? "creature",
+                        x = enc.X, y = enc.Y, z = -1,
+                        token_type = "enemy",
+                        ai_behavior = cs.AiBehavior,
+                        stats = new SStats
+                        {
+                            hp = cs.HP, ac = cs.AC,
+                            strength = cs.STR, dexterity = cs.DEX, constitution = cs.CON,
+                            intelligence = cs.INT, wisdom = cs.WIS, charisma = cs.CHA,
+                            speed = cs.Speed, atk_dice = cs.AtkDice
+                        }
+                    });
+                }
+            }
+
+            var mapData = new SMapData
+            {
+                config = BuildConfig(floor0.Request),
+                z_levels = new[] { zLevel0, zLevelM1 },
+                transitions = transitions,
+                spawns = allSpawns.ToArray(),
+                labels = new SLabel[0]
+            };
+
+            string jsonPath = Path.Combine(outputDir, "MapData.json");
+            string json = JsonUtility.ToJson(mapData, true);
+            File.WriteAllText(jsonPath, json);
+
+            Debug.Log($"[MapSerializer] Wrote 2-floor map: {jsonPath} ({json.Length} bytes)");
+            return jsonPath;
+        }
+
+        /// <summary>
+        /// BuildZLevel variant that sets z to a specific value instead of 0.
+        /// </summary>
+        private static SZLevel BuildZLevelAtZ(PipelineCoordinator.GenerationResult result, string pngRelative, int z)
+        {
+            var level = BuildZLevel(result, pngRelative);
+            level.z = z;
+            return level;
+        }
+
         // ── Builders ──────────────────────────────────────────────────────
 
         private static SConfig BuildConfig(MapGenerationRequest req)

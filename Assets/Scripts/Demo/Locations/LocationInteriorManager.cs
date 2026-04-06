@@ -84,6 +84,7 @@ namespace ForeverEngine.Demo.Locations
         {
             var (mapType, biome) = GetLocationProfile(loc);
             int partyLevel = GameManager.Instance?.Player?.Level ?? 3;
+            int seed = GameManager.Instance?.CurrentSeed ?? 42;
 
             var request = new MapGenerationRequest
             {
@@ -91,7 +92,7 @@ namespace ForeverEngine.Demo.Locations
                 Biome = biome,
                 Width = 128,
                 Height = 128,
-                Seed = GameManager.Instance?.CurrentSeed ?? 42,
+                Seed = seed,
                 PartyLevel = partyLevel,
                 PartySize = 1
             };
@@ -106,7 +107,38 @@ namespace ForeverEngine.Demo.Locations
             }
 
             string outputDir = Path.GetDirectoryName(GetCachePath(loc));
-            string mapPath = MapSerializer.Serialize(result, outputDir);
+            string mapPath;
+
+            // Dungeons and castles get 2 floors with stairs
+            if (mapType is "dungeon" or "castle")
+            {
+                var request2 = new MapGenerationRequest
+                {
+                    MapType = mapType,
+                    Biome = biome,
+                    Width = 128,
+                    Height = 128,
+                    Seed = seed + 1000,
+                    PartyLevel = partyLevel,
+                    PartySize = 1
+                };
+
+                var result2 = PipelineCoordinator.Generate(request2);
+                if (result2.Success)
+                {
+                    Debug.Log($"[LocationInterior] Generated 2-floor {mapType}");
+                    mapPath = MapSerializer.Serialize(result, result2, outputDir);
+                }
+                else
+                {
+                    Debug.LogWarning($"[LocationInterior] Floor -1 generation failed, using single floor");
+                    mapPath = MapSerializer.Serialize(result, outputDir);
+                }
+            }
+            else
+            {
+                mapPath = MapSerializer.Serialize(result, outputDir);
+            }
 
             LoadAndTransition(loc, mapPath);
         }
