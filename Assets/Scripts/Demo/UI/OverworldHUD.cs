@@ -12,13 +12,47 @@ namespace ForeverEngine.Demo.UI
             var ow = Overworld.OverworldManager.Instance;
 
             // Top-left: Stats
-            GUI.Box(new Rect(10, 10, 200, 130), "");
-            GUI.Label(new Rect(20, 15, 180, 20), $"<b>The Wanderer</b> (Lv.{p.Level})");
-            DrawBar(new Rect(20, 40, 170, 16), p.HPPercent, Color.red, $"HP: {p.HP}/{p.MaxHP}");
-            DrawBar(new Rect(20, 60, 170, 16), p.HungerPercent, new Color(0.8f, 0.5f, 0.2f), $"Hunger: {p.Hunger:F0}/{p.MaxHunger}");
-            DrawBar(new Rect(20, 80, 170, 16), p.ThirstPercent, Color.cyan, $"Thirst: {p.Thirst:F0}/{p.MaxThirst}");
-            GUI.Label(new Rect(20, 100, 180, 20), $"Gold: {p.Gold}  |  AC: {p.AC}");
-            GUI.Label(new Rect(20, 118, 180, 20), $"Day {p.DayCount}  |  {(ow != null && ow.IsNight ? "Night" : "Day")}");
+            var sheet = gm.Character;
+            string charTitle;
+            if (sheet != null)
+            {
+                string species = sheet.Species != null ? sheet.Species.Name : "";
+                string cls = RPGBridge.GetClassName(sheet);
+                charTitle = $"<b>{species} {cls}</b> Lv{sheet.TotalLevel}";
+            }
+            else
+            {
+                charTitle = $"<b>The Wanderer</b> (Lv.{p.Level})";
+            }
+
+            // Calculate spell slot display
+            string spellSlotStr = "";
+            if (sheet != null)
+            {
+                var slots = sheet.SpellSlots;
+                for (int i = 0; i < 9; i++)
+                {
+                    if (slots.MaxSlots[i] > 0)
+                    {
+                        if (spellSlotStr.Length > 0) spellSlotStr += " | ";
+                        spellSlotStr += $"L{i+1}: {slots.AvailableSlots[i]}/{slots.MaxSlots[i]}";
+                    }
+                }
+            }
+
+            int boxHeight = string.IsNullOrEmpty(spellSlotStr) ? 130 : 150;
+            GUI.Box(new Rect(10, 10, 240, boxHeight), "");
+            GUI.Label(new Rect(20, 15, 220, 20), charTitle);
+            DrawBar(new Rect(20, 40, 210, 16), p.HPPercent, Color.red, $"HP: {p.HP}/{p.MaxHP}");
+            DrawBar(new Rect(20, 60, 210, 16), p.HungerPercent, new Color(0.8f, 0.5f, 0.2f), $"Hunger: {p.Hunger:F0}/{p.MaxHunger}");
+            DrawBar(new Rect(20, 80, 210, 16), p.ThirstPercent, Color.cyan, $"Thirst: {p.Thirst:F0}/{p.MaxThirst}");
+            GUI.Label(new Rect(20, 100, 220, 20), $"Gold: {p.Gold}  |  AC: {p.AC}");
+            GUI.Label(new Rect(20, 118, 220, 20), $"Day {p.DayCount}  |  {(ow != null && ow.IsNight ? "Night" : "Day")}");
+            if (!string.IsNullOrEmpty(spellSlotStr))
+            {
+                var slotStyle = new GUIStyle(GUI.skin.label) { fontSize = 10, normal = { textColor = new Color(0.6f, 0.7f, 1f) } };
+                GUI.Label(new Rect(20, 136, 220, 18), $"Slots: {spellSlotStr}", slotStyle);
+            }
 
             // Top-right: Quest tracker
             var qs = ForeverEngine.ECS.Systems.QuestSystem.Instance;
