@@ -22,10 +22,11 @@ namespace ForeverEngine.MonoBehaviour.Rendering
             _fogTexture.filterMode = FilterMode.Point;
             _fogPixels = new Color32[width * height];
 
-            // Start with everything unexplored (black)
-            var unexplored = new Color32(0, 0, 0, 255);
+            // Start with everything explored (semi-transparent) so map is visible
+            // FogOfWarSystem will upgrade tiles near the player to fully visible
+            var explored = new Color32(0, 0, 0, 100);
             for (int i = 0; i < _fogPixels.Length; i++)
-                _fogPixels[i] = unexplored;
+                _fogPixels[i] = explored;
 
             _fogTexture.SetPixels32(_fogPixels);
             _fogTexture.Apply();
