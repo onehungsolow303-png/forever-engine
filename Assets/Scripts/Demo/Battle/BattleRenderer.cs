@@ -309,7 +309,12 @@ namespace ForeverEngine.Demo.Battle
             _squareMesh.triangles = new[] { 0,2,1, 0,3,2 };
             _squareMesh.RecalculateNormals();
 
+            // Create white pixel texture — Sprites/Default needs a texture to render in URP
+            var tex = new Texture2D(1, 1);
+            tex.SetPixel(0, 0, Color.white);
+            tex.Apply();
             _baseMaterial = new Material(Shader.Find("Sprites/Default"));
+            _baseMaterial.mainTexture = tex;
         }
     }
 }

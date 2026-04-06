@@ -145,13 +145,9 @@ namespace ForeverEngine.Demo.Locations
 
         private void LoadAndTransition(LocationData loc, string mapPath)
         {
-            string mapJson = File.ReadAllText(mapPath);
-            if (!SchemaValidator.ValidateMapData(mapJson))
-                Debug.LogWarning("[LocationInterior] Map data failed validation — loading anyway.");
-
-            GameManager.Instance.PendingMapDataPath = mapPath;
-            GameManager.Instance.PendingLocationId = loc.Id;
-            SceneManager.LoadScene("Game");
+            // Game scene dungeon renderer not yet functional — fall back to battle encounter
+            Debug.Log($"[LocationInterior] Dungeon interior not available, entering battle at {loc.Name}");
+            GameManager.Instance.EnterBattle($"dungeon_{loc.Type}_{loc.Id}");
         }
 
         // ── Popup helpers ─────────────────────────────────────────────────────
