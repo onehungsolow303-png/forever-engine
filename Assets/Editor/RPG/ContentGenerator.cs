@@ -8,6 +8,8 @@ namespace ForeverEngine.Editor.RPG
         private const string ClassDir = "Assets/Resources/RPG/Content/Classes";
         private const string SpeciesDir = "Assets/Resources/RPG/Content/Species";
         private const string SpellDir = "Assets/Resources/RPG/Content/Spells";
+        private const string WeaponDir = "Assets/Resources/RPG/Content/Weapons";
+        private const string ArmorDir = "Assets/Resources/RPG/Content/Armor";
 
         [MenuItem("Forever Engine/RPG/Generate All Content")]
         public static void GenerateAll()
@@ -19,6 +21,7 @@ namespace ForeverEngine.Editor.RPG
             SpellGenerator.GenerateAll();
             ClassGenerator.GenerateAll();
             SpeciesGenerator.GenerateAll();
+            EquipmentGenerator.GenerateAll();
 
             AssetDatabase.SaveAssets();
             AssetDatabase.Refresh();
@@ -35,6 +38,8 @@ namespace ForeverEngine.Editor.RPG
             EnsureFolder("Assets/Resources/RPG/Content", "Classes");
             EnsureFolder("Assets/Resources/RPG/Content", "Species");
             EnsureFolder("Assets/Resources/RPG/Content", "Spells");
+            EnsureFolder("Assets/Resources/RPG/Content", "Weapons");
+            EnsureFolder("Assets/Resources/RPG/Content", "Armor");
         }
 
         private static void EnsureFolder(string parent, string name)
@@ -53,10 +58,14 @@ namespace ForeverEngine.Editor.RPG
             var classes = AssetDatabase.FindAssets("t:ClassData", new[] { ClassDir });
             var species = AssetDatabase.FindAssets("t:SpeciesData", new[] { SpeciesDir });
             var spells = AssetDatabase.FindAssets("t:SpellData", new[] { SpellDir });
+            var weapons = AssetDatabase.FindAssets("t:WeaponData", new[] { WeaponDir });
+            var armor = AssetDatabase.FindAssets("t:ArmorData", new[] { ArmorDir });
 
             Debug.Log($"[ContentGenerator] Generated {classes.Length} ClassData assets");
             Debug.Log($"[ContentGenerator] Generated {species.Length} SpeciesData assets");
             Debug.Log($"[ContentGenerator] Generated {spells.Length} SpellData assets");
+            Debug.Log($"[ContentGenerator] Generated {weapons.Length} WeaponData assets");
+            Debug.Log($"[ContentGenerator] Generated {armor.Length} ArmorData assets");
 
             if (classes.Length != 12)
             {
@@ -71,6 +80,16 @@ namespace ForeverEngine.Editor.RPG
             if (spells.Length != 205)
             {
                 Debug.LogError($"[ContentGenerator] Expected 205 spells, found {spells.Length}");
+                errors++;
+            }
+            if (weapons.Length < 100)
+            {
+                Debug.LogError($"[ContentGenerator] Expected 100+ weapons, found {weapons.Length}");
+                errors++;
+            }
+            if (armor.Length < 50)
+            {
+                Debug.LogError($"[ContentGenerator] Expected 50+ armor, found {armor.Length}");
                 errors++;
             }
 
@@ -106,7 +125,7 @@ namespace ForeverEngine.Editor.RPG
                 }
             }
 
-            int total = classes.Length + species.Length + spells.Length;
+            int total = classes.Length + species.Length + spells.Length + weapons.Length + armor.Length;
             Debug.Log($"[ContentGenerator] Validation: {total} total assets, {errors} errors");
         }
     }
