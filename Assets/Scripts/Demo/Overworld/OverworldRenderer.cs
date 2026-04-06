@@ -198,7 +198,11 @@ namespace ForeverEngine.Demo.Overworld
 
         private void CreateHexMaterial()
         {
-            _hexMaterial = new Material(Shader.Find("Sprites/Default"));
+            // Try URP unlit first, then built-in Unlit/Color, then Sprites/Default as fallback
+            var shader = Shader.Find("Universal Render Pipeline/Unlit");
+            if (shader == null) shader = Shader.Find("Unlit/Color");
+            if (shader == null) shader = Shader.Find("Sprites/Default");
+            _hexMaterial = new Material(shader);
         }
     }
 }
