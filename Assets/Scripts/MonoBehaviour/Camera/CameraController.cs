@@ -43,6 +43,8 @@ namespace ForeverEngine.MonoBehaviour.Camera
             transform.position = Vector3.SmoothDamp(
                 transform.position, targetPos, ref _velocity, 1f / _followSpeed);
 
+            ApplyShake();
+
             // Parallax offset based on mouse
             if (_perspectiveMode)
             {
@@ -86,6 +88,32 @@ namespace ForeverEngine.MonoBehaviour.Camera
         public bool PerspectiveMode => _perspectiveMode;
 
         public void SetTarget(Transform target) => _target = target;
+
+        // ── Screen Shake ──────────────────────────────────────────────────
+        private float _shakeIntensity;
+        private float _shakeDuration;
+        private float _shakeTimer;
+
+        /// <summary>
+        /// Trigger screen shake. intensity 0.1 = subtle, 0.3 = big hit, 0.5 = massive.
+        /// </summary>
+        public void Shake(float intensity = 0.15f, float duration = 0.2f)
+        {
+            _shakeIntensity = intensity;
+            _shakeDuration = duration;
+            _shakeTimer = duration;
+        }
+
+        private void ApplyShake()
+        {
+            if (_shakeTimer <= 0) return;
+            _shakeTimer -= Time.deltaTime;
+            float t = _shakeTimer / _shakeDuration;
+            float offset = _shakeIntensity * t;
+            transform.position += new Vector3(
+                Random.Range(-offset, offset),
+                Random.Range(-offset, offset), 0);
+        }
 
         /// <summary>
         /// Returns tile coordinates at screen position.

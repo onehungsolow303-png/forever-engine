@@ -397,6 +397,10 @@ namespace ForeverEngine.Demo.Battle
 
                 Log.Add($"{playerCombatant.Name} casts {spell.Name} on {target.Name} for {dmgResult.AfterResistance} {spell.DamageType} damage{resistMsg}!");
 
+                // Visual feedback for spell damage
+                if (_renderer != null)
+                    _renderer.ShowDamageNumber(new Vector3(target.X, target.Y, 0), dmgResult.AfterResistance, false);
+
                 // AI events
                 var ai = Demo.AI.DemoAIIntegration.Instance;
                 ai?.OnPlayerAttacked(true, dmgResult.AfterResistance, target.Name);
@@ -698,6 +702,15 @@ namespace ForeverEngine.Demo.Battle
 
                 Log.Add($"{critStr}{attacker.Name} hits {target.Name}{advStr} for {dmgResult.AfterResistance} {dmgType} damage! (d20={atkResult.NaturalRoll}, total={atkResult.Total} vs AC {target.AC}){resistStr}");
 
+                // Visual feedback: damage number + screen shake
+                if (_renderer != null)
+                    _renderer.ShowDamageNumber(new Vector3(target.X, target.Y, 0), dmgResult.AfterResistance, atkResult.Critical);
+                if (atkResult.Critical || target.HP <= 0)
+                {
+                    var cam = FindFirstObjectByType<MonoBehaviour.Camera.CameraController>();
+                    cam?.Shake(atkResult.Critical ? 0.25f : 0.15f);
+                }
+
                 // AI events (preserved)
                 if (attacker.IsPlayer) ai?.OnPlayerAttacked(true, dmgResult.AfterResistance, target.Name);
                 if (target.IsPlayer) ai?.OnPlayerDamaged(dmgResult.AfterResistance);
@@ -743,6 +756,7 @@ namespace ForeverEngine.Demo.Battle
             else
             {
                 Log.Add($"{attacker.Name} misses {target.Name}{advStr}. (d20={atkResult.NaturalRoll}, total={atkResult.Total} vs AC {target.AC})");
+                _renderer?.ShowMiss(new Vector3(target.X, target.Y, 0));
                 if (attacker.IsPlayer) ai?.OnPlayerAttacked(false, 0, target.Name);
             }
 
