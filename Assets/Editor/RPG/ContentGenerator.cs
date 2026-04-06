@@ -5,9 +5,9 @@ namespace ForeverEngine.Editor.RPG
 {
     public static class ContentGenerator
     {
-        private const string ClassDir = "Assets/Scripts/RPG/Content/Classes";
-        private const string SpeciesDir = "Assets/Scripts/RPG/Content/Species";
-        private const string SpellDir = "Assets/Scripts/RPG/Content/Spells";
+        private const string ClassDir = "Assets/Resources/RPG/Content/Classes";
+        private const string SpeciesDir = "Assets/Resources/RPG/Content/Species";
+        private const string SpellDir = "Assets/Resources/RPG/Content/Spells";
 
         [MenuItem("Forever Engine/RPG/Generate All Content")]
         public static void GenerateAll()
@@ -30,10 +30,11 @@ namespace ForeverEngine.Editor.RPG
 
         private static void EnsureDirectories()
         {
-            EnsureFolder("Assets/Scripts/RPG", "Content");
-            EnsureFolder("Assets/Scripts/RPG/Content", "Classes");
-            EnsureFolder("Assets/Scripts/RPG/Content", "Species");
-            EnsureFolder("Assets/Scripts/RPG/Content", "Spells");
+            EnsureFolder("Assets/Resources", "RPG");
+            EnsureFolder("Assets/Resources/RPG", "Content");
+            EnsureFolder("Assets/Resources/RPG/Content", "Classes");
+            EnsureFolder("Assets/Resources/RPG/Content", "Species");
+            EnsureFolder("Assets/Resources/RPG/Content", "Spells");
         }
 
         private static void EnsureFolder(string parent, string name)

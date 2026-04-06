@@ -49,7 +49,7 @@ namespace ForeverEngine.Shared
                 if (!string.IsNullOrEmpty(data.config.schema_version) &&
                     data.config.schema_version != expectedVersion)
                 {
-                    Debug.LogWarning(
+                    Debug.Log(
                         $"[SchemaValidator] Map schema version mismatch: " +
                         $"expected {expectedVersion}, got {data.config.schema_version}. " +
                         $"Map Generator may need updating.");

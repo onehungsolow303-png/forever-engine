@@ -1,4 +1,5 @@
 using Unity.Burst;
+using Unity.Collections;
 using Unity.Mathematics;
 
 namespace ForeverEngine.ECS.Utility
@@ -31,6 +32,66 @@ namespace ForeverEngine.ECS.Utility
             {
                 if (!int.TryParse(rest, out sides)) sides = 4;
             }
+        }
+
+        /// <summary>
+        /// Burst-compatible overload that parses FixedString32Bytes directly.
+        /// Supports formats like "2d8", "1d6+2", "3d4-1".
+        /// </summary>
+        [BurstCompile]
+        public static void Parse(in FixedString32Bytes dice, out int count, out int sides, out int bonus)
+        {
+            count = 1; sides = 4; bonus = 0;
+            int len = dice.Length;
+            if (len == 0) return;
+
+            // Find 'd' or 'D'
+            int dIdx = -1;
+            for (int i = 0; i < len; i++)
+            {
+                byte c = dice[i];
+                if (c == (byte)'d' || c == (byte)'D') { dIdx = i; break; }
+            }
+            if (dIdx < 0) return;
+
+            // Parse count before 'd'
+            count = ParseInt(in dice, 0, dIdx);
+            if (count <= 0) { count = 1; return; }
+
+            // Find '+' or '-' after 'd'
+            int modIdx = -1;
+            int sign = 1;
+            for (int i = dIdx + 1; i < len; i++)
+            {
+                byte c = dice[i];
+                if (c == (byte)'+') { modIdx = i; sign = 1; break; }
+                if (c == (byte)'-') { modIdx = i; sign = -1; break; }
+            }
+
+            if (modIdx >= 0)
+            {
+                sides = ParseInt(in dice, dIdx + 1, modIdx);
+                bonus = ParseInt(in dice, modIdx + 1, len) * sign;
+            }
+            else
+            {
+                sides = ParseInt(in dice, dIdx + 1, len);
+            }
+
+            if (sides <= 0) sides = 4;
+        }
+
+        [BurstCompile]
+        private static int ParseInt(in FixedString32Bytes s, int start, int end)
+        {
+            int result = 0;
+            for (int i = start; i < end; i++)
+            {
+                byte c = s[i];
+                if (c < (byte)'0' || c > (byte)'9') continue;
+                result = result * 10 + (c - (byte)'0');
+            }
+            return result;
         }
 
         [BurstCompile]

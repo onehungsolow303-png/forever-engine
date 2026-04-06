@@ -1,7 +1,9 @@
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using System.IO;
 using System.Threading.Tasks;
 using ForeverEngine.MonoBehaviour.ContentLoader;
+using ForeverEngine.Shared;
 
 namespace ForeverEngine.Demo.Locations
 {
@@ -183,20 +185,24 @@ namespace ForeverEngine.Demo.Locations
 
             if (resp != null && resp.success)
             {
-                string body =
-                    $"You enter {loc.Name}. {source}\n\n" +
-                    $"Type: {resp.type}\n" +
-                    $"Data: {(string.IsNullOrEmpty(resp.dataPath) ? "(inline)" : resp.dataPath)}\n\n";
+                // Resolve the map data path: prefer response dataPath, fall back to cache
+                string mapPath = !string.IsNullOrEmpty(resp.dataPath) ? resp.dataPath : GetCachePath(loc);
 
-                if (!string.IsNullOrEmpty(resp.encounterJson))
-                    body += $"Encounter data loaded.\n";
-                if (!string.IsNullOrEmpty(resp.npcJson))
-                    body += $"NPC data loaded.\n";
-                if (!string.IsNullOrEmpty(resp.treasureJson))
-                    body += $"Treasure data loaded.\n";
+                if (!File.Exists(mapPath))
+                {
+                    ShowPopup(loc.Name, $"Map data file not found:\n{mapPath}");
+                    return;
+                }
 
-                body += "\n[TODO] Map import + scene transition goes here.";
-                ShowPopup(loc.Name, body);
+                // Validate before loading
+                string mapJson = File.ReadAllText(mapPath);
+                if (!SchemaValidator.ValidateMapData(mapJson))
+                    Debug.LogWarning($"[LocationInterior] Map data at {mapPath} failed validation — loading anyway.");
+
+                // Hand off to GameManager and transition to the Game scene
+                GameManager.Instance.PendingMapDataPath = mapPath;
+                GameManager.Instance.PendingLocationId = loc.Id;
+                SceneManager.LoadScene("Game");
             }
             else
             {

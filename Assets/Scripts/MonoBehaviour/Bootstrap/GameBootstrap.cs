@@ -1,5 +1,6 @@
 using UnityEngine;
 using Unity.Entities;
+using ForeverEngine.Demo;
 using ForeverEngine.ECS.Data;
 using ForeverEngine.MonoBehaviour.Rendering;
 using ForeverEngine.MonoBehaviour.Input;
@@ -30,7 +31,13 @@ namespace ForeverEngine.MonoBehaviour.Bootstrap
         {
             _entityManager = World.DefaultGameObjectInjectionWorld.EntityManager;
 
-            if (!string.IsNullOrEmpty(MapDataPath))
+            string pendingPath = GameManager.Instance?.PendingMapDataPath;
+            if (!string.IsNullOrEmpty(pendingPath))
+            {
+                GameManager.Instance.PendingMapDataPath = null;
+                LoadMap(pendingPath);
+            }
+            else if (!string.IsNullOrEmpty(MapDataPath))
                 LoadMap(MapDataPath);
             else
                 Debug.Log("[ForeverEngine] No map path. Use File > Open to load a map.");

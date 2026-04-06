@@ -127,7 +127,7 @@ namespace ForeverEngine.ECS.Systems
             bool saved   = saveRoll >= t.SaveDC;
 
             // Parse and roll trap damage
-            DiceRoller.Parse(t.Damage.ToString(), out int count, out int sides, out int bonus);
+            DiceRoller.Parse(in t.Damage, out int count, out int sides, out int bonus);
             int fullDamage = DiceRoller.Roll(count, sides, bonus, ref _rngSeed);
             int damage     = saved ? fullDamage / 2 : fullDamage;
 
