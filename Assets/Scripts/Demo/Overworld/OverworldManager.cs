@@ -68,9 +68,8 @@ namespace ForeverEngine.Demo.Overworld
             if (gm.LastBattleWon)
             {
                 gm.Player.Gold += gm.LastBattleGoldEarned;
-                // Partial heal after victory (short rest)
-                int healAmount = gm.Player.MaxHP / 4;
-                gm.Player.HP = System.Math.Min(gm.Player.HP + healAmount, gm.Player.MaxHP);
+                // Full heal after victory
+                gm.Player.HP = gm.Player.MaxHP;
                 gm.LastBattleWon = false;
             }
 
@@ -160,17 +159,17 @@ namespace ForeverEngine.Demo.Overworld
                     return;
             }
 
-            // No encounters in first 3 moves (tutorial grace period)
-            if (Player.MovesTaken <= 3) return;
+            // No encounters in first 10 moves (tutorial grace period)
+            if (Player.MovesTaken <= 10) return;
 
             float chance = tile.Type switch
             {
-                TileType.Plains => 0.03f,
-                TileType.Forest => 0.08f,
-                TileType.Road => 0.12f, // Ruins
+                TileType.Plains => 0.02f,
+                TileType.Forest => 0.04f,
+                TileType.Road => 0.06f, // Ruins
                 _ => 0f
             };
-            if (IsNight) chance += 0.08f;
+            if (IsNight) chance += 0.04f;
 
             if (Random.Range(0f, 1f) < chance)
             {
