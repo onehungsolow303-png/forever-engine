@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using ForeverEngine.Generation.Data;
-using ForeverEngine.ECS.Data;
 
 namespace ForeverEngine.Generation.Agents
 {
@@ -61,8 +60,19 @@ namespace ForeverEngine.Generation.Agents
                 // Encounters
                 if (rng.NextDouble() < purpose.EncounterMult * 0.5f && xpSpent < xpBudget)
                 {
-                    string creature = profile.CreaturePool != null && profile.CreaturePool.Length > 0
-                        ? profile.CreaturePool[rng.Next(profile.CreaturePool.Length)] : "goblin";
+                    // CR-gated creature selection: filter pool by party level
+                    int maxCR = request.PartyLevel <= 2 ? 25 : request.PartyLevel <= 4 ? 100 : request.PartyLevel <= 8 ? 500 : int.MaxValue;
+                    string creature;
+                    if (profile.CreaturePool != null && profile.CreaturePool.Length > 0)
+                    {
+                        var eligible = System.Array.FindAll(profile.CreaturePool, c => CreatureDatabase.GetStats(c).CR <= maxCR);
+                        if (eligible.Length == 0) eligible = profile.CreaturePool;
+                        creature = eligible[rng.Next(eligible.Length)];
+                    }
+                    else
+                    {
+                        creature = "goblin";
+                    }
                     int xp = System.Math.Min(xpBudget / graph.Nodes.Count, xpBudget - xpSpent);
                     result.Encounters.Add(new EntitySpawn { X = cx, Y = cy, Type = "creature", Variant = creature, Value = xp });
                     xpSpent += xp;
