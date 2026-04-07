@@ -181,9 +181,14 @@ namespace ForeverEngine.Demo
 
         public void PlayerDied()
         {
-            Player.HP = Player.MaxHP / 2;
-            Player.Hunger = 50;
-            Player.Thirst = 50;
+            // Respawn at last safe location, fully restored. Previously
+            // restored to half HP / half resources, which compounded into
+            // "die in second combat with no turn" because the next encounter
+            // could one-shot a 10/20-HP player. Roguelike difficulty is fine,
+            // but losing without an action is universally frustrating.
+            Player.HP = Player.MaxHP;
+            Player.Hunger = Player.MaxHunger;
+            Player.Thirst = Player.MaxThirst;
             var loc = LocationData.Get(Player.LastSafeLocation);
             if (loc != null) { Player.HexQ = loc.HexQ; Player.HexR = loc.HexR; }
             ReturnToOverworld();

@@ -90,9 +90,22 @@ namespace ForeverEngine.Demo.Battle
                 Combatants.Add(BattleCombatant.FromEnemy(enemyDef, ex, ey));
             }
 
-            // Roll initiative
+            // Roll initiative, then promote the player to the front of the
+            // round-1 turn order. The player's actual InitiativeRoll is left
+            // intact for any consumer that displays it; only the turn ordering
+            // is biased so the player always gets at least one action before
+            // any enemy. Rounds 2+ go in raw initiative order via NextTurn's
+            // index wrap. Addresses the "died with no turn" complaint without
+            // changing combat balance.
             foreach (var c in Combatants) c.RollInitiative(ref _rngSeed);
             Combatants = Combatants.OrderByDescending(c => c.InitiativeRoll).ToList();
+            int playerIdx = Combatants.FindIndex(c => c.IsPlayer);
+            if (playerIdx > 0)
+            {
+                var p = Combatants[playerIdx];
+                Combatants.RemoveAt(playerIdx);
+                Combatants.Insert(0, p);
+            }
 
             // Notify Director Hub that combat has started. Q-table persistence
             // is still pending the long-term memory wiring (spec §14 follow-up #3).
