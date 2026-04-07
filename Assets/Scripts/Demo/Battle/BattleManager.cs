@@ -94,10 +94,9 @@ namespace ForeverEngine.Demo.Battle
             foreach (var c in Combatants) c.RollInitiative(ref _rngSeed);
             Combatants = Combatants.OrderByDescending(c => c.InitiativeRoll).ToList();
 
-            // Phase 3 pivot: Demo.AI.DemoAIIntegration archived. Combat-start
-            // and Q-table persistence will be reintroduced via DirectorClient
-            // in a follow-up. For now no notification is sent and no saved
-            // table is loaded.
+            // Notify Director Hub that combat has started. Q-table persistence
+            // is still pending the long-term memory wiring (spec §14 follow-up #3).
+            Demo.AI.DirectorEvents.Send($"combat started: {encId}");
             float[] savedTable = null;
             foreach (var c in Combatants)
             {
@@ -401,12 +400,13 @@ namespace ForeverEngine.Demo.Battle
                 if (_renderer != null)
                     _renderer.ShowDamageNumber(new Vector3(target.X, target.Y, 0), dmgResult.AfterResistance, false);
 
-                // Phase 3 pivot: AI event hooks (OnPlayerAttacked, OnEnemyKilled)
-                // archived alongside Demo.AI.DemoAIIntegration. Will be replaced
-                // by DirectorClient.InterpretAction for narrative beats.
+                Demo.AI.DirectorEvents.Send(
+                    $"spell hit {target.Name} for {dmgResult.AfterResistance}",
+                    targetId: target.Name);
                 if (!target.IsAlive)
                 {
                     Log.Add($"{target.Name} is defeated!");
+                    Demo.AI.DirectorEvents.Send($"defeated {target.Name}", targetId: target.Name);
                 }
 
                 // Q-learning penalty for target
@@ -714,8 +714,13 @@ namespace ForeverEngine.Demo.Battle
                 if (target.HP <= 0 && !target.IsPlayer)
                     Audio.SoundManager.Instance?.PlayDeath();
 
-                // Phase 3 pivot: ai event hooks (OnPlayerAttacked, OnPlayerDamaged)
-                // archived alongside Demo.AI.DemoAIIntegration.
+                if (attacker.IsPlayer)
+                    Demo.AI.DirectorEvents.Send(
+                        $"hit {target.Name} for {dmgResult.AfterResistance}",
+                        targetId: target.Name);
+                else if (target.IsPlayer)
+                    Demo.AI.DirectorEvents.Send(
+                        $"took {dmgResult.AfterResistance} damage from {attacker.Name}");
 
                 // Check concentration on damaged caster
                 if (target.Concentration != null && target.Concentration.IsConcentrating && target.Sheet != null)
@@ -743,7 +748,7 @@ namespace ForeverEngine.Demo.Battle
                     else if (!target.IsPlayer)
                     {
                         Log.Add($"{target.Name} is defeated!");
-                        // Phase 3 pivot: ai?.OnEnemyKilled hook archived.
+                        Demo.AI.DirectorEvents.Send($"killed {target.Name}", targetId: target.Name);
                     }
                 }
 
@@ -760,7 +765,8 @@ namespace ForeverEngine.Demo.Battle
                 Log.Add($"{attacker.Name} misses {target.Name}{advStr}. (d20={atkResult.NaturalRoll}, total={atkResult.Total} vs AC {target.AC})");
                 _renderer?.ShowMiss(new Vector3(target.X, target.Y, 0));
                 Audio.SoundManager.Instance?.PlayMiss();
-                // Phase 3 pivot: ai?.OnPlayerAttacked(false) hook archived.
+                if (attacker.IsPlayer)
+                    Demo.AI.DirectorEvents.Send($"missed {target.Name}", targetId: target.Name);
             }
 
             // Q-learning: reward/penalize enemy attacker for hit/miss (preserved)
@@ -794,14 +800,15 @@ namespace ForeverEngine.Demo.Battle
             {
                 BattleOver = true; PlayerWon = false;
                 Log.Add("You have fallen...");
-                // Phase 3 pivot: OnPlayerDied hook archived.
+                Demo.AI.DirectorEvents.Send("player died");
             }
             else if (Combatants.All(c => c.IsPlayer || !c.IsAlive))
             {
                 BattleOver = true; PlayerWon = true;
                 Log.Add("Victory!");
                 Audio.SoundManager.Instance?.PlayVictory();
-                // Phase 3 pivot: OnCombatVictory hook archived.
+                Demo.AI.DirectorEvents.Send(
+                    $"victory: gold={_encounterData.GoldReward} xp={_encounterData.XPReward}");
                 var gm = GameManager.Instance;
                 if (gm != null)
                 {

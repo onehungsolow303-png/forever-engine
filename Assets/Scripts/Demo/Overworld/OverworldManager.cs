@@ -140,7 +140,7 @@ namespace ForeverEngine.Demo.Overworld
                 {
                     GameManager.Instance.Player.DiscoveredLocations.Add(loc.Id);
                     if (loc.IsSafe) GameManager.Instance.Player.LastSafeLocation = loc.Id;
-                    // Phase 3 pivot: OnLocationDiscovered hook archived.
+                    Demo.AI.DirectorEvents.Send($"discovered location: {loc.Id}");
                     Debug.Log($"[Overworld] Arrived at {loc.Name}");
                     return;
                 }
