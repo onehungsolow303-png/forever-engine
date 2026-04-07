@@ -149,7 +149,14 @@ namespace ForeverEngine.Demo.UI
                 label.style.marginBottom = 4;
                 _history.Add(label);
             }
-            _history.ScrollTo(_history.contentContainer.Children().GetEnumerator() is var en && en.MoveNext() ? en.Current as VisualElement : null);
+            // Auto-scroll to the most recent entry. ScrollTo(null) throws,
+            // so guard against the empty case (which Show() hits every time
+            // because it clears _historyLines first).
+            int childCount = _history.contentContainer.childCount;
+            if (childCount > 0)
+            {
+                _history.ScrollTo(_history.contentContainer[childCount - 1]);
+            }
         }
     }
 

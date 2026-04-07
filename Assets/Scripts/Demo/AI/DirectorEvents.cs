@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 using ForeverEngine.Bridges;
 using ForeverEngine.AI.SelfHealing;
@@ -44,7 +45,7 @@ namespace ForeverEngine.Demo.AI
                 ActorId = "player",
                 TargetId = targetId,
                 PlayerInput = playerInput,
-                ActorStats = actorStats,
+                ActorStats = actorStats ?? BuildActorStatsFromPlayer(gm),
                 TargetStats = targetStats,
             };
 
@@ -93,6 +94,7 @@ namespace ForeverEngine.Demo.AI
                 ActorId = "player",
                 TargetId = npcId,
                 PlayerInput = text,
+                ActorStats = BuildActorStatsFromPlayer(gm),
             };
 
             gm.StartCoroutine(gm.Director.InterpretAction(
@@ -108,6 +110,37 @@ namespace ForeverEngine.Demo.AI
                     fb?.TryExecute(() => throw new System.Exception(err));
                     onResponse?.Invoke("");
                 }));
+        }
+
+        /// <summary>
+        /// Builds the actor_stats payload that the JSON schema (action.schema.json)
+        /// requires. The schema mandates {hp, max_hp} as integers; without them
+        /// pydantic returns 422 Unprocessable Entity. Caller can override by passing
+        /// their own stats object to Send().
+        ///
+        /// Returns a minimal-but-valid stats object even if the player isn't loaded
+        /// yet (e.g. on the title screen) so the contract still holds.
+        /// </summary>
+        private static Dictionary<string, object> BuildActorStatsFromPlayer(GameManager gm)
+        {
+            var p = gm?.Player;
+            if (p == null)
+            {
+                return new Dictionary<string, object>
+                {
+                    ["hp"] = 0,
+                    ["max_hp"] = 1,
+                };
+            }
+            return new Dictionary<string, object>
+            {
+                ["hp"] = p.HP,
+                ["max_hp"] = p.MaxHP,
+                ["attack"] = p.Strength,
+                ["defense"] = p.AC,
+                ["level"] = p.Level,
+                ["gold"] = p.Gold,
+            };
         }
     }
 }
