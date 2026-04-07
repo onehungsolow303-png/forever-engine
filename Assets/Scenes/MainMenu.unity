@@ -128,15 +128,11 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1243328369}
-  - component: {fileID: 1243328378}
-  - component: {fileID: 1243328377}
   - component: {fileID: 1243328376}
   - component: {fileID: 1243328375}
-  - component: {fileID: 1243328374}
   - component: {fileID: 1243328373}
   - component: {fileID: 1243328372}
   - component: {fileID: 1243328371}
-  - component: {fileID: 1243328370}
   m_Layer: 0
   m_Name: AI_Systems
   m_TagString: Untagged
@@ -159,20 +155,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 1578085066}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1243328370
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1243328368}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 00d8ac3f5d0f34543ba8befffb8fafb2, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: ForeverEngine::ForeverEngine.AI.GameMaster.ClaudeAPIClient
-  apiKey: 
-  defaultModel: claude-haiku-4-5-20251001
 --- !u!114 &1243328371
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -213,22 +195,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cd4ea32a0334d234ea44a3c615cee105, type: 3}
   m_Name: 
   m_EditorClassIdentifier: ForeverEngine::ForeverEngine.AI.SelfHealing.SystemMonitor
---- !u!114 &1243328374
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1243328368}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 791840b80f27c7749ac1ae1244877a76, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: ForeverEngine::ForeverEngine.AI.Memory.MemoryManager
-  Semantic: {fileID: 0}
-  _shortTermDecay: 10
-  _maxEpisodes: 500
-  _maxLongTermEvents: 10000
 --- !u!114 &1243328375
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -255,31 +221,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: ForeverEngine::ForeverEngine.AI.Learning.DynamicDifficulty
   _config: {fileID: 0}
---- !u!114 &1243328377
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1243328368}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d37d07763c0443b47ae6724d22b21471, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: ForeverEngine::ForeverEngine.AI.Director.AIDirector
-  _config: {fileID: 0}
---- !u!114 &1243328378
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1243328368}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6dfdf00ff98710a44b7652b0e106b8b8, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: ForeverEngine::ForeverEngine.Demo.AI.DemoAIIntegration
 --- !u!1 &1381817898
 GameObject:
   m_ObjectHideFlags: 0
