@@ -190,6 +190,13 @@ namespace ForeverEngine.Demo.Battle
 
         // ── Damage Numbers ────────────────────────────────────────────────
 
+        // Color tiers by damage magnitude. White for small, orange for medium,
+        // red for big, plus the existing yellow override for crits.
+        private static readonly Color DMG_SMALL = new Color(1f, 1f, 1f);
+        private static readonly Color DMG_MED = new Color(1f, 0.65f, 0.2f);
+        private static readonly Color DMG_BIG = new Color(1f, 0.25f, 0.15f);
+        private static readonly Color DMG_CRIT = new Color(1f, 0.95f, 0.2f);
+
         public void ShowDamageNumber(Vector3 worldPos, int damage, bool isCrit)
         {
             var go = new GameObject("DmgNum");
@@ -198,13 +205,37 @@ namespace ForeverEngine.Demo.Battle
 
             var tm = go.AddComponent<TextMesh>();
             tm.text = isCrit ? $"CRIT {damage}!" : damage.ToString();
-            tm.characterSize = isCrit ? 0.18f : 0.15f;
             tm.fontSize = 48;
             tm.anchor = TextAnchor.MiddleCenter;
-            tm.color = isCrit ? Color.yellow : Color.white;
             tm.fontStyle = isCrit ? FontStyle.Bold : FontStyle.Normal;
 
-            _damageNumbers.Add(new DamageNumber { GO = go, Timer = 1.2f, InitialTimer = 1.2f, StartY = worldPos.y + 0.3f });
+            // Color by tier
+            if (isCrit)        tm.color = DMG_CRIT;
+            else if (damage >= 12) tm.color = DMG_BIG;
+            else if (damage >= 6)  tm.color = DMG_MED;
+            else                   tm.color = DMG_SMALL;
+
+            // Base size scales with damage magnitude. Crits get a hard
+            // upscale on top so a 5-damage crit still feels punchy.
+            float magnitudeScale = 0.12f + Mathf.Clamp01(damage / 20f) * 0.08f;
+            float initialScale = isCrit ? magnitudeScale * 1.6f : magnitudeScale;
+            tm.characterSize = initialScale;
+
+            float lifetime = isCrit ? 1.4f : 1.0f;
+            _damageNumbers.Add(new DamageNumber
+            {
+                GO = go,
+                Timer = lifetime,
+                InitialTimer = lifetime,
+                StartY = worldPos.y + 0.3f,
+                InitialScale = initialScale,
+                RestScale = magnitudeScale,
+                IsCrit = isCrit,
+            });
+
+            // Camera shake on crits — bigger crits shake harder.
+            if (isCrit)
+                ShakeCamera(0.18f, 0.12f + Mathf.Clamp01(damage / 30f) * 0.10f);
         }
 
         public void ShowMiss(Vector3 worldPos)
@@ -236,22 +267,76 @@ namespace ForeverEngine.Demo.Battle
                     continue;
                 }
 
-                // Float upward and fade
-                float progress = 1f - dn.Timer / dn.InitialTimer;
+                // Eased float: fast at the start, slow at the end. Quadratic
+                // ease-out feels punchy at impact and gentle on the way out.
+                float linear = 1f - dn.Timer / dn.InitialTimer;
+                float eased = 1f - (1f - linear) * (1f - linear);
                 var pos = dn.GO.transform.position;
-                pos.y = dn.StartY + progress * 0.8f;
+                pos.y = dn.StartY + eased * 0.9f;
                 dn.GO.transform.position = pos;
 
                 var tm = dn.GO.GetComponent<TextMesh>();
                 if (tm != null)
                 {
+                    // Initial scale punch -> rest scale over the first 25% of
+                    // the lifetime, so the number lands big and shrinks to
+                    // its rest size. Crits get more dramatic punch.
+                    float scaleProgress = Mathf.Clamp01(linear / 0.25f);
+                    tm.characterSize = Mathf.Lerp(dn.InitialScale, dn.RestScale, scaleProgress);
+
+                    // Fade in the last 0.3s. Crits hold longer before fading.
                     Color col = tm.color;
-                    col.a = Mathf.Clamp01(dn.Timer / 0.3f); // Fade in last 0.3s
+                    col.a = Mathf.Clamp01(dn.Timer / 0.3f);
                     tm.color = col;
                 }
 
                 _damageNumbers[i] = dn;
             }
+
+            // Camera shake decay
+            if (_shakeTimer > 0f && _cam != null)
+            {
+                _shakeTimer -= dt;
+                if (_shakeTimer <= 0f)
+                {
+                    _cam.transform.position = _shakeOriginalPos;
+                }
+                else
+                {
+                    float progress = _shakeTimer / _shakeDuration;
+                    float magnitude = _shakeMagnitude * progress;
+                    Vector3 offset = new Vector3(
+                        (Random.value - 0.5f) * magnitude * 2f,
+                        (Random.value - 0.5f) * magnitude * 2f,
+                        0f);
+                    _cam.transform.position = _shakeOriginalPos + offset;
+                }
+            }
+        }
+
+        // ── Camera shake ──────────────────────────────────────────────────
+        private float _shakeTimer;
+        private float _shakeDuration;
+        private float _shakeMagnitude;
+        private Vector3 _shakeOriginalPos;
+
+        /// <summary>
+        /// Trigger a brief camera shake. Idempotent: calling while a shake
+        /// is already active overwrites the parameters but reuses the same
+        /// stored origin so the shake doesn't drift the camera permanently.
+        /// </summary>
+        public void ShakeCamera(float duration, float magnitude)
+        {
+            if (_cam == null) return;
+            if (_shakeTimer <= 0f)
+            {
+                // Capture the resting camera position only when starting
+                // a fresh shake. Existing shakes keep their original.
+                _shakeOriginalPos = _cam.transform.position;
+            }
+            _shakeTimer = duration;
+            _shakeDuration = duration;
+            _shakeMagnitude = magnitude;
         }
 
         private struct DamageNumber
@@ -260,6 +345,9 @@ namespace ForeverEngine.Demo.Battle
             public float InitialTimer;
             public float Timer;
             public float StartY;
+            public float InitialScale;
+            public float RestScale;
+            public bool IsCrit;
         }
 
         // ── Primitives ────────────────────────────────────────────────────
