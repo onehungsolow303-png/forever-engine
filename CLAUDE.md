@@ -1,36 +1,88 @@
 # Forever Engine — Claude Code Project Rules
 
 ## What This Is
-A hybrid DOTS/MonoBehaviour game engine built on Unity 6+, evolved from the Map Generator pygame viewer. Part of a three-project ecosystem that will eventually merge into a single game engine.
+A Unity 6+ game runtime: hybrid DOTS/MonoBehaviour engine that hosts the playable RPG. Part of a four-repo ecosystem after the 2026-04-06 three-module consolidation pivot. Forever engine is the client; the brain and asset library live out-of-process in Python services.
 
 ## Architecture
-- **ECS (DOTS + Burst + Job System):** All game logic — fog, combat, AI, pathfinding, entities
-- **MonoBehaviour:** Rendering (Tilemap/Sprite), Camera, UI Toolkit, Audio, Input, Bootstrap
-- **Shared contracts:** C:\Dev\.shared\schemas\ — entity, map, asset, tile schemas
+- **ECS (DOTS + Burst + Job System):** per-frame game logic — fog, combat, AI inference, learning, pathfinding, entities
+- **MonoBehaviour:** rendering (Tilemap/Sprite), camera, UI Toolkit, audio, input, bootstrap, HTTP bridges
+- **Bridges/:** out-of-process client code
+  - `AssetClient.cs` — coroutine HTTP client to Asset Manager (port 7801)
+  - `DirectorClient.cs` — coroutine HTTP client to Director Hub (port 7802) with retry + backoff
+  - `ServiceWatchdog.cs` — boot-time `/health` check on both services
+  - `GameStateServer.cs` — HttpListener-backed read-only server on 127.0.0.1:7803 exposing live engine state to Director Hub's game_state_tool
+  - `SharedSchemaTypes.cs` — auto-generated POCOs from `C:\Dev\.shared\codegen\csharp_gen.py`
+  - `SmokeTestRunner.cs` — batchmode-friendly cross-module integration test
+- **Demo/:** the playable RPG demo
+  - `GameManager.cs` — singleton; constructs the bridge clients + watchdog + state server
+  - `Demo/AI/DirectorEvents.cs` — fire-and-forget bridge from gameplay events to Director Hub
+  - `Demo/UI/DialoguePanel.cs` — UI Toolkit overlay routing player text through DirectorClient
 
-## Project Ecosystem
-- **Forever Engine** (C:\Dev\Forever engin) — PRIMARY, game runtime
-- **Map Generator** (C:\Dev\Map Generator) — SECONDARY, procedural content pipeline
-- **Image Generator** (C:\Dev\Image generator) — DEFERRED, needs pivot to original asset generation
-- **Shared Memory** (C:\Dev\.shared\) — cross-project state, schemas, priorities
+## Repo Ecosystem (post-pivot)
+- **Forever engine** (`C:\Dev\Forever engine`) — this repo. Game runtime.
+- **Director Hub** (`C:\Dev\Director Hub`) — Python/FastAPI on port 7802. Agentic AI brain.
+- **Asset Manager** (`C:\Dev\Asset Manager`) — Python/FastAPI on port 7801. Asset library + selectors + generators + AI gateway.
+- **`.shared`** (`C:\Dev\.shared`) — Cross-module contract layer: JSON schemas, codegen, project state, docs.
 
 ## Rules
-1. **Forever Engine format is source of truth.** Other projects adapt to our schemas.
-2. **ECS for logic, MonoBehaviour for visuals.** Never put game logic in MonoBehaviours.
-3. **Burst-compile all Jobs.** Every IJob must have [BurstCompile] attribute.
-4. **NativeArray for map data.** Walkability, fog, elevation stored as NativeArrays for job access.
-5. **Validate imports.** Always run SchemaValidator before loading external map/asset data.
-6. **Cross-project changes.** If you modify a shared schema, update C:\Dev\.shared\project_state.json.
-7. **No pygame code.** This is Unity C#. Reference pygame viewer for design intent, not implementation.
-8. **ScriptableObject for config.** All magic numbers go in GameConfig, not hardcoded in scripts.
 
-## Design Spec
-Full specification: docs/superpowers/specs/2026-04-05-forever-engine-design.md
+1. **Forever Engine is the source of truth for rules.** Stats, HP, dice resolution, item/spell mechanics — these never leave C#. The Director Hub interprets player intent; the engine resolves the math.
+2. **Asset Manager is the only writer of the asset library.** Forever engine reads asset IDs over HTTP via AssetClient; never generate or modify asset files at runtime.
+3. **Director Hub never touches the engine directly.** It returns structured DecisionPayload JSON the engine applies. No direct ECS writes.
+4. **`.shared/` is the contract layer.** Schemas in `.shared/schemas/` are the single source of truth. If you change one, regenerate `Bridges/SharedSchemaTypes.cs` via:
+   ```
+   python C:/Dev/.shared/codegen/csharp_gen.py --out "C:/Dev/Forever engine/Assets/Scripts/Bridges/SharedSchemaTypes.cs"
+   ```
+5. **ECS for per-frame logic, MonoBehaviour for visuals + IO.** Per-frame AI (`AI/Inference`, `AI/Learning`, `AI/PlayerModeling`, `AI/SelfHealing`) stays in C#; LLM-driven planning and narrative live out-of-process in Director Hub.
+6. **Burst-compile all Jobs.** Every IJob must have `[BurstCompile]`.
+7. **NativeArray for map data.** Walkability, fog, elevation stored as NativeArrays for job access.
+8. **Validate imports.** Always run `SchemaValidator` before loading external map/asset data.
+9. **No game logic in MonoBehaviours that aren't bridges or UI.** The bridge classes in `Bridges/` and the UI panels are exempt — they're IO and presentation, not game logic.
+10. **ScriptableObject for config.** All magic numbers go in `GameConfig` or per-feature config SOs, not hardcoded.
+11. **Fault boundaries on bridge calls.** Use `SystemMonitor.GetOrCreate("name").TryExecute(...)` around any out-of-process call so repeated failures auto-disable rather than spam logs.
+
+## Pivot reference
+Full pivot specification: `C:\Dev\.shared\docs\superpowers\specs\2026-04-06-three-module-consolidation-design.md`
+Implementation plan: `C:\Dev\.shared\docs\superpowers\plans\2026-04-06-three-module-consolidation-plan.md`
+Pre-pivot brain code (archived): `C:\Dev\_archive\forever-engine-pre-pivot\`
 
 ## Key Files
-- Assets/Scripts/ECS/Components/ — All IComponentData structs
-- Assets/Scripts/ECS/Systems/ — All ISystems
-- Assets/Scripts/ECS/Jobs/ — All Burst-compiled IJobs
-- Assets/Scripts/MonoBehaviour/Bootstrap/GameBootstrap.cs — Entry point
-- Assets/Scripts/MonoBehaviour/Bootstrap/MapImporter.cs — JSON → ECS bridge
-- Assets/Scripts/Shared/SchemaValidator.cs — Cross-project contract enforcement
+- `Assets/Scripts/ECS/Components/` — All `IComponentData` structs
+- `Assets/Scripts/ECS/Systems/` — All `ISystem`s
+- `Assets/Scripts/ECS/Jobs/` — All Burst-compiled `IJob`s
+- `Assets/Scripts/MonoBehaviour/Bootstrap/GameBootstrap.cs` — Entry point
+- `Assets/Scripts/MonoBehaviour/Bootstrap/MapImporter.cs` — JSON → ECS bridge
+- `Assets/Scripts/Shared/SchemaValidator.cs` — Cross-project contract enforcement
+- `Assets/Scripts/Bridges/` — All HTTP clients + state server (see Architecture section above)
+- `Assets/Scripts/Demo/GameManager.cs` — Singleton wiring the bridge clients into the demo
+- `Assets/Scripts/Demo/AI/DirectorEvents.cs` — Fire-and-forget event helper for gameplay → Director
+- `Assets/Scripts/AI/Inference/InferenceEngine.cs` — Sentis ONNX wrapper (per-frame, in-engine)
+- `Assets/Scripts/AI/Inference/InferenceScheduler.cs` — Per-frame ms-budget batched inference with PerformanceRegulator feedback
+- `Assets/Scripts/AI/Learning/QLearner.cs` — Pure Q-learning algorithm (per-decision, in-engine)
+- `Assets/Scripts/AI/SelfHealing/{SystemMonitor,FaultBoundary,AssetFaultHandler,PerformanceRegulator}.cs` — Runtime fault graph
+
+## Boot sequence
+1. Demo scene loads → `GameManager.Awake()` constructs `AssetClient`, `DirectorClient`, `ServiceWatchdog`, `GameStateServer`
+2. `GameManager.Start()` (coroutine) calls `Watchdog.CheckAll()` against both Python services
+3. If services are down: log error, the rest of the engine continues in deterministic-fallback mode
+4. If services are up: continue normal scene initialization
+5. `GameStateServer` is now serving on `127.0.0.1:7803` for Director Hub's `game_state_tool`
+
+## Running cross-module locally
+
+```bash
+# Boot both Python services in the background:
+cd "C:/Dev/Director Hub" && uvicorn director_hub.bridge.server:app --port 7802 &
+cd "C:/Dev/Asset Manager" && uvicorn asset_manager.bridge.server:app --port 7801 &
+
+# Or use the docker-compose convenience:
+cd C:/Dev/.shared && docker compose up
+```
+
+Then open Forever engine in the Editor and play the Demo scene. The cross-module SmokeTestRunner can be invoked headless via:
+
+```bash
+"C:/Program Files/Unity/Hub/Editor/6000.4.1f1/Editor/Unity.exe" \
+  -batchmode -nographics -projectPath "C:/Dev/Forever engine" \
+  -executeMethod ForeverEngine.Tests.SmokeTestRunner.Run -quit -logFile -
+```
