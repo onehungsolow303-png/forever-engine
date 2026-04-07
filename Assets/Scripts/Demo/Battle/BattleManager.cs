@@ -1,6 +1,7 @@
 using UnityEngine;
 using System.Collections.Generic;
 using System.Linq;
+using ForeverEngine.Bridges;
 using ForeverEngine.ECS.Utility;
 using ForeverEngine.RPG.Combat;
 using ForeverEngine.RPG.Data;
@@ -131,8 +132,81 @@ namespace ForeverEngine.Demo.Battle
             var renderer = rendererGO.AddComponent<BattleRenderer>();
             renderer.Initialize(Grid, Combatants, Camera.main);
 
+            // Ask Asset Manager for a creature_token sprite for each unique
+            // enemy kind. The result is logged for now; visual swap (loading
+            // the returned PNG into a SpriteRenderer on the existing token
+            // GameObject) is a follow-up. The wire itself proves the engine
+            // can consume Asset Manager assets at gameplay-driven moments,
+            // closing the dead-code gap from the audit.
+            StartCoroutine(RequestEnemySprites());
+
             StartTurn();
             Log.Add($"Battle begins! {_encounterData.Enemies.Count} enemies.");
+        }
+
+        // Cache so we don't re-request the same enemy across battles within
+        // a single game session. Keyed on enemy Name (e.g. "Wolf", "Bandit").
+        private static readonly Dictionary<string, string> _enemySpriteCache = new();
+
+        private System.Collections.IEnumerator RequestEnemySprites()
+        {
+            var gm = GameManager.Instance;
+            if (gm == null || gm.Assets == null) yield break;
+
+            // Extract a biome hint from the encounter id (e.g. "random_Forest_day"
+            // → "forest"). Falls back to "default" for static encounters.
+            string biome = "default";
+            string encId = _encounterData.Id ?? "";
+            if (encId.Contains("Forest")) biome = "forest";
+            else if (encId.Contains("Road")) biome = "ruins";
+            else if (encId.Contains("Plains")) biome = "plains";
+            else if (encId.Contains("dungeon")) biome = "dungeon";
+            else if (encId.Contains("castle")) biome = "castle";
+
+            var seen = new HashSet<string>();
+            foreach (var enemy in _encounterData.Enemies)
+            {
+                if (enemy == null || string.IsNullOrEmpty(enemy.Name)) continue;
+                if (!seen.Add(enemy.Name)) continue;
+                string cacheKey = $"{enemy.Name}|{biome}";
+                if (_enemySpriteCache.TryGetValue(cacheKey, out var cached))
+                {
+                    Debug.Log($"[BattleManager] enemy sprite cache hit: {enemy.Name} -> {cached}");
+                    continue;
+                }
+
+                var req = new AssetClient.AssetSelectionRequestDto
+                {
+                    Kind = "creature_token",
+                    Biome = biome,
+                    Tags = new[] { enemy.Name.ToLowerInvariant() },
+                    AllowAiGeneration = false,
+                };
+
+                yield return gm.Assets.Select(
+                    req,
+                    resp =>
+                    {
+                        if (resp != null && resp.Found && !string.IsNullOrEmpty(resp.AssetId))
+                        {
+                            _enemySpriteCache[cacheKey] = resp.AssetId;
+                            Debug.Log($"[BattleManager] asset hit for {enemy.Name} ({biome}): {resp.AssetId} at {resp.Path}");
+                        }
+                        else
+                        {
+                            // Miss is expected today — the asset library is
+                            // pre-pivot empty for these kinds. The /select call
+                            // succeeded; just no asset matched. Log at info so
+                            // we can verify the wire works.
+                            Debug.Log($"[BattleManager] no asset for {enemy.Name} ({biome}) — using procedural token");
+                        }
+                    },
+                    err =>
+                    {
+                        // Asset Manager unavailable or errored — non-fatal.
+                        Debug.LogWarning($"[BattleManager] asset request failed for {enemy.Name}: {err}");
+                    });
+            }
         }
 
         public void StartTurn()
