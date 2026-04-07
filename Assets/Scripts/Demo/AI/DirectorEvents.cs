@@ -78,7 +78,8 @@ namespace ForeverEngine.Demo.AI
         public static void SendDialogue(
             string text,
             string npcId,
-            System.Action<string> onResponse)
+            System.Action<string> onResponse,
+            string locationId = null)
         {
             var gm = GameManager.Instance;
             if (gm == null || gm.Director == null) { onResponse?.Invoke(""); return; }
@@ -95,6 +96,7 @@ namespace ForeverEngine.Demo.AI
                 TargetId = npcId,
                 PlayerInput = text,
                 ActorStats = BuildActorStatsFromPlayer(gm),
+                SceneContext = BuildSceneContext(locationId),
             };
 
             gm.StartCoroutine(gm.Director.InterpretAction(
@@ -141,6 +143,42 @@ namespace ForeverEngine.Demo.AI
                 ["level"] = p.Level,
                 ["gold"] = p.Gold,
             };
+        }
+
+        /// <summary>
+        /// Build the scene_context payload for SendDialogue. Includes the
+        /// NPC persona + knowledge if a personality template exists for
+        /// the location, plus the location's name + biome hint. The
+        /// Director Hub LLM uses this to ground its responses in this
+        /// world's lore instead of hallucinating fresh NPCs each turn.
+        ///
+        /// scene_context in action.schema.json is additionalProperties:true
+        /// so adding npc_persona / npc_knowledge / npc_role doesn't break
+        /// the contract.
+        /// </summary>
+        private static Dictionary<string, object> BuildSceneContext(string locationId)
+        {
+            var ctx = new Dictionary<string, object>();
+            if (string.IsNullOrEmpty(locationId)) return ctx;
+
+            var loc = LocationData.Get(locationId);
+            if (loc != null)
+            {
+                ctx["location"] = loc.Name;
+                ctx["location_type"] = loc.Type;
+            }
+
+            var npc = NPCData.GetForLocation(locationId);
+            if (npc != null)
+            {
+                ctx["npc_id"] = npc.Id;
+                ctx["npc_name"] = npc.Name;
+                ctx["npc_role"] = npc.Role;
+                ctx["npc_persona"] = npc.Persona;
+                ctx["npc_knowledge"] = npc.Knowledge;
+            }
+
+            return ctx;
         }
     }
 }

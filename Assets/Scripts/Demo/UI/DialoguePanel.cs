@@ -65,7 +65,21 @@ namespace ForeverEngine.Demo.UI
             RefreshHistory();
 
             if (_npcLabel != null)
-                _npcLabel.text = string.IsNullOrEmpty(npcId) ? "Speaking with..." : npcId;
+            {
+                // Prefer the named NPC from NPCData when one exists for this
+                // location, fall back to the raw npcId, fall back to a placeholder.
+                string display = "Speaking with...";
+                var npc = NPCData.GetForLocation(locationId);
+                if (npc != null)
+                {
+                    display = string.IsNullOrEmpty(npc.Role) ? npc.Name : $"{npc.Name} — {npc.Role}";
+                }
+                else if (!string.IsNullOrEmpty(npcId))
+                {
+                    display = npcId;
+                }
+                _npcLabel.text = display;
+            }
 
             // Banner reflects watchdog state if available
             if (_offlineBanner != null)
@@ -116,18 +130,27 @@ namespace ForeverEngine.Demo.UI
             _input.value = "";
             _waitingForResponse = true;
 
-            Demo.AI.DirectorEvents.SendDialogue(text, _currentNpcId, narrative =>
-            {
-                _waitingForResponse = false;
-                if (string.IsNullOrEmpty(narrative))
+            Demo.AI.DirectorEvents.SendDialogue(
+                text,
+                _currentNpcId,
+                narrative =>
                 {
-                    AppendLine("(The conversation falters as you struggle to find the right words.)");
-                }
-                else
-                {
-                    AppendLine($"{_currentNpcId}: {narrative}");
-                }
-            });
+                    _waitingForResponse = false;
+                    if (string.IsNullOrEmpty(narrative))
+                    {
+                        AppendLine("(The conversation falters as you struggle to find the right words.)");
+                    }
+                    else
+                    {
+                        // Use the NPC's display name if we have a persona for this location;
+                        // otherwise fall back to the bare ID so older locations still render.
+                        string speaker = _currentNpcId;
+                        var npc = NPCData.GetForLocation(_currentLocationId);
+                        if (npc != null) speaker = npc.Name;
+                        AppendLine($"{speaker}: {narrative}");
+                    }
+                },
+                locationId: _currentLocationId);
         }
 
         private void AppendLine(string line)
