@@ -1,0 +1,114 @@
+name: ci
+
+# Forever engine CI is the cross-module gate: it boots both Python services
+# (Director Hub on 7802, Asset Manager on 7801), runs Unity headless compile +
+# EditMode tests, then runs the SmokeTestRunner against the live services.
+#
+# Both Python services are checked out as sibling repos. Adjust the paths
+# below if your monorepo / submodule layout differs.
+
+on:
+  push:
+    branches: [master, main]
+  pull_request:
+    branches: [master, main]
+
+env:
+  UNITY_VERSION: "6000.4.1f1"
+
+jobs:
+  unity-cross-module:
+    name: Unity headless compile + cross-module SmokeTest
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Forever engine
+        uses: actions/checkout@v4
+        with:
+          path: forever-engine
+
+      - name: Checkout Director Hub
+        uses: actions/checkout@v4
+        with:
+          repository: ${{ github.repository_owner }}/director-hub
+          path: director-hub
+
+      - name: Checkout Asset Manager
+        uses: actions/checkout@v4
+        with:
+          repository: ${{ github.repository_owner }}/asset-manager
+          path: asset-manager
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install Director Hub deps
+        working-directory: director-hub
+        run: pip install -e ".[dev]"
+
+      - name: Install Asset Manager deps
+        working-directory: asset-manager
+        run: pip install -e ".[dev]"
+
+      - name: Boot Director Hub in background
+        working-directory: director-hub
+        run: |
+          nohup uvicorn director_hub.bridge.server:app --port 7802 > /tmp/dh.log 2>&1 &
+          sleep 3
+          curl -fsS http://127.0.0.1:7802/health
+
+      - name: Boot Asset Manager in background
+        working-directory: asset-manager
+        run: |
+          nohup uvicorn asset_manager.bridge.server:app --port 7801 > /tmp/am.log 2>&1 &
+          sleep 3
+          curl -fsS http://127.0.0.1:7801/health
+
+      - name: Cache Unity Library
+        uses: actions/cache@v4
+        with:
+          path: forever-engine/Library
+          key: Library-${{ env.UNITY_VERSION }}-${{ hashFiles('forever-engine/Packages/manifest.json') }}
+          restore-keys: |
+            Library-${{ env.UNITY_VERSION }}-
+
+      - name: Unity headless compile
+        uses: game-ci/unity-builder@v4
+        env:
+          UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
+        with:
+          projectPath: forever-engine
+          unityVersion: ${{ env.UNITY_VERSION }}
+          targetPlatform: StandaloneLinux64
+          buildMethod: ""
+          customParameters: -quit -batchmode -nographics
+
+      - name: Unity EditMode tests
+        uses: game-ci/unity-test-runner@v4
+        env:
+          UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
+        with:
+          projectPath: forever-engine
+          unityVersion: ${{ env.UNITY_VERSION }}
+          testMode: editmode
+
+      - name: Cross-module SmokeTest
+        uses: game-ci/unity-builder@v4
+        env:
+          UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
+        with:
+          projectPath: forever-engine
+          unityVersion: ${{ env.UNITY_VERSION }}
+          targetPlatform: StandaloneLinux64
+          buildMethod: ForeverEngine.Tests.SmokeTestRunner.Run
+          customParameters: -quit -batchmode -nographics
+
+      - name: Show service logs on failure
+        if: failure()
+        run: |
+          echo "=== Director Hub log ==="
+          cat /tmp/dh.log || true
+          echo "=== Asset Manager log ==="
+          cat /tmp/am.log || true
