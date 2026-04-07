@@ -54,53 +54,137 @@ namespace ForeverEngine.Demo.Encounters
             // XP budget: Medium difficulty baseline (50 x level), night = Hard (75 x level)
             int xpBudget = (int)((night ? 75 : 50) * playerLevel * pacingMult);
 
+            // RNG seeded off the encounter ID + player level so the same hex
+            // doesn't always spawn the same composition.
+            var rng = new System.Random(id.GetHashCode() ^ (playerLevel * 7919));
+
             if (id.Contains("Forest"))
             {
-                // Wolves: CR 1/4 (25 XP each), ~10 HP, AC 11
-                int count = System.Math.Max(1, xpBudget / 25);
-                count = System.Math.Min(count, 5); // Cap at 5
-                for (int i = 0; i < count; i++)
-                    enc.Enemies.Add(MakeCREnemyDef("Wolf", 25, "chase", "Forest",
-                        DamageType.Piercing));
-                enc.GoldReward = 5 * count; enc.XPReward = 25 * count;
+                // Wolf encounters. 60% pack of CR1/4 wolves, 25% pack with a
+                // CR1/2 lead Dire Wolf, 15% (level 3+) lone CR2 Alpha + 1-2 pups.
+                int roll = rng.Next(100);
+                int count;
+                if (playerLevel >= 3 && roll < 15)
+                {
+                    // Alpha pack
+                    enc.Enemies.Add(MakeCREnemyDef("Alpha Wolf", 200, "guard", "Forest", DamageType.Piercing));
+                    int pups = 1 + rng.Next(2);
+                    for (int i = 0; i < pups; i++)
+                        enc.Enemies.Add(MakeCREnemyDef("Wolf Pup", 25, "chase", "Forest", DamageType.Piercing));
+                    enc.GoldReward = 30; enc.XPReward = 200 + 25 * pups;
+                }
+                else if (roll < 40)
+                {
+                    // Dire Wolf + pack
+                    enc.Enemies.Add(MakeCREnemyDef("Dire Wolf", 100, "chase", "Forest", DamageType.Piercing));
+                    count = System.Math.Max(0, (xpBudget - 100) / 25);
+                    count = System.Math.Min(count, 3);
+                    for (int i = 0; i < count; i++)
+                        enc.Enemies.Add(MakeCREnemyDef("Wolf", 25, "chase", "Forest", DamageType.Piercing));
+                    enc.GoldReward = 15 + 5 * count; enc.XPReward = 100 + 25 * count;
+                }
+                else
+                {
+                    // Standard pack
+                    count = System.Math.Max(1, xpBudget / 25);
+                    count = System.Math.Min(count, 5);
+                    for (int i = 0; i < count; i++)
+                        enc.Enemies.Add(MakeCREnemyDef("Wolf", 25, "chase", "Forest", DamageType.Piercing));
+                    enc.GoldReward = 5 * count; enc.XPReward = 25 * count;
+                }
             }
             else if (id.Contains("Road")) // Ruins
             {
                 if (night)
                 {
-                    // Mutants: CR 1 (100 XP), ~25 HP, AC 13
-                    int count = System.Math.Max(1, xpBudget / 100);
-                    count = System.Math.Min(count, 4);
-                    for (int i = 0; i < count; i++)
-                        enc.Enemies.Add(MakeCREnemyDef("Mutant", 100, "chase", "Ruins",
-                            DamageType.Bludgeoning));
-                    enc.GoldReward = 15 * count; enc.XPReward = 100 * count;
+                    int roll = rng.Next(100);
+                    if (roll < 30 && playerLevel >= 2)
+                    {
+                        // Mutant Hulk + plague rats
+                        enc.Enemies.Add(MakeCREnemyDef("Mutant Hulk", 200, "chase", "Ruins", DamageType.Bludgeoning));
+                        int rats = 1 + rng.Next(3);
+                        for (int i = 0; i < rats; i++)
+                            enc.Enemies.Add(MakeCREnemyDef("Plague Rat", 25, "chase", "Ruins", DamageType.Piercing));
+                        enc.GoldReward = 20; enc.XPReward = 200 + 25 * rats;
+                    }
+                    else
+                    {
+                        int count = System.Math.Max(1, xpBudget / 100);
+                        count = System.Math.Min(count, 4);
+                        for (int i = 0; i < count; i++)
+                            enc.Enemies.Add(MakeCREnemyDef("Mutant", 100, "chase", "Ruins", DamageType.Bludgeoning));
+                        enc.GoldReward = 15 * count; enc.XPReward = 100 * count;
+                    }
                 }
                 else
                 {
-                    // Skeletons: CR 1/4 (25 XP), vulnerable to bludgeoning, resistant to piercing
-                    int count = System.Math.Max(1, xpBudget / 25);
-                    count = System.Math.Min(count, 4);
-                    for (int i = 0; i < count; i++)
+                    int roll = rng.Next(100);
+                    if (roll < 25 && playerLevel >= 2)
                     {
-                        var skel = MakeCREnemyDef("Skeleton", 25, "guard", "Ruins",
-                            DamageType.Slashing);
-                        skel.Vulnerabilities = DamageType.Bludgeoning;
-                        skel.Resistances = DamageType.Piercing;
-                        enc.Enemies.Add(skel);
+                        // Skeleton Archer mixed in with footmen
+                        int archers = 1 + rng.Next(2);
+                        for (int i = 0; i < archers; i++)
+                        {
+                            var sa = MakeCREnemyDef("Skeleton Archer", 50, "guard", "Ruins", DamageType.Piercing);
+                            sa.Vulnerabilities = DamageType.Bludgeoning;
+                            enc.Enemies.Add(sa);
+                        }
+                        int foot = System.Math.Max(0, (xpBudget - 50 * archers) / 25);
+                        foot = System.Math.Min(foot, 3);
+                        for (int i = 0; i < foot; i++)
+                        {
+                            var skel = MakeCREnemyDef("Skeleton", 25, "guard", "Ruins", DamageType.Slashing);
+                            skel.Vulnerabilities = DamageType.Bludgeoning;
+                            skel.Resistances = DamageType.Piercing;
+                            enc.Enemies.Add(skel);
+                        }
+                        enc.GoldReward = 15 + 5 * foot; enc.XPReward = 50 * archers + 25 * foot;
                     }
-                    enc.GoldReward = 10 * count; enc.XPReward = 25 * count;
+                    else
+                    {
+                        int count = System.Math.Max(1, xpBudget / 25);
+                        count = System.Math.Min(count, 4);
+                        for (int i = 0; i < count; i++)
+                        {
+                            var skel = MakeCREnemyDef("Skeleton", 25, "guard", "Ruins", DamageType.Slashing);
+                            skel.Vulnerabilities = DamageType.Bludgeoning;
+                            skel.Resistances = DamageType.Piercing;
+                            enc.Enemies.Add(skel);
+                        }
+                        enc.GoldReward = 10 * count; enc.XPReward = 25 * count;
+                    }
                 }
             }
             else // Plains
             {
-                // Bandits: CR 1/2 (50 XP), ~15 HP, AC 12
-                int count = System.Math.Max(1, xpBudget / 50);
-                count = System.Math.Min(count, 4);
-                for (int i = 0; i < count; i++)
-                    enc.Enemies.Add(MakeCREnemyDef("Bandit", 50, "chase", "Plains",
-                        DamageType.Slashing));
-                enc.GoldReward = 15 * count; enc.XPReward = 50 * count;
+                int roll = rng.Next(100);
+                if (roll < 20 && playerLevel >= 2)
+                {
+                    // Bandit Captain + crew
+                    enc.Enemies.Add(MakeCREnemyDef("Bandit Captain", 200, "guard", "Plains", DamageType.Slashing));
+                    int crew = System.Math.Max(0, (xpBudget - 200) / 50);
+                    crew = System.Math.Min(crew, 2);
+                    for (int i = 0; i < crew; i++)
+                        enc.Enemies.Add(MakeCREnemyDef("Bandit", 50, "chase", "Plains", DamageType.Slashing));
+                    enc.GoldReward = 50 + 15 * crew; enc.XPReward = 200 + 50 * crew;
+                }
+                else if (night && roll < 50 && playerLevel >= 2)
+                {
+                    // Cultist ambush — pierces armor with daggers
+                    int count = System.Math.Max(1, xpBudget / 50);
+                    count = System.Math.Min(count, 3);
+                    for (int i = 0; i < count; i++)
+                        enc.Enemies.Add(MakeCREnemyDef("Cultist", 50, "chase", "Plains", DamageType.Piercing));
+                    enc.GoldReward = 10 * count; enc.XPReward = 50 * count;
+                }
+                else
+                {
+                    int count = System.Math.Max(1, xpBudget / 50);
+                    count = System.Math.Min(count, 4);
+                    for (int i = 0; i < count; i++)
+                        enc.Enemies.Add(MakeCREnemyDef("Bandit", 50, "chase", "Plains", DamageType.Slashing));
+                    enc.GoldReward = 15 * count; enc.XPReward = 50 * count;
+                }
             }
 
             return enc;
