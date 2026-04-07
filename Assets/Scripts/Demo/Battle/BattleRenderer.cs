@@ -1,5 +1,6 @@
-using UnityEngine;
 using System.Collections.Generic;
+using System.IO;
+using UnityEngine;
 
 namespace ForeverEngine.Demo.Battle
 {
@@ -13,6 +14,10 @@ namespace ForeverEngine.Demo.Battle
         private Mesh _squareMesh;
         private Material _baseMaterial;
         private Camera _cam;
+        // Cache textures by absolute path so multiple combatants of the
+        // same enemy kind share one Texture2D allocation. Cleared when
+        // BattleRenderer is destroyed (scene transition).
+        private static readonly Dictionary<string, Texture2D> _spriteCache = new();
 
         private static readonly Color COLOR_FLOOR = new Color(0.25f, 0.22f, 0.2f);
         private static readonly Color COLOR_WALL = new Color(0.1f, 0.1f, 0.12f);
@@ -299,6 +304,98 @@ namespace ForeverEngine.Demo.Battle
             mr.sharedMaterial.color = color;
 
             return go;
+        }
+
+        /// <summary>
+        /// Replace a combatant's token visual with a sprite loaded from disk.
+        /// The path comes from Asset Manager's /select response. Falls back
+        /// silently if the file is missing or unreadable — the procedural
+        /// circle token stays in place.
+        ///
+        /// Loads via System.IO so it works with paths outside the Unity
+        /// AssetDatabase (Asset Manager bakes to .shared/baked/ which is
+        /// not under Assets/).
+        /// </summary>
+        public void SwapTokenSprite(BattleCombatant combatant, string pngPath)
+        {
+            if (combatant == null || string.IsNullOrEmpty(pngPath)) return;
+            if (!_tokenObjects.TryGetValue(combatant, out var token) || token == null) return;
+            if (!File.Exists(pngPath))
+            {
+                Debug.LogWarning($"[BattleRenderer] sprite path does not exist on disk: {pngPath}");
+                return;
+            }
+
+            Texture2D tex;
+            if (!_spriteCache.TryGetValue(pngPath, out tex) || tex == null)
+            {
+                try
+                {
+                    byte[] bytes = File.ReadAllBytes(pngPath);
+                    tex = new Texture2D(2, 2, TextureFormat.RGBA32, false);
+                    tex.filterMode = FilterMode.Point; // pixel art crispness
+                    if (!tex.LoadImage(bytes))
+                    {
+                        Debug.LogWarning($"[BattleRenderer] LoadImage rejected bytes from {pngPath}");
+                        return;
+                    }
+                    _spriteCache[pngPath] = tex;
+                }
+                catch (System.Exception e)
+                {
+                    Debug.LogWarning($"[BattleRenderer] failed to load sprite {pngPath}: {e.Message}");
+                    return;
+                }
+            }
+
+            // Replace the token's circle mesh with a textured quad. The
+            // existing material is reused so HP bar / condition tint /
+            // turn pulse logic still operates on the same MeshRenderer.
+            var meshFilter = token.GetComponent<MeshFilter>();
+            if (meshFilter != null)
+            {
+                meshFilter.sharedMesh = _GetOrCreateTexturedQuad();
+            }
+            var mr = token.GetComponent<MeshRenderer>();
+            if (mr != null)
+            {
+                mr.sharedMaterial.mainTexture = tex;
+                mr.sharedMaterial.color = Color.white; // remove the COLOR_ENEMY tint
+            }
+
+            Debug.Log($"[BattleRenderer] swapped token sprite for {combatant.Name} -> {pngPath}");
+        }
+
+        // Lazily-built textured quad mesh shared by every sprite swap.
+        // Distinct from _squareMesh (used for tiles + HP bars) because
+        // _squareMesh has no UVs and would render the texture as a single
+        // pixel. The quad sits at 0.45 half-extent so it visually matches
+        // the original 0.45-radius circle token.
+        private static Mesh _texturedQuadMesh;
+        private static Mesh _GetOrCreateTexturedQuad()
+        {
+            if (_texturedQuadMesh != null) return _texturedQuadMesh;
+            const float s = 0.45f;
+            _texturedQuadMesh = new Mesh
+            {
+                vertices = new[]
+                {
+                    new Vector3(-s, -s, 0),
+                    new Vector3( s, -s, 0),
+                    new Vector3( s,  s, 0),
+                    new Vector3(-s,  s, 0),
+                },
+                triangles = new[] { 0, 2, 1, 0, 3, 2 },
+                uv = new[]
+                {
+                    new Vector2(0, 0),
+                    new Vector2(1, 0),
+                    new Vector2(1, 1),
+                    new Vector2(0, 1),
+                },
+            };
+            _texturedQuadMesh.RecalculateNormals();
+            return _texturedQuadMesh;
         }
 
         private void CreateMeshAndMaterial()

@@ -183,6 +183,9 @@ namespace ForeverEngine.Demo.Battle
                     AllowAiGeneration = false,
                 };
 
+                // Capture name into the closure so the callback can match
+                // combatants by it (the loop variable changes per iteration).
+                string enemyNameForCallback = enemy.Name;
                 yield return gm.Assets.Select(
                     req,
                     resp =>
@@ -190,7 +193,8 @@ namespace ForeverEngine.Demo.Battle
                         if (resp != null && resp.Found && !string.IsNullOrEmpty(resp.AssetId))
                         {
                             _enemySpriteCache[cacheKey] = resp.AssetId;
-                            Debug.Log($"[BattleManager] asset hit for {enemy.Name} ({biome}): {resp.AssetId} at {resp.Path}");
+                            Debug.Log($"[BattleManager] asset hit for {enemyNameForCallback} ({biome}): {resp.AssetId} at {resp.Path}");
+                            ApplySpriteToCombatants(enemyNameForCallback, resp.Path);
                         }
                         else
                         {
@@ -198,14 +202,36 @@ namespace ForeverEngine.Demo.Battle
                             // pre-pivot empty for these kinds. The /select call
                             // succeeded; just no asset matched. Log at info so
                             // we can verify the wire works.
-                            Debug.Log($"[BattleManager] no asset for {enemy.Name} ({biome}) — using procedural token");
+                            Debug.Log($"[BattleManager] no asset for {enemyNameForCallback} ({biome}) — using procedural token");
                         }
                     },
                     err =>
                     {
                         // Asset Manager unavailable or errored — non-fatal.
-                        Debug.LogWarning($"[BattleManager] asset request failed for {enemy.Name}: {err}");
+                        Debug.LogWarning($"[BattleManager] asset request failed for {enemyNameForCallback}: {err}");
                     });
+            }
+        }
+
+        /// <summary>
+        /// Push a sprite path into the BattleRenderer for every combatant
+        /// matching `enemyName`. Called from RequestEnemySprites' success
+        /// callback. Renderer handles the actual file I/O + texture load.
+        /// </summary>
+        private void ApplySpriteToCombatants(string enemyName, string pngPath)
+        {
+            if (string.IsNullOrEmpty(pngPath)) return;
+            // _renderer is populated by Update() the first frame after Start;
+            // RequestEnemySprites runs as a coroutine spawned from Start so
+            // _renderer may still be null on the first iteration. Find it
+            // ourselves to be safe.
+            var rendererInstance = _renderer != null ? _renderer : FindAnyObjectByType<BattleRenderer>();
+            if (rendererInstance == null) return;
+            foreach (var c in Combatants)
+            {
+                if (c == null || c.IsPlayer) continue;
+                if (c.Name == enemyName)
+                    rendererInstance.SwapTokenSprite(c, pngPath);
             }
         }
 
