@@ -5,29 +5,40 @@ namespace ForeverEngine.AI.SelfHealing
     public static class AssetFaultHandler
     {
         private static Texture2D _placeholderTexture;
-        private static Material _placeholderMaterial;
+
+        /// <summary>
+        /// Generic Resources.Load wrapper that logs missing assets and
+        /// surfaces them through SystemMonitor for the runtime fault graph.
+        /// Returns null if the asset is missing — caller decides the fallback.
+        /// </summary>
+        public static T SafeLoad<T>(string path) where T : Object
+        {
+            var asset = Resources.Load<T>(path);
+            if (asset == null)
+            {
+                Debug.LogWarning($"[SelfHeal] Missing {typeof(T).Name}: {path}");
+                SystemMonitor.Instance?.GetOrCreate("Resources.Load")?.TryExecute(() =>
+                    throw new System.IO.FileNotFoundException(path));
+            }
+            return asset;
+        }
 
         public static Texture2D SafeLoadTexture(string path)
         {
-            var tex = Resources.Load<Texture2D>(path);
-            if (tex != null) return tex;
-            Debug.LogWarning($"[SelfHeal] Missing texture: {path}");
-            return GetPlaceholderTexture();
+            var tex = SafeLoad<Texture2D>(path);
+            return tex != null ? tex : GetPlaceholderTexture();
         }
 
         public static GameObject SafeLoadPrefab(string path)
         {
-            var prefab = Resources.Load<GameObject>(path);
-            if (prefab != null) return prefab;
-            Debug.LogWarning($"[SelfHeal] Missing prefab: {path}");
-            return GameObject.CreatePrimitive(PrimitiveType.Cube);
+            var prefab = SafeLoad<GameObject>(path);
+            return prefab != null ? prefab : GameObject.CreatePrimitive(PrimitiveType.Cube);
         }
 
         public static AudioClip SafeLoadAudio(string path)
         {
-            var clip = Resources.Load<AudioClip>(path);
-            if (clip == null) Debug.LogWarning($"[SelfHeal] Missing audio: {path}");
-            return clip; // null is safe — AudioSource handles null clips
+            // null is safe — AudioSource handles null clips
+            return SafeLoad<AudioClip>(path);
         }
 
         private static Texture2D GetPlaceholderTexture()

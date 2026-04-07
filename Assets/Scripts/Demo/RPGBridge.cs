@@ -28,8 +28,7 @@ namespace ForeverEngine.Demo
         public static WeaponData GetWeapon(string id)
         {
             if (_weaponCache.TryGetValue(id, out var w)) return w;
-            w = Resources.Load<WeaponData>($"RPG/Content/Weapons/{id}");
-            if (w == null) Debug.LogWarning($"[RPGBridge] Weapon not found: {id}");
+            w = ForeverEngine.AI.SelfHealing.AssetFaultHandler.SafeLoad<WeaponData>($"RPG/Content/Weapons/{id}");
             _weaponCache[id] = w;
             return w;
         }
@@ -41,8 +40,7 @@ namespace ForeverEngine.Demo
         public static ArmorData GetArmor(string id)
         {
             if (_armorCache.TryGetValue(id, out var a)) return a;
-            a = Resources.Load<ArmorData>($"RPG/Content/Armor/{id}");
-            if (a == null) Debug.LogWarning($"[RPGBridge] Armor not found: {id}");
+            a = ForeverEngine.AI.SelfHealing.AssetFaultHandler.SafeLoad<ArmorData>($"RPG/Content/Armor/{id}");
             _armorCache[id] = a;
             return a;
         }

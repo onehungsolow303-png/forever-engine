@@ -63,6 +63,7 @@ namespace ForeverEngine.Editor
             aiGO.AddComponent<ForeverEngine.AI.SelfHealing.SystemMonitor>();
             aiGO.AddComponent<ForeverEngine.AI.SelfHealing.PerformanceRegulator>();
             aiGO.AddComponent<ForeverEngine.AI.Inference.InferenceEngine>();
+            aiGO.AddComponent<ForeverEngine.AI.Inference.InferenceScheduler>();
 
             // Sound Manager (persistent)
             var sfxGO = new GameObject("SoundManager");

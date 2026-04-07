@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.Collections.Generic;
+using ForeverEngine.AI.SelfHealing;
 
 namespace ForeverEngine.AI.Inference
 {
@@ -19,8 +20,16 @@ namespace ForeverEngine.AI.Inference
 
         private void Update()
         {
+            // Adaptive budget: when PerformanceRegulator reports a degraded
+            // QualityLevel (frame time over budget), shrink the inference
+            // budget proportionally so AI doesn't make rendering worse.
+            float qualityScale = 1f;
+            var perfReg = PerformanceRegulator.Instance;
+            if (perfReg != null) qualityScale = perfReg.QualityLevel;
+            float effectiveBudget = _maxInferenceTimeMs * qualityScale;
+
             float elapsed = 0f;
-            while (_queue.Count > 0 && elapsed < _maxInferenceTimeMs)
+            while (_queue.Count > 0 && elapsed < effectiveBudget)
             {
                 var request = _queue.Values[0];
                 _queue.RemoveAt(0);
