@@ -29,6 +29,7 @@ namespace ForeverEngine.Demo
         public AssetClient Assets { get; private set; }
         public DirectorClient Director { get; private set; }
         public ServiceWatchdog Watchdog { get; private set; }
+        public GameStateServer StateServer { get; private set; }
         public string SessionId { get; private set; }
 
         private void Awake()
@@ -40,6 +41,9 @@ namespace ForeverEngine.Demo
             Assets = new AssetClient();
             Director = new DirectorClient();
             Watchdog = gameObject.AddComponent<ServiceWatchdog>();
+            // GameStateServer exposes live engine state on 127.0.0.1:7803
+            // for Director Hub's game_state_tool. Auto-starts on Awake.
+            StateServer = gameObject.AddComponent<GameStateServer>();
         }
 
         private IEnumerator Start()
