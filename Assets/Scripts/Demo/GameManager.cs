@@ -68,6 +68,7 @@ namespace ForeverEngine.Demo
             CurrentSeed = seed;
             Player = new PlayerData { HexQ = 2, HexR = 2 };
             Player.DiscoveredLocations.Add("camp");
+            StartCoroutine(StartDirectorSession());
             SceneManager.LoadScene("Overworld");
         }
 
@@ -81,6 +82,7 @@ namespace ForeverEngine.Demo
             CurrentSeed   = seed > 0 ? seed : Random.Range(1, 99999);
             Player        = PlayerData.FromCharacterData(characterData);
             Player.DiscoveredLocations.Add("camp");
+            StartCoroutine(StartDirectorSession());
             SceneManager.LoadScene("Overworld");
         }
 
@@ -95,7 +97,54 @@ namespace ForeverEngine.Demo
             Player        = new PlayerData { HexQ = 2, HexR = 2 };
             Player.DiscoveredLocations.Add("camp");
             SyncPlayerFromCharacter();
+            StartCoroutine(StartDirectorSession());
             SceneManager.LoadScene("Overworld");
+        }
+
+        /// <summary>
+        /// Open a Director Hub session via /session/start so subsequent
+        /// /interpret_action calls anchor to a real session_id instead of
+        /// the "no-session" fallback. The Director Hub uses session_id to
+        /// anchor its 4-tier memory (short / episodic / semantic / long)
+        /// for conversation continuity across player turns.
+        ///
+        /// Fault-tolerant: if the Director is unreachable or returns an
+        /// error, SessionId stays null and DirectorEvents falls back to
+        /// the literal "no-session" string (which Director Hub still
+        /// accepts for stateless requests).
+        /// </summary>
+        private IEnumerator StartDirectorSession()
+        {
+            if (Director == null || Player == null) yield break;
+
+            var req = new DirectorClient.SessionStartRequestDto
+            {
+                PlayerProfile = new
+                {
+                    name = "Hero",
+                    hp = Player.HP,
+                    max_hp = Player.MaxHP,
+                    level = Player.Level,
+                    weapon = Player.WeaponName,
+                    armor = Player.ArmorName,
+                },
+                MapMeta = new
+                {
+                    seed = CurrentSeed,
+                },
+            };
+
+            yield return Director.StartSession(
+                req,
+                resp =>
+                {
+                    SessionId = resp?.SessionId;
+                    Debug.Log($"[GameManager] Director session started: {SessionId}");
+                },
+                err =>
+                {
+                    Debug.LogWarning($"[GameManager] Director session start failed: {err}. Continuing with no-session fallback.");
+                });
         }
 
         /// <summary>
