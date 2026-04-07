@@ -8,7 +8,6 @@ using ForeverEngine.Demo.Overworld;
 using ForeverEngine.Demo.Battle;
 using ForeverEngine.Demo.Encounters;
 using ForeverEngine.Demo.Locations;
-using ForeverEngine.AI.GameMaster;
 using ForeverEngine.MonoBehaviour.Bootstrap;
 using ForeverEngine.MonoBehaviour.Rendering;
 using ForeverEngine.MonoBehaviour.Input;
@@ -47,17 +46,23 @@ namespace ForeverEngine.Editor
             gmGO.AddComponent<GameManager>();
 
             // AI Systems (child of GameManager — persists via DontDestroyOnLoad)
+            //
+            // Phase 3 pivot: AIDirector, MemoryManager, ClaudeAPIClient,
+            // DemoAIIntegration archived to _archive/forever-engine-pre-pivot/.
+            // Their out-of-process replacements (AssetClient, DirectorClient,
+            // ServiceWatchdog) are now instantiated by GameManager.Awake itself,
+            // so this builder no longer needs to wire them.
+            //
+            // The per-frame AI subsystems (DynamicDifficulty, PlayerProfiler,
+            // SystemMonitor, PerformanceRegulator, InferenceEngine) STAY in C#
+            // per the tempo-split decision Q2=C and remain wired here.
             var aiGO = new GameObject("AI_Systems");
             aiGO.transform.SetParent(gmGO.transform);
-            aiGO.AddComponent<ForeverEngine.Demo.AI.DemoAIIntegration>();
-            aiGO.AddComponent<ForeverEngine.AI.Director.AIDirector>();
             aiGO.AddComponent<ForeverEngine.AI.Learning.DynamicDifficulty>();
             aiGO.AddComponent<ForeverEngine.AI.PlayerModeling.PlayerProfiler>();
-            aiGO.AddComponent<ForeverEngine.AI.Memory.MemoryManager>();
             aiGO.AddComponent<ForeverEngine.AI.SelfHealing.SystemMonitor>();
             aiGO.AddComponent<ForeverEngine.AI.SelfHealing.PerformanceRegulator>();
             aiGO.AddComponent<ForeverEngine.AI.Inference.InferenceEngine>();
-            aiGO.AddComponent<ClaudeAPIClient>();
 
             // Sound Manager (persistent)
             var sfxGO = new GameObject("SoundManager");

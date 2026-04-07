@@ -46,11 +46,10 @@ namespace ForeverEngine.Demo.Encounters
             int playerLevel = GameManager.Instance?.Character?.TotalLevel
                 ?? GameManager.Instance?.Player?.Level ?? 1;
 
-            // AI Director pacing multiplier
+            // Phase 3 pivot: AIDirector archived to Director Hub. Pacing
+            // multiplier defaults to 1.0; will be reintroduced via
+            // DirectorClient in a follow-up.
             float pacingMult = 1.0f;
-            var director = ForeverEngine.AI.Director.AIDirector.Instance;
-            if (director != null)
-                pacingMult = UnityEngine.Mathf.Clamp(1.0f + (director.Pacing.CurrentIntensity - 0.5f), 0.5f, 1.5f);
 
             // XP budget: Medium difficulty baseline (50 x level), night = Hard (75 x level)
             int xpBudget = (int)((night ? 75 : 50) * playerLevel * pacingMult);

@@ -1,7 +1,6 @@
 using UnityEngine;
 using System.Collections.Generic;
 using ForeverEngine.Genres.Strategy;
-using ForeverEngine.Demo.UI;
 
 namespace ForeverEngine.Demo.Overworld
 {
@@ -19,7 +18,8 @@ namespace ForeverEngine.Demo.Overworld
         [SerializeField] private float _dayLengthSeconds = 600f; // 10 min
 
         private OverworldRenderer _renderer;
-        private DialogueOverlay   _dialogueOverlay;
+        // Phase 3 pivot: DialogueOverlay archived to _archive/forever-engine-pre-pivot/.
+        // Will be reintroduced in a follow-up that uses DirectorClient for NPC dialogue.
 
         private void Awake() => Instance = this;
 
@@ -53,16 +53,9 @@ namespace ForeverEngine.Demo.Overworld
                 interiorGO.AddComponent<Demo.Locations.LocationInteriorManager>();
             }
 
-            // Setup dialogue overlay
-            if (DialogueOverlay.Instance == null)
-            {
-                var overlayGO = new GameObject("DialogueOverlay");
-                _dialogueOverlay = overlayGO.AddComponent<DialogueOverlay>();
-            }
-            else
-            {
-                _dialogueOverlay = DialogueOverlay.Instance;
-            }
+            // Phase 3 pivot: DialogueOverlay setup removed. The NPC dialogue
+            // path will be replaced by Director Hub /dialogue calls in a
+            // follow-up.
 
             // Handle returning from battle
             if (gm.LastBattleWon)
@@ -88,8 +81,9 @@ namespace ForeverEngine.Demo.Overworld
             if (_renderer != null && GameManager.Instance?.Player != null)
                 _renderer.UpdateVisuals(GameManager.Instance.Player.HexQ, GameManager.Instance.Player.HexR, Fog, IsNight);
 
-            // Block movement and location entry while dialogue overlay is open
-            if (_dialogueOverlay != null && _dialogueOverlay.IsOpen) return;
+            // Phase 3 pivot: dialogue overlay gating removed alongside the
+            // archived DialogueOverlay. Movement is unblocked while waiting
+            // for the Director Hub-based replacement.
 
             // Input: hex movement (WASD mapped to hex directions)
             if      (Input.GetKeyDown(KeyCode.W) || Input.GetKeyDown(KeyCode.UpArrow))    Player.TryMove(0, 1);
@@ -116,10 +110,12 @@ namespace ForeverEngine.Demo.Overworld
             {
                 if (loc.HexQ != p.HexQ || loc.HexR != p.HexR) continue;
 
-                // Safe locations: show NPC dialogue overlay
-                if (loc.IsSafe && _dialogueOverlay != null)
+                // Phase 3 pivot: safe-location dialogue overlay removed.
+                // Director Hub /dialogue replacement TODO. For now, safe
+                // locations log a message instead of opening the overlay.
+                if (loc.IsSafe)
                 {
-                    _dialogueOverlay.Show(loc.Type);
+                    Debug.Log($"[Overworld] Entered safe location {loc.Type} (dialogue pending Director Hub wire-up)");
                     return;
                 }
 
@@ -144,7 +140,7 @@ namespace ForeverEngine.Demo.Overworld
                 {
                     GameManager.Instance.Player.DiscoveredLocations.Add(loc.Id);
                     if (loc.IsSafe) GameManager.Instance.Player.LastSafeLocation = loc.Id;
-                    Demo.AI.DemoAIIntegration.Instance?.OnLocationDiscovered(loc.Id);
+                    // Phase 3 pivot: OnLocationDiscovered hook archived.
                     Debug.Log($"[Overworld] Arrived at {loc.Name}");
                     return;
                 }

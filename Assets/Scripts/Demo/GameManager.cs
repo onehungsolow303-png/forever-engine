@@ -1,7 +1,9 @@
+using System.Collections;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using ForeverEngine.MonoBehaviour.CharacterCreation;
 using ForeverEngine.RPG.Character;
+using ForeverEngine.Bridges;
 
 namespace ForeverEngine.Demo
 {
@@ -20,11 +22,41 @@ namespace ForeverEngine.Demo
         public int LastBattleGoldEarned { get; set; }
         public int LastBattleXPEarned { get; set; }
 
+        // Phase 3 pivot: HTTP bridges to Asset Manager (port 7801) and
+        // Director Hub (port 7802). The C# brain (AIDirector, AIGameMaster,
+        // MemoryManager) was archived to _archive/forever-engine-pre-pivot/
+        // and replaced by these out-of-process Python services.
+        public AssetClient Assets { get; private set; }
+        public DirectorClient Director { get; private set; }
+        public ServiceWatchdog Watchdog { get; private set; }
+        public string SessionId { get; private set; }
+
         private void Awake()
         {
             if (Instance != null && Instance != this) { Destroy(gameObject); return; }
             Instance = this;
             DontDestroyOnLoad(gameObject);
+
+            Assets = new AssetClient();
+            Director = new DirectorClient();
+            Watchdog = gameObject.AddComponent<ServiceWatchdog>();
+        }
+
+        private IEnumerator Start()
+        {
+            // Boot-time service health check. If either Python service is
+            // down, log loudly but do not halt — the rest of the engine
+            // (per-frame AI, RPG rules, rendering) is still functional and
+            // the user can play in deterministic-fallback mode.
+            yield return Watchdog.CheckAll();
+            if (!Watchdog.AllOk)
+            {
+                Debug.LogError(
+                    $"[GameManager] Backend services not fully available. " +
+                    $"AssetManager={Watchdog.AssetManagerOk} " +
+                    $"DirectorHub={Watchdog.DirectorHubOk}. " +
+                    $"Game will run in deterministic-fallback mode.");
+            }
         }
 
         public void NewGame(int seed = 42)

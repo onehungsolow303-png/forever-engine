@@ -1,5 +1,4 @@
 using UnityEngine;
-using ForeverEngine.AI.Director;
 using ForeverEngine.AI.Learning;
 
 namespace ForeverEngine.Demo.Encounters
@@ -12,10 +11,9 @@ namespace ForeverEngine.Demo.Encounters
 
         public bool ShouldSuppressEncounter()
         {
-            // AI Director pacing: suppress if too many recent fights
-            var director = AIDirector.Instance;
-            if (director != null && director.Pacing.CurrentIntensity > 0.7f)
-                return true;
+            // Phase 3 pivot: AIDirector archived to Director Hub. Pacing-based
+            // suppression will be reintroduced via DirectorClient.InterpretAction
+            // in a follow-up; for now we only check rest-based suppression.
 
             var gm = GameManager.Instance;
             if (gm != null)

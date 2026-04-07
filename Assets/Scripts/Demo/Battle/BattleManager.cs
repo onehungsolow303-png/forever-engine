@@ -94,11 +94,11 @@ namespace ForeverEngine.Demo.Battle
             foreach (var c in Combatants) c.RollInitiative(ref _rngSeed);
             Combatants = Combatants.OrderByDescending(c => c.InitiativeRoll).ToList();
 
-            // Notify AI integration
-            Demo.AI.DemoAIIntegration.Instance?.OnCombatStarted(encId);
-
-            // Initialize Q-learning brains for each enemy
-            float[] savedTable = Demo.AI.DemoAIIntegration.Instance?.LoadCombatQTable();
+            // Phase 3 pivot: Demo.AI.DemoAIIntegration archived. Combat-start
+            // and Q-table persistence will be reintroduced via DirectorClient
+            // in a follow-up. For now no notification is sent and no saved
+            // table is loaded.
+            float[] savedTable = null;
             foreach (var c in Combatants)
             {
                 if (!c.IsPlayer && c.IsAlive)
@@ -401,14 +401,12 @@ namespace ForeverEngine.Demo.Battle
                 if (_renderer != null)
                     _renderer.ShowDamageNumber(new Vector3(target.X, target.Y, 0), dmgResult.AfterResistance, false);
 
-                // AI events
-                var ai = Demo.AI.DemoAIIntegration.Instance;
-                ai?.OnPlayerAttacked(true, dmgResult.AfterResistance, target.Name);
-
+                // Phase 3 pivot: AI event hooks (OnPlayerAttacked, OnEnemyKilled)
+                // archived alongside Demo.AI.DemoAIIntegration. Will be replaced
+                // by DirectorClient.InterpretAction for narrative beats.
                 if (!target.IsAlive)
                 {
                     Log.Add($"{target.Name} is defeated!");
-                    ai?.OnEnemyKilled(target.Name);
                 }
 
                 // Q-learning penalty for target
@@ -620,8 +618,7 @@ namespace ForeverEngine.Demo.Battle
             };
 
             var atkResult = AttackResolver.Resolve(atkCtx, ref _rngSeed);
-
-            var ai = Demo.AI.DemoAIIntegration.Instance;
+            // Phase 3 pivot: AI event hooks archived; ai variable removed.
 
             // Format advantage/disadvantage in log
             string advStr = atkResult.State switch
@@ -717,9 +714,8 @@ namespace ForeverEngine.Demo.Battle
                 if (target.HP <= 0 && !target.IsPlayer)
                     Audio.SoundManager.Instance?.PlayDeath();
 
-                // AI events (preserved)
-                if (attacker.IsPlayer) ai?.OnPlayerAttacked(true, dmgResult.AfterResistance, target.Name);
-                if (target.IsPlayer) ai?.OnPlayerDamaged(dmgResult.AfterResistance);
+                // Phase 3 pivot: ai event hooks (OnPlayerAttacked, OnPlayerDamaged)
+                // archived alongside Demo.AI.DemoAIIntegration.
 
                 // Check concentration on damaged caster
                 if (target.Concentration != null && target.Concentration.IsConcentrating && target.Sheet != null)
@@ -747,7 +743,7 @@ namespace ForeverEngine.Demo.Battle
                     else if (!target.IsPlayer)
                     {
                         Log.Add($"{target.Name} is defeated!");
-                        ai?.OnEnemyKilled(target.Name);
+                        // Phase 3 pivot: ai?.OnEnemyKilled hook archived.
                     }
                 }
 
@@ -764,7 +760,7 @@ namespace ForeverEngine.Demo.Battle
                 Log.Add($"{attacker.Name} misses {target.Name}{advStr}. (d20={atkResult.NaturalRoll}, total={atkResult.Total} vs AC {target.AC})");
                 _renderer?.ShowMiss(new Vector3(target.X, target.Y, 0));
                 Audio.SoundManager.Instance?.PlayMiss();
-                if (attacker.IsPlayer) ai?.OnPlayerAttacked(false, 0, target.Name);
+                // Phase 3 pivot: ai?.OnPlayerAttacked(false) hook archived.
             }
 
             // Q-learning: reward/penalize enemy attacker for hit/miss (preserved)
@@ -798,14 +794,14 @@ namespace ForeverEngine.Demo.Battle
             {
                 BattleOver = true; PlayerWon = false;
                 Log.Add("You have fallen...");
-                Demo.AI.DemoAIIntegration.Instance?.OnPlayerDied();
+                // Phase 3 pivot: OnPlayerDied hook archived.
             }
             else if (Combatants.All(c => c.IsPlayer || !c.IsAlive))
             {
                 BattleOver = true; PlayerWon = true;
                 Log.Add("Victory!");
                 Audio.SoundManager.Instance?.PlayVictory();
-                Demo.AI.DemoAIIntegration.Instance?.OnCombatVictory(_encounterData.GoldReward, _encounterData.XPReward);
+                // Phase 3 pivot: OnCombatVictory hook archived.
                 var gm = GameManager.Instance;
                 if (gm != null)
                 {
@@ -837,10 +833,9 @@ namespace ForeverEngine.Demo.Battle
                 float endReward = PlayerWon ? -0.5f : 0.5f;
                 foreach (var b in _brains.Values) b.OnEpisodeEnd(endReward);
 
-                // Save Q-table to LTM (preserved)
-                var firstBrain = _brains.Values.FirstOrDefault();
-                if (firstBrain != null)
-                    Demo.AI.DemoAIIntegration.Instance?.SaveCombatQTable(firstBrain.SaveQTable());
+                // Phase 3 pivot: Q-table persistence to LongTermMemory archived
+                // alongside MemoryManager. Will be reintroduced via Director Hub
+                // memory tools in a follow-up. The brain still trains in-session.
             }
         }
 
