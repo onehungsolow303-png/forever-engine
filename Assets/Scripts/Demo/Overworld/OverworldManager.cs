@@ -110,12 +110,18 @@ namespace ForeverEngine.Demo.Overworld
             {
                 if (loc.HexQ != p.HexQ || loc.HexR != p.HexR) continue;
 
-                // Phase 3 pivot: safe-location dialogue overlay removed.
-                // Director Hub /dialogue replacement TODO. For now, safe
-                // locations log a message instead of opening the overlay.
+                // Safe locations open the dialogue panel routed through
+                // Director Hub. Created on demand so the panel doesn't have
+                // to be in the scene at boot.
                 if (loc.IsSafe)
                 {
-                    Debug.Log($"[Overworld] Entered safe location {loc.Type} (dialogue pending Director Hub wire-up)");
+                    var panel = ForeverEngine.Demo.UI.DialoguePanel.Instance;
+                    if (panel == null)
+                    {
+                        var dpGo = new GameObject("DialoguePanel");
+                        panel = dpGo.AddComponent<ForeverEngine.Demo.UI.DialoguePanel>();
+                    }
+                    panel.Show(loc.Id, $"npc_{loc.Id}");
                     return;
                 }
 

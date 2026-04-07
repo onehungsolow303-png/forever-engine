@@ -67,5 +67,47 @@ namespace ForeverEngine.Demo.AI
                 }
             ));
         }
+
+        /// <summary>
+        /// Like Send() but invokes onResponse with the narrative text from the
+        /// Director's reply. Used by DialoguePanel for player-facing dialogue
+        /// where the response needs to be displayed. Empty string passed on any
+        /// failure so the caller can render a fallback.
+        /// </summary>
+        public static void SendDialogue(
+            string text,
+            string npcId,
+            System.Action<string> onResponse)
+        {
+            var gm = GameManager.Instance;
+            if (gm == null || gm.Director == null) { onResponse?.Invoke(""); return; }
+
+            var fb = SystemMonitor.Instance != null
+                ? SystemMonitor.Instance.GetOrCreate(SystemName, maxRetries: 3)
+                : null;
+            if (fb != null && fb.IsDisabled) { onResponse?.Invoke(""); return; }
+
+            var req = new DirectorClient.ActionRequestDto
+            {
+                SessionId = gm.SessionId ?? "no-session",
+                ActorId = "player",
+                TargetId = npcId,
+                PlayerInput = text,
+            };
+
+            gm.StartCoroutine(gm.Director.InterpretAction(
+                req,
+                decision =>
+                {
+                    fb?.TryExecute(() => { });
+                    onResponse?.Invoke(decision?.NarrativeText ?? "");
+                },
+                err =>
+                {
+                    Debug.LogWarning($"[DirectorEvents] dialogue '{text}': {err}");
+                    fb?.TryExecute(() => throw new System.Exception(err));
+                    onResponse?.Invoke("");
+                }));
+        }
     }
 }

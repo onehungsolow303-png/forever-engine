@@ -1,0 +1,12 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements">
+    <ui:VisualElement name="root" style="position: absolute; left: 50%; top: 50%; translate: -50% -50%; width: 600px; min-height: 320px; max-height: 80%; padding: 20px; background-color: rgba(20, 20, 30, 0.95); border-color: rgba(120, 120, 160, 0.6); border-width: 2px; border-radius: 8px;">
+        <ui:Label name="npc-name" text="NPC" style="color: rgb(240, 200, 100); font-size: 18px; -unity-font-style: bold; margin-bottom: 8px;" />
+        <ui:Label name="offline-banner" text="Director offline — running in deterministic-fallback mode" style="display: none; color: rgb(240, 160, 80); font-size: 11px; margin-bottom: 8px;" />
+        <ui:ScrollView name="history" style="flex-grow: 1; min-height: 200px; margin-bottom: 8px; background-color: rgba(0, 0, 0, 0.3); padding: 8px;" />
+        <ui:VisualElement style="flex-direction: row; align-items: center;">
+            <ui:TextField name="input" multiline="false" style="flex-grow: 1; margin-right: 8px;" />
+            <ui:Button name="send" text="Send" style="margin-right: 4px;" />
+            <ui:Button name="close" text="Close" />
+        </ui:VisualElement>
+    </ui:VisualElement>
+</ui:UXML>
