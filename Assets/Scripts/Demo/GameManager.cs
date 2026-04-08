@@ -163,15 +163,6 @@ namespace ForeverEngine.Demo
             SceneManager.LoadScene("BattleMap");
         }
 
-        public void EnterLocation(string locationId)
-        {
-            PendingLocationId = locationId;
-            var loc = LocationData.Get(locationId);
-            if (loc != null && (loc.Type == "town" || loc.Type == "camp" || loc.Type == "fortress"))
-                return;
-            SceneManager.LoadScene("BattleMap");
-        }
-
         public void ReturnToOverworld()
         {
             PendingEncounterId = null;
