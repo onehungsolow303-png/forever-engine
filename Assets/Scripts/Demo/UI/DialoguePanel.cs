@@ -29,6 +29,8 @@ namespace ForeverEngine.Demo.UI
         private TextField _input;
         private Button _sendButton;
         private Button _closeButton;
+        private Button _micButton;
+        private Button _muteButton;
         private string _currentLocationId;
         private string _currentNpcId;
         private readonly List<string> _historyLines = new();
@@ -38,6 +40,12 @@ namespace ForeverEngine.Demo.UI
         {
             if (Instance != null && Instance != this) { Destroy(gameObject); return; }
             Instance = this;
+
+            // Ensure VoiceInput + VoiceOutput singletons exist on the same
+            // GameObject. They self-register via their own Awake. Created
+            // lazily so projects that don't need voice features pay no cost.
+            if (VoiceInput.Instance == null) gameObject.AddComponent<VoiceInput>();
+            if (VoiceOutput.Instance == null) gameObject.AddComponent<VoiceOutput>();
 
             _document = gameObject.GetComponent<UIDocument>();
             if (_document == null) _document = gameObject.AddComponent<UIDocument>();
@@ -145,6 +153,13 @@ namespace ForeverEngine.Demo.UI
         {
             _root?.style.SetVisible(false);
             IsOpen = false;
+            // Release the mic + stop any in-flight TTS so we don't keep
+            // talking after the player has dismissed the conversation.
+            if (VoiceInput.Instance != null && VoiceInput.Instance.IsListening)
+                VoiceInput.Instance.StopListening();
+            if (VoiceOutput.Instance != null)
+                VoiceOutput.Instance.StopSpeaking();
+            UpdateMicButtonAppearance();
         }
 
         private void HookUpReferences()
@@ -156,9 +171,23 @@ namespace ForeverEngine.Demo.UI
             _input = _root.Q<TextField>("input");
             _sendButton = _root.Q<Button>("send");
             _closeButton = _root.Q<Button>("close");
+            _micButton = _root.Q<Button>("mic");
+            _muteButton = _root.Q<Button>("mute");
 
             if (_sendButton != null) _sendButton.clicked += OnSendClicked;
             if (_closeButton != null) _closeButton.clicked += Close;
+            if (_micButton != null) _micButton.clicked += OnMicClicked;
+            if (_muteButton != null) _muteButton.clicked += OnMuteClicked;
+
+            // Subscribe to VoiceInput results so spoken text lands in the
+            // input field as the user dictates. Final results auto-trigger
+            // Send so the user doesn't have to click after speaking.
+            if (VoiceInput.Instance != null)
+            {
+                VoiceInput.Instance.OnPartialResult += OnVoicePartial;
+                VoiceInput.Instance.OnFinalResult += OnVoiceFinal;
+                VoiceInput.Instance.OnError += OnVoiceError;
+            }
             if (_input != null)
             {
                 _input.RegisterCallback<KeyDownEvent>(evt =>
@@ -247,10 +276,77 @@ namespace ForeverEngine.Demo.UI
                         var npc = NPCData.GetForLocation(_currentLocationId);
                         if (npc != null) speaker = npc.Name;
                         AppendLine($"{speaker}: {narrative}");
+
+                        // Auto-narrate the NPC's response via TTS. Skipped
+                        // when the user has muted via the speaker button.
+                        // VoiceOutput strips *action* descriptions internally
+                        // so only the spoken dialogue gets vocalized.
+                        if (VoiceOutput.Instance != null)
+                            VoiceOutput.Instance.Speak(narrative);
                     }
                 },
                 locationId: _currentLocationId,
                 recentHistory: recentHistory);
+        }
+
+        // ── Voice button handlers ─────────────────────────────────────────
+
+        private void OnMicClicked()
+        {
+            if (VoiceInput.Instance == null || !VoiceInput.Instance.IsAvailable)
+            {
+                Debug.LogWarning("[DialoguePanel] voice input unavailable on this platform");
+                return;
+            }
+            VoiceInput.Instance.Toggle();
+            UpdateMicButtonAppearance();
+        }
+
+        private void OnMuteClicked()
+        {
+            if (VoiceOutput.Instance == null) return;
+            VoiceOutput.Instance.ToggleMute();
+            if (_muteButton != null)
+                _muteButton.text = VoiceOutput.Instance.MuteEnabled ? "🔇" : "🔊";
+        }
+
+        private void UpdateMicButtonAppearance()
+        {
+            if (_micButton == null || VoiceInput.Instance == null) return;
+            // Highlight the mic button while listening so the player knows
+            // their speech is being captured.
+            if (VoiceInput.Instance.IsListening)
+            {
+                _micButton.text = "🔴";
+                _micButton.style.backgroundColor = new Color(0.7f, 0.2f, 0.2f, 0.95f);
+            }
+            else
+            {
+                _micButton.text = "🎤";
+                _micButton.style.backgroundColor = new Color(0.24f, 0.27f, 0.43f, 0.95f);
+            }
+        }
+
+        private void OnVoicePartial(string text)
+        {
+            // Stream hypothesis into the input field as the user speaks
+            if (_input != null) _input.value = text;
+        }
+
+        private void OnVoiceFinal(string text)
+        {
+            // Final commit: place the recognized text in the input. We do
+            // NOT auto-send because dictation often picks up filler words
+            // or mishears, so the player gets a chance to edit before
+            // pressing Send.
+            if (_input != null) _input.value = text;
+            UpdateMicButtonAppearance();
+        }
+
+        private void OnVoiceError(string message)
+        {
+            Debug.LogWarning($"[DialoguePanel] voice input error: {message}");
+            UpdateMicButtonAppearance();
         }
 
         private void AppendLine(string line)
