@@ -217,6 +217,18 @@ namespace ForeverEngine.Demo.UI
             _input.value = "";
             _waitingForResponse = true;
 
+            // Snapshot the conversation history (last 12 turns) BEFORE
+            // appending the current input. The Director Hub LLM uses this
+            // to track mood escalation across the conversation — without
+            // it, every turn looks like the first joke and the NPC never
+            // gets fed up. The cap of 12 keeps token cost bounded.
+            const int historyTurnsToSend = 12;
+            int historyStart = System.Math.Max(0, _historyLines.Count - historyTurnsToSend);
+            int historyCount = _historyLines.Count - historyStart;
+            string[] recentHistory = new string[historyCount];
+            for (int i = 0; i < historyCount; i++)
+                recentHistory[i] = _historyLines[historyStart + i];
+
             Demo.AI.DirectorEvents.SendDialogue(
                 text,
                 _currentNpcId,
@@ -237,7 +249,8 @@ namespace ForeverEngine.Demo.UI
                         AppendLine($"{speaker}: {narrative}");
                     }
                 },
-                locationId: _currentLocationId);
+                locationId: _currentLocationId,
+                recentHistory: recentHistory);
         }
 
         private void AppendLine(string line)

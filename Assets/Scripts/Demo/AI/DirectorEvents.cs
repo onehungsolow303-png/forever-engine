@@ -79,7 +79,8 @@ namespace ForeverEngine.Demo.AI
             string text,
             string npcId,
             System.Action<string> onResponse,
-            string locationId = null)
+            string locationId = null,
+            string[] recentHistory = null)
         {
             var gm = GameManager.Instance;
             if (gm == null || gm.Director == null) { onResponse?.Invoke(""); return; }
@@ -97,6 +98,7 @@ namespace ForeverEngine.Demo.AI
                 PlayerInput = text,
                 ActorStats = BuildActorStatsFromPlayer(gm),
                 SceneContext = BuildSceneContext(locationId),
+                RecentHistory = recentHistory ?? System.Array.Empty<string>(),
             };
 
             gm.StartCoroutine(gm.Director.InterpretAction(
