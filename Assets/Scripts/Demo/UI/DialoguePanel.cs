@@ -432,8 +432,18 @@ namespace ForeverEngine.Demo.UI
                 // restores HP + hunger + thirst at once).
                 if (!string.IsNullOrEmpty(effect.StatusEffect))
                 {
-                    string status = effect.StatusEffect.ToLowerInvariant();
-                    if (status == "full_rest" || status == "rest" || status == "long_rest")
+                    // Normalize the status string so cosmetic LLM drift like
+                    // "Well Rested" or "well-rested" still triggers the right
+                    // engine action. Haiku-class models routinely emit
+                    // "rested" / "well_rested" instead of the spec'd
+                    // "full_rest" — we accept all three so the player
+                    // actually gets fully restored either way.
+                    string status = effect.StatusEffect
+                        .ToLowerInvariant()
+                        .Replace('-', '_')
+                        .Replace(' ', '_');
+                    if (status == "full_rest" || status == "rest" || status == "long_rest"
+                        || status == "rested" || status == "well_rested")
                     {
                         player.FullRest();
                         AppendLine($"(You feel fully restored. HP {player.HP}/{player.MaxHP})");
