@@ -207,6 +207,15 @@ namespace ForeverEngine.Demo.UI
             RefreshHistory();
         }
 
+        // Color used for player turns ("You: ..."). Slightly cooler/blue
+        // tone so the player can scan their own input quickly.
+        private static readonly Color _playerLineColor = new Color(0.78f, 0.88f, 1f);
+        // Color used for NPC turns. Warm off-white for high contrast on
+        // the dark scrollview background.
+        private static readonly Color _npcLineColor = new Color(0.96f, 0.94f, 0.88f);
+        // Color used for system / fallback messages. Muted gold.
+        private static readonly Color _systemLineColor = new Color(0.85f, 0.78f, 0.55f);
+
         private void RefreshHistory()
         {
             if (_history == null) return;
@@ -215,7 +224,24 @@ namespace ForeverEngine.Demo.UI
             {
                 var label = new Label(line);
                 label.style.whiteSpace = WhiteSpace.Normal;
-                label.style.marginBottom = 4;
+                label.style.marginBottom = 8;
+                label.style.fontSize = 15;
+                // Tint based on the line's prefix so player vs NPC reads
+                // at a glance. The default theme color is too dim against
+                // the dark scrollview background to be readable.
+                if (line.StartsWith("You:"))
+                {
+                    label.style.color = _playerLineColor;
+                }
+                else if (line.StartsWith("("))
+                {
+                    label.style.color = _systemLineColor;
+                    label.style.unityFontStyleAndWeight = FontStyle.Italic;
+                }
+                else
+                {
+                    label.style.color = _npcLineColor;
+                }
                 _history.Add(label);
             }
             // Auto-scroll to the most recent entry. ScrollTo(null) throws,
