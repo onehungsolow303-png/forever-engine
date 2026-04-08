@@ -347,6 +347,35 @@ namespace ForeverEngine.Demo.UI
         {
             Debug.LogWarning($"[DialoguePanel] voice input error: {message}");
             UpdateMicButtonAppearance();
+
+            // Disable the mic button visually so the player knows it's not
+            // available, and surface the error to the offline-banner row
+            // (re-purposed as a "voice unavailable" indicator).
+            if (_micButton != null)
+            {
+                _micButton.text = "🚫";
+                _micButton.style.backgroundColor = new Color(0.4f, 0.4f, 0.4f, 0.95f);
+                _micButton.SetEnabled(false);
+                _micButton.tooltip = $"Voice input unavailable: {message}";
+            }
+            if (_offlineBanner != null)
+            {
+                // Detect the well-known "dictation not enabled" Windows error
+                // and tell the player exactly how to fix it instead of dumping
+                // the raw error string.
+                if (message != null && message.Contains("Dictation support is not enabled"))
+                {
+                    _offlineBanner.text =
+                        "🎤 Voice input disabled. Enable in Windows: " +
+                        "Settings → Privacy & Security → Speech → Online speech recognition.";
+                }
+                else
+                {
+                    _offlineBanner.text = $"🎤 Voice input error: {message}";
+                }
+                _offlineBanner.style.color = new Color(0.95f, 0.7f, 0.45f);
+                _offlineBanner.style.display = DisplayStyle.Flex;
+            }
         }
 
         private void AppendLine(string line)
