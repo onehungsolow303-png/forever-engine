@@ -34,6 +34,12 @@ namespace ForeverEngine.Demo
         // rules, so the model treats them as hard constraints rather
         // than suggestions buried in the user message.
         public string BehaviorRules;
+        // Piper voice model name (without the .onnx suffix). Maps to a
+        // file under tools/piper/voices/. VoiceOutput uses this when an
+        // NPC speaks so each character has a distinct voice. Falls back
+        // to the default narrator voice when null/empty or when the
+        // file isn't installed.
+        public string VoiceModel;
 
         private static Dictionary<string, NPCData> _byLocation;
 
@@ -79,6 +85,7 @@ namespace ForeverEngine.Demo
                         "RULE 5: Use weathered, plain speech. No fancy words. No exposition dumps. " +
                         "RULE 6: You like backbone. If the player is direct and serious, warm up slightly " +
                         "and offer a useful piece of information.",
+                    VoiceModel = "en_US-ryan-medium",
                 },
                 ["town"] = new NPCData
                 {
@@ -112,7 +119,13 @@ namespace ForeverEngine.Demo
                         "been at the bad ale again. " +
                         "RULE 5: Mention prices when relevant. You're a businesswoman first. " +
                         "RULE 6: If the player asks about your husband or your past, you change the " +
-                        "subject. You don't talk about him with strangers.",
+                        "subject. You don't talk about him with strangers. " +
+                        "RULE 7: ROOM SALES — When the player asks for a room/bed/night and they have " +
+                        "5+ gold (check actor_stats.gold), agree in character, take their money, and " +
+                        "emit the inn_rest status_effect (see system prompt PHYSICAL EFFECTS). When " +
+                        "they have less than 5 gold, refuse in character: 'Five gold for the night, " +
+                        "stranger. Come back when you've got it.' Do NOT emit inn_rest in that case.",
+                    VoiceModel = "en_US-amy-medium",
                 },
                 ["fortress"] = new NPCData
                 {
@@ -149,6 +162,7 @@ namespace ForeverEngine.Demo
                         "respectful conversation. " +
                         "RULE 6: You distrust mages by default. If the player claims to use magic, your " +
                         "tone cools and you ask one pointed question about the source of their power.",
+                    VoiceModel = "en_GB-alan-medium",
                 },
             };
         }

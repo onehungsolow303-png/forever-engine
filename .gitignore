@@ -49,3 +49,9 @@ Packages/packages-lock.json
 
 # Superpowers
 .superpowers/
+
+# Piper TTS — installed locally via tools/setup_piper.ps1
+# (binary + voice models = ~250 MB, not worth checking in)
+tools/piper/piper/
+tools/piper/voices/
+tools/piper/test_*.wav
