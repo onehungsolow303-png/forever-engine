@@ -51,8 +51,13 @@ namespace ForeverEngine.Demo.Encounters
             // DirectorClient in a follow-up.
             float pacingMult = 1.0f;
 
-            // XP budget: Medium difficulty baseline (50 x level), night = Hard (75 x level)
-            int xpBudget = (int)((night ? 75 : 50) * playerLevel * pacingMult);
+            // XP budget: Medium difficulty baseline (40 x level), night = Hard (60 x level).
+            // Tamed from the original 50/75 per the combat-balance-audit.md Option C
+            // recommendation. Player HP scales 20 + (level-1)*5 via PlayerData.LevelUp(),
+            // so a level-5 player has 40 HP and can survive a tamed encounter without
+            // dying in round 2. The audit's player-first-in-round-1 fix from c6fc22d
+            // handles "no turn"; this handles "still dies after one turn."
+            int xpBudget = (int)((night ? 60 : 40) * playerLevel * pacingMult);
 
             // RNG seeded off the encounter ID + player level so the same hex
             // doesn't always spawn the same composition.
@@ -85,9 +90,9 @@ namespace ForeverEngine.Demo.Encounters
                 }
                 else
                 {
-                    // Standard pack
+                    // Standard pack — capped at 4 (was 5) per balance audit Option C
                     count = System.Math.Max(1, xpBudget / 25);
-                    count = System.Math.Min(count, 5);
+                    count = System.Math.Min(count, 4);
                     for (int i = 0; i < count; i++)
                         enc.Enemies.Add(MakeCREnemyDef("Wolf", 25, "chase", "Forest", DamageType.Piercing));
                     enc.GoldReward = 5 * count; enc.XPReward = 25 * count;
