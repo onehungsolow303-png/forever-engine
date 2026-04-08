@@ -11,6 +11,14 @@ namespace ForeverEngine.Demo.UI
             var p = gm.Player;
             var ow = Overworld.OverworldManager.Instance;
 
+            // Suppress the entire IMGUI overworld HUD while a modal dialogue
+            // is open. IMGUI renders LAST in the frame so it draws on top of
+            // every UI Toolkit panel including DialoguePanel - the location
+            // prompt was overlapping Old Garth's response text on first
+            // playtest, blocking conversation readability.
+            if (DialoguePanel.Instance != null && DialoguePanel.Instance.IsOpen)
+                return;
+
             // Top-left: Stats
             var sheet = gm.Character;
             string charTitle;

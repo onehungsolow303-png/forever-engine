@@ -81,9 +81,14 @@ namespace ForeverEngine.Demo.Overworld
             if (_renderer != null && GameManager.Instance?.Player != null)
                 _renderer.UpdateVisuals(GameManager.Instance.Player.HexQ, GameManager.Instance.Player.HexR, Fog, IsNight);
 
-            // Phase 3 pivot: dialogue overlay gating removed alongside the
-            // archived DialogueOverlay. Movement is unblocked while waiting
-            // for the Director Hub-based replacement.
+            // Suppress overworld input while a modal dialogue panel is open.
+            // Without this, typing into the dialogue panel's TextField also
+            // moved the player on the hex grid (W/A/S/D leak), and pressing
+            // Enter to send a message also re-triggered TryEnterLocation.
+            // The dialogue panel is the player's exclusive input target
+            // until they Close it.
+            if (UI.DialoguePanel.Instance != null && UI.DialoguePanel.Instance.IsOpen)
+                return;
 
             // Input: hex movement (WASD mapped to hex directions)
             if      (Input.GetKeyDown(KeyCode.W) || Input.GetKeyDown(KeyCode.UpArrow))    Player.TryMove(0, 1);
