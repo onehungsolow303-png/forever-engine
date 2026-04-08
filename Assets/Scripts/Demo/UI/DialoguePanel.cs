@@ -187,6 +187,11 @@ namespace ForeverEngine.Demo.UI
                 VoiceInput.Instance.OnPartialResult += OnVoicePartial;
                 VoiceInput.Instance.OnFinalResult += OnVoiceFinal;
                 VoiceInput.Instance.OnError += OnVoiceError;
+                // Refresh the mic visual whenever the listening state flips,
+                // including auto-stops from silence timeout / cancel / error.
+                // Without this the button stays visually red after dictation
+                // ends and the player thinks the panel is frozen.
+                VoiceInput.Instance.OnStateChanged += UpdateMicButtonAppearance;
             }
             if (_input != null)
             {

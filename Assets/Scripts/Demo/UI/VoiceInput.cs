@@ -38,6 +38,9 @@ namespace ForeverEngine.Demo.UI
         /// <summary>Fires on initialization or runtime errors. The string is human-readable.</summary>
         public event System.Action<string> OnError;
 
+        /// <summary>Fires whenever IsListening flips so the UI can refresh the mic button.</summary>
+        public event System.Action OnStateChanged;
+
 #if UNITY_STANDALONE_WIN || UNITY_EDITOR_WIN
         private DictationRecognizer _recognizer;
 #endif
@@ -63,29 +66,35 @@ namespace ForeverEngine.Demo.UI
         {
             if (IsListening) return;
 #if UNITY_STANDALONE_WIN || UNITY_EDITOR_WIN
+            // Always dispose any stale recognizer before creating a new one.
+            // Reusing a recognizer that ended in Canceled / Failed state
+            // produces undefined behavior and was the cause of the
+            // playtest "mic stuck red after first use" freeze. Cheap to
+            // construct fresh each time.
+            Cleanup();
+
             try
             {
-                if (_recognizer == null)
-                {
-                    _recognizer = new DictationRecognizer();
-                    _recognizer.DictationResult += HandleResult;
-                    _recognizer.DictationHypothesis += HandleHypothesis;
-                    _recognizer.DictationError += HandleError;
-                    _recognizer.DictationComplete += HandleComplete;
-                    // Auto-silence detection: stop after this many seconds
-                    // of silence. Default is 20s which is too long for chat.
-                    _recognizer.AutoSilenceTimeoutSeconds = 5f;
-                    _recognizer.InitialSilenceTimeoutSeconds = 8f;
-                }
+                _recognizer = new DictationRecognizer();
+                _recognizer.DictationResult += HandleResult;
+                _recognizer.DictationHypothesis += HandleHypothesis;
+                _recognizer.DictationError += HandleError;
+                _recognizer.DictationComplete += HandleComplete;
+                // Auto-silence detection: stop after this many seconds
+                // of silence. Default is 20s which is too long for chat.
+                _recognizer.AutoSilenceTimeoutSeconds = 5f;
+                _recognizer.InitialSilenceTimeoutSeconds = 8f;
                 _recognizer.Start();
                 IsListening = true;
                 Debug.Log("[VoiceInput] listening");
+                OnStateChanged?.Invoke();
             }
             catch (System.Exception e)
             {
                 Debug.LogWarning($"[VoiceInput] failed to start: {e.Message}");
                 OnError?.Invoke(e.Message);
                 Cleanup();
+                OnStateChanged?.Invoke();
             }
 #else
             OnError?.Invoke("voice input unavailable on this platform");
@@ -99,7 +108,11 @@ namespace ForeverEngine.Demo.UI
             {
                 try { _recognizer.Stop(); } catch (System.Exception e) { Debug.LogWarning($"[VoiceInput] stop: {e.Message}"); }
             }
+            // The recognizer fires DictationComplete asynchronously after
+            // Stop, but we flip the visible state immediately so the UI
+            // updates without waiting for the callback round-trip.
             IsListening = false;
+            OnStateChanged?.Invoke();
 #endif
         }
 
@@ -133,6 +146,11 @@ namespace ForeverEngine.Demo.UI
             if (cause != DictationCompletionCause.Complete && cause != DictationCompletionCause.PauseLimitExceeded)
                 Debug.Log($"[VoiceInput] dictation ended: {cause}");
             IsListening = false;
+            // Dispose so the next StartListening creates a fresh recognizer.
+            // Reusing a recognizer that ended in Canceled / Failed state was
+            // the cause of the "mic stuck red after first use" freeze.
+            Cleanup();
+            OnStateChanged?.Invoke();
         }
 
         private void Cleanup()
