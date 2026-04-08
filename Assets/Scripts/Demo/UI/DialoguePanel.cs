@@ -42,23 +42,69 @@ namespace ForeverEngine.Demo.UI
             _document = gameObject.GetComponent<UIDocument>();
             if (_document == null) _document = gameObject.AddComponent<UIDocument>();
 
-            // Load the UXML asset. In Editor builds it can be loaded by name
-            // from Assets/UI/; in player builds it must be in a Resources/
-            // folder. The fallback path constructs a panel programmatically
-            // so the component is usable even without the asset.
+            // UIDocument needs PanelSettings BEFORE it can render visuals to
+            // screen. Without it the visual tree may instantiate but no
+            // rendered panel exists, so the player sees nothing. Try the
+            // Resources cache first; fall back to a programmatic instance
+            // with sensible defaults if no asset has been authored.
+            var settings = Resources.Load<PanelSettings>("DialoguePanelSettings");
+            if (settings == null)
+            {
+                settings = ScriptableObject.CreateInstance<PanelSettings>();
+                settings.name = "DialoguePanelSettings (auto)";
+                settings.scaleMode = PanelScaleMode.ConstantPhysicalSize;
+                settings.referenceResolution = new Vector2Int(1920, 1080);
+                settings.sortingOrder = 100; // above world geometry
+            }
+            _document.panelSettings = settings;
+
+            // Load the UXML asset. Must live under a Resources/ folder so
+            // Resources.Load can find it in player builds (the asset was
+            // moved from Assets/UI/ to Assets/Resources/ in commit 63032d4).
             var asset = Resources.Load<VisualTreeAsset>(PanelAssetPath);
             if (asset != null)
             {
                 _document.visualTreeAsset = asset;
             }
 
+            // Try to grab the root immediately. If UIDocument is not yet
+            // initialized this will be null; EnsureRootInitialized() in
+            // Show() retries on demand so callers don't have to think about
+            // the timing.
             _root = _document.rootVisualElement;
-            _root?.style.SetVisible(false);
-            HookUpReferences();
+            if (_root != null)
+            {
+                _root.style.SetVisible(false);
+                HookUpReferences();
+            }
+        }
+
+        /// <summary>
+        /// Lazy fallback: if Awake couldn't grab the root because UIDocument
+        /// hadn't instantiated the visual tree yet, retry on the next call
+        /// to Show. Idempotent — does nothing once _root is set.
+        /// </summary>
+        private void EnsureRootInitialized()
+        {
+            if (_root != null) return;
+            if (_document == null) return;
+            _root = _document.rootVisualElement;
+            if (_root != null)
+            {
+                _root.style.SetVisible(false);
+                HookUpReferences();
+            }
         }
 
         public void Show(string locationId, string npcId)
         {
+            // If Awake couldn't initialize the root (UIDocument timing race),
+            // retry now. Without this, Show() runs against null fields and
+            // the panel appears as a 1-pixel-tall element with no content,
+            // which is what was happening when the player pressed Enter at
+            // safe locations and "nothing happened."
+            EnsureRootInitialized();
+
             _currentLocationId = locationId;
             _currentNpcId = npcId ?? $"npc_{locationId}";
             _historyLines.Clear();

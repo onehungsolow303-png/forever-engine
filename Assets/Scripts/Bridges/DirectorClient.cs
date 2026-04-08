@@ -112,12 +112,18 @@ namespace ForeverEngine.Bridges
             [JsonProperty("schema_version")] public string SchemaVersion;
             [JsonProperty("session_id")] public string SessionId;
             [JsonProperty("success")] public bool Success;
-            [JsonProperty("scale")] public int Scale;
+            // Numeric fields are nullable to defend against any optional
+            // schema field arriving as null from an upstream serializer.
+            // The session start fix on the server side (Director Hub
+            // bridge/server.py session_start) populates these explicitly,
+            // but a defensive client tolerates legacy or stub responses
+            // that don't.
+            [JsonProperty("scale")] public int? Scale;
             [JsonProperty("narrative_text")] public string NarrativeText;
             [JsonProperty("stat_effects")] public object[] StatEffects;
             [JsonProperty("fx_requests")] public object[] FxRequests;
-            [JsonProperty("repetition_penalty")] public int RepetitionPenalty;
-            [JsonProperty("deterministic_fallback")] public bool DeterministicFallback;
+            [JsonProperty("repetition_penalty")] public int? RepetitionPenalty;
+            [JsonProperty("deterministic_fallback")] public bool? DeterministicFallback;
         }
     }
 }
