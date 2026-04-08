@@ -418,6 +418,15 @@ namespace ForeverEngine.Demo.UI
             var player = gm?.Player;
             if (player == null) return;
 
+            // CharacterSheet is the source of truth when one exists
+            // (i.e. the player went through character creation). Combat
+            // builds BattleCombatants from the sheet, not from PlayerData,
+            // so any state mutation that only touches PlayerData stays
+            // invisible to combat. Mutate the sheet first, then call
+            // SyncPlayerFromCharacter so the backward-compat PlayerData
+            // mirrors the new state.
+            var sheet = gm.Character;
+
             foreach (var effect in effects)
             {
                 if (effect == null) continue;
@@ -445,6 +454,11 @@ namespace ForeverEngine.Demo.UI
                     if (status == "full_rest" || status == "rest" || status == "long_rest"
                         || status == "rested" || status == "well_rested")
                     {
+                        if (sheet != null)
+                        {
+                            RPGBridge.ApplyLongRestToSheet(sheet);
+                            gm.SyncPlayerFromCharacter();
+                        }
                         player.FullRest();
                         AppendLine($"(You feel fully restored. HP {player.HP}/{player.MaxHP})");
                         continue;
@@ -463,6 +477,11 @@ namespace ForeverEngine.Demo.UI
                             continue;
                         }
                         player.Gold -= InnRoomCost;
+                        if (sheet != null)
+                        {
+                            RPGBridge.ApplyLongRestToSheet(sheet);
+                            gm.SyncPlayerFromCharacter();
+                        }
                         player.FullRest();
                         AppendLine($"(You pay {InnRoomCost} gold for the room and rest the night. " +
                                    $"HP {player.HP}/{player.MaxHP}, gold {player.Gold})");
@@ -475,7 +494,15 @@ namespace ForeverEngine.Demo.UI
                     if (effect.Delta > 0)
                     {
                         int before = player.HP;
-                        player.Heal(effect.Delta);
+                        if (sheet != null)
+                        {
+                            RPGBridge.ApplyHpDeltaToSheet(sheet, effect.Delta);
+                            gm.SyncPlayerFromCharacter();
+                        }
+                        else
+                        {
+                            player.Heal(effect.Delta);
+                        }
                         int gained = player.HP - before;
                         if (gained > 0)
                             AppendLine($"(You recover {gained} HP. HP {player.HP}/{player.MaxHP})");
@@ -483,7 +510,15 @@ namespace ForeverEngine.Demo.UI
                     else if (effect.Delta < 0)
                     {
                         int dmg = -effect.Delta;
-                        player.TakeDamage(dmg);
+                        if (sheet != null)
+                        {
+                            RPGBridge.ApplyHpDeltaToSheet(sheet, effect.Delta);
+                            gm.SyncPlayerFromCharacter();
+                        }
+                        else
+                        {
+                            player.TakeDamage(dmg);
+                        }
                         AppendLine($"(You take {dmg} damage. HP {player.HP}/{player.MaxHP})");
                     }
                 }

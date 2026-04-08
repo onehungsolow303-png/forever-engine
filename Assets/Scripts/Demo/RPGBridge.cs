@@ -193,6 +193,57 @@ namespace ForeverEngine.Demo
                 player.ArmorName = sheet.Armor.Name;
         }
 
+        /// <summary>
+        /// Apply a long rest to the CharacterSheet (the source of truth):
+        /// HP → MaxHP, all spell slots restored, concentration dropped,
+        /// non-permanent conditions cleared, death saves reset.
+        ///
+        /// Hit dice recovery is left to the ECS RestSystem path; this
+        /// helper is the synchronous dialogue-driven equivalent that
+        /// doesn't have access to the ECS world.
+        ///
+        /// Why this exists: PlayerData.FullRest only mutates PlayerData,
+        /// which is the backward-compat layer. Combat reads from
+        /// CharacterSheet (via BattleCombatant.FromCharacterSheet), so
+        /// rests applied through dialogue never reached the in-combat
+        /// HP — the player would talk to Garth, see "HP 12/12" in the
+        /// dialogue scrollback, then enter combat at the old stale HP
+        /// and get one-shot. Mutating the sheet first and syncing to
+        /// PlayerData second matches the convention used elsewhere
+        /// (character creation, level up, equip changes).
+        /// </summary>
+        public static void ApplyLongRestToSheet(CharacterSheet sheet)
+        {
+            if (sheet == null) return;
+            sheet.HP = sheet.MaxHP;
+            sheet.TempHP = 0;
+            if (sheet.SpellSlots != null) sheet.SpellSlots.RestoreAll();
+            if (sheet.Concentration != null && sheet.Concentration.IsConcentrating)
+                sheet.Concentration.End();
+            if (sheet.Conditions != null) sheet.Conditions.Clear();
+            if (sheet.DeathSaves != null) sheet.DeathSaves.Reset();
+        }
+
+        /// <summary>
+        /// Apply a positive or negative HP delta to the CharacterSheet,
+        /// clamped to [0, MaxHP]. Mirrors PlayerData.Heal / TakeDamage so
+        /// healing potions and damage emitted by NPCs in dialogue actually
+        /// land on the source-of-truth sheet, not just the backward-compat
+        /// PlayerData snapshot.
+        /// </summary>
+        public static void ApplyHpDeltaToSheet(CharacterSheet sheet, int delta)
+        {
+            if (sheet == null || delta == 0) return;
+            int next = sheet.HP + delta;
+            if (next < 0) next = 0;
+            if (next > sheet.MaxHP) next = sheet.MaxHP;
+            sheet.HP = next;
+            // Healing above 0 should also reset death saves so the player
+            // isn't still mid-dying after an NPC heals them out of combat.
+            if (delta > 0 && next > 0 && sheet.DeathSaves != null)
+                sheet.DeathSaves.Reset();
+        }
+
         public static string GetClassName(CharacterSheet sheet)
         {
             if (sheet == null || sheet.ClassLevels.Count == 0) return "Adventurer";
