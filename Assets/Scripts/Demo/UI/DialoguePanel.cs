@@ -160,10 +160,51 @@ namespace ForeverEngine.Demo.UI
             if (_sendButton != null) _sendButton.clicked += OnSendClicked;
             if (_closeButton != null) _closeButton.clicked += Close;
             if (_input != null)
+            {
                 _input.RegisterCallback<KeyDownEvent>(evt =>
                 {
                     if (evt.keyCode == KeyCode.Return && !evt.shiftKey) OnSendClicked();
                 });
+
+                // TextField is a COMPOSITE control. Inline styles on the
+                // outer <ui:TextField> element only affect the wrapper, not
+                // the inner <TextInput> child that actually renders the
+                // text and background. The Unity default theme paints the
+                // inner element with light gray bg + dim foreground which
+                // is unreadable on our dark dialogue background — the
+                // player reported "I couldn't see what I was typing."
+                //
+                // Defer the inner-element lookup to the next layout pass
+                // via schedule.Execute, because composite controls create
+                // their inner structure during the first layout, not in
+                // the constructor. Re-apply on every subsequent geometry
+                // change to be defensive against theme reloads.
+                _input.schedule.Execute(StyleInputInner).ExecuteLater(0);
+                _input.RegisterCallback<GeometryChangedEvent>(_ => StyleInputInner());
+            }
+        }
+
+        /// <summary>
+        /// Walks into the TextField's inner TextElement and overrides the
+        /// theme-default colors so the player's typed input is readable on
+        /// the dialogue panel's dark background.
+        /// </summary>
+        private void StyleInputInner()
+        {
+            if (_input == null) return;
+            // Try the modern Unity 6 USS class first, fall back to the older
+            // class name, fall back to any TextElement child.
+            VisualElement inner = _input.Q(className: "unity-base-text-field__input")
+                                ?? _input.Q(className: "unity-text-field__input")
+                                ?? _input.Q<TextElement>();
+            if (inner == null) return;
+
+            inner.style.color = new Color(0.97f, 0.97f, 0.97f);
+            inner.style.backgroundColor = new Color(0.16f, 0.16f, 0.20f, 0.95f);
+            inner.style.fontSize = 15;
+            inner.style.paddingLeft = 8;
+            inner.style.paddingRight = 8;
+            inner.style.unityFontStyleAndWeight = FontStyle.Normal;
         }
 
         private void OnSendClicked()

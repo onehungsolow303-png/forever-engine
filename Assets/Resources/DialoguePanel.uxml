@@ -1,12 +1,12 @@
 <ui:UXML xmlns:ui="UnityEngine.UIElements">
-    <ui:VisualElement name="root" style="position: absolute; left: 50%; top: 50%; translate: -50% -50%; width: 700px; min-height: 380px; max-height: 80%; padding: 24px; background-color: rgba(15, 15, 22, 0.97); border-color: rgba(160, 140, 80, 0.7); border-left-width: 2px; border-right-width: 2px; border-top-width: 2px; border-bottom-width: 2px; border-top-left-radius: 8px; border-top-right-radius: 8px; border-bottom-left-radius: 8px; border-bottom-right-radius: 8px;">
-        <ui:Label name="npc-name" text="NPC" style="color: rgb(255, 210, 100); font-size: 22px; -unity-font-style: bold; margin-bottom: 12px;" />
-        <ui:Label name="offline-banner" text="Director offline — running in deterministic-fallback mode" style="display: none; color: rgb(240, 160, 80); font-size: 12px; margin-bottom: 8px;" />
-        <ui:ScrollView name="history" style="flex-grow: 1; min-height: 220px; margin-bottom: 12px; background-color: rgba(0, 0, 0, 0.55); padding: 12px; border-left-width: 1px; border-right-width: 1px; border-top-width: 1px; border-bottom-width: 1px; border-color: rgba(80, 80, 100, 0.4);" />
-        <ui:VisualElement style="flex-direction: row; align-items: center;">
-            <ui:TextField name="input" multiline="false" style="flex-grow: 1; margin-right: 8px; font-size: 15px; min-height: 28px; color: rgb(245, 245, 245); background-color: rgba(40, 40, 50, 0.95);" />
-            <ui:Button name="send" text="Send" style="margin-right: 4px; font-size: 14px; min-height: 28px; padding-left: 14px; padding-right: 14px; color: rgb(255, 255, 255); background-color: rgba(60, 90, 50, 0.95);" />
-            <ui:Button name="close" text="Close" style="font-size: 14px; min-height: 28px; padding-left: 14px; padding-right: 14px; color: rgb(255, 255, 255); background-color: rgba(80, 50, 50, 0.95);" />
+    <ui:VisualElement name="root" style="position: absolute; left: 50%; top: 50%; translate: -50% -50%; width: 720px; height: 540px; padding: 24px; background-color: rgba(15, 15, 22, 0.97); border-color: rgba(160, 140, 80, 0.7); border-left-width: 2px; border-right-width: 2px; border-top-width: 2px; border-bottom-width: 2px; border-top-left-radius: 8px; border-top-right-radius: 8px; border-bottom-left-radius: 8px; border-bottom-right-radius: 8px;">
+        <ui:Label name="npc-name" text="NPC" style="color: rgb(255, 210, 100); font-size: 22px; -unity-font-style: bold; margin-bottom: 12px; flex-shrink: 0;" />
+        <ui:Label name="offline-banner" text="Director offline — running in deterministic-fallback mode" style="display: none; color: rgb(240, 160, 80); font-size: 12px; margin-bottom: 8px; flex-shrink: 0;" />
+        <ui:ScrollView name="history" style="flex-grow: 1; flex-shrink: 1; min-height: 0; margin-bottom: 12px; background-color: rgba(0, 0, 0, 0.55); padding: 12px; border-left-width: 1px; border-right-width: 1px; border-top-width: 1px; border-bottom-width: 1px; border-color: rgba(80, 80, 100, 0.4);" />
+        <ui:VisualElement style="flex-direction: row; align-items: center; flex-shrink: 0;">
+            <ui:TextField name="input" multiline="false" style="flex-grow: 1; margin-right: 8px; min-height: 32px;" />
+            <ui:Button name="send" text="Send" style="margin-right: 4px; font-size: 14px; min-height: 32px; padding-left: 16px; padding-right: 16px; color: rgb(255, 255, 255); background-color: rgba(60, 110, 60, 0.95);" />
+            <ui:Button name="close" text="Close" style="font-size: 14px; min-height: 32px; padding-left: 16px; padding-right: 16px; color: rgb(255, 255, 255); background-color: rgba(110, 60, 60, 0.95);" />
         </ui:VisualElement>
     </ui:VisualElement>
 </ui:UXML>
