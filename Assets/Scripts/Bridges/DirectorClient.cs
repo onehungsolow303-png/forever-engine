@@ -120,10 +120,36 @@ namespace ForeverEngine.Bridges
             // that don't.
             [JsonProperty("scale")] public int? Scale;
             [JsonProperty("narrative_text")] public string NarrativeText;
-            [JsonProperty("stat_effects")] public object[] StatEffects;
+            // Strongly typed so DialoguePanel can iterate and apply each
+            // effect (HP healing during rest, damage from hostile NPCs,
+            // status flags like "full_rest"). Previously this was object[]
+            // and the engine ignored it — meaning Garth could narrate "you
+            // feel restored" but the player's HP never actually changed.
+            [JsonProperty("stat_effects")] public StatEffectDto[] StatEffects;
             [JsonProperty("fx_requests")] public object[] FxRequests;
             [JsonProperty("repetition_penalty")] public int? RepetitionPenalty;
             [JsonProperty("deterministic_fallback")] public bool? DeterministicFallback;
+        }
+
+        /// <summary>
+        /// One element of DecisionPayload.stat_effects. Mirrors the schema
+        /// at .shared/schemas/decision.schema.json — stat is one of
+        /// "hp" / "attack" / "defense" / "status"; delta is an integer
+        /// (positive heals, negative damages); status_effect is an optional
+        /// free-form string used as a marker for special engine actions.
+        ///
+        /// Recognized status_effect values currently:
+        ///   - "full_rest"  → Player.FullRest() (HP + hunger + thirst)
+        /// Other values are passed through unchanged so the engine can add
+        /// support for them later without a schema bump.
+        /// </summary>
+        [Serializable]
+        public class StatEffectDto
+        {
+            [JsonProperty("target_id")] public string TargetId;
+            [JsonProperty("stat")] public string Stat;
+            [JsonProperty("delta")] public int Delta;
+            [JsonProperty("status_effect")] public string StatusEffect;
         }
     }
 }

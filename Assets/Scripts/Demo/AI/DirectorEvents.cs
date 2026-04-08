@@ -74,6 +74,10 @@ namespace ForeverEngine.Demo.AI
         /// Director's reply. Used by DialoguePanel for player-facing dialogue
         /// where the response needs to be displayed. Empty string passed on any
         /// failure so the caller can render a fallback.
+        ///
+        /// This overload only surfaces narrative text. Callers that need to
+        /// apply stat_effects (rest grants HP, NPC strikes the player, etc.)
+        /// should use the SendDialogueDecision overload below.
         /// </summary>
         public static void SendDialogue(
             string text,
@@ -82,13 +86,33 @@ namespace ForeverEngine.Demo.AI
             string locationId = null,
             string[] recentHistory = null)
         {
+            SendDialogueDecision(
+                text, npcId,
+                decision => onResponse?.Invoke(decision?.NarrativeText ?? ""),
+                locationId, recentHistory);
+        }
+
+        /// <summary>
+        /// Full-fidelity overload — invokes onResponse with the entire
+        /// DecisionPayloadDto. DialoguePanel uses this so it can iterate
+        /// stat_effects and apply each one (rest grants HP, NPCs strike
+        /// the player, etc.) instead of throwing the structured data away
+        /// and only showing narrative text.
+        /// </summary>
+        public static void SendDialogueDecision(
+            string text,
+            string npcId,
+            System.Action<DirectorClient.DecisionPayloadDto> onResponse,
+            string locationId = null,
+            string[] recentHistory = null)
+        {
             var gm = GameManager.Instance;
-            if (gm == null || gm.Director == null) { onResponse?.Invoke(""); return; }
+            if (gm == null || gm.Director == null) { onResponse?.Invoke(null); return; }
 
             var fb = SystemMonitor.Instance != null
                 ? SystemMonitor.Instance.GetOrCreate(SystemName, maxRetries: 3)
                 : null;
-            if (fb != null && fb.IsDisabled) { onResponse?.Invoke(""); return; }
+            if (fb != null && fb.IsDisabled) { onResponse?.Invoke(null); return; }
 
             var req = new DirectorClient.ActionRequestDto
             {
@@ -106,13 +130,13 @@ namespace ForeverEngine.Demo.AI
                 decision =>
                 {
                     fb?.TryExecute(() => { });
-                    onResponse?.Invoke(decision?.NarrativeText ?? "");
+                    onResponse?.Invoke(decision);
                 },
                 err =>
                 {
                     Debug.LogWarning($"[DirectorEvents] dialogue '{text}': {err}");
                     fb?.TryExecute(() => throw new System.Exception(err));
-                    onResponse?.Invoke("");
+                    onResponse?.Invoke(null);
                 }));
         }
 
@@ -168,6 +192,11 @@ namespace ForeverEngine.Demo.AI
             {
                 ctx["location"] = loc.Name;
                 ctx["location_type"] = loc.Type;
+                // Safe-location flag drives the LLM's "can the player rest
+                // here?" decision in dialogue. The system prompt tells the
+                // model: only emit a full_rest stat_effect when location_safe
+                // is true AND the NPC explicitly grants rest in dialogue.
+                ctx["location_safe"] = loc.IsSafe;
             }
 
             var npc = NPCData.GetForLocation(locationId);

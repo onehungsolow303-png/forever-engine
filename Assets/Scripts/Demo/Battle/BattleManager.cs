@@ -57,6 +57,11 @@ namespace ForeverEngine.Demo.Battle
                 // Spell selection (1-9) when menu is open
                 else if (_spellMenuOpen)
                     HandleSpellInput();
+                // Quick heal: H consumes one health potion from inventory.
+                // Costs an action so it can't be combined with an attack
+                // on the same turn — using a potion in 5e takes an action.
+                else if (Input.GetKeyDown(KeyCode.H))
+                    UseHealthPotion();
                 else if (Input.GetKeyDown(KeyCode.Space)) PlayerEndTurn();
             }
         }
@@ -355,6 +360,49 @@ namespace ForeverEngine.Demo.Battle
         }
 
         public void PlayerEndTurn() { if (CurrentTurn != null && CurrentTurn.IsPlayer) NextTurn(); }
+
+        // Heal amount per potion. Modest so combat still requires positioning
+        // and attacks — potions are an emergency tool, not a free reset.
+        private const int HEALTH_POTION_HEAL_AMOUNT = 12;
+
+        /// <summary>
+        /// Consume one health potion from the player's inventory and heal
+        /// the active player combatant. Uses the player's action so it
+        /// can't be paired with an attack on the same turn (5e rules).
+        /// No-op when:
+        ///   - It's not the player's turn
+        ///   - The player has already used their action
+        ///   - The player has no health potions in inventory
+        ///   - The player is at full HP (so they don't waste a potion)
+        /// </summary>
+        public void UseHealthPotion()
+        {
+            if (CurrentTurn == null || !CurrentTurn.IsPlayer || !CurrentTurn.HasAction) return;
+            var gm = GameManager.Instance;
+            var inventory = gm?.Player?.Inventory;
+            if (inventory == null) return;
+
+            if (!inventory.HasItem(ItemIds.HealthPotion))
+            {
+                Log.Add("No health potions left!");
+                return;
+            }
+            if (CurrentTurn.HP >= CurrentTurn.MaxHP)
+            {
+                Log.Add("Already at full HP — saving the potion.");
+                return;
+            }
+
+            inventory.Remove(ItemIds.HealthPotion);
+            int before = CurrentTurn.HP;
+            CurrentTurn.Heal(HEALTH_POTION_HEAL_AMOUNT);
+            int gained = CurrentTurn.HP - before;
+            Log.Add($"Drank a health potion. +{gained} HP ({CurrentTurn.HP}/{CurrentTurn.MaxHP}).");
+            // Sync the persistent PlayerData HP back from the combatant so
+            // the heal carries over to the overworld after combat ends.
+            if (gm?.Player != null) gm.Player.HP = CurrentTurn.HP;
+            CurrentTurn.HasAction = false;
+        }
 
         // === Spell Casting ===
 

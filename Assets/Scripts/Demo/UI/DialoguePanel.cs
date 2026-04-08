@@ -263,12 +263,13 @@ namespace ForeverEngine.Demo.UI
             for (int i = 0; i < historyCount; i++)
                 recentHistory[i] = _historyLines[historyStart + i];
 
-            Demo.AI.DirectorEvents.SendDialogue(
+            Demo.AI.DirectorEvents.SendDialogueDecision(
                 text,
                 _currentNpcId,
-                narrative =>
+                decision =>
                 {
                     _waitingForResponse = false;
+                    string narrative = decision?.NarrativeText;
                     if (string.IsNullOrEmpty(narrative))
                     {
                         AppendLine("(The conversation falters as you struggle to find the right words.)");
@@ -282,12 +283,24 @@ namespace ForeverEngine.Demo.UI
                         if (npc != null) speaker = npc.Name;
                         AppendLine($"{speaker}: {narrative}");
 
+                        // Apply any stat_effects the LLM emitted. This is how
+                        // "I'd like to rest" actually heals the player at a
+                        // safe location: the LLM emits a full_rest status
+                        // and we apply it here. Without this hook the
+                        // narrative is pure flavor text — the engine never
+                        // changed game state.
+                        ApplyStatEffects(decision.StatEffects);
+
                         // Auto-narrate the NPC's response via TTS. Skipped
                         // when the user has muted via the speaker button.
                         // VoiceOutput strips *action* descriptions internally
                         // so only the spoken dialogue gets vocalized.
+                        // Pass the NPC's voice model so each character has
+                        // a distinct Piper voice (Garth gruff male, Thalia
+                        // warm female, Aldric British noble). Falls back to
+                        // the default narrator if the NPC has no mapping.
                         if (VoiceOutput.Instance != null)
-                            VoiceOutput.Instance.Speak(narrative);
+                            VoiceOutput.Instance.Speak(narrative, npc?.VoiceModel);
                     }
                 },
                 locationId: _currentLocationId,
@@ -380,6 +393,90 @@ namespace ForeverEngine.Demo.UI
                 }
                 _offlineBanner.style.color = new Color(0.95f, 0.7f, 0.45f);
                 _offlineBanner.style.display = DisplayStyle.Flex;
+            }
+        }
+
+        /// <summary>
+        /// Iterate the LLM's stat_effects array and apply each one to the
+        /// player. Recognized:
+        ///   * status_effect == "full_rest" → Player.FullRest()
+        ///   * stat == "hp" with delta > 0   → Player.Heal(delta)
+        ///   * stat == "hp" with delta < 0   → Player.TakeDamage(-delta)
+        /// All other effects are logged and skipped (combat damage and
+        /// stat changes are resolved by the engine's rules layer, not
+        /// dialogue).
+        ///
+        /// Each applied effect appends a system line to the dialogue
+        /// history so the player sees what changed (e.g. "(You feel
+        /// fully rested. HP 20/20)") instead of having silent state
+        /// changes hidden behind narrative flavor text.
+        /// </summary>
+        private void ApplyStatEffects(Bridges.DirectorClient.StatEffectDto[] effects)
+        {
+            if (effects == null || effects.Length == 0) return;
+            var gm = GameManager.Instance;
+            var player = gm?.Player;
+            if (player == null) return;
+
+            foreach (var effect in effects)
+            {
+                if (effect == null) continue;
+                // Only apply effects targeting the player. Anything else is
+                // a hint to systems we don't currently route through dialogue
+                // (combat resolution, NPC stat changes, etc.).
+                if (!string.IsNullOrEmpty(effect.TargetId) && effect.TargetId != "player")
+                    continue;
+
+                // Special status effects take precedence over raw stat deltas
+                // because they typically combine multiple changes (full_rest
+                // restores HP + hunger + thirst at once).
+                if (!string.IsNullOrEmpty(effect.StatusEffect))
+                {
+                    string status = effect.StatusEffect.ToLowerInvariant();
+                    if (status == "full_rest" || status == "rest" || status == "long_rest")
+                    {
+                        player.FullRest();
+                        AppendLine($"(You feel fully restored. HP {player.HP}/{player.MaxHP})");
+                        continue;
+                    }
+                    if (status == "inn_rest" || status == "inn_room")
+                    {
+                        // Inn room: 5 gold for a night, full rest. Hardcoded
+                        // here because the schema can't carry an inn-cost
+                        // field; if the player can't afford it the LLM
+                        // should have refused already, but we re-check so
+                        // the engine never silently goes negative.
+                        const int InnRoomCost = 5;
+                        if (player.Inventory == null || player.Gold < InnRoomCost)
+                        {
+                            AppendLine($"(You don't have {InnRoomCost} gold for a room.)");
+                            continue;
+                        }
+                        player.Gold -= InnRoomCost;
+                        player.FullRest();
+                        AppendLine($"(You pay {InnRoomCost} gold for the room and rest the night. " +
+                                   $"HP {player.HP}/{player.MaxHP}, gold {player.Gold})");
+                        continue;
+                    }
+                }
+
+                if (string.Equals(effect.Stat, "hp", System.StringComparison.OrdinalIgnoreCase))
+                {
+                    if (effect.Delta > 0)
+                    {
+                        int before = player.HP;
+                        player.Heal(effect.Delta);
+                        int gained = player.HP - before;
+                        if (gained > 0)
+                            AppendLine($"(You recover {gained} HP. HP {player.HP}/{player.MaxHP})");
+                    }
+                    else if (effect.Delta < 0)
+                    {
+                        int dmg = -effect.Delta;
+                        player.TakeDamage(dmg);
+                        AppendLine($"(You take {dmg} damage. HP {player.HP}/{player.MaxHP})");
+                    }
+                }
             }
         }
 

@@ -4,6 +4,21 @@ using ForeverEngine.MonoBehaviour.CharacterCreation;
 
 namespace ForeverEngine.Demo
 {
+    /// <summary>
+    /// Centralized item ID constants. The inventory currently keys items
+    /// by raw ints (legacy from before there was an item database). Naming
+    /// the IDs here keeps usages searchable and prevents accidental ID
+    /// collisions when new items get added.
+    /// </summary>
+    public static class ItemIds
+    {
+        public const int Food = 100;
+        public const int Water = 101;
+        public const int HealthPotion = 102;
+        // Restored on use during combat. Heals a fixed amount (see
+        // BattleManager.HEALTH_POTION_HEAL_AMOUNT).
+    }
+
     [System.Serializable]
     public class PlayerData
     {
@@ -27,8 +42,9 @@ namespace ForeverEngine.Demo
         public PlayerData()
         {
             Inventory = new Inventory(20);
-            Inventory.Add(new ItemInstance { ItemId = 100, StackCount = 3, MaxStack = 10 }); // Food
-            Inventory.Add(new ItemInstance { ItemId = 101, StackCount = 3, MaxStack = 10 }); // Water
+            Inventory.Add(new ItemInstance { ItemId = ItemIds.Food,         StackCount = 3, MaxStack = 10 });
+            Inventory.Add(new ItemInstance { ItemId = ItemIds.Water,        StackCount = 3, MaxStack = 10 });
+            Inventory.Add(new ItemInstance { ItemId = ItemIds.HealthPotion, StackCount = 2, MaxStack = 10 });
         }
 
         /// <summary>
