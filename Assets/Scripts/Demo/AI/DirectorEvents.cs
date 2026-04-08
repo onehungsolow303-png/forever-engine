@@ -176,6 +176,8 @@ namespace ForeverEngine.Demo.AI
                 ctx["npc_role"] = npc.Role;
                 ctx["npc_persona"] = npc.Persona;
                 ctx["npc_knowledge"] = npc.Knowledge;
+                if (!string.IsNullOrEmpty(npc.BehaviorRules))
+                    ctx["npc_behavior_rules"] = npc.BehaviorRules;
             }
 
             return ctx;
