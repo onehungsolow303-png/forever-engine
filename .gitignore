@@ -69,12 +69,11 @@ tools/piper/test_*.wav
 # by anyone who has purchased them on their Unity account.
 #
 # Purchased 2026-04-09 ($452.72 total):
-# Add the actual folder names below as each pack gets imported:
-# Assets/DungeonCatacomb/
-# Assets/MultistoryDungeons/
-# Assets/Lordenfel/
-# Assets/EternalTemple/
-# Assets/ForestEnvironment/
-# Assets/MountainEnvironment/
-# Assets/MedievalFantasyTown/
-# (Uncomment or adjust when actual folder names are confirmed after import)
+# Extracted from .unitypackage cache to Assets/ on 2026-04-09.
+# Actual folder names (confirmed after extraction):
+Assets/NAKED_SINGULARITY/
+Assets/NatureManufacture Assets/
+Assets/Magic Pig Games (Infinity PBR)/
+Assets/Lordenfel/
+Assets/EternalTemple/
+Assets/Multistory Dungeons/
