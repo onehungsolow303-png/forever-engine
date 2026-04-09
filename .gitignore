@@ -55,3 +55,26 @@ Packages/packages-lock.json
 tools/piper/piper/
 tools/piper/voices/
 tools/piper/test_*.wav
+
+# ─── Purchased Unity Asset Store packs (license protection) ─────────
+# These packs have Unity_AssetStore_standard license which FORBIDS
+# redistribution of source files in public repos. Each pack imports
+# into Assets/ under its own folder. Add each pack's folder name here
+# as it gets imported. The Forever engine repo is public on GitHub so
+# this is a license-critical defense.
+#
+# Note: the pack folders contain meshes, textures, materials, prefabs,
+# and demo scenes that are essential for the game at runtime. They're
+# gitignored because they can be re-imported from Unity Package Manager
+# by anyone who has purchased them on their Unity account.
+#
+# Purchased 2026-04-09 ($452.72 total):
+# Add the actual folder names below as each pack gets imported:
+# Assets/DungeonCatacomb/
+# Assets/MultistoryDungeons/
+# Assets/Lordenfel/
+# Assets/EternalTemple/
+# Assets/ForestEnvironment/
+# Assets/MountainEnvironment/
+# Assets/MedievalFantasyTown/
+# (Uncomment or adjust when actual folder names are confirmed after import)
