@@ -96,9 +96,11 @@ namespace ForeverEngine.Editor
             var encGO = new GameObject("EncounterManager");
             encGO.AddComponent<EncounterManager>();
 
-            // Location Manager
-            var locGO = new GameObject("LocationManager");
-            locGO.AddComponent<LocationManager>();
+            // LocationManager was deleted in the dead-code sweep (commit
+            // 3b7b265) — OverworldManager.TryEnterLocation now routes
+            // safe locations to DialoguePanel and unsafe locations to
+            // LocationInteriorManager directly. No separate LocationManager
+            // MonoBehaviour exists anymore.
 
             // HUD
             var hudGO = new GameObject("OverworldHUD");
