@@ -120,15 +120,15 @@ namespace ForeverEngine.MonoBehaviour.Camera
         private void HandleInput()
         {
             // Orbit: Q/E keys
-            if (Input.GetKey(KeyCode.Q))
+            if (UnityEngine.Input.GetKey(KeyCode.Q))
                 _orbitAngle -= _orbitSpeed * Time.deltaTime;
-            if (Input.GetKey(KeyCode.E))
+            if (UnityEngine.Input.GetKey(KeyCode.E))
                 _orbitAngle += _orbitSpeed * Time.deltaTime;
 
             // Orbit: middle mouse drag
-            if (Input.GetMouseButton(2)) // middle mouse
+            if (UnityEngine.Input.GetMouseButton(2)) // middle mouse
             {
-                float dx = Input.GetAxis("Mouse X");
+                float dx = UnityEngine.Input.GetAxis("Mouse X");
                 _orbitAngle += dx * _mouseOrbitSpeed * 10f;
             }
 
@@ -136,7 +136,7 @@ namespace ForeverEngine.MonoBehaviour.Camera
             _orbitAngle = Mathf.Repeat(_orbitAngle, 360f);
 
             // Zoom: scroll wheel
-            float scroll = Input.GetAxis("Mouse ScrollWheel");
+            float scroll = UnityEngine.Input.GetAxis("Mouse ScrollWheel");
             if (Mathf.Abs(scroll) > 0.001f)
             {
                 _targetDistance -= scroll * _zoomSpeed;
