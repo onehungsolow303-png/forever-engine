@@ -38,6 +38,23 @@ public static class AutoImportPurchasedPacks
         "C:/Users/bp303/AppData/Roaming/Unity/Asset Store-5.x/Magic Pig Games Infinity PBR/3D ModelsEnvironmentsFantasy/Medieval Fantasy Town Village Environment for RPG FPS.unitypackage",
     };
 
+    /// <summary>
+    /// Call from batchmode via:
+    ///   Unity.exe -batchmode -projectPath "..." -executeMethod AutoImportPurchasedPacks.ImportAll
+    /// Does NOT use -quit — the method calls EditorApplication.Exit(0) after
+    /// all imports + AssetDatabase.Refresh() have completed, ensuring the
+    /// extraction finishes before Unity shuts down.
+    /// </summary>
+    public static void ImportAll()
+    {
+        OnScriptsReloaded();
+        // Force a synchronous asset database refresh so all extracted
+        // files are written to disk before we exit.
+        AssetDatabase.Refresh(ImportAssetOptions.ForceSynchronousImport);
+        Debug.Log("[AutoImportPurchasedPacks] Refresh complete. Exiting.");
+        EditorApplication.Exit(0);
+    }
+
     [InitializeOnLoadMethod]
     private static void OnScriptsReloaded()
     {
