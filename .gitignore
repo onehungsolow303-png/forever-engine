@@ -71,11 +71,20 @@ tools/piper/test_*.wav
 # Purchased 2026-04-09 ($452.72 total):
 # Extracted from .unitypackage cache to Assets/ on 2026-04-09.
 # Actual folder names (confirmed after extraction):
+# Pack folders + their Unity .meta files (folder metas sit alongside, not inside)
 Assets/NAKED_SINGULARITY/
+Assets/NAKED_SINGULARITY.meta
 Assets/NatureManufacture Assets/
+Assets/NatureManufacture Assets.meta
 Assets/Magic Pig Games (Infinity PBR)/
+Assets/Magic Pig Games (Infinity PBR).meta
 Assets/Lordenfel/
+Assets/Lordenfel.meta
 Assets/EternalTemple/
+Assets/EternalTemple.meta
 Assets/Eternal Temple/
+Assets/Eternal Temple.meta
 Assets/Multistory Dungeons/
+Assets/Multistory Dungeons.meta
 Assets/Multistory Dungeons 2/
+Assets/Multistory Dungeons 2.meta
