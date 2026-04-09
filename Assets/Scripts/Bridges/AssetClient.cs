@@ -11,10 +11,16 @@ namespace ForeverEngine.Bridges
     /// HTTP client for Asset Manager (http://127.0.0.1:7801).
     /// All calls are coroutine-based and tolerant of service unavailability -
     /// the engine continues with placeholder assets when Asset Manager is down.
+    ///
+    /// Retry logic matches DirectorClient: 3 attempts with exponential backoff
+    /// (0.5s, 1s, 2s). Previously AssetClient was single-shot (no retries),
+    /// which meant transient network hiccups caused permanent asset selection
+    /// failures. Fixed in the audit remediation pass (2026-04-09).
     /// </summary>
     public class AssetClient
     {
         public string BaseUrl { get; }
+        public int RetryCount { get; set; } = 3;
 
         public AssetClient(string baseUrl = "http://127.0.0.1:7801")
         {
@@ -23,52 +29,89 @@ namespace ForeverEngine.Bridges
 
         public IEnumerator GetCatalog(Action<CatalogResponse> onSuccess, Action<string> onError)
         {
-            using var req = UnityWebRequest.Get($"{BaseUrl}/catalog");
-            yield return req.SendWebRequest();
-            if (req.result != UnityWebRequest.Result.Success)
-            {
-                onError?.Invoke($"GetCatalog failed: {req.error}");
-                yield break;
-            }
-            try
-            {
-                var resp = JsonConvert.DeserializeObject<CatalogResponse>(req.downloadHandler.text);
-                onSuccess?.Invoke(resp);
-            }
-            catch (Exception e)
-            {
-                onError?.Invoke($"GetCatalog parse error: {e.Message}");
-            }
+            yield return Get<CatalogResponse>("/catalog", onSuccess, onError);
         }
 
         public IEnumerator Select(AssetSelectionRequestDto request, Action<AssetSelectionResponse> onSuccess, Action<string> onError)
         {
             var json = JsonConvert.SerializeObject(request);
-            using var req = new UnityWebRequest($"{BaseUrl}/select", "POST");
-            req.uploadHandler = new UploadHandlerRaw(Encoding.UTF8.GetBytes(json));
-            req.downloadHandler = new DownloadHandlerBuffer();
-            req.SetRequestHeader("Content-Type", "application/json");
-            yield return req.SendWebRequest();
-            if (req.result != UnityWebRequest.Result.Success)
+            yield return Post<AssetSelectionResponse>("/select", json, onSuccess, onError);
+        }
+
+        private IEnumerator Get<TResp>(string path, Action<TResp> onSuccess, Action<string> onError)
+        {
+            int attempt = 0;
+            string lastError = null;
+
+            while (attempt < RetryCount)
             {
-                onError?.Invoke($"Select failed: {req.error}");
-                yield break;
+                attempt++;
+                using var req = UnityWebRequest.Get($"{BaseUrl}{path}");
+                yield return req.SendWebRequest();
+
+                if (req.result == UnityWebRequest.Result.Success)
+                {
+                    try
+                    {
+                        var resp = JsonConvert.DeserializeObject<TResp>(req.downloadHandler.text);
+                        onSuccess?.Invoke(resp);
+                        yield break;
+                    }
+                    catch (Exception e)
+                    {
+                        lastError = $"parse error on attempt {attempt}: {e.Message}";
+                    }
+                }
+                else
+                {
+                    lastError = $"http error on attempt {attempt}: {req.error}";
+                }
+
+                yield return new WaitForSeconds(Mathf.Pow(2, attempt - 1) * 0.5f);
             }
-            try
+
+            onError?.Invoke(lastError ?? "unknown error after all retries");
+        }
+
+        private IEnumerator Post<TResp>(string path, string json, Action<TResp> onSuccess, Action<string> onError)
+        {
+            int attempt = 0;
+            string lastError = null;
+
+            while (attempt < RetryCount)
             {
-                var resp = JsonConvert.DeserializeObject<AssetSelectionResponse>(req.downloadHandler.text);
-                onSuccess?.Invoke(resp);
+                attempt++;
+                using var req = new UnityWebRequest($"{BaseUrl}{path}", "POST");
+                req.uploadHandler = new UploadHandlerRaw(Encoding.UTF8.GetBytes(json));
+                req.downloadHandler = new DownloadHandlerBuffer();
+                req.SetRequestHeader("Content-Type", "application/json");
+                yield return req.SendWebRequest();
+
+                if (req.result == UnityWebRequest.Result.Success)
+                {
+                    try
+                    {
+                        var resp = JsonConvert.DeserializeObject<TResp>(req.downloadHandler.text);
+                        onSuccess?.Invoke(resp);
+                        yield break;
+                    }
+                    catch (Exception e)
+                    {
+                        lastError = $"parse error on attempt {attempt}: {e.Message}";
+                    }
+                }
+                else
+                {
+                    lastError = $"http error on attempt {attempt}: {req.error}";
+                }
+
+                yield return new WaitForSeconds(Mathf.Pow(2, attempt - 1) * 0.5f);
             }
-            catch (Exception e)
-            {
-                onError?.Invoke($"Select parse error: {e.Message}");
-            }
+
+            onError?.Invoke(lastError ?? "unknown error after all retries");
         }
 
         // Plain DTOs for the asset bridge - mirror asset_manager/bridge/schemas.py.
-        // Named with Dto suffix to avoid colliding with the auto-generated
-        // AssetSelectionRequest in SharedSchemaTypes.cs (which has the same name
-        // because the JSON schema title is AssetSelectionRequest).
 
         [Serializable]
         public class AssetSelectionRequestDto

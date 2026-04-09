@@ -61,6 +61,18 @@ Pre-pivot brain code (archived): `C:\Dev\_archive\forever-engine-pre-pivot\`
 - `Assets/Scripts/AI/Learning/QLearner.cs` — Pure Q-learning algorithm (per-decision, in-engine)
 - `Assets/Scripts/AI/SelfHealing/{SystemMonitor,FaultBoundary,AssetFaultHandler,PerformanceRegulator}.cs` — Runtime fault graph
 
+## 3D Engine Transition (2026-04-09)
+
+The engine is transitioning from 2D Tilemap/Sprite rendering to full 3D mesh scenes.
+Full spec: `C:\Dev\.shared\docs\superpowers\specs\2026-04-09-3d-engine-transition-design.md`
+
+Key components added for 3D:
+- `Assets/Scripts/MonoBehaviour/Camera/PerspectiveCameraController.cs` — standalone 3D camera with orbit/zoom/follow
+- `Packages/Tripo3d_Unity_Bridge/` — DCC Bridge for AI 3D model import (Tools → Tripo Bridge)
+- 7 purchased Unity Asset Store 3D environment packs (34 GB in Assets/, all gitignored for license protection)
+
+The existing 2D systems (DialoguePanel, BattleHUD, OverworldHUD, ECS game logic) are renderer-independent and do NOT need to change for 3D.
+
 ## Boot sequence
 1. Demo scene loads → `GameManager.Awake()` constructs `AssetClient`, `DirectorClient`, `ServiceWatchdog`, `GameStateServer`
 2. `GameManager.Start()` (coroutine) calls `Watchdog.CheckAll()` against both Python services
