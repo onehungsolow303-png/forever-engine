@@ -174,6 +174,140 @@ namespace ForeverEngine.Editor
             go.GetComponent<Renderer>().sharedMaterial = mat;
         }
 
+        // ── Overworld 3D Scene ──────────────────────────────────────────────
+
+        private const string Overworld3DScenePath = "Assets/Scenes/Overworld3D.unity";
+
+        /// <summary>
+        /// Creates the Overworld3D scene, ready for the 3D overworld game loop.
+        ///
+        /// Scene contents:
+        ///   - Perspective camera with PerspectiveCameraController + URP data
+        ///   - Directional light (sun): warm white, 50° elevation, soft shadows
+        ///   - Ambient: flat mode, dark blue-purple
+        ///   - Linear fog: blue-grey, start 40, end 120
+        ///   - Overworld3DSetup GameObject (bootstrapper, prefab map wired)
+        ///   - OverworldManager GameObject (game loop)
+        ///
+        /// Menu: Forever Engine / Create Overworld3D Scene
+        /// Saved to Assets/Scenes/Overworld3D.unity
+        /// </summary>
+        [MenuItem("Forever Engine/Create Overworld3D Scene")]
+        public static void CreateOverworld3DScene()
+        {
+            // ── New empty scene ──────────────────────────────────────────────
+            var scene = EditorSceneManager.NewScene(
+                NewSceneSetup.EmptyScene, NewSceneMode.Single);
+
+            // ── Perspective camera ───────────────────────────────────────────
+            var camGO = new GameObject("Main Camera");
+            camGO.tag = "MainCamera";
+            var cam = camGO.AddComponent<Camera>();
+            cam.orthographic = false;
+            cam.fieldOfView = 45f;
+            cam.nearClipPlane = 0.3f;
+            cam.farClipPlane = 200f;
+            cam.clearFlags = CameraClearFlags.SolidColor;
+            // Dark blue-black sky background
+            cam.backgroundColor = new Color(0.05f, 0.08f, 0.12f);
+
+            // URP camera data — ensures the camera renders with the URP pipeline
+            camGO.AddComponent<UniversalAdditionalCameraData>();
+
+            // Perspective orbit/zoom/follow controller
+            camGO.AddComponent<ForeverEngine.MonoBehaviour.Camera.PerspectiveCameraController>();
+
+            // ── Directional light (sun) ──────────────────────────────────────
+            var sunGO = new GameObject("Sun");
+            var sun = sunGO.AddComponent<Light>();
+            sun.type = LightType.Directional;
+            // Warm white outdoor sun
+            sun.color = new Color(1.0f, 0.95f, 0.85f);
+            sun.intensity = 1.2f;
+            sun.shadows = LightShadows.Soft;
+            // 50° elevation, -30° horizontal (north-west sun angle)
+            sunGO.transform.rotation = Quaternion.Euler(50f, -30f, 0f);
+
+            var sunUrpData = sunGO.AddComponent<UniversalAdditionalLightData>();
+            sunUrpData.usePipelineSettings = true;
+
+            // ── Render settings ──────────────────────────────────────────────
+            // Ambient: flat, dark blue-purple (overworld dusk/night feel)
+            RenderSettings.ambientMode = UnityEngine.Rendering.AmbientMode.Flat;
+            RenderSettings.ambientLight = new Color(0.2f, 0.18f, 0.22f);
+
+            // Fog: linear, blue-grey distance haze
+            RenderSettings.fog = true;
+            RenderSettings.fogMode = FogMode.Linear;
+            RenderSettings.fogColor = new Color(0.4f, 0.45f, 0.5f);
+            RenderSettings.fogStartDistance = 40f;
+            RenderSettings.fogEndDistance = 120f;
+
+            // ── Overworld3DSetup GameObject ──────────────────────────────────
+            var setupGO = new GameObject("Overworld3DSetup");
+            var setup = setupGO.AddComponent<Overworld3DSetup>();
+
+            // Wire the prefab map via SerializedObject (field is [SerializeField] private)
+            var prefabMap = AssetDatabase.LoadAssetAtPath<OverworldPrefabMapper>(
+                "Assets/ScriptableObjects/OverworldPrefabMap.asset");
+            if (prefabMap != null)
+            {
+                var so = new SerializedObject(setup);
+                var prop = so.FindProperty("_prefabMap");
+                if (prop != null)
+                {
+                    prop.objectReferenceValue = prefabMap;
+                    so.ApplyModifiedPropertiesWithoutUndo();
+                }
+                else
+                {
+                    Debug.LogWarning("[SceneBuilder3D] Could not find '_prefabMap' property on Overworld3DSetup.");
+                }
+            }
+            else
+            {
+                Debug.LogWarning(
+                    "[SceneBuilder3D] OverworldPrefabMap.asset not found at " +
+                    "Assets/ScriptableObjects/OverworldPrefabMap.asset — " +
+                    "run 'Forever Engine / Create Overworld Prefab Map' first.");
+            }
+
+            // ── OverworldManager GameObject ──────────────────────────────────
+            var managerGO = new GameObject("OverworldManager");
+            managerGO.AddComponent<OverworldManager>();
+
+            // ── Save scene ───────────────────────────────────────────────────
+            EditorSceneManager.SaveScene(scene, Overworld3DScenePath);
+            AssetDatabase.Refresh();
+
+            // ── Add to build settings if not already present ─────────────────
+            AddSceneToBuildSettings(Overworld3DScenePath);
+
+            Debug.Log("[SceneBuilder3D] Overworld3D scene saved to " + Overworld3DScenePath);
+        }
+
+        /// <summary>
+        /// Adds <paramref name="scenePath"/> to EditorBuildSettings.scenes if it
+        /// is not already present. Existing entries are preserved unchanged.
+        /// </summary>
+        private static void AddSceneToBuildSettings(string scenePath)
+        {
+            var existing = EditorBuildSettings.scenes;
+
+            foreach (var s in existing)
+            {
+                if (s.path == scenePath)
+                    return; // already present
+            }
+
+            var updated = new EditorBuildSettingsScene[existing.Length + 1];
+            existing.CopyTo(updated, 0);
+            updated[existing.Length] = new EditorBuildSettingsScene(scenePath, true);
+            EditorBuildSettings.scenes = updated;
+
+            Debug.Log($"[SceneBuilder3D] Added '{scenePath}' to build settings (index {existing.Length}).");
+        }
+
         // ── Overworld Prefab Map ─────────────────────────────────────────────
 
         /// <summary>
