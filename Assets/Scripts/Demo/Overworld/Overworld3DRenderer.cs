@@ -32,6 +32,15 @@ namespace ForeverEngine.Demo.Overworld
         /// </summary>
         public Transform PlayerTransform => _playerModel != null ? _playerModel.transform : null;
 
+        /// <summary>
+        /// Assign the prefab map at runtime (used by Overworld3DSetup bootstrapper).
+        /// Must be called before Initialize().
+        /// </summary>
+        public void SetPrefabMap(OverworldPrefabMapper map)
+        {
+            _prefabMap = map;
+        }
+
         public void Initialize(Dictionary<(int, int), HexTile> tiles)
         {
             float hexSize = _prefabMap != null ? _prefabMap.HexWorldSize : 4f;

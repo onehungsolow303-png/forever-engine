@@ -18,6 +18,20 @@ namespace ForeverEngine.Demo.Overworld
         [SerializeField] private float _dayLengthSeconds = 600f; // 10 min
 
         private OverworldRenderer _renderer;
+        private Overworld3DRenderer _renderer3D;
+
+        /// <summary>True when a 3D renderer has been registered (by Overworld3DSetup).</summary>
+        public bool Is3D => _renderer3D != null;
+
+        /// <summary>
+        /// Called by Overworld3DSetup to register the 3D renderer.
+        /// When set, Update() routes visuals through the 3D renderer instead of the 2D one.
+        /// </summary>
+        public void Set3DRenderer(Overworld3DRenderer renderer)
+        {
+            _renderer3D = renderer;
+        }
+
         // Phase 3 pivot: DialogueOverlay archived to _archive/forever-engine-pre-pivot/.
         // Will be reintroduced in a follow-up that uses DirectorClient for NPC dialogue.
 
@@ -36,10 +50,13 @@ namespace ForeverEngine.Demo.Overworld
             if (gm.Player.ExploredHexes.Count > 0)
                 Fog.LoadExplored(gm.Player.ExploredHexes);
 
-            // Setup renderer
-            var rendererGO = new GameObject("OverworldRenderer");
-            _renderer = rendererGO.AddComponent<OverworldRenderer>();
-            _renderer.Initialize(Tiles, Camera.main);
+            // Setup renderer -- 3D handled by Overworld3DSetup if present
+            if (FindAnyObjectByType<Overworld3DSetup>() == null)
+            {
+                var rendererGO = new GameObject("OverworldRenderer");
+                _renderer = rendererGO.AddComponent<OverworldRenderer>();
+                _renderer.Initialize(Tiles, Camera.main);
+            }
 
             // Setup player
             var playerGO = new GameObject("OverworldPlayer");
@@ -67,8 +84,10 @@ namespace ForeverEngine.Demo.Overworld
                 SaveManager.Save();
             }
 
-            // Initial visual update
-            _renderer.UpdateVisuals(gm.Player.HexQ, gm.Player.HexR, Fog, IsNight);
+            // Initial visual update (3D renderer may not be set yet; Overworld3DSetup
+            // runs after this Start(), so the first frame is handled by Update()).
+            if (_renderer != null)
+                _renderer.UpdateVisuals(gm.Player.HexQ, gm.Player.HexR, Fog, IsNight);
 
             Debug.Log($"[Overworld] Initialized at ({gm.Player.HexQ},{gm.Player.HexR}), {Tiles.Count} tiles");
         }
@@ -78,8 +97,15 @@ namespace ForeverEngine.Demo.Overworld
             // Day/night and visuals always run
             DayTime = (DayTime + Time.deltaTime / _dayLengthSeconds) % 1f;
             Fog.SetRevealRadius(IsNight ? 1 : 2);
-            if (_renderer != null && GameManager.Instance?.Player != null)
-                _renderer.UpdateVisuals(GameManager.Instance.Player.HexQ, GameManager.Instance.Player.HexR, Fog, IsNight);
+            if (GameManager.Instance?.Player != null)
+            {
+                int pq = GameManager.Instance.Player.HexQ;
+                int pr = GameManager.Instance.Player.HexR;
+                if (_renderer3D != null)
+                    _renderer3D.UpdateVisuals(pq, pr, Fog, IsNight);
+                else if (_renderer != null)
+                    _renderer.UpdateVisuals(pq, pr, Fog, IsNight);
+            }
 
             // Suppress overworld input while a modal dialogue panel is open.
             // Without this, typing into the dialogue panel's TextField also
