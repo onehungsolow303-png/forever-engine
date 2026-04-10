@@ -2,6 +2,7 @@ using UnityEngine;
 using UnityEditor;
 using UnityEditor.SceneManagement;
 using UnityEngine.Rendering.Universal;
+using ForeverEngine.Demo.Overworld;
 
 namespace ForeverEngine.Editor
 {
@@ -171,6 +172,139 @@ namespace ForeverEngine.Editor
             go.transform.position = position;
             go.transform.localScale = scale;
             go.GetComponent<Renderer>().sharedMaterial = mat;
+        }
+
+        // ── Overworld Prefab Map ─────────────────────────────────────────────
+
+        /// <summary>
+        /// Creates and saves an OverworldPrefabMapper ScriptableObject asset,
+        /// pre-populated with prefabs from the purchased NatureManufacture and
+        /// Lordenfel asset packs, plus Plane placeholders for Plains and Water.
+        ///
+        /// Menu: Forever Engine / Create Overworld Prefab Map
+        ///
+        /// Saved to Assets/ScriptableObjects/OverworldPrefabMap.asset
+        /// </summary>
+        [MenuItem("Forever Engine/Create Overworld Prefab Map")]
+        public static void CreateOverworldPrefabMap()
+        {
+            // Ensure output directory for placeholder prefabs exists
+            const string prefabDir = "Assets/Prefabs/Overworld";
+            if (!AssetDatabase.IsValidFolder(prefabDir))
+                AssetDatabase.CreateFolder("Assets/Prefabs", "Overworld");
+
+            // ── Build the ScriptableObject ───────────────────────────────────
+            var mapper = ScriptableObject.CreateInstance<OverworldPrefabMapper>();
+            mapper.HexWorldSize = 4f;
+            mapper.ElevationScale = 2f;
+
+            // Forest — Beech Trees from NatureManufacture Forest pack
+            mapper.ForestPrefabs = LoadPrefabsFromPath(
+                "Assets/NatureManufacture Assets/Forest Environment Dynamic Nature/Beech Trees");
+
+            // Mountain — NatureManufacture Mountain Environment pack
+            mapper.MountainPrefabs = LoadPrefabsFromPath(
+                "Assets/NatureManufacture Assets/Mountain Environment");
+
+            // Ruins — Lordenfel Architecture prefabs (Road/Ruins tile type)
+            mapper.RuinsPrefabs = LoadPrefabsFromPath(
+                "Assets/Lordenfel/Prefabs/Architecture");
+
+            // Plains — placeholder Plane prefab (grass green)
+            var plainsPrefab = CreatePlaceholderPrefab(
+                "Plains_Placeholder", new Color(0.35f, 0.60f, 0.25f), prefabDir);
+            mapper.PlainsPrefabs = plainsPrefab != null
+                ? new GameObject[] { plainsPrefab }
+                : System.Array.Empty<GameObject>();
+
+            // Water — placeholder Plane prefab (ocean blue)
+            var waterPrefab = CreatePlaceholderPrefab(
+                "Water_Placeholder", new Color(0.15f, 0.40f, 0.75f), prefabDir);
+            mapper.WaterPrefabs = waterPrefab != null
+                ? new GameObject[] { waterPrefab }
+                : System.Array.Empty<GameObject>();
+
+            // ── Save the asset ───────────────────────────────────────────────
+            const string soPath = "Assets/ScriptableObjects/OverworldPrefabMap.asset";
+            AssetDatabase.CreateAsset(mapper, soPath);
+            AssetDatabase.SaveAssets();
+            AssetDatabase.Refresh();
+
+            Debug.Log(
+                $"[SceneBuilder3D] OverworldPrefabMap saved to {soPath}\n" +
+                $"  Forest: {mapper.ForestPrefabs.Length} prefabs\n" +
+                $"  Mountain: {mapper.MountainPrefabs.Length} prefabs\n" +
+                $"  Ruins: {mapper.RuinsPrefabs.Length} prefabs\n" +
+                $"  Plains placeholder: {mapper.PlainsPrefabs.Length}\n" +
+                $"  Water placeholder: {mapper.WaterPrefabs.Length}");
+
+            // Ping the asset in the Project window
+            EditorUtility.FocusProjectWindow();
+            Selection.activeObject = mapper;
+        }
+
+        /// <summary>
+        /// Finds all .prefab assets under <paramref name="path"/> (recursively),
+        /// loads them as GameObjects, and returns up to 10 results.
+        /// Returns an empty array if none are found.
+        /// </summary>
+        private static GameObject[] LoadPrefabsFromPath(string path)
+        {
+            const int cap = 10;
+            string[] guids = AssetDatabase.FindAssets("t:Prefab", new[] { path });
+            var results = new System.Collections.Generic.List<GameObject>(cap);
+
+            foreach (string guid in guids)
+            {
+                if (results.Count >= cap) break;
+                string assetPath = AssetDatabase.GUIDToAssetPath(guid);
+                var prefab = AssetDatabase.LoadAssetAtPath<GameObject>(assetPath);
+                if (prefab != null)
+                    results.Add(prefab);
+            }
+
+            if (results.Count == 0)
+                Debug.LogWarning($"[SceneBuilder3D] No prefabs found under: {path}");
+
+            return results.ToArray();
+        }
+
+        /// <summary>
+        /// Creates a Plane primitive with a URP/Lit material of the given
+        /// <paramref name="color"/>, saves it as a prefab asset under
+        /// <paramref name="directory"/>, and returns the loaded prefab.
+        /// Returns <c>null</c> if saving fails.
+        /// </summary>
+        private static GameObject CreatePlaceholderPrefab(
+            string name, Color color, string directory)
+        {
+            // Build the in-scene placeholder
+            var go = GameObject.CreatePrimitive(PrimitiveType.Plane);
+            go.name = name;
+
+            var mat = new Material(Shader.Find("Universal Render Pipeline/Lit"));
+            mat.color = color;
+            go.GetComponent<Renderer>().sharedMaterial = mat;
+
+            // Save material alongside the prefab
+            string matPath = $"{directory}/{name}_Mat.mat";
+            AssetDatabase.CreateAsset(mat, matPath);
+
+            // Save as prefab
+            string prefabPath = $"{directory}/{name}.prefab";
+            bool success;
+            var savedPrefab = PrefabUtility.SaveAsPrefabAsset(go, prefabPath, out success);
+
+            // Clean up the temporary in-scene object
+            Object.DestroyImmediate(go);
+
+            if (!success)
+            {
+                Debug.LogError($"[SceneBuilder3D] Failed to save placeholder prefab: {prefabPath}");
+                return null;
+            }
+
+            return savedPrefab;
         }
     }
 }
