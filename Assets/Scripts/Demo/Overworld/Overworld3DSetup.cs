@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 using ForeverEngine.MonoBehaviour.Camera;
 
@@ -6,22 +7,24 @@ namespace ForeverEngine.Demo.Overworld
     /// <summary>
     /// Bootstrapper for the Overworld3D scene. Placed on a GameObject in the scene,
     /// it wires OverworldManager (game logic) to the 3D renderer and perspective camera.
-    ///
-    /// Execution order: OverworldManager.Start() runs first (generates tiles, fog, player),
-    /// then this component's Start() hooks the 3D renderer into the existing game loop.
+    /// Waits for OverworldManager to finish generating tiles before initializing.
     /// </summary>
     public class Overworld3DSetup : UnityEngine.MonoBehaviour
     {
         [SerializeField] private OverworldPrefabMapper _prefabMap;
 
-        private void Start()
+        private IEnumerator Start()
         {
             var om = OverworldManager.Instance;
             if (om == null)
             {
                 Debug.LogError("[Overworld3DSetup] No OverworldManager found!");
-                return;
+                yield break;
             }
+
+            // Wait for OverworldManager.Start() to finish generating tiles
+            while (om.Tiles == null)
+                yield return null;
 
             // Find or create the 3D renderer
             var renderer3D = FindAnyObjectByType<Overworld3DRenderer>();
@@ -41,6 +44,7 @@ namespace ForeverEngine.Demo.Overworld
             {
                 camCtrl.FollowTarget = renderer3D.PlayerTransform;
                 camCtrl.SnapToTarget();
+                // Q/E now available for camera orbit (hex NW/SE moved to Z/C)
             }
             else if (camCtrl == null)
             {

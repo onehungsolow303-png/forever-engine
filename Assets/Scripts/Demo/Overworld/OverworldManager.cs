@@ -46,7 +46,9 @@ namespace ForeverEngine.Demo.Overworld
             Tiles = OverworldGenerator.Generate(20, 20, gm.CurrentSeed);
 
             // Setup fog
-            Fog = new OverworldFog(IsNight ? 1 : 2);
+            // Larger reveal radius for 3D top-down view (camera sees more of the map)
+            bool is3D = FindAnyObjectByType<Overworld3DSetup>() != null;
+            Fog = new OverworldFog(is3D ? 5 : (IsNight ? 1 : 2));
             if (gm.Player.ExploredHexes.Count > 0)
                 Fog.LoadExplored(gm.Player.ExploredHexes);
 
@@ -94,6 +96,7 @@ namespace ForeverEngine.Demo.Overworld
 
         private void Update()
         {
+            if (Fog == null) return; // Not initialized (no GameManager)
             // Day/night and visuals always run
             DayTime = (DayTime + Time.deltaTime / _dayLengthSeconds) % 1f;
             Fog.SetRevealRadius(IsNight ? 1 : 2);
@@ -116,13 +119,14 @@ namespace ForeverEngine.Demo.Overworld
             if (UI.DialoguePanel.Instance != null && UI.DialoguePanel.Instance.IsOpen)
                 return;
 
-            // Input: hex movement (WASD mapped to hex directions)
-            if      (Input.GetKeyDown(KeyCode.W) || Input.GetKeyDown(KeyCode.UpArrow))    Player.TryMove(0, 1);
-            else if (Input.GetKeyDown(KeyCode.S) || Input.GetKeyDown(KeyCode.DownArrow))  Player.TryMove(0, -1);
+            // Input: hex movement (WASD mapped to 3D camera-relative hex directions)
+            // In 3D view: +R = +Z (forward/up on screen), +Q = +X (right on screen)
+            if      (Input.GetKeyDown(KeyCode.W) || Input.GetKeyDown(KeyCode.UpArrow))    Player.TryMove(0, -1);
+            else if (Input.GetKeyDown(KeyCode.S) || Input.GetKeyDown(KeyCode.DownArrow))  Player.TryMove(0, 1);
             else if (Input.GetKeyDown(KeyCode.A) || Input.GetKeyDown(KeyCode.LeftArrow))  Player.TryMove(-1, 0);
             else if (Input.GetKeyDown(KeyCode.D) || Input.GetKeyDown(KeyCode.RightArrow)) Player.TryMove(1, 0);
-            else if (Input.GetKeyDown(KeyCode.Q)) Player.TryMove(-1, 1); // hex NW
-            else if (Input.GetKeyDown(KeyCode.E)) Player.TryMove(1, -1); // hex SE
+            else if (Input.GetKeyDown(KeyCode.Z)) Player.TryMove(-1, -1); // hex NW
+            else if (Input.GetKeyDown(KeyCode.C)) Player.TryMove(1, 1);   // hex SE
             else if (Input.GetKeyDown(KeyCode.F)) Player.Forage();
             else if (Input.GetKeyDown(KeyCode.Return) || Input.GetKeyDown(KeyCode.KeypadEnter)) TryEnterLocation();
         }

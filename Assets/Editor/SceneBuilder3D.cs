@@ -310,55 +310,74 @@ namespace ForeverEngine.Editor
 
         // ── Overworld Prefab Map ─────────────────────────────────────────────
 
-        /// <summary>
-        /// Creates and saves an OverworldPrefabMapper ScriptableObject asset,
-        /// pre-populated with prefabs from the purchased NatureManufacture and
-        /// Lordenfel asset packs, plus Plane placeholders for Plains and Water.
-        ///
-        /// Menu: Forever Engine / Create Overworld Prefab Map
-        ///
-        /// Saved to Assets/ScriptableObjects/OverworldPrefabMap.asset
-        /// </summary>
         [MenuItem("Forever Engine/Create Overworld Prefab Map")]
         public static void CreateOverworldPrefabMap()
         {
-            // Ensure output directory for placeholder prefabs exists
-            const string prefabDir = "Assets/Prefabs/Overworld";
-            if (!AssetDatabase.IsValidFolder(prefabDir))
-                AssetDatabase.CreateFolder("Assets/Prefabs", "Overworld");
-
-            // ── Build the ScriptableObject ───────────────────────────────────
             var mapper = ScriptableObject.CreateInstance<OverworldPrefabMapper>();
             mapper.HexWorldSize = 4f;
             mapper.ElevationScale = 2f;
 
-            // Forest — Beech Trees from NatureManufacture Forest pack
+            // Primary terrain prefabs (one per tile)
             mapper.ForestPrefabs = LoadPrefabsFromPath(
-                "Assets/NatureManufacture Assets/Forest Environment Dynamic Nature/Beech Trees");
-
-            // Mountain — NatureManufacture Mountain Environment pack
+                "Assets/NatureManufacture Assets/Forest Environment Dynamic Nature/Beech Trees", 10);
             mapper.MountainPrefabs = LoadPrefabsFromPath(
-                "Assets/NatureManufacture Assets/Mountain Environment");
-
-            // Ruins — Lordenfel Architecture prefabs (Road/Ruins tile type)
+                "Assets/NatureManufacture Assets/Mountain Environment", 10);
             mapper.RuinsPrefabs = LoadPrefabsFromPath(
+                "Assets/Lordenfel/Prefabs/Architecture", 10);
+            mapper.PlainsPrefabs = System.Array.Empty<GameObject>();
+            mapper.WaterPrefabs = System.Array.Empty<GameObject>();
+
+            // Scatter prefabs (multiple per tile for density)
+            var forestScatter = new System.Collections.Generic.List<GameObject>();
+            forestScatter.AddRange(LoadPrefabsFromPath(
+                "Assets/NatureManufacture Assets/Forest Environment Dynamic Nature/Bushes", 6));
+            forestScatter.AddRange(LoadPrefabsFromPath(
+                "Assets/NatureManufacture Assets/Forest Environment Dynamic Nature/Rocks", 6));
+            forestScatter.AddRange(LoadPrefabsFromPath(
+                "Assets/NatureManufacture Assets/Forest Environment Dynamic Nature/Mushrooms", 4));
+            forestScatter.AddRange(LoadPrefabsFromPath(
+                "Assets/NatureManufacture Assets/Forest Environment Dynamic Nature/Foliage and Grass", 6));
+            mapper.ForestScatter = forestScatter.ToArray();
+
+            var mountainScatter = new System.Collections.Generic.List<GameObject>();
+            mountainScatter.AddRange(LoadPrefabsFromPath(
+                "Assets/NatureManufacture Assets/Mountain Environment/Rocks", 8));
+            mountainScatter.AddRange(LoadPrefabsFromPath(
+                "Assets/NatureManufacture Assets/Mountain Environment/Bushes", 6));
+            mapper.MountainScatter = mountainScatter.ToArray();
+
+            mapper.PlainsScatter = LoadPrefabsFromPath(
+                "Assets/NatureManufacture Assets/Forest Environment Dynamic Nature/Foliage and Grass", 6);
+
+            mapper.RuinsScatter = LoadPrefabsFromPath(
+                "Assets/Lordenfel/Prefabs/Props", 6);
+
+            // Ground materials (PBR textures per biome)
+            mapper.PlainsGround = LoadMaterial(
+                "Assets/NatureManufacture Assets/Forest Environment Dynamic Nature/Ground/Materials/M_ground_beech_forest_Moss.mat");
+            mapper.ForestGround = LoadMaterial(
+                "Assets/NatureManufacture Assets/Forest Environment Dynamic Nature/Ground/Materials/M_ground_beech_forest_leaves_01.mat");
+            mapper.MountainGround = LoadMaterial(
+                "Assets/NatureManufacture Assets/Forest Environment Dynamic Nature/Ground/Materials/M_ground_beech_forest_rocks_01.mat");
+            mapper.RuinsGround = LoadMaterial(
+                "Assets/NatureManufacture Assets/Forest Environment Dynamic Nature/Ground/Materials/M_ground_beech_forest_stones_01.mat");
+            mapper.WaterGround = null;
+
+            // Player prefab
+            mapper.PlayerPrefab = AssetDatabase.LoadAssetAtPath<GameObject>(
+                "Assets/NAKED_SINGULARITY/DARK_KNIGHT/PREFABS/SK_DC_Knight_full_RPG.prefab");
+            if (mapper.PlayerPrefab == null)
+                Debug.LogWarning("[SceneBuilder3D] Dark Knight player prefab not found");
+
+            // Location prefabs
+            mapper.TownPrefab = LoadFirstPrefab(
+                "Assets/Magic Pig Games (Infinity PBR)/Medieval Environment Pack/_Prefabs/_Building Sets");
+            mapper.CampPrefab = LoadFirstPrefab(
+                "Assets/NatureManufacture Assets/Forest Environment Dynamic Nature/Small Architecture/Bridge/Prefabs");
+            mapper.DungeonEntrancePrefab = LoadFirstPrefab(
                 "Assets/Lordenfel/Prefabs/Architecture");
 
-            // Plains — placeholder Plane prefab (grass green)
-            var plainsPrefab = CreatePlaceholderPrefab(
-                "Plains_Placeholder", new Color(0.35f, 0.60f, 0.25f), prefabDir);
-            mapper.PlainsPrefabs = plainsPrefab != null
-                ? new GameObject[] { plainsPrefab }
-                : System.Array.Empty<GameObject>();
-
-            // Water — placeholder Plane prefab (ocean blue)
-            var waterPrefab = CreatePlaceholderPrefab(
-                "Water_Placeholder", new Color(0.15f, 0.40f, 0.75f), prefabDir);
-            mapper.WaterPrefabs = waterPrefab != null
-                ? new GameObject[] { waterPrefab }
-                : System.Array.Empty<GameObject>();
-
-            // ── Save the asset ───────────────────────────────────────────────
+            // Save
             const string soPath = "Assets/ScriptableObjects/OverworldPrefabMap.asset";
             AssetDatabase.CreateAsset(mapper, soPath);
             AssetDatabase.SaveAssets();
@@ -366,79 +385,48 @@ namespace ForeverEngine.Editor
 
             Debug.Log(
                 $"[SceneBuilder3D] OverworldPrefabMap saved to {soPath}\n" +
-                $"  Forest: {mapper.ForestPrefabs.Length} prefabs\n" +
-                $"  Mountain: {mapper.MountainPrefabs.Length} prefabs\n" +
-                $"  Ruins: {mapper.RuinsPrefabs.Length} prefabs\n" +
-                $"  Plains placeholder: {mapper.PlainsPrefabs.Length}\n" +
-                $"  Water placeholder: {mapper.WaterPrefabs.Length}");
-
-            // Ping the asset in the Project window
-            EditorUtility.FocusProjectWindow();
-            Selection.activeObject = mapper;
+                $"  Forest: {mapper.ForestPrefabs.Length} prefabs, {mapper.ForestScatter.Length} scatter\n" +
+                $"  Mountain: {mapper.MountainPrefabs.Length} prefabs, {mapper.MountainScatter.Length} scatter\n" +
+                $"  Ruins: {mapper.RuinsPrefabs.Length} prefabs, {mapper.RuinsScatter.Length} scatter\n" +
+                $"  Plains scatter: {mapper.PlainsScatter.Length}\n" +
+                $"  Ground mats: P={mapper.PlainsGround != null} F={mapper.ForestGround != null} M={mapper.MountainGround != null} R={mapper.RuinsGround != null}\n" +
+                $"  Player: {(mapper.PlayerPrefab != null ? "Dark Knight" : "MISSING")}\n" +
+                $"  Locations: Town={mapper.TownPrefab != null} Camp={mapper.CampPrefab != null} Dungeon={mapper.DungeonEntrancePrefab != null}");
         }
 
-        /// <summary>
-        /// Finds all .prefab assets under <paramref name="path"/> (recursively),
-        /// loads them as GameObjects, and returns up to 10 results.
-        /// Returns an empty array if none are found.
-        /// </summary>
-        private static GameObject[] LoadPrefabsFromPath(string path)
+        private static GameObject[] LoadPrefabsFromPath(string path, int cap)
         {
-            const int cap = 10;
             string[] guids = AssetDatabase.FindAssets("t:Prefab", new[] { path });
             var results = new System.Collections.Generic.List<GameObject>(cap);
-
             foreach (string guid in guids)
             {
                 if (results.Count >= cap) break;
                 string assetPath = AssetDatabase.GUIDToAssetPath(guid);
                 var prefab = AssetDatabase.LoadAssetAtPath<GameObject>(assetPath);
-                if (prefab != null)
-                    results.Add(prefab);
+                if (prefab != null) results.Add(prefab);
             }
-
             if (results.Count == 0)
                 Debug.LogWarning($"[SceneBuilder3D] No prefabs found under: {path}");
-
             return results.ToArray();
         }
 
-        /// <summary>
-        /// Creates a Plane primitive with a URP/Lit material of the given
-        /// <paramref name="color"/>, saves it as a prefab asset under
-        /// <paramref name="directory"/>, and returns the loaded prefab.
-        /// Returns <c>null</c> if saving fails.
-        /// </summary>
-        private static GameObject CreatePlaceholderPrefab(
-            string name, Color color, string directory)
+        private static Material LoadMaterial(string path)
         {
-            // Build the in-scene placeholder
-            var go = GameObject.CreatePrimitive(PrimitiveType.Plane);
-            go.name = name;
+            var mat = AssetDatabase.LoadAssetAtPath<Material>(path);
+            if (mat == null)
+                Debug.LogWarning($"[SceneBuilder3D] Material not found: {path}");
+            return mat;
+        }
 
-            var mat = new Material(Shader.Find("Universal Render Pipeline/Lit"));
-            mat.color = color;
-            go.GetComponent<Renderer>().sharedMaterial = mat;
-
-            // Save material alongside the prefab
-            string matPath = $"{directory}/{name}_Mat.mat";
-            AssetDatabase.CreateAsset(mat, matPath);
-
-            // Save as prefab
-            string prefabPath = $"{directory}/{name}.prefab";
-            bool success;
-            var savedPrefab = PrefabUtility.SaveAsPrefabAsset(go, prefabPath, out success);
-
-            // Clean up the temporary in-scene object
-            Object.DestroyImmediate(go);
-
-            if (!success)
+        private static GameObject LoadFirstPrefab(string path)
+        {
+            string[] guids = AssetDatabase.FindAssets("t:Prefab", new[] { path });
+            if (guids.Length == 0)
             {
-                Debug.LogError($"[SceneBuilder3D] Failed to save placeholder prefab: {prefabPath}");
+                Debug.LogWarning($"[SceneBuilder3D] No prefab found under: {path}");
                 return null;
             }
-
-            return savedPrefab;
+            return AssetDatabase.LoadAssetAtPath<GameObject>(AssetDatabase.GUIDToAssetPath(guids[0]));
         }
     }
 }

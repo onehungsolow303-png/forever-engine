@@ -20,11 +20,11 @@ namespace ForeverEngine.Demo.Overworld
         private Light _directionalLight;
 
         // Fallback tile colors when no prefab is assigned
-        private static readonly Color COLOR_PLAINS   = new Color(0.45f, 0.55f, 0.3f);
-        private static readonly Color COLOR_FOREST   = new Color(0.2f, 0.4f, 0.15f);
-        private static readonly Color COLOR_MOUNTAIN = new Color(0.5f, 0.45f, 0.4f);
-        private static readonly Color COLOR_WATER    = new Color(0.15f, 0.25f, 0.5f);
-        private static readonly Color COLOR_RUINS    = new Color(0.4f, 0.35f, 0.3f);
+        private static readonly Color COLOR_PLAINS   = new Color(0.5f, 0.7f, 0.35f);
+        private static readonly Color COLOR_FOREST   = new Color(0.25f, 0.5f, 0.2f);
+        private static readonly Color COLOR_MOUNTAIN = new Color(0.6f, 0.55f, 0.5f);
+        private static readonly Color COLOR_WATER    = new Color(0.2f, 0.35f, 0.65f);
+        private static readonly Color COLOR_RUINS    = new Color(0.5f, 0.45f, 0.35f);
         private static readonly Color COLOR_LOCATION = new Color(1f, 0.85f, 0.3f);
 
         /// <summary>
@@ -43,47 +43,82 @@ namespace ForeverEngine.Demo.Overworld
 
         public void Initialize(Dictionary<(int, int), HexTile> tiles)
         {
+            if (tiles == null) { Debug.LogError("[Overworld3DRenderer] tiles is null — GameManager not loaded?"); return; }
             float hexSize = _prefabMap != null ? _prefabMap.HexWorldSize : 4f;
-            float elevScale = _prefabMap != null ? _prefabMap.ElevationScale : 2f;
 
-            // Create parent transform for tile organization
+            // Create parent transform
             var tileParentGO = new GameObject("TileParent");
             tileParentGO.transform.SetParent(transform);
             _tileParent = tileParentGO.transform;
 
-            // Cache directional light for day/night
             _directionalLight = FindDirectionalLight();
 
-            // Instantiate tiles
+            // Calculate map bounds for the single ground plane
+            float minX = float.MaxValue, maxX = float.MinValue;
+            float minZ = float.MaxValue, maxZ = float.MinValue;
+            foreach (var kv in tiles)
+            {
+                Vector3 pos = HexToWorld3D(kv.Key.Item1, kv.Key.Item2, 0, hexSize, 0f);
+                if (pos.x < minX) minX = pos.x;
+                if (pos.x > maxX) maxX = pos.x;
+                if (pos.z < minZ) minZ = pos.z;
+                if (pos.z > maxZ) maxZ = pos.z;
+            }
+
+            // Single large ground plane covering the entire map
+            var ground = GameObject.CreatePrimitive(PrimitiveType.Plane);
+            ground.name = "Ground";
+            ground.transform.SetParent(_tileParent);
+            float centerX = (minX + maxX) / 2f;
+            float centerZ = (minZ + maxZ) / 2f;
+            float extentX = (maxX - minX) / 2f + hexSize * 2f;
+            float extentZ = (maxZ - minZ) / 2f + hexSize * 2f;
+            ground.transform.position = new Vector3(centerX, 0f, centerZ);
+            ground.transform.localScale = new Vector3(extentX / 5f, 1f, extentZ / 5f);
+            DestroyImmediate(ground.GetComponent<Collider>());
+            ground.GetComponent<Renderer>().material = CreateLitMaterial(COLOR_PLAINS);
+
+            // Shared materials (reuse instead of creating per tile)
+            var forestMat = CreateLitMaterial(COLOR_FOREST);
+            var trunkMat = CreateLitMaterial(new Color(0.35f, 0.25f, 0.15f));
+
+            // Lightweight per-tile containers (empty GameObjects for fog visibility)
+            // and sparse tree decorations
             foreach (var kv in tiles)
             {
                 var (q, r) = kv.Key;
                 var tile = kv.Value;
-                Vector3 worldPos = HexToWorld3D(q, r, tile.Height, hexSize, elevScale);
+                Vector3 worldPos = HexToWorld3D(q, r, 0, hexSize, 0f);
                 int seed = q * 73 + r * 137;
 
-                GameObject prefab = _prefabMap != null ? _prefabMap.GetPrefabForTile(tile.Type, seed) : null;
-                GameObject instance;
+                // Empty container for show/hide via fog
+                var container = new GameObject($"Tile_{q}_{r}");
+                container.transform.SetParent(_tileParent);
+                container.transform.position = worldPos;
 
-                if (prefab != null)
+                // Sparse trees on some forest tiles (reuse shared materials)
+                if (tile.Type == TileType.Forest && Mathf.Abs(seed) % 4 == 0)
                 {
-                    instance = Instantiate(prefab, worldPos, Quaternion.Euler(0f, seed % 360, 0f), _tileParent);
-                }
-                else
-                {
-                    // Fallback: colored plane
-                    instance = CreateFallbackTile(worldPos, tile.Type, seed);
+                    var trunk = GameObject.CreatePrimitive(PrimitiveType.Cylinder);
+                    trunk.transform.SetParent(container.transform);
+                    trunk.transform.localPosition = new Vector3(0f, 1f, 0f);
+                    trunk.transform.localScale = new Vector3(0.15f, 1f, 0.15f);
+                    trunk.GetComponent<Renderer>().sharedMaterial = trunkMat;
+                    DestroyImmediate(trunk.GetComponent<Collider>());
+
+                    var canopy = GameObject.CreatePrimitive(PrimitiveType.Sphere);
+                    canopy.transform.SetParent(container.transform);
+                    canopy.transform.localPosition = new Vector3(0f, 2.2f, 0f);
+                    canopy.transform.localScale = new Vector3(1.5f, 1.2f, 1.5f);
+                    canopy.GetComponent<Renderer>().sharedMaterial = forestMat;
+                    DestroyImmediate(canopy.GetComponent<Collider>());
                 }
 
-                instance.name = $"Tile_{q}_{r}";
-                _tileInstances[(q, r)] = instance;
+                _tileInstances[(q, r)] = container;
             }
 
-            // Create player model
-            CreatePlayerModel(tiles, hexSize, elevScale);
-
-            // Create location markers
-            CreateLocationMarkers(tiles, hexSize, elevScale);
+            CreatePlayerModel(tiles, hexSize, 0f);
+            CreateLocationMarkers(tiles, hexSize, 0f);
         }
 
         public void UpdateVisuals(int playerQ, int playerR, OverworldFog fog, bool isNight)
@@ -101,32 +136,21 @@ namespace ForeverEngine.Demo.Overworld
                     height = playerTile.Height;
                 }
 
-                Vector3 targetPos = HexToWorld3D(playerQ, playerR, height, hexSize, elevScale);
+                Vector3 targetPos = HexToWorld3D(playerQ, playerR, 0, hexSize, 0f) + Vector3.up * 0.1f;
                 _playerModel.transform.position = Vector3.Lerp(
                     _playerModel.transform.position, targetPos, Time.deltaTime * 12f);
             }
 
-            // Update tile visibility based on fog
+            // Update tile visibility based on fog (show/hide only — no material modifications)
             foreach (var kv in _tileInstances)
             {
                 var (q, r) = kv.Key;
                 var tileGO = kv.Value;
                 if (tileGO == null) continue;
 
-                if (fog.IsVisible(q, r))
-                {
-                    tileGO.SetActive(true);
-                    SetTileBrightness(tileGO, 1f);
-                }
-                else if (fog.IsExplored(q, r))
-                {
-                    tileGO.SetActive(true);
-                    SetTileBrightness(tileGO, 0.4f);
-                }
-                else
-                {
-                    tileGO.SetActive(false);
-                }
+                bool visible = fog.IsVisible(q, r);
+                bool explored = fog.IsExplored(q, r);
+                tileGO.SetActive(visible || explored);
             }
 
             // Adjust directional light for day/night
@@ -168,22 +192,14 @@ namespace ForeverEngine.Demo.Overworld
 
             Vector3 startPos = HexToWorld3D(startQ, startR, startHeight, hexSize, elevScale);
 
-            if (_prefabMap != null && _prefabMap.PlayerPrefab != null)
-            {
-                _playerModel = Instantiate(_prefabMap.PlayerPrefab, startPos, Quaternion.identity, transform);
-            }
-            else
-            {
-                // Fallback: blue capsule
-                _playerModel = GameObject.CreatePrimitive(PrimitiveType.Capsule);
-                _playerModel.transform.SetParent(transform);
-                _playerModel.transform.position = startPos + Vector3.up * 0.5f;
-                var renderer = _playerModel.GetComponent<Renderer>();
-                if (renderer != null)
-                {
-                    renderer.material = CreateUnlitMaterial(new Color(0.2f, 0.6f, 1f));
-                }
-            }
+            // Lightweight capsule player (asset pack models crash Unity)
+            _playerModel = GameObject.CreatePrimitive(PrimitiveType.Capsule);
+            _playerModel.transform.SetParent(transform);
+            _playerModel.transform.position = startPos + Vector3.up * 0.5f;
+            _playerModel.transform.localScale = new Vector3(0.6f, 0.8f, 0.6f);
+            var playerRenderer = _playerModel.GetComponent<Renderer>();
+            if (playerRenderer != null)
+                playerRenderer.material = CreateLitMaterial(new Color(0.2f, 0.6f, 1f));
 
             _playerModel.name = "PlayerModel";
         }
@@ -198,23 +214,22 @@ namespace ForeverEngine.Demo.Overworld
 
                 Vector3 worldPos = HexToWorld3D(loc.HexQ, loc.HexR, height, hexSize, elevScale);
 
-                // Marker: yellow cylinder
+                // Lightweight cylinder marker (asset pack prefabs crash Unity)
                 var marker = GameObject.CreatePrimitive(PrimitiveType.Cylinder);
                 marker.transform.SetParent(transform);
                 marker.transform.position = worldPos + Vector3.up * 1.5f;
                 marker.transform.localScale = new Vector3(0.5f, 1.5f, 0.5f);
-                marker.name = $"Location_{loc.Id}";
-
                 var markerRenderer = marker.GetComponent<Renderer>();
                 if (markerRenderer != null)
-                {
                     markerRenderer.material = CreateUnlitMaterial(COLOR_LOCATION);
-                }
+                var markerCol = marker.GetComponent<Collider>();
+                if (markerCol != null) Object.Destroy(markerCol);
 
-                // Label: TextMesh that faces camera via Billboard
+                marker.name = $"Location_{loc.Id}";
+
                 var labelGO = new GameObject($"Label_{loc.Id}");
                 labelGO.transform.SetParent(marker.transform);
-                labelGO.transform.localPosition = new Vector3(0f, 1.5f, 0f);
+                labelGO.transform.localPosition = new Vector3(0f, 3f, 0f);
 
                 var tm = labelGO.AddComponent<TextMesh>();
                 tm.text = loc.Name;
@@ -230,26 +245,6 @@ namespace ForeverEngine.Demo.Overworld
             }
         }
 
-        private GameObject CreateFallbackTile(Vector3 worldPos, TileType type, int seed)
-        {
-            var go = GameObject.CreatePrimitive(PrimitiveType.Plane);
-            go.transform.SetParent(_tileParent);
-            go.transform.position = worldPos;
-            go.transform.rotation = Quaternion.Euler(0f, seed % 360, 0f);
-            // Default Unity plane is 10x10; scale down to hex-appropriate size
-            float hexSize = _prefabMap != null ? _prefabMap.HexWorldSize : 4f;
-            float planeScale = hexSize / 10f;
-            go.transform.localScale = new Vector3(planeScale, 1f, planeScale);
-
-            var renderer = go.GetComponent<Renderer>();
-            if (renderer != null)
-            {
-                renderer.material = CreateUnlitMaterial(GetFallbackColor(type));
-            }
-
-            return go;
-        }
-
         private static Color GetFallbackColor(TileType type) => type switch
         {
             TileType.Plains   => COLOR_PLAINS,
@@ -260,22 +255,20 @@ namespace ForeverEngine.Demo.Overworld
             _                 => COLOR_PLAINS
         };
 
-        private static void SetTileBrightness(GameObject tileGO, float brightness)
+        /// <summary>
+        /// Returns a biome color with subtle per-tile variation for visual interest.
+        /// </summary>
+        private static Color GetBiomeColor(TileType type, int seed)
         {
-            var renderers = tileGO.GetComponentsInChildren<Renderer>();
-            foreach (var r in renderers)
-            {
-                if (r.material.HasProperty("_Color"))
-                {
-                    var baseColor = r.material.color;
-                    r.material.color = new Color(
-                        baseColor.r * brightness,
-                        baseColor.g * brightness,
-                        baseColor.b * brightness,
-                        baseColor.a);
-                }
-            }
+            Color baseColor = GetFallbackColor(type);
+            float variation = ((seed * 31 + 17) % 100) / 100f * 0.15f - 0.075f;
+            return new Color(
+                Mathf.Clamp01(baseColor.r + variation),
+                Mathf.Clamp01(baseColor.g + variation * 0.7f),
+                Mathf.Clamp01(baseColor.b + variation * 0.5f),
+                1f);
         }
+
 
         private static Material CreateUnlitMaterial(Color color)
         {
@@ -283,6 +276,19 @@ namespace ForeverEngine.Demo.Overworld
             if (shader == null) shader = Shader.Find("Unlit/Color");
             var mat = new Material(shader);
             mat.color = color;
+            return mat;
+        }
+
+        private static Material CreateLitMaterial(Color color)
+        {
+            var shader = Shader.Find("Universal Render Pipeline/Lit");
+            if (shader == null) shader = Shader.Find("Standard");
+            var mat = new Material(shader);
+            if (mat.HasProperty("_BaseColor"))
+                mat.SetColor("_BaseColor", color);
+            else
+                mat.color = color;
+            mat.SetFloat("_Smoothness", 0.1f);
             return mat;
         }
 
