@@ -117,13 +117,23 @@ namespace ForeverEngine.MonoBehaviour.Camera
 
         // ── Input handling ──────────────────────────────────────────
 
+        /// <summary>
+        /// When true, Q/E orbit is suppressed to avoid conflicts with
+        /// OverworldManager hex movement (Q=NW, E=SE). Middle-mouse
+        /// orbit still works. Set by Overworld3DSetup.
+        /// </summary>
+        public bool SuppressKeyboardOrbit { get; set; }
+
         private void HandleInput()
         {
-            // Orbit: Q/E keys
-            if (UnityEngine.Input.GetKey(KeyCode.Q))
-                _orbitAngle -= _orbitSpeed * Time.deltaTime;
-            if (UnityEngine.Input.GetKey(KeyCode.E))
-                _orbitAngle += _orbitSpeed * Time.deltaTime;
+            // Orbit: Q/E keys (suppressed when overworld hex movement uses Q/E)
+            if (!SuppressKeyboardOrbit)
+            {
+                if (UnityEngine.Input.GetKey(KeyCode.Q))
+                    _orbitAngle -= _orbitSpeed * Time.deltaTime;
+                if (UnityEngine.Input.GetKey(KeyCode.E))
+                    _orbitAngle += _orbitSpeed * Time.deltaTime;
+            }
 
             // Orbit: middle mouse drag
             if (UnityEngine.Input.GetMouseButton(2)) // middle mouse

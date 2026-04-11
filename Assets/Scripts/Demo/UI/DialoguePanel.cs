@@ -197,8 +197,13 @@ namespace ForeverEngine.Demo.UI
             {
                 _input.RegisterCallback<KeyDownEvent>(evt =>
                 {
-                    if (evt.keyCode == KeyCode.Return && !evt.shiftKey) OnSendClicked();
-                });
+                    if (evt.keyCode == KeyCode.Return && !evt.shiftKey)
+                    {
+                        evt.StopImmediatePropagation();
+                        evt.PreventDefault();
+                        OnSendClicked();
+                    }
+                }, TrickleDown.TrickleDown);
 
                 // TextField is a COMPOSITE control. Inline styles on the
                 // outer <ui:TextField> element only affect the wrapper, not

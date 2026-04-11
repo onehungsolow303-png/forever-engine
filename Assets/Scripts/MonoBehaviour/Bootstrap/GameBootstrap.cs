@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.Tilemaps;
 using Unity.Entities;
 using ForeverEngine.Demo;
@@ -39,7 +40,10 @@ namespace ForeverEngine.MonoBehaviour.Bootstrap
             else if (!string.IsNullOrEmpty(MapDataPath))
                 LoadMap(MapDataPath);
             else
-                Debug.Log("[ForeverEngine] No map path. Use File > Open to load a map.");
+            {
+                Debug.Log("[ForeverEngine] No map path — redirecting to MainMenu.");
+                SceneManager.LoadScene("MainMenu");
+            }
         }
 
         /// <summary>
