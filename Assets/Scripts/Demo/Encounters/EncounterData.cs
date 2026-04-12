@@ -15,6 +15,7 @@ namespace ForeverEngine.Demo.Encounters
         public DamageType Resistances;
         public DamageType Vulnerabilities;
         public DamageType Immunities;
+        public string ModelId;
     }
 
     [System.Serializable]
@@ -25,6 +26,7 @@ namespace ForeverEngine.Demo.Encounters
         public List<EnemyDef> Enemies = new();
         public int GoldReward;
         public int XPReward;
+        public string Biome;
 
         private static Dictionary<string, System.Func<EncounterData>> _templates;
 
@@ -41,6 +43,9 @@ namespace ForeverEngine.Demo.Encounters
         {
             bool night = id.Contains("night");
             var enc = new EncounterData { Id = id, GridWidth = 8, GridHeight = 8 };
+            if (id.Contains("Forest")) enc.Biome = "forest";
+            else if (id.Contains("Road")) enc.Biome = "dungeon";
+            else enc.Biome = "plains";
 
             // Get player level for XP budget calculation
             int playerLevel = GameManager.Instance?.Character?.TotalLevel

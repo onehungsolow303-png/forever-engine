@@ -36,6 +36,7 @@ namespace ForeverEngine.Demo.Battle
 
         // Temp HP (tracked here for non-sheet combatants; sheet combatants use Sheet.TempHP)
         public int TempHP;
+        public string ModelId;
 
         public void RollInitiative(ref uint seed)
         {
@@ -99,7 +100,8 @@ namespace ForeverEngine.Demo.Battle
                 Resistances = def.Resistances,
                 Vulnerabilities = def.Vulnerabilities,
                 Immunities = def.Immunities,
-                AttackDamageType = def.AttackDamageType
+                AttackDamageType = def.AttackDamageType,
+                ModelId = def.ModelId
             };
         }
 

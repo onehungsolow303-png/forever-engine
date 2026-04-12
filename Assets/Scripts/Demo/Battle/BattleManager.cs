@@ -27,6 +27,7 @@ namespace ForeverEngine.Demo.Battle
         private uint _rngSeed;
         private Encounters.EncounterData _encounterData;
         private BattleRenderer _renderer;
+        private BattleRenderer3D _renderer3D;
         private Dictionary<BattleCombatant, CombatBrain> _brains = new();
         private CombatIntelligence _neuralBrain;
 
@@ -38,8 +39,13 @@ namespace ForeverEngine.Demo.Battle
 
         private void Update()
         {
-            if (_renderer == null) _renderer = FindAnyObjectByType<BattleRenderer>();
-            if (_renderer != null) _renderer.UpdateVisuals(Combatants, CurrentTurn);
+            if (_renderer3D != null)
+                _renderer3D.UpdateVisuals(Combatants, CurrentTurn);
+            else
+            {
+                if (_renderer == null) _renderer = FindAnyObjectByType<BattleRenderer>();
+                if (_renderer != null) _renderer.UpdateVisuals(Combatants, CurrentTurn);
+            }
 
             // Player input during their turn
             if (CurrentTurn != null && CurrentTurn.IsPlayer && !BattleOver)
@@ -132,10 +138,25 @@ namespace ForeverEngine.Demo.Battle
                 _neuralBrain = go.AddComponent<CombatIntelligence>();
             }
 
-            // Create visual renderer
-            var rendererGO = new GameObject("BattleRenderer");
-            var renderer = rendererGO.AddComponent<BattleRenderer>();
-            renderer.Initialize(Grid, Combatants, Camera.main);
+            // Create visual renderer — 3D if a template is available, else 2D fallback
+            var template = FindBattleTemplate(_encounterData);
+            if (template != null)
+            {
+                var rendererGO = new GameObject("BattleRenderer3D");
+                var renderer3D = rendererGO.AddComponent<BattleRenderer3D>();
+                renderer3D.Initialize(template, Grid, Combatants, Camera.main);
+                _renderer3D = renderer3D;
+
+                var inputGO = new GameObject("BattleInput");
+                var input = inputGO.AddComponent<BattleInputController>();
+                input.Initialize(renderer3D, this, Camera.main);
+            }
+            else
+            {
+                var rendererGO = new GameObject("BattleRenderer");
+                var renderer = rendererGO.AddComponent<BattleRenderer>();
+                renderer.Initialize(Grid, Combatants, Camera.main);
+            }
 
             // Ask Asset Manager for a creature_token sprite for each unique
             // enemy kind. The result is logged for now; visual swap (loading
@@ -240,6 +261,17 @@ namespace ForeverEngine.Demo.Battle
             }
         }
 
+        private BattleSceneTemplate FindBattleTemplate(Encounters.EncounterData encounter)
+        {
+            string biome = encounter.Biome ?? "dungeon";
+            var templates = Resources.LoadAll<BattleSceneTemplate>($"BattleTemplates/{biome}");
+            if (templates == null || templates.Length == 0)
+                templates = Resources.LoadAll<BattleSceneTemplate>("BattleTemplates");
+            if (templates == null || templates.Length == 0) return null;
+            var rng = new System.Random((int)_rngSeed);
+            return templates[rng.Next(templates.Length)];
+        }
+
         public void StartTurn()
         {
             if (BattleOver) return;
@@ -330,13 +362,27 @@ namespace ForeverEngine.Demo.Battle
             CurrentTurn.MovementRemaining--;
         }
 
+        /// <summary>Move player to a specific tile (called by mouse input).</summary>
+        public void PlayerMoveTo(int x, int y)
+        {
+            if (CurrentTurn == null || !CurrentTurn.IsPlayer || BattleOver) return;
+            int dist = Mathf.Abs(CurrentTurn.X - x) + Mathf.Abs(CurrentTurn.Y - y);
+            if (dist > CurrentTurn.MovementRemaining) return;
+            if (!Grid.IsWalkable(x, y)) return;
+            CurrentTurn.X = x;
+            CurrentTurn.Y = y;
+            CurrentTurn.MovementRemaining -= dist;
+        }
+
+        /// <summary>Attack a specific enemy (called by mouse input).</summary>
         public void PlayerAttack(BattleCombatant target)
         {
-            if (CurrentTurn == null || !CurrentTurn.IsPlayer || !CurrentTurn.HasAction) return;
-            if (!IsAdjacent(CurrentTurn, target)) return;
+            if (CurrentTurn == null || !CurrentTurn.IsPlayer || BattleOver) return;
+            if (!CurrentTurn.HasAction) return;
+            int dist = Mathf.Abs(CurrentTurn.X - target.X) + Mathf.Abs(CurrentTurn.Y - target.Y);
+            if (dist > 1) return;
             ResolveAttack(CurrentTurn, target);
             CurrentTurn.HasAction = false;
-            CheckBattleEnd();
         }
 
         public void AttackNearestEnemy()
