@@ -175,9 +175,9 @@ namespace ForeverEngine.Demo.Overworld
             if (_camCtrl != null)
             {
                 float orbRad = _camCtrl.OrbitAngle * Mathf.Deg2Rad;
-                // Camera looks opposite to its orbit offset
-                fwdX = -Mathf.Sin(orbRad);
-                fwdZ = -Mathf.Cos(orbRad);
+                // "Forward" = camera offset direction = "up on screen" in isometric view
+                fwdX = Mathf.Sin(orbRad);
+                fwdZ = Mathf.Cos(orbRad);
                 rightX = Mathf.Cos(orbRad);
                 rightZ = -Mathf.Sin(orbRad);
             }
