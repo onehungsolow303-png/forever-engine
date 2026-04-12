@@ -18,6 +18,11 @@ namespace ForeverEngine.Demo.Overworld
         private Dictionary<string, GameObject> _locationMarkers = new();
         private Transform _tileParent;
         private Light _directionalLight;
+        private Coroutine _moveCoroutine;
+        private const float MOVE_DURATION = 0.3f;
+
+        /// <summary>True while the player model is animating between hexes.</summary>
+        public bool IsMoving => _moveCoroutine != null;
 
         // Fallback tile colors when no prefab is assigned
         private static readonly Color COLOR_PLAINS   = new Color(0.5f, 0.7f, 0.35f);
@@ -126,19 +131,11 @@ namespace ForeverEngine.Demo.Overworld
             float hexSize = _prefabMap != null ? _prefabMap.HexWorldSize : 4f;
             float elevScale = _prefabMap != null ? _prefabMap.ElevationScale : 2f;
 
-            // Lerp player model to target hex position
-            if (_playerModel != null)
+            // Snap player to target hex when not animating (handles teleport, scene load, etc.)
+            if (_playerModel != null && !IsMoving)
             {
-                int height = 0;
-                if (OverworldManager.Instance != null &&
-                    OverworldManager.Instance.Tiles.TryGetValue((playerQ, playerR), out var playerTile))
-                {
-                    height = playerTile.Height;
-                }
-
                 Vector3 targetPos = HexToWorld3D(playerQ, playerR, 0, hexSize, 0f) + Vector3.up * 0.1f;
-                _playerModel.transform.position = Vector3.Lerp(
-                    _playerModel.transform.position, targetPos, Time.deltaTime * 12f);
+                _playerModel.transform.position = targetPos;
             }
 
             // Update tile visibility based on fog (show/hide only — no material modifications)
@@ -168,6 +165,47 @@ namespace ForeverEngine.Demo.Overworld
                 if (loc != null)
                     kv.Value.SetActive(fog.IsExplored(loc.HexQ, loc.HexR));
             }
+        }
+
+        /// <summary>
+        /// Kick off a smooth lerp from the player's current visual position to the target hex.
+        /// Called by OverworldManager after a successful TryMove.
+        /// </summary>
+        public void StartMoveAnimation(int targetQ, int targetR)
+        {
+            if (_playerModel == null) return;
+            float hexSize = _prefabMap != null ? _prefabMap.HexWorldSize : 4f;
+            Vector3 targetPos = HexToWorld3D(targetQ, targetR, 0, hexSize, 0f) + Vector3.up * 0.1f;
+
+            if (_moveCoroutine != null) StopCoroutine(_moveCoroutine);
+            _moveCoroutine = StartCoroutine(AnimateMove(targetPos));
+        }
+
+        private System.Collections.IEnumerator AnimateMove(Vector3 targetPos)
+        {
+            Vector3 startPos = _playerModel.transform.position;
+
+            // Rotate to face movement direction (XZ only)
+            Vector3 direction = targetPos - startPos;
+            direction.y = 0f;
+            if (direction.sqrMagnitude > 0.001f)
+            {
+                Quaternion targetRot = Quaternion.LookRotation(direction);
+                _playerModel.transform.rotation = targetRot;
+            }
+
+            // Lerp position over MOVE_DURATION using smooth step
+            float elapsed = 0f;
+            while (elapsed < MOVE_DURATION)
+            {
+                elapsed += Time.deltaTime;
+                float t = Mathf.SmoothStep(0f, 1f, Mathf.Clamp01(elapsed / MOVE_DURATION));
+                _playerModel.transform.position = Vector3.Lerp(startPos, targetPos, t);
+                yield return null;
+            }
+
+            _playerModel.transform.position = targetPos;
+            _moveCoroutine = null;
         }
 
         /// <summary>
