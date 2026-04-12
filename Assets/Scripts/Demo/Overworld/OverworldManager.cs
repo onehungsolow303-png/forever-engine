@@ -19,9 +19,8 @@ namespace ForeverEngine.Demo.Overworld
 
         private OverworldRenderer _renderer;
         private Overworld3DRenderer _renderer3D;
-        private ForeverEngine.MonoBehaviour.Camera.PerspectiveCameraController _camCtrl;
-        private (float x, float z)? _queuedInput;
-        private float _moveInputBuffer;
+
+        [SerializeField] private float _moveSpeed = 8f;
 
         /// <summary>True when a 3D renderer has been registered (by Overworld3DSetup).</summary>
         public bool Is3D => _renderer3D != null;
@@ -33,7 +32,6 @@ namespace ForeverEngine.Demo.Overworld
         public void Set3DRenderer(Overworld3DRenderer renderer)
         {
             _renderer3D = renderer;
-            _camCtrl = FindAnyObjectByType<ForeverEngine.MonoBehaviour.Camera.PerspectiveCameraController>();
         }
 
         // Phase 3 pivot: DialogueOverlay archived to _archive/forever-engine-pre-pivot/.
@@ -123,104 +121,68 @@ namespace ForeverEngine.Demo.Overworld
             if (UI.DialoguePanel.Instance != null && UI.DialoguePanel.Instance.IsOpen)
                 return;
 
-            // Sample held movement keys every frame (even during animation)
+            // Free movement: WASD relative to camera direction
             float inputX = 0f, inputZ = 0f;
             if (Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.UpArrow))    inputZ += 1f;
             if (Input.GetKey(KeyCode.S) || Input.GetKey(KeyCode.DownArrow))  inputZ -= 1f;
             if (Input.GetKey(KeyCode.D) || Input.GetKey(KeyCode.RightArrow)) inputX += 1f;
             if (Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.LeftArrow))  inputX -= 1f;
 
-            bool hasInput = inputX != 0f || inputZ != 0f;
-
-            // During animation, remember held direction for when it finishes
-            if (_renderer3D != null && _renderer3D.IsMoving)
+            Transform playerT = _renderer3D != null ? _renderer3D.PlayerTransform : null;
+            if (playerT != null && (inputX != 0f || inputZ != 0f))
             {
-                if (hasInput) _queuedInput = (inputX, inputZ);
-                return;
-            }
-
-            // Process queued input (from during animation) immediately
-            bool moved = false;
-            if (_queuedInput.HasValue)
-            {
-                moved = TryCameraRelativeMove(_queuedInput.Value.x, _queuedInput.Value.z);
-                _queuedInput = null;
-                _moveInputBuffer = 0f;
-            }
-            else if (hasInput)
-            {
-                // Buffer fresh input ~40ms so both keys in a simultaneous press register
-                _moveInputBuffer += Time.deltaTime;
-                if (_moveInputBuffer >= 0.04f)
+                var cam = Camera.main;
+                if (cam != null)
                 {
-                    moved = TryCameraRelativeMove(inputX, inputZ);
-                    _moveInputBuffer = 0f;
+                    Vector3 camFwd = cam.transform.forward;
+                    Vector3 camRight = cam.transform.right;
+                    camFwd.y = 0f; camFwd.Normalize();
+                    camRight.y = 0f; camRight.Normalize();
+
+                    Vector3 moveDir = (camFwd * inputZ + camRight * inputX).normalized;
+                    playerT.position += moveDir * _moveSpeed * Time.deltaTime;
+                    playerT.rotation = Quaternion.LookRotation(moveDir);
                 }
             }
-            else
+
+            // Track which hex the player is on from world position
+            if (playerT != null)
             {
-                _moveInputBuffer = 0f;
+                float hexSize = 4f;
+                var (newQ, newR) = WorldToHex(playerT.position, hexSize);
+                if (newQ != Player.Q || newR != Player.R)
+                {
+                    // Check if new hex is passable
+                    if (Tiles.TryGetValue((newQ, newR), out var tile) && tile.Type != TileType.Water)
+                    {
+                        Player.SetHex(newQ, newR, Fog);
+                        OnPlayerMoved(newQ, newR);
+                    }
+                    else
+                    {
+                        // Push back to valid hex boundary
+                        Vector3 validPos = Overworld3DRenderer.HexToWorld3D(Player.Q, Player.R, 0, hexSize, 0f);
+                        playerT.position = new Vector3(
+                            Mathf.Lerp(playerT.position.x, validPos.x, 0.5f),
+                            playerT.position.y,
+                            Mathf.Lerp(playerT.position.z, validPos.z, 0.5f));
+                    }
+                }
             }
 
-            if (!moved)
-            {
-                if (Input.GetKeyDown(KeyCode.F)) Player.Forage();
-                else if (Input.GetKeyDown(KeyCode.Return) || Input.GetKeyDown(KeyCode.KeypadEnter)) TryEnterLocation();
-            }
-
-            // Trigger smooth animation for 3D renderer
-            if (moved && _renderer3D != null)
-                _renderer3D.StartMoveAnimation(Player.Q, Player.R);
+            if (Input.GetKeyDown(KeyCode.F)) Player.Forage();
+            else if (Input.GetKeyDown(KeyCode.Return) || Input.GetKeyDown(KeyCode.KeypadEnter)) TryEnterLocation();
         }
 
-        // All 6 hex directions with their world-space XZ vectors (from HexToWorld3D formula)
-        // Angles: 0°, 60°, 120°, 180°, 240°, 300° from +Z axis
-        private static readonly (int dq, int dr, float x, float z)[] HEX_DIRS =
-        {
-            ( 0,  1,  0f,      1f),      // 0°   (+Z)
-            ( 1,  0,  0.866f,  0.5f),    // 60°
-            ( 1, -1,  0.866f, -0.5f),    // 120°
-            ( 0, -1,  0f,     -1f),      // 180° (-Z)
-            (-1,  0, -0.866f, -0.5f),    // 240°
-            (-1,  1, -0.866f,  0.5f),    // 300°
-        };
-
         /// <summary>
-        /// Move the player in the hex direction closest to the camera-relative input.
-        /// inputX/inputZ are in camera space: +Z = forward (into screen), +X = right.
-        /// Uses the orbit angle (not camera transform) for a stable direction that
-        /// doesn't jitter from the follow-damping each frame.
+        /// Convert a world XZ position to hex grid coordinates.
+        /// Inverse of Overworld3DRenderer.HexToWorld3D.
         /// </summary>
-        private bool TryCameraRelativeMove(float inputX, float inputZ)
+        private static (int q, int r) WorldToHex(Vector3 pos, float hexSize)
         {
-            var cam = Camera.main;
-            if (cam == null)
-                return Player.TryMove(Mathf.RoundToInt(inputX), Mathf.RoundToInt(inputZ));
-
-            // W = camera forward direction (the way the camera is looking)
-            Vector3 camFwd = cam.transform.forward;
-            Vector3 camRight = cam.transform.right;
-            camFwd.y = 0f; camFwd.Normalize();
-            camRight.y = 0f; camRight.Normalize();
-
-            float desiredX = camFwd.x * inputZ + camRight.x * inputX;
-            float desiredZ = camFwd.z * inputZ + camRight.z * inputX;
-
-            // Find the hex direction with the highest dot product (closest match)
-            float bestDot = -2f;
-            int bestQ = 0, bestR = 0;
-            foreach (var (dq, dr, hx, hz) in HEX_DIRS)
-            {
-                float dot = desiredX * hx + desiredZ * hz;
-                if (dot > bestDot)
-                {
-                    bestDot = dot;
-                    bestQ = dq;
-                    bestR = dr;
-                }
-            }
-
-            return Player.TryMove(bestQ, bestR);
+            float q = (2f / 3f * pos.x) / hexSize;
+            float r = (-1f / 3f * pos.x + Mathf.Sqrt(3f) / 3f * pos.z) / hexSize;
+            return (Mathf.RoundToInt(q), Mathf.RoundToInt(r));
         }
 
         /// <summary>

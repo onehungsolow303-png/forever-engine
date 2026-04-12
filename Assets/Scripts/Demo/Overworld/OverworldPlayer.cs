@@ -44,6 +44,24 @@ namespace ForeverEngine.Demo.Overworld
             return true;
         }
 
+        /// <summary>
+        /// Set hex position from world coordinates (free movement mode).
+        /// Triggers fog reveal and survival drains when hex changes.
+        /// </summary>
+        public void SetHex(int q, int r, OverworldFog fog)
+        {
+            _data.HexQ = q; _data.HexR = r;
+            _data.ExploredHexes.Add(_data.HexKey);
+            fog.Reveal(q, r);
+
+            _data.DrainHunger(1f);
+            _data.DrainThirst(1.5f);
+            if (_data.IsStarving) _data.TakeDamage(1);
+            if (_data.IsDehydrated) _data.TakeDamage(2);
+
+            MovesTaken++;
+        }
+
         public void Forage()
         {
             if (!_tiles.TryGetValue((_data.HexQ, _data.HexR), out var tile)) return;
