@@ -166,36 +166,18 @@ namespace ForeverEngine.Demo.Overworld
         /// </summary>
         private bool TryCameraRelativeMove(float inputX, float inputZ)
         {
-            // Use cached camera controller's orbit angle for a stable direction
-            // that doesn't jitter from follow-damping between moves
-            if (_camCtrl == null)
-                _camCtrl = FindAnyObjectByType<ForeverEngine.MonoBehaviour.Camera.PerspectiveCameraController>();
+            var cam = Camera.main;
+            if (cam == null)
+                return Player.TryMove(Mathf.RoundToInt(inputX), Mathf.RoundToInt(inputZ));
 
-            float fwdX, fwdZ, rightX, rightZ;
-            if (_camCtrl != null)
-            {
-                float orbRad = _camCtrl.OrbitAngle * Mathf.Deg2Rad;
-                // "Forward" = camera offset direction = "up on screen" in isometric view
-                fwdX = Mathf.Sin(orbRad);
-                fwdZ = Mathf.Cos(orbRad);
-                rightX = Mathf.Cos(orbRad);
-                rightZ = -Mathf.Sin(orbRad);
-            }
-            else
-            {
-                var cam = Camera.main;
-                if (cam == null)
-                    return Player.TryMove(Mathf.RoundToInt(inputX), Mathf.RoundToInt(inputZ));
-                Vector3 camFwd = cam.transform.forward;
-                Vector3 camRight = cam.transform.right;
-                camFwd.y = 0f; camFwd.Normalize();
-                camRight.y = 0f; camRight.Normalize();
-                fwdX = camFwd.x; fwdZ = camFwd.z;
-                rightX = camRight.x; rightZ = camRight.z;
-            }
+            // W = camera forward direction (the way the camera is looking)
+            Vector3 camFwd = cam.transform.forward;
+            Vector3 camRight = cam.transform.right;
+            camFwd.y = 0f; camFwd.Normalize();
+            camRight.y = 0f; camRight.Normalize();
 
-            float desiredX = fwdX * inputZ + rightX * inputX;
-            float desiredZ = fwdZ * inputZ + rightZ * inputX;
+            float desiredX = camFwd.x * inputZ + camRight.x * inputX;
+            float desiredZ = camFwd.z * inputZ + camRight.z * inputX;
 
             // Find the hex direction with the highest dot product (closest match)
             float bestDot = -2f;
