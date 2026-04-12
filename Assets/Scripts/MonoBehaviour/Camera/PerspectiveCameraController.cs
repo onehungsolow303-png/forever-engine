@@ -43,7 +43,7 @@ namespace ForeverEngine.MonoBehaviour.Camera
         [SerializeField] private float _elevationAngle = 50f;
 
         [Tooltip("Speed of orbit rotation when right-click dragging (degrees/pixel).")]
-        [SerializeField] private float _orbitSpeed = 3f;
+        [SerializeField] private float _orbitSpeed = 1.5f;
 
         [Header("Distance / Zoom")]
         [Tooltip("Distance from the camera to the follow target (units).")]
