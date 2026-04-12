@@ -122,16 +122,22 @@ namespace ForeverEngine.Demo.Overworld
             // Block all input while the player model is animating between hexes
             if (_renderer3D != null && _renderer3D.IsMoving) return;
 
-            // Input: hex movement — camera-relative in 3D, fixed in 2D
+            // Movement input: check held keys so W+D etc. produces diagonal (strafe)
+            float inputX = 0f, inputZ = 0f;
+            if (Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.UpArrow))    inputZ += 1f;
+            if (Input.GetKey(KeyCode.S) || Input.GetKey(KeyCode.DownArrow))  inputZ -= 1f;
+            if (Input.GetKey(KeyCode.D) || Input.GetKey(KeyCode.RightArrow)) inputX += 1f;
+            if (Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.LeftArrow))  inputX -= 1f;
+
             bool moved = false;
-            if      (Input.GetKeyDown(KeyCode.W) || Input.GetKeyDown(KeyCode.UpArrow))    moved = TryCameraRelativeMove(0f, 1f);
-            else if (Input.GetKeyDown(KeyCode.S) || Input.GetKeyDown(KeyCode.DownArrow))  moved = TryCameraRelativeMove(0f, -1f);
-            else if (Input.GetKeyDown(KeyCode.A) || Input.GetKeyDown(KeyCode.LeftArrow))  moved = TryCameraRelativeMove(-1f, 0f);
-            else if (Input.GetKeyDown(KeyCode.D) || Input.GetKeyDown(KeyCode.RightArrow)) moved = TryCameraRelativeMove(1f, 0f);
-            else if (Input.GetKeyDown(KeyCode.Z)) moved = TryCameraRelativeMove(-0.866f, 0.5f);  // forward-left
-            else if (Input.GetKeyDown(KeyCode.C)) moved = TryCameraRelativeMove(0.866f, 0.5f);   // forward-right
-            else if (Input.GetKeyDown(KeyCode.F)) Player.Forage();
-            else if (Input.GetKeyDown(KeyCode.Return) || Input.GetKeyDown(KeyCode.KeypadEnter)) TryEnterLocation();
+            if (inputX != 0f || inputZ != 0f)
+                moved = TryCameraRelativeMove(inputX, inputZ);
+
+            if (!moved)
+            {
+                if (Input.GetKeyDown(KeyCode.F)) Player.Forage();
+                else if (Input.GetKeyDown(KeyCode.Return) || Input.GetKeyDown(KeyCode.KeypadEnter)) TryEnterLocation();
+            }
 
             // Trigger smooth animation for 3D renderer
             if (moved && _renderer3D != null)
@@ -153,26 +159,39 @@ namespace ForeverEngine.Demo.Overworld
         /// <summary>
         /// Move the player in the hex direction closest to the camera-relative input.
         /// inputX/inputZ are in camera space: +Z = forward (into screen), +X = right.
-        /// Falls back to fixed mapping when no camera is available (2D mode).
+        /// Uses the orbit angle (not camera transform) for a stable direction that
+        /// doesn't jitter from the follow-damping each frame.
         /// </summary>
         private bool TryCameraRelativeMove(float inputX, float inputZ)
         {
             var cam = Camera.main;
             if (cam == null)
-            {
-                // Fallback: treat input as world-space directly
                 return Player.TryMove(Mathf.RoundToInt(inputX), Mathf.RoundToInt(inputZ));
+
+            // Use orbit angle for stable direction (camera follow damping jitters the transform)
+            var camCtrl = cam.GetComponent<ForeverEngine.MonoBehaviour.Camera.PerspectiveCameraController>();
+            float fwdX, fwdZ, rightX, rightZ;
+            if (camCtrl != null)
+            {
+                float orbRad = camCtrl.OrbitAngle * Mathf.Deg2Rad;
+                // Camera looks opposite to its orbit offset
+                fwdX = -Mathf.Sin(orbRad);
+                fwdZ = -Mathf.Cos(orbRad);
+                rightX = Mathf.Cos(orbRad);
+                rightZ = -Mathf.Sin(orbRad);
+            }
+            else
+            {
+                Vector3 camFwd = cam.transform.forward;
+                Vector3 camRight = cam.transform.right;
+                camFwd.y = 0f; camFwd.Normalize();
+                camRight.y = 0f; camRight.Normalize();
+                fwdX = camFwd.x; fwdZ = camFwd.z;
+                rightX = camRight.x; rightZ = camRight.z;
             }
 
-            // Project camera axes onto XZ plane
-            Vector3 camFwd = cam.transform.forward;
-            Vector3 camRight = cam.transform.right;
-            camFwd.y = 0f; camFwd.Normalize();
-            camRight.y = 0f; camRight.Normalize();
-
-            // Desired world direction from input
-            float desiredX = camFwd.x * inputZ + camRight.x * inputX;
-            float desiredZ = camFwd.z * inputZ + camRight.z * inputX;
+            float desiredX = fwdX * inputZ + rightX * inputX;
+            float desiredZ = fwdZ * inputZ + rightZ * inputX;
 
             // Find the hex direction with the highest dot product (closest match)
             float bestDot = -2f;
