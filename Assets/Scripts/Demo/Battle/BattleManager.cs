@@ -406,7 +406,7 @@ namespace ForeverEngine.Demo.Battle
 
         // === Spell Casting ===
 
-        private void ToggleSpellMenu()
+        public void ToggleSpellMenu()
         {
             _spellMenuOpen = !_spellMenuOpen;
             if (_spellMenuOpen)
