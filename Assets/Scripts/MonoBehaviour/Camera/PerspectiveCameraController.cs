@@ -90,6 +90,10 @@ namespace ForeverEngine.MonoBehaviour.Camera
 
         private void Awake()
         {
+            // Force orbit speed — serialized scenes may still have the old Q/E
+            // keyboard value (120 deg/sec). Safe to remove once scenes are re-saved.
+            _orbitSpeed = 0.25f;
+
             _targetDistance = _distance;
             _currentDistance = _distance;
 

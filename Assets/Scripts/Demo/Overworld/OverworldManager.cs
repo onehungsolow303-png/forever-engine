@@ -19,6 +19,7 @@ namespace ForeverEngine.Demo.Overworld
 
         private OverworldRenderer _renderer;
         private Overworld3DRenderer _renderer3D;
+        private ForeverEngine.MonoBehaviour.Camera.PerspectiveCameraController _camCtrl;
 
         /// <summary>True when a 3D renderer has been registered (by Overworld3DSetup).</summary>
         public bool Is3D => _renderer3D != null;
@@ -30,6 +31,7 @@ namespace ForeverEngine.Demo.Overworld
         public void Set3DRenderer(Overworld3DRenderer renderer)
         {
             _renderer3D = renderer;
+            _camCtrl = FindAnyObjectByType<ForeverEngine.MonoBehaviour.Camera.PerspectiveCameraController>();
         }
 
         // Phase 3 pivot: DialogueOverlay archived to _archive/forever-engine-pre-pivot/.
@@ -164,16 +166,15 @@ namespace ForeverEngine.Demo.Overworld
         /// </summary>
         private bool TryCameraRelativeMove(float inputX, float inputZ)
         {
-            var cam = Camera.main;
-            if (cam == null)
-                return Player.TryMove(Mathf.RoundToInt(inputX), Mathf.RoundToInt(inputZ));
+            // Use cached camera controller's orbit angle for a stable direction
+            // that doesn't jitter from follow-damping between moves
+            if (_camCtrl == null)
+                _camCtrl = FindAnyObjectByType<ForeverEngine.MonoBehaviour.Camera.PerspectiveCameraController>();
 
-            // Use orbit angle for stable direction (camera follow damping jitters the transform)
-            var camCtrl = cam.GetComponent<ForeverEngine.MonoBehaviour.Camera.PerspectiveCameraController>();
             float fwdX, fwdZ, rightX, rightZ;
-            if (camCtrl != null)
+            if (_camCtrl != null)
             {
-                float orbRad = camCtrl.OrbitAngle * Mathf.Deg2Rad;
+                float orbRad = _camCtrl.OrbitAngle * Mathf.Deg2Rad;
                 // Camera looks opposite to its orbit offset
                 fwdX = -Mathf.Sin(orbRad);
                 fwdZ = -Mathf.Cos(orbRad);
@@ -182,6 +183,9 @@ namespace ForeverEngine.Demo.Overworld
             }
             else
             {
+                var cam = Camera.main;
+                if (cam == null)
+                    return Player.TryMove(Mathf.RoundToInt(inputX), Mathf.RoundToInt(inputZ));
                 Vector3 camFwd = cam.transform.forward;
                 Vector3 camRight = cam.transform.right;
                 camFwd.y = 0f; camFwd.Normalize();
