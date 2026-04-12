@@ -21,6 +21,7 @@ namespace ForeverEngine.Demo.Overworld
         private Overworld3DRenderer _renderer3D;
         private ForeverEngine.MonoBehaviour.Camera.PerspectiveCameraController _camCtrl;
         private (float x, float z)? _queuedInput;
+        private float _moveInputBuffer;
 
         /// <summary>True when a 3D renderer has been registered (by Overworld3DSetup).</summary>
         public bool Is3D => _renderer3D != null;
@@ -129,24 +130,36 @@ namespace ForeverEngine.Demo.Overworld
             if (Input.GetKey(KeyCode.D) || Input.GetKey(KeyCode.RightArrow)) inputX += 1f;
             if (Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.LeftArrow))  inputX -= 1f;
 
+            bool hasInput = inputX != 0f || inputZ != 0f;
+
             // During animation, remember held direction for when it finishes
             if (_renderer3D != null && _renderer3D.IsMoving)
             {
-                if (inputX != 0f || inputZ != 0f)
-                    _queuedInput = (inputX, inputZ);
+                if (hasInput) _queuedInput = (inputX, inputZ);
                 return;
             }
 
-            // Process queued input from during animation, or fresh input
+            // Process queued input (from during animation) immediately
             bool moved = false;
             if (_queuedInput.HasValue)
             {
                 moved = TryCameraRelativeMove(_queuedInput.Value.x, _queuedInput.Value.z);
                 _queuedInput = null;
+                _moveInputBuffer = 0f;
             }
-            else if (inputX != 0f || inputZ != 0f)
+            else if (hasInput)
             {
-                moved = TryCameraRelativeMove(inputX, inputZ);
+                // Buffer fresh input ~40ms so both keys in a simultaneous press register
+                _moveInputBuffer += Time.deltaTime;
+                if (_moveInputBuffer >= 0.04f)
+                {
+                    moved = TryCameraRelativeMove(inputX, inputZ);
+                    _moveInputBuffer = 0f;
+                }
+            }
+            else
+            {
+                _moveInputBuffer = 0f;
             }
 
             if (!moved)
