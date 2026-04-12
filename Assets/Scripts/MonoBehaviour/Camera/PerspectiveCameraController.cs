@@ -43,7 +43,7 @@ namespace ForeverEngine.MonoBehaviour.Camera
         [SerializeField] private float _elevationAngle = 50f;
 
         [Tooltip("Speed of orbit rotation when right-click dragging (degrees/pixel).")]
-        [SerializeField] private float _orbitSpeed = 1.5f;
+        [SerializeField] private float _orbitSpeed = 0.5f;
 
         [Header("Distance / Zoom")]
         [Tooltip("Distance from the camera to the follow target (units).")]
@@ -116,11 +116,13 @@ namespace ForeverEngine.MonoBehaviour.Camera
 
         private void HandleInput()
         {
-            // Orbit: right-click drag
+            // Orbit + pitch: right-click drag
             if (UnityEngine.Input.GetMouseButton(1))
             {
                 float dx = UnityEngine.Input.GetAxis("Mouse X");
+                float dy = UnityEngine.Input.GetAxis("Mouse Y");
                 _orbitAngle += dx * _orbitSpeed;
+                _elevationAngle = Mathf.Clamp(_elevationAngle - dy * _orbitSpeed, 15f, 75f);
             }
 
             // Keep orbit angle in 0-360 range
