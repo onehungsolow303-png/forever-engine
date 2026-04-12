@@ -18,8 +18,8 @@ namespace ForeverEngine.MonoBehaviour.Camera
     /// follow and zoom.
     ///
     /// Controls:
-    ///   Q/E or Middle-mouse drag  — orbit (rotate around target)
-    ///   Scroll wheel              — zoom in/out
+    ///   Right-click drag  — orbit (rotate around target)
+    ///   Scroll wheel      — zoom in/out
     ///   Camera auto-follows FollowTarget with damping
     ///
     /// Designed for the purchased environment packs (Dungeon Catacomb,
@@ -42,11 +42,8 @@ namespace ForeverEngine.MonoBehaviour.Camera
         [Range(15f, 75f)]
         [SerializeField] private float _elevationAngle = 50f;
 
-        [Tooltip("Speed of orbit rotation when pressing Q/E (degrees/sec).")]
-        [SerializeField] private float _orbitSpeed = 120f;
-
-        [Tooltip("Speed of orbit rotation when dragging middle mouse (degrees/pixel).")]
-        [SerializeField] private float _mouseOrbitSpeed = 0.5f;
+        [Tooltip("Speed of orbit rotation when right-click dragging (degrees/pixel).")]
+        [SerializeField] private float _orbitSpeed = 0.5f;
 
         [Header("Distance / Zoom")]
         [Tooltip("Distance from the camera to the follow target (units).")]
@@ -117,29 +114,13 @@ namespace ForeverEngine.MonoBehaviour.Camera
 
         // ── Input handling ──────────────────────────────────────────
 
-        /// <summary>
-        /// When true, Q/E orbit is suppressed to avoid conflicts with
-        /// OverworldManager hex movement (Q=NW, E=SE). Middle-mouse
-        /// orbit still works. Set by Overworld3DSetup.
-        /// </summary>
-        public bool SuppressKeyboardOrbit { get; set; }
-
         private void HandleInput()
         {
-            // Orbit: Q/E keys (suppressed when overworld hex movement uses Q/E)
-            if (!SuppressKeyboardOrbit)
-            {
-                if (UnityEngine.Input.GetKey(KeyCode.Q))
-                    _orbitAngle -= _orbitSpeed * Time.deltaTime;
-                if (UnityEngine.Input.GetKey(KeyCode.E))
-                    _orbitAngle += _orbitSpeed * Time.deltaTime;
-            }
-
-            // Orbit: middle mouse drag
-            if (UnityEngine.Input.GetMouseButton(2)) // middle mouse
+            // Orbit: right-click drag
+            if (UnityEngine.Input.GetMouseButton(1))
             {
                 float dx = UnityEngine.Input.GetAxis("Mouse X");
-                _orbitAngle += dx * _mouseOrbitSpeed * 10f;
+                _orbitAngle += dx * _orbitSpeed * 10f;
             }
 
             // Keep orbit angle in 0-360 range

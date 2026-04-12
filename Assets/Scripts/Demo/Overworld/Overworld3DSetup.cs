@@ -44,7 +44,6 @@ namespace ForeverEngine.Demo.Overworld
             {
                 camCtrl.FollowTarget = renderer3D.PlayerTransform;
                 camCtrl.SnapToTarget();
-                // Q/E now available for camera orbit (hex NW/SE moved to Z/C)
             }
             else if (camCtrl == null)
             {
