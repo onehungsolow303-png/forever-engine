@@ -119,16 +119,24 @@ namespace ForeverEngine.Demo.Overworld
             if (UI.DialoguePanel.Instance != null && UI.DialoguePanel.Instance.IsOpen)
                 return;
 
+            // Block all input while the player model is animating between hexes
+            if (_renderer3D != null && _renderer3D.IsMoving) return;
+
             // Input: hex movement (WASD mapped to 3D camera-relative hex directions)
             // In 3D view: +R = +Z (forward/up on screen), +Q = +X (right on screen)
-            if      (Input.GetKeyDown(KeyCode.W) || Input.GetKeyDown(KeyCode.UpArrow))    Player.TryMove(0, -1);
-            else if (Input.GetKeyDown(KeyCode.S) || Input.GetKeyDown(KeyCode.DownArrow))  Player.TryMove(0, 1);
-            else if (Input.GetKeyDown(KeyCode.A) || Input.GetKeyDown(KeyCode.LeftArrow))  Player.TryMove(-1, 0);
-            else if (Input.GetKeyDown(KeyCode.D) || Input.GetKeyDown(KeyCode.RightArrow)) Player.TryMove(1, 0);
-            else if (Input.GetKeyDown(KeyCode.Z)) Player.TryMove(-1, -1); // hex NW
-            else if (Input.GetKeyDown(KeyCode.C)) Player.TryMove(1, 1);   // hex SE
+            bool moved = false;
+            if      (Input.GetKeyDown(KeyCode.W) || Input.GetKeyDown(KeyCode.UpArrow))    moved = Player.TryMove(0, -1);
+            else if (Input.GetKeyDown(KeyCode.S) || Input.GetKeyDown(KeyCode.DownArrow))  moved = Player.TryMove(0, 1);
+            else if (Input.GetKeyDown(KeyCode.A) || Input.GetKeyDown(KeyCode.LeftArrow))  moved = Player.TryMove(-1, 0);
+            else if (Input.GetKeyDown(KeyCode.D) || Input.GetKeyDown(KeyCode.RightArrow)) moved = Player.TryMove(1, 0);
+            else if (Input.GetKeyDown(KeyCode.Z)) moved = Player.TryMove(-1, -1); // hex NW
+            else if (Input.GetKeyDown(KeyCode.C)) moved = Player.TryMove(1, 1);   // hex SE
             else if (Input.GetKeyDown(KeyCode.F)) Player.Forage();
             else if (Input.GetKeyDown(KeyCode.Return) || Input.GetKeyDown(KeyCode.KeypadEnter)) TryEnterLocation();
+
+            // Trigger smooth animation for 3D renderer
+            if (moved && _renderer3D != null)
+                _renderer3D.StartMoveAnimation(Player.Q, Player.R);
         }
 
         /// <summary>
