@@ -20,6 +20,7 @@ namespace ForeverEngine.Demo.Overworld
         private OverworldRenderer _renderer;
         private Overworld3DRenderer _renderer3D;
         private ForeverEngine.MonoBehaviour.Camera.PerspectiveCameraController _camCtrl;
+        private (float x, float z)? _queuedInput;
 
         /// <summary>True when a 3D renderer has been registered (by Overworld3DSetup).</summary>
         public bool Is3D => _renderer3D != null;
@@ -121,19 +122,32 @@ namespace ForeverEngine.Demo.Overworld
             if (UI.DialoguePanel.Instance != null && UI.DialoguePanel.Instance.IsOpen)
                 return;
 
-            // Block all input while the player model is animating between hexes
-            if (_renderer3D != null && _renderer3D.IsMoving) return;
-
-            // Movement input: check held keys so W+D etc. produces diagonal (strafe)
+            // Sample held movement keys every frame (even during animation)
             float inputX = 0f, inputZ = 0f;
             if (Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.UpArrow))    inputZ += 1f;
             if (Input.GetKey(KeyCode.S) || Input.GetKey(KeyCode.DownArrow))  inputZ -= 1f;
             if (Input.GetKey(KeyCode.D) || Input.GetKey(KeyCode.RightArrow)) inputX += 1f;
             if (Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.LeftArrow))  inputX -= 1f;
 
+            // During animation, remember held direction for when it finishes
+            if (_renderer3D != null && _renderer3D.IsMoving)
+            {
+                if (inputX != 0f || inputZ != 0f)
+                    _queuedInput = (inputX, inputZ);
+                return;
+            }
+
+            // Process queued input from during animation, or fresh input
             bool moved = false;
-            if (inputX != 0f || inputZ != 0f)
+            if (_queuedInput.HasValue)
+            {
+                moved = TryCameraRelativeMove(_queuedInput.Value.x, _queuedInput.Value.z);
+                _queuedInput = null;
+            }
+            else if (inputX != 0f || inputZ != 0f)
+            {
                 moved = TryCameraRelativeMove(inputX, inputZ);
+            }
 
             if (!moved)
             {
