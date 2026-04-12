@@ -122,21 +122,73 @@ namespace ForeverEngine.Demo.Overworld
             // Block all input while the player model is animating between hexes
             if (_renderer3D != null && _renderer3D.IsMoving) return;
 
-            // Input: hex movement (WASD mapped to 3D camera-relative hex directions)
-            // In 3D view: +R = +Z (forward/up on screen), +Q = +X (right on screen)
+            // Input: hex movement — camera-relative in 3D, fixed in 2D
             bool moved = false;
-            if      (Input.GetKeyDown(KeyCode.W) || Input.GetKeyDown(KeyCode.UpArrow))    moved = Player.TryMove(0, -1);
-            else if (Input.GetKeyDown(KeyCode.S) || Input.GetKeyDown(KeyCode.DownArrow))  moved = Player.TryMove(0, 1);
-            else if (Input.GetKeyDown(KeyCode.A) || Input.GetKeyDown(KeyCode.LeftArrow))  moved = Player.TryMove(-1, 0);
-            else if (Input.GetKeyDown(KeyCode.D) || Input.GetKeyDown(KeyCode.RightArrow)) moved = Player.TryMove(1, 0);
-            else if (Input.GetKeyDown(KeyCode.Z)) moved = Player.TryMove(-1, -1); // hex NW
-            else if (Input.GetKeyDown(KeyCode.C)) moved = Player.TryMove(1, 1);   // hex SE
+            if      (Input.GetKeyDown(KeyCode.W) || Input.GetKeyDown(KeyCode.UpArrow))    moved = TryCameraRelativeMove(0f, 1f);
+            else if (Input.GetKeyDown(KeyCode.S) || Input.GetKeyDown(KeyCode.DownArrow))  moved = TryCameraRelativeMove(0f, -1f);
+            else if (Input.GetKeyDown(KeyCode.A) || Input.GetKeyDown(KeyCode.LeftArrow))  moved = TryCameraRelativeMove(-1f, 0f);
+            else if (Input.GetKeyDown(KeyCode.D) || Input.GetKeyDown(KeyCode.RightArrow)) moved = TryCameraRelativeMove(1f, 0f);
+            else if (Input.GetKeyDown(KeyCode.Z)) moved = TryCameraRelativeMove(-0.866f, 0.5f);  // forward-left
+            else if (Input.GetKeyDown(KeyCode.C)) moved = TryCameraRelativeMove(0.866f, 0.5f);   // forward-right
             else if (Input.GetKeyDown(KeyCode.F)) Player.Forage();
             else if (Input.GetKeyDown(KeyCode.Return) || Input.GetKeyDown(KeyCode.KeypadEnter)) TryEnterLocation();
 
             // Trigger smooth animation for 3D renderer
             if (moved && _renderer3D != null)
                 _renderer3D.StartMoveAnimation(Player.Q, Player.R);
+        }
+
+        // All 6 hex directions with their world-space XZ vectors (from HexToWorld3D formula)
+        // Angles: 0°, 60°, 120°, 180°, 240°, 300° from +Z axis
+        private static readonly (int dq, int dr, float x, float z)[] HEX_DIRS =
+        {
+            ( 0,  1,  0f,      1f),      // 0°   (+Z)
+            ( 1,  0,  0.866f,  0.5f),    // 60°
+            ( 1, -1,  0.866f, -0.5f),    // 120°
+            ( 0, -1,  0f,     -1f),      // 180° (-Z)
+            (-1,  0, -0.866f, -0.5f),    // 240°
+            (-1,  1, -0.866f,  0.5f),    // 300°
+        };
+
+        /// <summary>
+        /// Move the player in the hex direction closest to the camera-relative input.
+        /// inputX/inputZ are in camera space: +Z = forward (into screen), +X = right.
+        /// Falls back to fixed mapping when no camera is available (2D mode).
+        /// </summary>
+        private bool TryCameraRelativeMove(float inputX, float inputZ)
+        {
+            var cam = Camera.main;
+            if (cam == null)
+            {
+                // Fallback: treat input as world-space directly
+                return Player.TryMove(Mathf.RoundToInt(inputX), Mathf.RoundToInt(inputZ));
+            }
+
+            // Project camera axes onto XZ plane
+            Vector3 camFwd = cam.transform.forward;
+            Vector3 camRight = cam.transform.right;
+            camFwd.y = 0f; camFwd.Normalize();
+            camRight.y = 0f; camRight.Normalize();
+
+            // Desired world direction from input
+            float desiredX = camFwd.x * inputZ + camRight.x * inputX;
+            float desiredZ = camFwd.z * inputZ + camRight.z * inputX;
+
+            // Find the hex direction with the highest dot product (closest match)
+            float bestDot = -2f;
+            int bestQ = 0, bestR = 0;
+            foreach (var (dq, dr, hx, hz) in HEX_DIRS)
+            {
+                float dot = desiredX * hx + desiredZ * hz;
+                if (dot > bestDot)
+                {
+                    bestDot = dot;
+                    bestQ = dq;
+                    bestR = dr;
+                }
+            }
+
+            return Player.TryMove(bestQ, bestR);
         }
 
         /// <summary>
