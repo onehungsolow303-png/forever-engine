@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 using DungeonArchitect.Builders.Snap;
 using DA = DungeonArchitect;
@@ -28,6 +29,9 @@ namespace ForeverEngine.Demo.Dungeon
         public int EntranceIndex { get; private set; } = -1;
         public int BossIndex { get; private set; } = -1;
         public SnapQuery Query { get; private set; }
+
+        private Dictionary<int, List<int>> _roomGraph = new();
+        public IReadOnlyDictionary<int, List<int>> RoomGraph => _roomGraph;
 
         public override void OnPostDungeonBuild(DA.Dungeon dungeon, DA.DungeonModel model)
         {
@@ -125,6 +129,9 @@ namespace ForeverEngine.Demo.Dungeon
                 }
             }
 
+            // Build room adjacency graph from DA Snap connections
+            BuildRoomGraph(dungeon);
+
             // If no explicit boss found, mark last non-corridor room as boss
             if (BossIndex < 0)
             {
@@ -174,6 +181,75 @@ namespace ForeverEngine.Demo.Dungeon
                 if (dist < closest) { closest = dist; closestIdx = i; }
             }
             return closestIdx;
+        }
+
+        private void BuildRoomGraph(DA.Dungeon dungeon)
+        {
+            _roomGraph.Clear();
+
+            // Initialize empty adjacency lists for all rooms
+            for (int i = 0; i < Rooms.Length; i++)
+                _roomGraph[i] = new List<int>();
+
+            // Build InstanceID → room index mapping
+            var idToIndex = new Dictionary<string, int>();
+            if (Query != null && Query.modules != null)
+            {
+                for (int i = 0; i < Query.modules.Length; i++)
+                {
+                    var instanceId = Query.modules[i].instanceInfo.InstanceID;
+                    if (!string.IsNullOrEmpty(instanceId))
+                        idToIndex[instanceId] = i;
+                }
+            }
+
+            // Read connections from SnapModel
+            var snapModel = dungeon.GetComponent<DungeonArchitect.Builders.Snap.SnapModel>();
+            if (snapModel != null && snapModel.connections != null)
+            {
+                foreach (var conn in snapModel.connections)
+                {
+                    if (idToIndex.TryGetValue(conn.ModuleAInstanceID, out int idxA) &&
+                        idToIndex.TryGetValue(conn.ModuleBInstanceID, out int idxB))
+                    {
+                        if (!_roomGraph[idxA].Contains(idxB))
+                            _roomGraph[idxA].Add(idxB);
+                        if (!_roomGraph[idxB].Contains(idxA))
+                            _roomGraph[idxB].Add(idxA);
+                    }
+                }
+            }
+
+            // Fallback: if no connections found, use spatial proximity
+            int totalEdges = 0;
+            foreach (var edges in _roomGraph.Values) totalEdges += edges.Count;
+
+            if (totalEdges == 0)
+            {
+                Debug.LogWarning("[DADungeonBuilder] No SnapModel connections found — using spatial proximity fallback");
+                for (int i = 0; i < Rooms.Length; i++)
+                {
+                    for (int j = i + 1; j < Rooms.Length; j++)
+                    {
+                        float dist = Vector3.Distance(Rooms[i].WorldBounds.center, Rooms[j].WorldBounds.center);
+                        float threshold = Mathf.Max(
+                            Rooms[i].WorldBounds.size.magnitude,
+                            Rooms[j].WorldBounds.size.magnitude) * 0.75f;
+
+                        if (dist < threshold)
+                        {
+                            _roomGraph[i].Add(j);
+                            _roomGraph[j].Add(i);
+                        }
+                    }
+                }
+
+                // Recount
+                totalEdges = 0;
+                foreach (var edges in _roomGraph.Values) totalEdges += edges.Count;
+            }
+
+            Debug.Log($"[DADungeonBuilder] Room graph: {Rooms.Length} nodes, {totalEdges / 2} edges");
         }
     }
 }
