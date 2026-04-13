@@ -4,6 +4,7 @@ using UnityEngine.SceneManagement;
 using ForeverEngine.MonoBehaviour.CharacterCreation;
 using ForeverEngine.RPG.Character;
 using ForeverEngine.Bridges;
+using ForeverEngine.Demo.Dungeon;
 
 namespace ForeverEngine.Demo
 {
@@ -18,6 +19,7 @@ namespace ForeverEngine.Demo
         public string PendingEncounterId { get; set; }
         public string PendingLocationId { get; set; }
         public string PendingMapDataPath { get; set; }
+        public DungeonState PendingDungeonState { get; set; }
         public bool LastBattleWon { get; set; }
         public int LastBattleGoldEarned { get; set; }
         public int LastBattleXPEarned { get; set; }
