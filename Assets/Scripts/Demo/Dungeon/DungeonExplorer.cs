@@ -36,6 +36,7 @@ namespace ForeverEngine.Demo.Dungeon
         private Rigidbody _playerRb;
         private int _cachedBFSRoom = -1;
         private Dictionary<int, int> _cachedRoomDepths;
+        private DungeonMinimap _minimap;
 
         private bool _initialized;
 
@@ -55,6 +56,14 @@ namespace ForeverEngine.Demo.Dungeon
         private void Update()
         {
             if (!_initialized || _playerTransform == null) return;
+
+            // Tab toggles full minimap overlay
+            if (Input.GetKeyDown(KeyCode.Tab) && _minimap != null)
+                _minimap.ToggleFullMap();
+
+            // Suppress movement when full map is open
+            if (_minimap != null && _minimap.IsFullOpen) return;
+
             HandleMovement();
             UpdateFogOfWar();
         }
@@ -92,6 +101,12 @@ namespace ForeverEngine.Demo.Dungeon
             SetupCamera(state);
 
             _initialized = true;
+
+            // Create minimap
+            var minimapGO = new GameObject("DungeonMinimap");
+            _minimap = minimapGO.AddComponent<DungeonMinimap>();
+            _minimap.Initialize(_daBuilder, _playerTransform);
+
             Debug.Log($"[DungeonExplorer] Initialized '{locationId}' with DA — " +
                       $"{_daBuilder?.Rooms?.Length ?? 0} rooms.");
         }
