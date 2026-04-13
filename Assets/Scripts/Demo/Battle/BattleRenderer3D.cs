@@ -171,11 +171,12 @@ namespace ForeverEngine.Demo.Battle
                 }
             }
 
-            // Update HUD
+            // Update HUD and turn order
             if (_ui != null)
             {
                 var player = combatants.Find(c => c.IsPlayer);
                 _ui.UpdateHUD(player);
+                _ui.UpdateTurnOrder(combatants, currentTurn);
             }
         }
 

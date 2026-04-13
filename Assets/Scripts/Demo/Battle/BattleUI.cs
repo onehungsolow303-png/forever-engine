@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.UIElements;
+using System.Collections.Generic;
 
 namespace ForeverEngine.Demo.Battle
 {
@@ -7,6 +8,9 @@ namespace ForeverEngine.Demo.Battle
     {
         private UIDocument _doc;
         private VisualElement _root;
+
+        // Turn order bar
+        private VisualElement _turnOrderBar;
 
         private Label _playerName;
         private VisualElement _hpBar;
@@ -29,9 +33,72 @@ namespace ForeverEngine.Demo.Battle
             _root.style.flexGrow = 1;
             _doc.rootVisualElement.Add(_root);
 
+            BuildTurnOrderBar();
             BuildPlayerHUD(player);
             BuildActionBar();
             BuildTooltip();
+        }
+
+        private void BuildTurnOrderBar()
+        {
+            _turnOrderBar = new VisualElement();
+            _turnOrderBar.style.position = Position.Absolute;
+            _turnOrderBar.style.top = 12;
+            _turnOrderBar.style.left = new Length(50, LengthUnit.Percent);
+            _turnOrderBar.style.translate = new Translate(new Length(-50, LengthUnit.Percent), 0);
+            _turnOrderBar.style.flexDirection = FlexDirection.Row;
+            _turnOrderBar.style.backgroundColor = new Color(0.1f, 0.1f, 0.12f, 0.8f);
+            _turnOrderBar.style.borderTopLeftRadius = _turnOrderBar.style.borderTopRightRadius =
+                _turnOrderBar.style.borderBottomLeftRadius = _turnOrderBar.style.borderBottomRightRadius = 8;
+            _turnOrderBar.style.paddingLeft = _turnOrderBar.style.paddingRight =
+                _turnOrderBar.style.paddingTop = _turnOrderBar.style.paddingBottom = 6;
+            _root.Add(_turnOrderBar);
+        }
+
+        public void UpdateTurnOrder(List<BattleCombatant> combatants, BattleCombatant currentTurn)
+        {
+            if (_turnOrderBar == null) return;
+            _turnOrderBar.Clear();
+
+            foreach (var c in combatants)
+            {
+                if (!c.IsAlive) continue;
+
+                var box = new VisualElement();
+                box.style.width = 60; box.style.height = 40;
+                box.style.marginLeft = box.style.marginRight = 3;
+                box.style.borderTopLeftRadius = box.style.borderTopRightRadius =
+                    box.style.borderBottomLeftRadius = box.style.borderBottomRightRadius = 4;
+                box.style.alignItems = Align.Center;
+                box.style.justifyContent = Justify.Center;
+
+                bool isActive = c == currentTurn;
+                if (isActive)
+                {
+                    box.style.backgroundColor = c.IsPlayer
+                        ? new Color(0.15f, 0.35f, 0.6f, 0.9f)
+                        : new Color(0.6f, 0.15f, 0.15f, 0.9f);
+                    box.style.borderBottomWidth = 2;
+                    box.style.borderBottomColor = Color.white;
+                }
+                else
+                {
+                    box.style.backgroundColor = c.IsPlayer
+                        ? new Color(0.1f, 0.2f, 0.35f, 0.7f)
+                        : new Color(0.35f, 0.1f, 0.1f, 0.7f);
+                }
+
+                var nameLabel = new Label(c.Name);
+                nameLabel.style.fontSize = 9;
+                nameLabel.style.color = isActive ? Color.white : new Color(0.7f, 0.7f, 0.7f);
+                nameLabel.style.unityTextAlign = TextAnchor.MiddleCenter;
+                nameLabel.style.overflow = Overflow.Hidden;
+                nameLabel.style.textOverflow = TextOverflow.Ellipsis;
+                nameLabel.style.maxWidth = 56;
+                box.Add(nameLabel);
+
+                _turnOrderBar.Add(box);
+            }
         }
 
         private void BuildPlayerHUD(BattleCombatant player)

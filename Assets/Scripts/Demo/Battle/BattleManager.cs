@@ -50,10 +50,14 @@ namespace ForeverEngine.Demo.Battle
             // Player input during their turn
             if (CurrentTurn != null && CurrentTurn.IsPlayer && !BattleOver)
             {
-                if (Input.GetKeyDown(KeyCode.W)) PlayerMove(0, 1);
-                else if (Input.GetKeyDown(KeyCode.S)) PlayerMove(0, -1);
-                else if (Input.GetKeyDown(KeyCode.A)) PlayerMove(-1, 0);
-                else if (Input.GetKeyDown(KeyCode.D)) PlayerMove(1, 0);
+                if (Input.GetKeyDown(KeyCode.W) || Input.GetKeyDown(KeyCode.UpArrow))
+                    CameraRelativeMove(0, 1);
+                else if (Input.GetKeyDown(KeyCode.S) || Input.GetKeyDown(KeyCode.DownArrow))
+                    CameraRelativeMove(0, -1);
+                else if (Input.GetKeyDown(KeyCode.A) || Input.GetKeyDown(KeyCode.LeftArrow))
+                    CameraRelativeMove(-1, 0);
+                else if (Input.GetKeyDown(KeyCode.D) || Input.GetKeyDown(KeyCode.RightArrow))
+                    CameraRelativeMove(1, 0);
                 // Attack nearest adjacent enemy with 1 or F
                 else if (!_spellMenuOpen && (Input.GetKeyDown(KeyCode.Alpha1) || Input.GetKeyDown(KeyCode.F)))
                     AttackNearestEnemy();
@@ -335,6 +339,36 @@ namespace ForeverEngine.Demo.Battle
             if (_turnIndex == 0) RoundNumber++;
             CheckBattleEnd();
             if (!BattleOver) StartTurn();
+        }
+
+        /// <summary>
+        /// Convert camera-relative input to grid movement.
+        /// inputX: -1=left, 1=right. inputZ: -1=back, 1=forward.
+        /// </summary>
+        private void CameraRelativeMove(float inputX, float inputZ)
+        {
+            var cam = Camera.main;
+            if (cam == null) { PlayerMove((int)inputX, (int)inputZ); return; }
+
+            Vector3 camFwd = cam.transform.forward;
+            Vector3 camRight = cam.transform.right;
+            camFwd.y = 0f; camFwd.Normalize();
+            camRight.y = 0f; camRight.Normalize();
+
+            Vector3 desired = (camFwd * inputZ + camRight * inputX).normalized;
+
+            // Snap to nearest cardinal grid direction
+            // Grid directions: (1,0), (-1,0), (0,1), (0,-1)
+            float dotRight = Vector3.Dot(desired, Vector3.right);   // +X
+            float dotForward = Vector3.Dot(desired, Vector3.forward); // +Z
+
+            int dx, dy;
+            if (Mathf.Abs(dotRight) > Mathf.Abs(dotForward))
+                { dx = dotRight > 0 ? 1 : -1; dy = 0; }
+            else
+                { dx = 0; dy = dotForward > 0 ? 1 : -1; }
+
+            PlayerMove(dx, dy);
         }
 
         public void PlayerMove(int dx, int dy)
