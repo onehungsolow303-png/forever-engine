@@ -20,9 +20,19 @@ namespace ForeverEngine.Demo.Battle
             _cellSize = 1f;
 
             // Instantiate room prefab (or empty container if no prefab assigned)
-            if (template.RoomPrefab != null)
+            GameObject roomPrefab = template.RoomPrefab;
+
+            // If no prefab assigned, try loading a random Lordenfel room for dungeon biomes
+            if (roomPrefab == null && template.Biome == "dungeon")
             {
-                _roomInstance = Instantiate(template.RoomPrefab, Vector3.zero, Quaternion.identity);
+                var candidates = Resources.LoadAll<GameObject>("BattleRooms");
+                if (candidates != null && candidates.Length > 0)
+                    roomPrefab = candidates[UnityEngine.Random.Range(0, candidates.Length)];
+            }
+
+            if (roomPrefab != null)
+            {
+                _roomInstance = Instantiate(roomPrefab, Vector3.zero, Quaternion.identity);
                 _roomInstance.name = "BattleRoom";
             }
             else
