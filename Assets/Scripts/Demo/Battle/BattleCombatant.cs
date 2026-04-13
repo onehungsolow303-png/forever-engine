@@ -79,13 +79,17 @@ namespace ForeverEngine.Demo.Battle
         public static BattleCombatant FromPlayer(PlayerData data)
         {
             DiceRoller.Parse(data.AttackDice, out int c, out int s, out int b);
-            return new BattleCombatant
+            var combatant = new BattleCombatant
             {
                 Name = "Wanderer", X = 1, Y = 1, IsPlayer = true,
                 HP = data.HP, MaxHP = data.MaxHP, AC = data.AC,
                 Strength = data.Strength, Dexterity = data.Dexterity, Speed = data.Speed,
-                AtkCount = c, AtkSides = s, AtkBonus = b, Behavior = "player"
+                AtkCount = c, AtkSides = s, AtkBonus = b, Behavior = "player",
+                ModelId = data.ModelId
             };
+            var (modelPath, modelScale) = ModelRegistry.Resolve(combatant.ModelId ?? "Default_Player");
+            if (modelPath != null) { combatant.ModelId = modelPath; combatant.ModelScale = modelScale; }
+            return combatant;
         }
 
         public static BattleCombatant FromEnemy(Encounters.EnemyDef def, int x, int y)
@@ -113,7 +117,7 @@ namespace ForeverEngine.Demo.Battle
         public static BattleCombatant FromCharacterSheet(CharacterSheet sheet)
         {
             var snap = sheet.ToStatsSnapshot();
-            return new BattleCombatant
+            var combatant = new BattleCombatant
             {
                 Name = sheet.Name,
                 X = 1, Y = 1,
@@ -133,8 +137,28 @@ namespace ForeverEngine.Demo.Battle
                 DeathSaves = sheet.DeathSaves,
                 Concentration = sheet.Concentration,
                 TempHP = sheet.TempHP,
-                AttackDamageType = sheet.MainHand != null ? sheet.MainHand.Type : DamageType.Bludgeoning
+                AttackDamageType = sheet.MainHand != null ? sheet.MainHand.Type : DamageType.Bludgeoning,
+                ModelId = sheet.ModelId
             };
+            // Resolve model via registry; fall back to species+class key if ModelId not set
+            string registryKey = !string.IsNullOrEmpty(combatant.ModelId)
+                ? combatant.ModelId
+                : BuildPlayerKey(sheet);
+            var (modelPath, modelScale) = ModelRegistry.Resolve(registryKey);
+            if (modelPath != null) { combatant.ModelId = modelPath; combatant.ModelScale = modelScale; }
+            return combatant;
+        }
+
+        private static string BuildPlayerKey(CharacterSheet sheet)
+        {
+            string speciesName = sheet.Species != null && !string.IsNullOrEmpty(sheet.Species.Name)
+                ? sheet.Species.Name.Replace(" ", "")
+                : "Human";
+            string className = sheet.ClassLevels != null && sheet.ClassLevels.Count > 0
+                               && sheet.ClassLevels[0].ClassRef != null
+                ? sheet.ClassLevels[0].ClassRef.Name
+                : "Fighter";
+            return $"{speciesName}_{className}";
         }
     }
 }

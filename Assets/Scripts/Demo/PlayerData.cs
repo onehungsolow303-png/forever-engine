@@ -38,6 +38,7 @@ namespace ForeverEngine.Demo
         public string LastSafeLocation = "camp";
         public string WeaponName = "Rusty Sword";
         public string ArmorName = "Leather Armor";
+        public string ModelId = "Default_Player";
 
         public PlayerData()
         {
@@ -75,6 +76,16 @@ namespace ForeverEngine.Demo
 
             // Class-based weapon and attack dice
             (pd.WeaponName, pd.AttackDice, pd.ArmorName) = GetClassGear(cd.className);
+
+            // Model: build registry key from species + class (e.g. "Human_Fighter")
+            string speciesKey = !string.IsNullOrEmpty(cd.species)
+                ? cd.species.Replace(" ", "")
+                : "Human";
+            string classKey = !string.IsNullOrEmpty(cd.className)
+                ? System.Globalization.CultureInfo.InvariantCulture.TextInfo
+                    .ToTitleCase(cd.className.ToLowerInvariant())
+                : "Fighter";
+            pd.ModelId = $"{speciesKey}_{classKey}";
 
             return pd;
         }

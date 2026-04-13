@@ -85,6 +85,9 @@ namespace ForeverEngine.RPG.Character
         // === Expertise (double proficiency for certain skills) ===
         public HashSet<string> Expertise = new HashSet<string>();
 
+        // === Model ===
+        public string ModelId;
+
         // ================================================================
         // METHODS
         // ================================================================
