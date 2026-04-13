@@ -2,6 +2,13 @@ using UnityEngine;
 
 namespace ForeverEngine.Demo.Battle
 {
+    public enum ArenaType
+    {
+        Dungeon,
+        Boss,
+        Overworld
+    }
+
     [CreateAssetMenu(fileName = "BattleTemplate", menuName = "Forever/Battle Scene Template")]
     public class BattleSceneTemplate : ScriptableObject
     {
@@ -9,6 +16,7 @@ namespace ForeverEngine.Demo.Battle
         public GameObject RoomPrefab;
         public int GridWidth = 8;
         public int GridHeight = 8;
+        public ArenaType Arena = ArenaType.Dungeon;
 
         [Header("Spawn Zones")]
         public Vector2Int[] PlayerSpawnZone = { new(1, 1), new(1, 2), new(2, 1), new(2, 2) };
