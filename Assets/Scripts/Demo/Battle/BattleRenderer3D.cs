@@ -87,7 +87,10 @@ namespace ForeverEngine.Demo.Battle
             {
                 var prefab = Resources.Load<GameObject>($"Models/{combatant.ModelId}");
                 if (prefab != null)
+                {
                     model = Instantiate(prefab);
+                    model.transform.localScale *= combatant.ModelScale;
+                }
             }
 
             if (model == null)
