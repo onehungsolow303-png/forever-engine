@@ -10,11 +10,11 @@ namespace ForeverEngine.Demo.Dungeon
     /// created by DungeonSceneSetup.
     ///
     /// Responsibilities:
-    ///   - Calls DungeonAssembler to build the room layout
+    ///   - Receives a built DADungeonBuilder with room layout from DA Snap
     ///   - Spawns the player model (via ModelRegistry, with capsule fallback)
     ///   - Wires PerspectiveCameraController follow target
     ///   - Handles WASD movement (camera-relative, same pattern as OverworldManager)
-    ///   - Fog of war: enables room lights when the player is nearby
+    ///   - Fog of war: enables room lights when the player enters a room
     ///   - EnterBattle(): saves DungeonState, hands off to GameManager.EnterBattle
     ///   - OnBattleWon(): checks boss defeat, completes or continues dungeon
     /// </summary>
@@ -23,15 +23,11 @@ namespace ForeverEngine.Demo.Dungeon
         public static DungeonExplorer Instance { get; private set; }
 
         // ── Config ──────────────────────────────────────────────────────────
-        private const float MoveSpeed      = 6f;
-        private const float FogRevealRange = 10f;   // World units within which rooms light up
-        private const int   DefaultRoomCount = 7;
+        private const float MoveSpeed = 6f;
 
         // ── State ───────────────────────────────────────────────────────────
-        private string    _locationId;
-        private RoomCatalog _catalog;
-        private DungeonAssembler _assembler;
-        private DungeonAssembler.RoomInstance[] _rooms;
+        private string _locationId;
+        private DADungeonBuilder _daBuilder;
 
         private Transform _playerTransform;
         private PerspectiveCameraController _camera;
@@ -62,13 +58,13 @@ namespace ForeverEngine.Demo.Dungeon
         // ── Public API ──────────────────────────────────────────────────────
 
         /// <summary>
-        /// Build the dungeon and set up the player + camera.
-        /// Called by DungeonSceneSetup.Start().
+        /// Initialize with a built DADungeonBuilder.
+        /// Called by DungeonSceneSetup.Start() after DA has finished building.
         /// </summary>
-        public void Initialize(string locationId, RoomCatalog catalog)
+        public void InitializeWithDA(string locationId, DADungeonBuilder builder)
         {
             _locationId = locationId;
-            _catalog    = catalog;
+            _daBuilder  = builder;
 
             var gm = GameManager.Instance;
 
@@ -77,21 +73,11 @@ namespace ForeverEngine.Demo.Dungeon
             if (state == null || state.LocationId != locationId)
                 state = new DungeonState { LocationId = locationId };
 
-            int seed = gm != null ? gm.CurrentSeed + locationId.GetHashCode() : 42;
-
-            // Determine room count from GameConfig if available, else default
-            int roomCount = DefaultRoomCount;
-            var gc = Resources.Load<GameConfig>("GameConfig");
-            // GameConfig doesn't expose a dungeon room count yet — use default.
-            // When added, read it here: roomCount = gc.DungeonRoomCount;
-
-            // Assemble dungeon
-            var assemblerGO = new GameObject("DungeonAssembler");
-            _assembler = assemblerGO.AddComponent<DungeonAssembler>();
-            _rooms = _assembler.Assemble(catalog, roomCount, seed);
-
-            state.RoomCount    = _rooms.Length;
-            state.BossRoomIndex = _rooms.Length - 1;
+            if (_daBuilder != null && _daBuilder.Rooms != null)
+            {
+                state.RoomCount     = _daBuilder.Rooms.Length;
+                state.BossRoomIndex = _daBuilder.BossIndex;
+            }
 
             if (gm != null) gm.PendingDungeonState = state;
 
@@ -102,7 +88,8 @@ namespace ForeverEngine.Demo.Dungeon
             SetupCamera(state);
 
             _initialized = true;
-            Debug.Log($"[DungeonExplorer] Initialized '{locationId}' — {_rooms.Length} rooms.");
+            Debug.Log($"[DungeonExplorer] Initialized '{locationId}' with DA — " +
+                      $"{_daBuilder?.Rooms?.Length ?? 0} rooms.");
         }
 
         /// <summary>
@@ -134,8 +121,12 @@ namespace ForeverEngine.Demo.Dungeon
             if (state == null) return;
 
             // Check if the won battle was the boss encounter
-            bool wasBoss = encounterId != null &&
-                           encounterId.Contains($"room_{state.BossRoomIndex}");
+            bool wasBoss = encounterId != null && encounterId.Contains("boss_dungeon");
+
+            // Also check by boss room index if the encounter ID embeds the room index
+            if (!wasBoss && _daBuilder != null && state.BossRoomIndex >= 0)
+                wasBoss = encounterId != null &&
+                          encounterId.Contains($"room{state.BossRoomIndex}");
 
             if (wasBoss)
             {
@@ -145,7 +136,7 @@ namespace ForeverEngine.Demo.Dungeon
             }
             else
             {
-                Debug.Log($"[DungeonExplorer] Battle won, continuing exploration.");
+                Debug.Log("[DungeonExplorer] Battle won, continuing exploration.");
             }
         }
 
@@ -166,9 +157,14 @@ namespace ForeverEngine.Demo.Dungeon
 
             // Position: restore from state if we've been here before, else entrance room
             if (state.VisitedRooms.Count > 0 && state.PlayerPosition != Vector3.zero)
+            {
                 playerGO.transform.position = state.PlayerPosition;
-            else if (_rooms != null && _rooms.Length > 0)
-                playerGO.transform.position = _rooms[0].WorldPosition + Vector3.up * 1f;
+            }
+            else if (_daBuilder != null && _daBuilder.Rooms != null && _daBuilder.EntranceIndex >= 0)
+            {
+                playerGO.transform.position =
+                    _daBuilder.Rooms[_daBuilder.EntranceIndex].WorldBounds.center + Vector3.up * 1f;
+            }
 
             playerGO.transform.rotation = Quaternion.Euler(0, state.PlayerRotationY, 0);
 
@@ -276,31 +272,29 @@ namespace ForeverEngine.Demo.Dungeon
 
         private void UpdateFogOfWar()
         {
-            if (_rooms == null || _playerTransform == null) return;
+            if (_daBuilder == null || _daBuilder.Rooms == null || _playerTransform == null) return;
 
             Vector3 playerPos = _playerTransform.position;
             var state = GameManager.Instance?.PendingDungeonState;
 
-            foreach (var room in _rooms)
+            int currentRoom = _daBuilder.GetRoomAtPosition(playerPos);
+
+            foreach (var room in _daBuilder.Rooms)
             {
-                if (room.RoomLight == null) continue;
+                if (room.FogLight == null) continue;
 
-                float dist = Vector3.Distance(playerPos, room.WorldPosition);
-                bool isCurrent = dist <= FogRevealRange;
-
-                if (isCurrent)
+                if (room.Index == currentRoom)
                 {
                     // Fully illuminate the current room
-                    room.RoomLight.enabled   = true;
-                    room.RoomLight.intensity = room.OriginalLightIntensity;
-
+                    room.FogLight.enabled   = true;
+                    room.FogLight.intensity = room.OriginalLightIntensity;
                     state?.VisitRoom(room.Index);
                 }
                 else if (state != null && state.HasVisited(room.Index))
                 {
                     // Previously visited rooms are visible but dimmed to 50%
-                    room.RoomLight.enabled   = true;
-                    room.RoomLight.intensity = room.OriginalLightIntensity * 0.5f;
+                    room.FogLight.enabled   = true;
+                    room.FogLight.intensity = room.OriginalLightIntensity * 0.5f;
                 }
                 // Unvisited rooms remain disabled (fog of war)
             }
@@ -312,8 +306,8 @@ namespace ForeverEngine.Demo.Dungeon
             var state = gm?.PendingDungeonState;
             if (state == null) return;
 
-            state.PlayerPosition  = _playerTransform != null ? _playerTransform.position  : Vector3.zero;
-            state.PlayerRotationY = _playerTransform != null ? _playerTransform.eulerAngles.y : 0f;
+            state.PlayerPosition   = _playerTransform != null ? _playerTransform.position  : Vector3.zero;
+            state.PlayerRotationY  = _playerTransform != null ? _playerTransform.eulerAngles.y : 0f;
             state.CameraOrbitAngle = _camera != null ? _camera.OrbitAngle : 45f;
             state.CameraDistance   = _camera != null ? _camera.Distance   : 12f;
             state.TriggerEncounter(triggeredZone);
@@ -323,7 +317,7 @@ namespace ForeverEngine.Demo.Dungeon
         {
             var gm = GameManager.Instance;
             if (gm == null) return;
-            Debug.Log($"[DungeonExplorer] Dungeon complete — returning to overworld.");
+            Debug.Log("[DungeonExplorer] Dungeon complete — returning to overworld.");
             gm.PendingDungeonState = null;
             gm.ReturnToOverworld();
         }

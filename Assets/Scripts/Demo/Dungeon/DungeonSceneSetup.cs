@@ -1,18 +1,16 @@
 using UnityEngine;
+using DungeonArchitect;
 
 namespace ForeverEngine.Demo.Dungeon
 {
     /// <summary>
-    /// Bootstrap MonoBehaviour for the DungeonExploration scene.
-    /// Attach to a GameObject in the scene. Reads GameManager state,
-    /// loads the RoomCatalog, and initialises DungeonExplorer.
-    ///
-    /// If returning from a won battle inside the dungeon, also calls
-    /// DungeonExplorer.OnBattleWon() to check for boss defeat.
+    /// Bootstrap for the DungeonExploration scene.
+    /// Instantiates the Dungeon Architect Snap builder prefab,
+    /// builds the dungeon, then initializes DungeonExplorer.
     /// </summary>
     public class DungeonSceneSetup : UnityEngine.MonoBehaviour
     {
-        [SerializeField] private RoomCatalog _roomCatalog;
+        [SerializeField] private GameObject _dungeonPrefab;
 
         private void Start()
         {
@@ -27,24 +25,58 @@ namespace ForeverEngine.Demo.Dungeon
                 return;
             }
 
-            if (_roomCatalog == null)
-                _roomCatalog = Resources.Load<RoomCatalog>("RoomCatalog");
-            if (_roomCatalog == null)
+            // Load the Lordenfel DA Snap prefab
+            if (_dungeonPrefab == null)
+                _dungeonPrefab = Resources.Load<GameObject>("DungeonSnap");
+            if (_dungeonPrefab == null)
             {
-                Debug.LogError("DungeonSceneSetup: No RoomCatalog — assign one in the Inspector " +
-                               "or place a RoomCatalog asset at Resources/RoomCatalog");
+                // Try loading directly from Lordenfel path
+                _dungeonPrefab = Resources.Load<GameObject>(
+                    "Lordenfel/FPD_DungeonSnap_01");
+            }
+            if (_dungeonPrefab == null)
+            {
+                Debug.LogError("DungeonSceneSetup: No dungeon prefab found. " +
+                    "Assign in Inspector or place at Resources/DungeonSnap");
                 gm.ReturnToOverworld();
                 return;
             }
 
-            var explorerObj = new GameObject("DungeonExplorer");
-            var explorer    = explorerObj.AddComponent<DungeonExplorer>();
-            explorer.Initialize(locationId, _roomCatalog);
+            // Instantiate DA dungeon
+            var dungeonObj = Instantiate(_dungeonPrefab);
+            dungeonObj.name = "DungeonArchitect";
 
+            // Add our event listener
+            var builder = dungeonObj.AddComponent<DADungeonBuilder>();
+
+            // Ensure SnapQuery is present
+            var query = dungeonObj.GetComponent<DungeonArchitect.Builders.Snap.SnapQuery>();
+            if (query == null)
+                query = dungeonObj.AddComponent<DungeonArchitect.Builders.Snap.SnapQuery>();
+
+            // Set seed and build
+            var dungeon = dungeonObj.GetComponent<Dungeon>();
+            if (dungeon == null)
+            {
+                Debug.LogError("DungeonSceneSetup: Prefab has no Dungeon component");
+                gm.ReturnToOverworld();
+                return;
+            }
+
+            int seed = gm.CurrentSeed + locationId.GetHashCode();
+            dungeon.Config.Seed = (uint)Mathf.Abs(seed);
+            dungeon.Build();
+
+            // Create explorer and initialize with DA builder
+            var explorerObj = new GameObject("DungeonExplorer");
+            var explorer = explorerObj.AddComponent<DungeonExplorer>();
+            explorer.InitializeWithDA(locationId, builder);
+
+            // Handle return from battle
             if (gm.LastBattleWon && gm.PendingDungeonState != null)
                 explorer.OnBattleWon(gm.PendingEncounterId);
 
-            gm.LastBattleWon      = false;
+            gm.LastBattleWon = false;
             gm.PendingEncounterId = null;
         }
     }
