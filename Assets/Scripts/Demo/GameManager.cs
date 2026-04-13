@@ -169,10 +169,32 @@ namespace ForeverEngine.Demo
             SceneManager.LoadScene("BattleMap");
         }
 
+        /// <summary>
+        /// Load (or resume) a dungeon exploration session for a location.
+        /// Creates a fresh DungeonState if none exists for this location.
+        /// </summary>
+        public void EnterDungeon(string locationId)
+        {
+            PendingLocationId = locationId;
+            if (PendingDungeonState == null || PendingDungeonState.LocationId != locationId)
+                PendingDungeonState = new DungeonState { LocationId = locationId };
+            SceneManager.LoadScene("DungeonExploration");
+        }
+
         public void ReturnToOverworld()
         {
+            // If we won a battle while inside a dungeon, return to dungeon exploration
+            // instead of the overworld so the player can continue to the next room.
+            if (LastBattleWon && PendingDungeonState != null)
+            {
+                LastBattleWon = false;
+                SceneManager.LoadScene("DungeonExploration");
+                return;
+            }
+
             PendingEncounterId = null;
             PendingLocationId = null;
+            PendingDungeonState = null;
             SceneManager.LoadScene(Use3DOverworld ? "Overworld3D" : "Overworld");
         }
 

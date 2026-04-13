@@ -57,9 +57,9 @@ namespace ForeverEngine.Demo.Locations
                 return;
             }
 
-            // Dungeon interior renderer not yet functional — fall back to battle encounter
-            Debug.Log($"[LocationInterior] Entering battle at {loc.Name}");
-            GameManager.Instance.EnterBattle($"dungeon_{loc.Type}_{loc.Id}");
+            // Route to the 3D dungeon exploration scene
+            Debug.Log($"[LocationInterior] Entering dungeon at {loc.Name}");
+            GameManager.Instance.EnterDungeon(loc.Id);
         }
 
         // ── Popup helpers ─────────────────────────────────────────────────────
