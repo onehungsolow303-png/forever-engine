@@ -162,8 +162,10 @@ namespace ForeverEngine.Demo.Dungeon
             }
             else if (_daBuilder != null && _daBuilder.Rooms != null && _daBuilder.EntranceIndex >= 0)
             {
-                playerGO.transform.position =
-                    _daBuilder.Rooms[_daBuilder.EntranceIndex].WorldBounds.center + Vector3.up * 1f;
+                // Spawn at floor level (bounds min Y) not center (mid-air)
+                var bounds = _daBuilder.Rooms[_daBuilder.EntranceIndex].WorldBounds;
+                var floorCenter = new Vector3(bounds.center.x, bounds.min.y + 1f, bounds.center.z);
+                playerGO.transform.position = floorCenter;
             }
 
             playerGO.transform.rotation = Quaternion.Euler(0, state.PlayerRotationY, 0);
@@ -174,8 +176,9 @@ namespace ForeverEngine.Demo.Dungeon
             // Add physics components for trigger detection
             var rb = playerGO.GetComponent<Rigidbody>();
             if (rb == null) rb = playerGO.AddComponent<Rigidbody>();
-            rb.isKinematic = true;
-            rb.useGravity  = false;
+            rb.isKinematic = false;
+            rb.useGravity  = true;
+            rb.constraints = RigidbodyConstraints.FreezeRotation;
             _playerRb = rb;
 
             var col = playerGO.GetComponent<CapsuleCollider>();
@@ -247,7 +250,12 @@ namespace ForeverEngine.Demo.Dungeon
             if (Input.GetKey(KeyCode.D) || Input.GetKey(KeyCode.RightArrow)) inputX += 1f;
             if (Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.LeftArrow))  inputX -= 1f;
 
-            if (inputX == 0f && inputZ == 0f) return;
+            if (inputX == 0f && inputZ == 0f)
+            {
+                // Stop horizontal movement when no input (preserve gravity)
+                _playerRb.linearVelocity = new Vector3(0, _playerRb.linearVelocity.y, 0);
+                return;
+            }
 
             var cam = UnityEngine.Camera.main;
             if (cam != null)
@@ -258,15 +266,18 @@ namespace ForeverEngine.Demo.Dungeon
                 camRight.y = 0f; camRight.Normalize();
 
                 Vector3 moveDir = (camFwd * inputZ + camRight * inputX).normalized;
-                _playerRb.MovePosition(_playerTransform.position + moveDir * MoveSpeed * Time.deltaTime);
+                Vector3 vel = moveDir * MoveSpeed;
+                vel.y = _playerRb.linearVelocity.y; // preserve gravity
+                _playerRb.linearVelocity = vel;
 
                 if (moveDir.sqrMagnitude > 0.001f)
                     _playerTransform.rotation = Quaternion.LookRotation(moveDir);
             }
             else
             {
-                _playerRb.MovePosition(_playerTransform.position +
-                    new Vector3(inputX, 0, inputZ).normalized * MoveSpeed * Time.deltaTime);
+                Vector3 vel = new Vector3(inputX, 0, inputZ).normalized * MoveSpeed;
+                vel.y = _playerRb.linearVelocity.y;
+                _playerRb.linearVelocity = vel;
             }
         }
 
