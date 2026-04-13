@@ -14,6 +14,11 @@ namespace ForeverEngine.Demo.Battle
         private Vector3 _gridOffset = Vector3.zero;
         private BattleUI _ui;
 
+        // Arena geometry constants (easy to bump later)
+        private const int DungeonGridSize = 8;
+        private const int BossGridSize = 12;
+        private const int OverworldGridSize = 16;
+
         public void Initialize(BattleSceneTemplate template, BattleGrid grid,
             List<BattleCombatant> combatants, Camera cam)
         {
@@ -35,21 +40,7 @@ namespace ForeverEngine.Demo.Battle
             else
             {
                 _roomInstance = new GameObject("BattleRoom");
-                // Fallback floor plane
-                var floor = GameObject.CreatePrimitive(PrimitiveType.Plane);
-                floor.transform.SetParent(_roomInstance.transform);
-                float floorW = grid.Width * _cellSize / 10f;
-                float floorH = grid.Height * _cellSize / 10f;
-                floor.transform.localScale = new Vector3(floorW, 1f, floorH);
-                floor.transform.position = new Vector3(
-                    grid.Width * _cellSize / 2f, 0f, grid.Height * _cellSize / 2f);
-                var floorMat = new Material(Shader.Find("Universal Render Pipeline/Lit")
-                    ?? Shader.Find("Standard"));
-                if (floorMat.HasProperty("_BaseColor"))
-                    floorMat.SetColor("_BaseColor", new Color(0.3f, 0.3f, 0.35f));
-                else
-                    floorMat.color = new Color(0.3f, 0.3f, 0.35f);
-                floor.GetComponent<Renderer>().material = floorMat;
+                BuildArena(template.Arena, grid);
             }
 
             // Setup lighting
@@ -261,6 +252,183 @@ namespace ForeverEngine.Demo.Battle
             _models.Clear();
             if (_gridOverlay != null) Destroy(_gridOverlay.gameObject);
             if (_ui != null) Destroy(_ui.gameObject);
+        }
+
+        private void BuildArena(ArenaType arenaType, BattleGrid grid)
+        {
+            float gridW = grid.Width * _cellSize;
+            float gridH = grid.Height * _cellSize;
+            float centerX = gridW / 2f;
+            float centerZ = gridH / 2f;
+
+            var shader = Shader.Find("Universal Render Pipeline/Lit") ?? Shader.Find("Standard");
+
+            switch (arenaType)
+            {
+                case ArenaType.Dungeon:
+                    BuildFloor(gridW, gridH, centerX, centerZ, new Color(0.3f, 0.3f, 0.35f), shader);
+                    BuildDungeonWalls(gridW, gridH, centerX, centerZ, 3f, 0.3f, new Color(0.3f, 0.3f, 0.35f), shader);
+                    break;
+
+                case ArenaType.Boss:
+                    BuildFloor(gridW, gridH, centerX, centerZ, new Color(0.25f, 0.2f, 0.22f), shader);
+                    BuildBossWalls(gridW, gridH, centerX, centerZ, shader);
+                    break;
+
+                case ArenaType.Overworld:
+                    BuildFloor(gridW * 1.5f, gridH * 1.5f, centerX, centerZ, new Color(0.4f, 0.5f, 0.3f), shader);
+                    BuildOverworldRocks(grid, centerX, centerZ, shader);
+                    break;
+            }
+        }
+
+        private void BuildFloor(float w, float h, float cx, float cz, Color color, Shader shader)
+        {
+            var floor = GameObject.CreatePrimitive(PrimitiveType.Plane);
+            floor.transform.SetParent(_roomInstance.transform);
+            floor.transform.localScale = new Vector3(w / 10f, 1f, h / 10f);
+            floor.transform.position = new Vector3(cx, 0f, cz);
+            var mat = new Material(shader);
+            if (mat.HasProperty("_BaseColor"))
+                mat.SetColor("_BaseColor", color);
+            else
+                mat.color = color;
+            floor.GetComponent<Renderer>().material = mat;
+        }
+
+        private void BuildDungeonWalls(float gridW, float gridH, float cx, float cz,
+            float wallHeight, float wallThickness, Color color, Shader shader)
+        {
+            var mat = new Material(shader);
+            if (mat.HasProperty("_BaseColor"))
+                mat.SetColor("_BaseColor", color);
+            else
+                mat.color = color;
+
+            // North wall
+            CreateWall("WallNorth", new Vector3(cx, wallHeight / 2f, gridH),
+                new Vector3(gridW, wallHeight, wallThickness), mat);
+
+            // East wall
+            CreateWall("WallEast", new Vector3(gridW, wallHeight / 2f, cz),
+                new Vector3(wallThickness, wallHeight, gridH), mat);
+
+            // West wall
+            CreateWall("WallWest", new Vector3(0f, wallHeight / 2f, cz),
+                new Vector3(wallThickness, wallHeight, gridH), mat);
+
+            // South wall — split with 2-unit door gap
+            float doorGap = 2f;
+            float segmentLen = (gridW - doorGap) / 2f;
+            CreateWall("WallSouthL", new Vector3(segmentLen / 2f, wallHeight / 2f, 0f),
+                new Vector3(segmentLen, wallHeight, wallThickness), mat);
+            CreateWall("WallSouthR", new Vector3(gridW - segmentLen / 2f, wallHeight / 2f, 0f),
+                new Vector3(segmentLen, wallHeight, wallThickness), mat);
+        }
+
+        private void BuildBossWalls(float gridW, float gridH, float cx, float cz, Shader shader)
+        {
+            float wallHeight = 5f;
+            float wallThickness = 0.5f;
+            var wallColor = new Color(0.25f, 0.2f, 0.22f);
+
+            var mat = new Material(shader);
+            if (mat.HasProperty("_BaseColor"))
+                mat.SetColor("_BaseColor", wallColor);
+            else
+                mat.color = wallColor;
+
+            // North wall
+            CreateWall("WallNorth", new Vector3(cx, wallHeight / 2f, gridH),
+                new Vector3(gridW, wallHeight, wallThickness), mat);
+
+            // East wall
+            CreateWall("WallEast", new Vector3(gridW, wallHeight / 2f, cz),
+                new Vector3(wallThickness, wallHeight, gridH), mat);
+
+            // West wall
+            CreateWall("WallWest", new Vector3(0f, wallHeight / 2f, cz),
+                new Vector3(wallThickness, wallHeight, gridH), mat);
+
+            // South wall — 2.5-unit door gap
+            float doorGap = 2.5f;
+            float segmentLen = (gridW - doorGap) / 2f;
+            CreateWall("WallSouthL", new Vector3(segmentLen / 2f, wallHeight / 2f, 0f),
+                new Vector3(segmentLen, wallHeight, wallThickness), mat);
+            CreateWall("WallSouthR", new Vector3(gridW - segmentLen / 2f, wallHeight / 2f, 0f),
+                new Vector3(segmentLen, wallHeight, wallThickness), mat);
+
+            // 4 corner pillars inside the arena
+            float pillarSize = 0.8f;
+            float inset = 2f;
+            var pillarPositions = new Vector3[]
+            {
+                new(inset, wallHeight / 2f, inset),
+                new(gridW - inset, wallHeight / 2f, inset),
+                new(inset, wallHeight / 2f, gridH - inset),
+                new(gridW - inset, wallHeight / 2f, gridH - inset),
+            };
+            for (int i = 0; i < pillarPositions.Length; i++)
+                CreateWall($"Pillar_{i}", pillarPositions[i],
+                    new Vector3(pillarSize, wallHeight, pillarSize), mat);
+        }
+
+        private void BuildOverworldRocks(BattleGrid grid, float cx, float cz, Shader shader)
+        {
+            var mat = new Material(shader);
+            var rockColor = new Color(0.45f, 0.42f, 0.38f);
+            if (mat.HasProperty("_BaseColor"))
+                mat.SetColor("_BaseColor", rockColor);
+            else
+                mat.color = rockColor;
+
+            var rng = new System.Random(grid.Width * 1000 + grid.Height);
+            int rockCount = 3 + rng.Next(3);
+
+            for (int i = 0; i < rockCount; i++)
+            {
+                int rx, ry;
+                int attempts = 0;
+                do
+                {
+                    rx = rng.Next(grid.Width / 4, grid.Width * 3 / 4);
+                    ry = rng.Next(grid.Height / 4, grid.Height * 3 / 4);
+                    attempts++;
+                } while (attempts < 20 && !grid.IsWalkable(rx, ry));
+
+                if (attempts >= 20) continue;
+
+                grid.Walkable[ry * grid.Width + rx] = false;
+
+                float scaleX = 0.6f + (float)rng.NextDouble() * 0.6f;
+                float scaleY = 0.4f + (float)rng.NextDouble() * 0.4f;
+                float scaleZ = 0.6f + (float)rng.NextDouble() * 0.6f;
+                float rotY = (float)rng.NextDouble() * 45f;
+
+                var rock = GameObject.CreatePrimitive(PrimitiveType.Cube);
+                rock.name = $"Rock_{i}";
+                rock.transform.SetParent(_roomInstance.transform);
+                rock.transform.position = new Vector3(
+                    rx * _cellSize + _cellSize * 0.5f, scaleY / 2f,
+                    ry * _cellSize + _cellSize * 0.5f);
+                rock.transform.localScale = new Vector3(scaleX, scaleY, scaleZ);
+                rock.transform.rotation = Quaternion.Euler(0f, rotY, 0f);
+                rock.GetComponent<Renderer>().material = mat;
+                var col = rock.GetComponent<Collider>();
+                if (col != null) Object.Destroy(col);
+            }
+        }
+
+        private void CreateWall(string name, Vector3 position, Vector3 scale, Material mat)
+        {
+            var wall = GameObject.CreatePrimitive(PrimitiveType.Cube);
+            wall.name = name;
+            wall.transform.SetParent(_roomInstance.transform);
+            wall.transform.position = position;
+            wall.transform.localScale = scale;
+            wall.GetComponent<Renderer>().material = mat;
+            var col = wall.GetComponent<Collider>();
+            if (col != null) Object.Destroy(col);
         }
     }
 
