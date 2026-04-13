@@ -14,11 +14,6 @@ namespace ForeverEngine.Demo.Battle
         private Vector3 _gridOffset = Vector3.zero;
         private BattleUI _ui;
 
-        // Arena geometry constants (easy to bump later)
-        private const int DungeonGridSize = 8;
-        private const int BossGridSize = 12;
-        private const int OverworldGridSize = 16;
-
         public void Initialize(BattleSceneTemplate template, BattleGrid grid,
             List<BattleCombatant> combatants, Camera cam)
         {

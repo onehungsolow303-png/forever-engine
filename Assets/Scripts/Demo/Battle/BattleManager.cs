@@ -157,10 +157,10 @@ namespace ForeverEngine.Demo.Battle
             if (template != null)
             {
                 // Determine arena type from encounter context
-                string encId = _encounterData.Id ?? "";
-                if (encId.Contains("boss"))
+                string arenaEncId = _encounterData.Id ?? "";
+                if (arenaEncId.Contains("boss"))
                     template.Arena = ArenaType.Boss;
-                else if (encId.Contains("dungeon") || encId.Contains("Dungeon") || encId.Contains("Crypt"))
+                else if (arenaEncId.Contains("dungeon") || arenaEncId.Contains("Dungeon") || arenaEncId.Contains("Crypt"))
                     template.Arena = ArenaType.Dungeon;
                 else
                     template.Arena = ArenaType.Overworld;

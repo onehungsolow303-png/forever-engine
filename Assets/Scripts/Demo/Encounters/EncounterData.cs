@@ -84,7 +84,7 @@ namespace ForeverEngine.Demo.Encounters
             float tierRewardMult = tier switch { 1 => 1.0f, 2 => 1.3f, 3 => 1.6f, _ => 1f };
 
             // Only apply tier scaling to dungeon encounters
-            if (id.Contains("dungeon"))
+            if (id.Contains("dungeon") || id.Contains("Dungeon"))
                 xpBudget = (int)(xpBudget * tierBudgetMult);
 
             // RNG seeded off the encounter ID + player level so the same hex
@@ -313,7 +313,7 @@ namespace ForeverEngine.Demo.Encounters
             }
 
             // Apply tier reward scaling for dungeon encounters
-            if (id.Contains("dungeon") && tierRewardMult != 1f)
+            if ((id.Contains("dungeon") || id.Contains("Dungeon")) && tierRewardMult != 1f)
             {
                 enc.GoldReward = (int)(enc.GoldReward * tierRewardMult);
                 enc.XPReward = (int)(enc.XPReward * tierRewardMult);
@@ -365,9 +365,9 @@ namespace ForeverEngine.Demo.Encounters
         {
             _templates = new Dictionary<string, System.Func<EncounterData>>
             {
-                ["dungeon_boss"] = () => new EncounterData
+                ["boss_dungeon"] = () => new EncounterData
                 {
-                    Id = "dungeon_boss", GridWidth = 12, GridHeight = 12, GoldReward = 100, XPReward = 200,
+                    Id = "boss_dungeon", GridWidth = 12, GridHeight = 12, GoldReward = 100, XPReward = 200,
                     Enemies = new List<EnemyDef>
                     {
                         new EnemyDef { Name = "Hollow Guardian", HP = 40, AC = 15, Str = 16, Dex = 10, Spd = 4, AtkDice = "2d6+3", Behavior = "guard", AttackDamageType = DamageType.Bludgeoning, CR = 3 },

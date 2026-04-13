@@ -344,7 +344,7 @@ namespace ForeverEngine.Demo.Dungeon
                     room.FogLight.enabled = true;
                     room.FogLight.intensity = room.OriginalLightIntensity * 0.5f;
                 }
-                else if (shouldBeActive && depth <= 1 && !useGraph && state != null && state.HasVisited(room.Index))
+                else if (shouldBeActive && !useGraph && state != null && state.HasVisited(room.Index))
                 {
                     // Fallback path: same as original behavior for nearby visited rooms
                     room.FogLight.enabled = true;
