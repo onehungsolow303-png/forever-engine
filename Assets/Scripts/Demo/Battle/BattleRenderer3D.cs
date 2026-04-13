@@ -144,14 +144,18 @@ namespace ForeverEngine.Demo.Battle
                     }
                 }
 
-                if (c == currentTurn && c.IsAlive)
+                if (c.IsAlive)
                 {
-                    float pulse = 1f + Mathf.Sin(Time.time * 4f) * 0.08f;
-                    model.transform.localScale = Vector3.one * 0.6f * pulse;
-                }
-                else if (c.IsAlive)
-                {
-                    model.transform.localScale = Vector3.one * 0.6f;
+                    float baseScale = 0.6f * c.ModelScale;
+                    if (c == currentTurn)
+                    {
+                        float pulse = 1f + Mathf.Sin(Time.time * 4f) * 0.08f;
+                        model.transform.localScale = Vector3.one * baseScale * pulse;
+                    }
+                    else
+                    {
+                        model.transform.localScale = Vector3.one * baseScale;
+                    }
                 }
 
                 BattleCombatant faceTarget = null;
