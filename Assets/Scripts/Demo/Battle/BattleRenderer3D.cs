@@ -67,8 +67,9 @@ namespace ForeverEngine.Demo.Battle
                 _camCtrl = cam.gameObject.AddComponent<ForeverEngine.MonoBehaviour.Camera.PerspectiveCameraController>();
             var gridCenter = new GameObject("GridCenter");
             gridCenter.transform.position = GridToWorld(grid.Width / 2, grid.Height / 2);
+            // Start following grid center; UpdateVisuals switches to active combatant
             _camCtrl.FollowTarget = gridCenter.transform;
-            _camCtrl.SetDistance(15f);
+            _camCtrl.SetDistance(10f);
             _camCtrl.SnapToTarget();
 
             // Spawn combatant models
@@ -126,6 +127,10 @@ namespace ForeverEngine.Demo.Battle
 
         public void UpdateVisuals(List<BattleCombatant> combatants, BattleCombatant currentTurn)
         {
+            // Camera follows current turn combatant
+            if (currentTurn != null && _models.TryGetValue(currentTurn, out var turnModel) && turnModel != null)
+                _camCtrl.FollowTarget = turnModel.transform;
+
             foreach (var c in combatants)
             {
                 if (!_models.TryGetValue(c, out var model)) continue;
