@@ -8,7 +8,9 @@
     "Unity.Mathematics",
     "Unity.Transforms",
     "Unity.InputSystem",
-    "Unity.InferenceEngine"
+    "Unity.InferenceEngine",
+    "DungeonArchitect.Core",
+    "DungeonArchitect.Builders"
   ],
   "includePlatforms": [],
   "excludePlatforms": [],
