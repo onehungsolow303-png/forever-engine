@@ -86,7 +86,7 @@ namespace ForeverEngine.Demo.Encounters
                 new EnemySlot("Lizard Folk", "chase", 50)),
 
             new EncounterTemplate("Orc Raiders", 200, 400,
-                new[] { "dungeon", "plains" },
+                new[] { "dungeon", "plains", "forest" },
                 new EnemySlot("Orc", "guard", 100),
                 new EnemySlot("Orc", "chase", 100),
                 new EnemySlot("Kobold", "chase", 25),
