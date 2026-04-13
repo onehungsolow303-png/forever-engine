@@ -285,6 +285,8 @@ namespace ForeverEngine.Demo.Dungeon
             }
         }
 
+        private const float RoomCullDistance = 60f; // Only render rooms within this range
+
         private void UpdateFogOfWar()
         {
             if (_daBuilder == null || _daBuilder.Rooms == null || _playerTransform == null) return;
@@ -296,22 +298,30 @@ namespace ForeverEngine.Demo.Dungeon
 
             foreach (var room in _daBuilder.Rooms)
             {
+                float dist = Vector3.Distance(playerPos, room.WorldBounds.center);
+                bool isNearby = dist < RoomCullDistance;
+
+                // Room culling: disable distant room GameObjects to reduce GC pressure
+                if (room.RoomObject != null)
+                    room.RoomObject.SetActive(isNearby);
+
                 if (room.FogLight == null) continue;
 
                 if (room.Index == currentRoom)
                 {
-                    // Fully illuminate the current room
                     room.FogLight.enabled   = true;
                     room.FogLight.intensity = room.OriginalLightIntensity;
                     state?.VisitRoom(room.Index);
                 }
-                else if (state != null && state.HasVisited(room.Index))
+                else if (isNearby && state != null && state.HasVisited(room.Index))
                 {
-                    // Previously visited rooms are visible but dimmed to 50%
                     room.FogLight.enabled   = true;
                     room.FogLight.intensity = room.OriginalLightIntensity * 0.5f;
                 }
-                // Unvisited rooms remain disabled (fog of war)
+                else
+                {
+                    room.FogLight.enabled = false;
+                }
             }
         }
 

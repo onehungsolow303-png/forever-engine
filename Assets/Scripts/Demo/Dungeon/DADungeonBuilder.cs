@@ -140,6 +140,13 @@ namespace ForeverEngine.Demo.Dungeon
                 }
             }
 
+            // Disable all rooms except entrance to reduce initial GC pressure
+            for (int i = 0; i < Rooms.Length; i++)
+            {
+                if (Rooms[i].RoomObject != null && i != EntranceIndex)
+                    Rooms[i].RoomObject.SetActive(false);
+            }
+
             Debug.Log($"[DADungeonBuilder] Built {Rooms.Length} rooms — entrance:{EntranceIndex}, boss:{BossIndex}");
         }
 
