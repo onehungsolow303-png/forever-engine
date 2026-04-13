@@ -1,5 +1,5 @@
 using UnityEngine;
-using DungeonArchitect;
+using DA = DungeonArchitect;
 
 namespace ForeverEngine.Demo.Dungeon
 {
@@ -55,7 +55,7 @@ namespace ForeverEngine.Demo.Dungeon
                 query = dungeonObj.AddComponent<DungeonArchitect.Builders.Snap.SnapQuery>();
 
             // Set seed and build
-            var dungeon = dungeonObj.GetComponent<Dungeon>();
+            var dungeon = dungeonObj.GetComponent<DA.Dungeon>();
             if (dungeon == null)
             {
                 Debug.LogError("DungeonSceneSetup: Prefab has no Dungeon component");

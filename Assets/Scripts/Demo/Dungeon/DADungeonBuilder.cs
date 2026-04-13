@@ -1,6 +1,6 @@
 using UnityEngine;
-using DungeonArchitect;
 using DungeonArchitect.Builders.Snap;
+using DA = DungeonArchitect;
 
 namespace ForeverEngine.Demo.Dungeon
 {
@@ -8,7 +8,7 @@ namespace ForeverEngine.Demo.Dungeon
     /// Hooks into Dungeon Architect's Snap builder to set up encounter zones,
     /// fog of war lighting, and room tracking after dungeon generation.
     /// </summary>
-    public class DADungeonBuilder : DungeonEventListener
+    public class DADungeonBuilder : DA.DungeonEventListener
     {
         public struct RoomInfo
         {
@@ -29,7 +29,7 @@ namespace ForeverEngine.Demo.Dungeon
         public int BossIndex { get; private set; } = -1;
         public SnapQuery Query { get; private set; }
 
-        public override void OnPostDungeonBuild(Dungeon dungeon, DungeonModel model)
+        public override void OnPostDungeonBuild(DA.Dungeon dungeon, DA.DungeonModel model)
         {
             Query = dungeon.GetComponent<SnapQuery>();
             if (Query == null || Query.modules == null || Query.modules.Length == 0)
