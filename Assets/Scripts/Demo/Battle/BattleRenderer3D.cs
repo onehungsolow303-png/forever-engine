@@ -11,6 +11,7 @@ namespace ForeverEngine.Demo.Battle
         private BattleGridOverlay _gridOverlay;
         private ForeverEngine.MonoBehaviour.Camera.PerspectiveCameraController _camCtrl;
         private float _cellSize = 1f;
+        private BattleUI _ui;
 
         public void Initialize(BattleSceneTemplate template, BattleGrid grid,
             List<BattleCombatant> combatants, Camera cam)
@@ -71,6 +72,12 @@ namespace ForeverEngine.Demo.Battle
             var overlayGO = new GameObject("GridOverlay");
             _gridOverlay = overlayGO.AddComponent<BattleGridOverlay>();
             _gridOverlay.Initialize(grid, _cellSize);
+
+            // Create battle UI
+            var uiGO = new GameObject("BattleUI");
+            _ui = uiGO.AddComponent<BattleUI>();
+            var player = combatants.Find(c => c.IsPlayer);
+            if (player != null) _ui.Initialize(player);
         }
 
         private void SpawnModel(BattleCombatant combatant)
@@ -163,6 +170,13 @@ namespace ForeverEngine.Demo.Battle
                             Time.deltaTime * 8f);
                 }
             }
+
+            // Update HUD
+            if (_ui != null)
+            {
+                var player = combatants.Find(c => c.IsPlayer);
+                _ui.UpdateHUD(player);
+            }
         }
 
         public void ShowDamage(BattleCombatant target, int amount, bool isCrit)
@@ -216,6 +230,7 @@ namespace ForeverEngine.Demo.Battle
                 if (kv.Value != null) Destroy(kv.Value);
             _models.Clear();
             if (_gridOverlay != null) Destroy(_gridOverlay.gameObject);
+            if (_ui != null) Destroy(_ui.gameObject);
         }
     }
 
