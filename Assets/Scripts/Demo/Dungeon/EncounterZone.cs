@@ -23,6 +23,15 @@ namespace ForeverEngine.Demo.Dungeon
         {
             if (_triggered || !other.CompareTag("Player")) return;
             _triggered = true;
+
+            // Destroy ambient enemy NPCs in this room (combat system spawns its own)
+            var allNPCs = FindObjectsByType<DungeonNPC>(FindObjectsSortMode.None);
+            foreach (var npc in allNPCs)
+            {
+                if (npc.Role == DungeonNPCRole.AmbientEnemy && npc.RoomIndex == ZoneIndex)
+                    Destroy(npc.gameObject);
+            }
+
             var explorer = FindFirstObjectByType<DungeonExplorer>();
             if (explorer != null)
                 explorer.EnterBattle(EncounterId, ZoneIndex, IsBoss);

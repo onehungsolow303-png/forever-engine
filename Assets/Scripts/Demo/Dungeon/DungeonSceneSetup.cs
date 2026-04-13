@@ -67,6 +67,11 @@ namespace ForeverEngine.Demo.Dungeon
             dungeon.Config.Seed = (uint)Mathf.Abs(seed);
             dungeon.Build();
 
+            // Spawn NPCs in dungeon rooms
+            var npcConfig = Resources.Load<DungeonNPCConfig>("DungeonNPCConfig");
+            if (npcConfig != null)
+                DungeonNPCSpawner.SpawnNPCs(builder, npcConfig, seed);
+
             // Create explorer and initialize with DA builder
             var explorerObj = new GameObject("DungeonExplorer");
             var explorer = explorerObj.AddComponent<DungeonExplorer>();
