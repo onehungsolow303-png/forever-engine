@@ -9,18 +9,14 @@ namespace ForeverEngine.Demo.Battle
         private MeshFilter _mf;
         private MeshRenderer _mr;
         private Material _material;
-        private int _gridWidth, _gridHeight;
         private float _cellSize;
 
-        private static readonly Color COLOR_REACHABLE = new Color(0.2f, 0.5f, 1f, 0.25f);
-        private static readonly Color COLOR_THREATENED = new Color(1f, 0.2f, 0.2f, 0.25f);
-        private static readonly Color COLOR_CURRENT = new Color(1f, 1f, 1f, 0.35f);
-        private static readonly Color COLOR_PATH = new Color(0.3f, 0.7f, 1f, 0.4f);
+        private static readonly Color COLOR_REACHABLE = new Color(0.1f, 0.8f, 0.2f, 0.35f);
+        private static readonly Color COLOR_OUT_OF_RANGE = new Color(0.9f, 0.15f, 0.1f, 0.35f);
+        private static readonly Color COLOR_CURRENT = new Color(1f, 1f, 1f, 0.25f);
 
         public void Initialize(BattleGrid grid, float cellSize)
         {
-            _gridWidth = grid.Width;
-            _gridHeight = grid.Height;
             _cellSize = cellSize;
 
             _mf = gameObject.AddComponent<MeshFilter>();
@@ -36,73 +32,120 @@ namespace ForeverEngine.Demo.Battle
             _material.renderQueue = 3000;
             _mr.material = _material;
 
-            gameObject.SetActive(false);
+            gameObject.SetActive(true);
         }
 
-        public void Show(BattleGrid grid, BattleCombatant mover, List<BattleCombatant> combatants, float cellSize)
+        /// <summary>
+        /// Show path from mover to target cell. Green if reachable, red if out of range.
+        /// Only highlights the path cells, not the entire grid.
+        /// </summary>
+        public void ShowPath(BattleGrid grid, BattleCombatant mover, int targetX, int targetY,
+            List<BattleCombatant> combatants, float cellSize)
         {
             _cellSize = cellSize;
-            gameObject.SetActive(true);
-            RebuildMesh(grid, mover, combatants);
-        }
 
-        public void Hide()
-        {
-            gameObject.SetActive(false);
-        }
-
-        private void RebuildMesh(BattleGrid grid, BattleCombatant mover, List<BattleCombatant> combatants)
-        {
             var verts = new List<Vector3>();
             var tris = new List<int>();
             var colors = new List<Color>();
 
+            // Build occupied set
             var occupied = new HashSet<(int, int)>();
-            var threatened = new HashSet<(int, int)>();
             foreach (var c in combatants)
+                if (c.IsAlive && c != mover)
+                    occupied.Add((c.X, c.Y));
+
+            // Compute Manhattan path (step through cardinal directions toward target)
+            var path = ComputePath(mover.X, mover.Y, targetX, targetY, grid, occupied);
+
+            bool reachable = path.Count <= mover.MovementRemaining
+                && grid.IsWalkable(targetX, targetY)
+                && !occupied.Contains((targetX, targetY));
+
+            // Show current tile
+            AddQuad(verts, tris, colors, mover.X, mover.Y, COLOR_CURRENT);
+
+            // Show path cells — green if reachable, red if not
+            for (int i = 0; i < path.Count; i++)
             {
-                if (!c.IsAlive) continue;
-                occupied.Add((c.X, c.Y));
-                if (!c.IsPlayer)
-                {
-                    for (int dx = -1; dx <= 1; dx++)
-                        for (int dy = -1; dy <= 1; dy++)
-                            if (dx != 0 || dy != 0)
-                                threatened.Add((c.X + dx, c.Y + dy));
-                }
-            }
+                var (px, py) = path[i];
+                float t = (float)(i + 1) / Mathf.Max(1, path.Count);
+                Color cellColor = reachable
+                    ? Color.Lerp(COLOR_REACHABLE, COLOR_REACHABLE, t)
+                    : Color.Lerp(COLOR_REACHABLE, COLOR_OUT_OF_RANGE,
+                        Mathf.Clamp01((float)(i + 1 - mover.MovementRemaining) / Mathf.Max(1, path.Count - mover.MovementRemaining)));
 
-            for (int y = 0; y < grid.Height; y++)
-            {
-                for (int x = 0; x < grid.Width; x++)
-                {
-                    if (!grid.IsWalkable(x, y)) continue;
+                // Cells beyond movement range are always red
+                if (i >= mover.MovementRemaining)
+                    cellColor = COLOR_OUT_OF_RANGE;
 
-                    Color cellColor;
-                    if (x == mover.X && y == mover.Y)
-                        cellColor = COLOR_CURRENT;
-                    else if (threatened.Contains((x, y)))
-                        cellColor = COLOR_THREATENED;
-                    else
-                    {
-                        int dist = Mathf.Abs(x - mover.X) + Mathf.Abs(y - mover.Y);
-                        if (dist <= mover.MovementRemaining && !occupied.Contains((x, y)))
-                            cellColor = COLOR_REACHABLE;
-                        else
-                            continue;
-                    }
-
-                    AddQuad(verts, tris, colors, x, y, cellColor);
-                }
+                AddQuad(verts, tris, colors, px, py, cellColor);
             }
 
             if (_mesh == null) _mesh = new Mesh();
             _mesh.Clear();
-            _mesh.SetVertices(verts);
-            _mesh.SetTriangles(tris, 0);
-            _mesh.SetColors(colors);
-            _mesh.RecalculateNormals();
+            if (verts.Count > 0)
+            {
+                _mesh.SetVertices(verts);
+                _mesh.SetTriangles(tris, 0);
+                _mesh.SetColors(colors);
+                _mesh.RecalculateNormals();
+            }
             _mf.mesh = _mesh;
+        }
+
+        public void ClearPath()
+        {
+            if (_mesh != null) _mesh.Clear();
+            if (_mf != null) _mf.mesh = _mesh;
+        }
+
+        /// <summary>
+        /// Simple Manhattan walk toward target, avoiding obstacles and occupied cells.
+        /// Returns list of cells from mover toward target (not including mover's cell).
+        /// </summary>
+        private List<(int x, int y)> ComputePath(int fromX, int fromY, int toX, int toY,
+            BattleGrid grid, HashSet<(int, int)> occupied)
+        {
+            var path = new List<(int, int)>();
+            int cx = fromX, cy = fromY;
+            int maxSteps = Mathf.Abs(toX - fromX) + Mathf.Abs(toY - fromY);
+            maxSteps = Mathf.Min(maxSteps, 20); // Safety cap
+
+            for (int i = 0; i < maxSteps; i++)
+            {
+                if (cx == toX && cy == toY) break;
+
+                // Prefer the axis with greater distance
+                int dx = toX - cx, dy = toY - cy;
+                int nx, ny;
+
+                if (Mathf.Abs(dx) >= Mathf.Abs(dy))
+                {
+                    nx = cx + (dx > 0 ? 1 : -1); ny = cy;
+                    if (!grid.IsWalkable(nx, ny) || occupied.Contains((nx, ny)))
+                    {
+                        // Try other axis
+                        nx = cx; ny = cy + (dy > 0 ? 1 : (dy < 0 ? -1 : 0));
+                        if (dy == 0 || !grid.IsWalkable(nx, ny) || occupied.Contains((nx, ny)))
+                            break; // Stuck
+                    }
+                }
+                else
+                {
+                    nx = cx; ny = cy + (dy > 0 ? 1 : -1);
+                    if (!grid.IsWalkable(nx, ny) || occupied.Contains((nx, ny)))
+                    {
+                        nx = cx + (dx > 0 ? 1 : (dx < 0 ? -1 : 0)); ny = cy;
+                        if (dx == 0 || !grid.IsWalkable(nx, ny) || occupied.Contains((nx, ny)))
+                            break; // Stuck
+                    }
+                }
+
+                cx = nx; cy = ny;
+                path.Add((cx, cy));
+            }
+
+            return path;
         }
 
         private void AddQuad(List<Vector3> verts, List<int> tris, List<Color> colors,

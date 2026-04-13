@@ -941,7 +941,12 @@ namespace ForeverEngine.Demo.Battle
                 Log.Add($"{critStr}{attacker.Name} hits {target.Name}{advStr} for {dmgResult.AfterResistance} {dmgType} damage! (d20={atkResult.NaturalRoll}, total={atkResult.Total} vs AC {target.AC}){resistStr}");
 
                 // Visual + audio feedback
-                if (_renderer != null)
+                if (_renderer3D != null)
+                {
+                    _renderer3D.ShowDamage(target, dmgResult.AfterResistance, atkResult.Critical);
+                    _renderer3D.ShowHitFlash(target);
+                }
+                else if (_renderer != null)
                     _renderer.ShowDamageNumber(new Vector3(target.X, target.Y, 0), dmgResult.AfterResistance, atkResult.Critical);
                 if (atkResult.Critical)
                     Audio.SoundManager.Instance?.PlayCrit();

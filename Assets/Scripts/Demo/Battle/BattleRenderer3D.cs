@@ -200,16 +200,26 @@ namespace ForeverEngine.Demo.Battle
             go.AddComponent<DamagePopup>();
         }
 
-        public void ShowGrid(BattleGrid grid, BattleCombatant mover, List<BattleCombatant> combatants)
+        public void ShowPathPreview(BattleGrid grid, BattleCombatant mover,
+            int targetX, int targetY, List<BattleCombatant> combatants)
         {
             if (_gridOverlay != null)
-                _gridOverlay.Show(grid, mover, combatants, _cellSize);
+                _gridOverlay.ShowPath(grid, mover, targetX, targetY, combatants, _cellSize);
         }
 
-        public void HideGrid()
+        public void ClearPathPreview()
         {
             if (_gridOverlay != null)
-                _gridOverlay.Hide();
+                _gridOverlay.ClearPath();
+        }
+
+        /// <summary>Flash a combatant's model white briefly to indicate a hit.</summary>
+        public void ShowHitFlash(BattleCombatant target)
+        {
+            if (!_models.TryGetValue(target, out var model) || model == null) return;
+            var flash = model.GetComponent<HitFlash>();
+            if (flash == null) flash = model.AddComponent<HitFlash>();
+            flash.Trigger();
         }
 
         public Vector3 GridToWorld(int x, int y)
@@ -255,6 +265,36 @@ namespace ForeverEngine.Demo.Battle
             var cam = Camera.main;
             if (cam != null) transform.forward = cam.transform.forward;
             if (_timer >= 1f) Destroy(gameObject);
+        }
+    }
+
+    /// <summary>Brief white flash on a model to indicate a successful hit.</summary>
+    public class HitFlash : UnityEngine.MonoBehaviour
+    {
+        private float _timer = -1f;
+        private Renderer _mr;
+        private Color _originalColor;
+        private static readonly Color FLASH_COLOR = Color.white;
+        private const float FLASH_DURATION = 0.15f;
+
+        public void Trigger()
+        {
+            if (_mr == null) _mr = GetComponentInChildren<Renderer>();
+            if (_mr == null) return;
+            _originalColor = _mr.material.color;
+            _mr.material.color = FLASH_COLOR;
+            _timer = FLASH_DURATION;
+        }
+
+        private void Update()
+        {
+            if (_timer < 0f) return;
+            _timer -= Time.deltaTime;
+            if (_timer <= 0f)
+            {
+                if (_mr != null) _mr.material.color = _originalColor;
+                _timer = -1f;
+            }
         }
     }
 }
