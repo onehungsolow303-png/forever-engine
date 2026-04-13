@@ -42,6 +42,29 @@ namespace ForeverEngine
         [Header("AI")]
         public float AITurnDelay = 0.33f;  // Seconds before AI acts (visual feedback)
 
+        [Header("AI — Q-Learning")]
+        public float QLearningRate = 0.15f;
+        public float QDiscountFactor = 0.85f;
+        public float QExplorationRate = 0.25f;
+
+        [Header("AI — Rewards")]
+        public float RewardAdvanceHit = 0.1f;
+        public float RewardAttackAdjacent = 0.3f;
+        public float RewardRetreatLowHP = 0.2f;
+        public float RewardHoldGuard = 0.1f;
+        public float PenaltyHoldChase = -0.05f;
+        public float RewardKill = 0.5f;
+        public float PenaltyDamageTaken = -0.1f;
+        public float RewardHit = 0.5f;
+        public float PenaltyMiss = -0.1f;
+
+        [Header("Encounters")]
+        public int DayXPBudgetPerLevel = 40;
+        public int NightXPBudgetPerLevel = 60;
+        public int MaxEnemiesPerEncounter = 4;
+        [Range(0f, 1f)]
+        public float EncounterTemplateChance = 0.6f;
+
         [Header("Shared Schemas")]
         [Tooltip("Path to C:\\Dev\\.shared\\schemas\\ for cross-project validation")]
         public string SharedSchemaPath = "C:\\Dev\\.shared\\schemas";
