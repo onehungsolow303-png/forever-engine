@@ -30,6 +30,7 @@ namespace ForeverEngine.Demo.Battle
         private BattleRenderer3D _renderer3D;
         private Dictionary<BattleCombatant, CombatBrain> _brains = new();
         private CombatIntelligence _neuralBrain;
+        private GameConfig _gameConfig;
 
         // Spell casting UI state
         private bool _spellMenuOpen;
@@ -78,6 +79,7 @@ namespace ForeverEngine.Demo.Battle
 
         private void Start()
         {
+            _gameConfig = Resources.Load<GameConfig>("GameConfig");
             var gm = GameManager.Instance;
             if (gm == null) return;
 
@@ -726,13 +728,14 @@ namespace ForeverEngine.Demo.Battle
                     {
                         ResolveAttack(ai, player);
                         ai.HasAction = false;
-                        brain.AddReward(0.1f);
+                        brain.AddReward(_gameConfig != null ? _gameConfig.RewardAdvanceHit : 0.1f);
                     }
                     break;
 
                 case CombatBrain.Action.Retreat:
                     MoveAway(ai, player.X, player.Y);
-                    if (ai.HP < ai.MaxHP * 0.3f) brain.AddReward(0.2f);
+                    if (ai.HP < ai.MaxHP * 0.3f)
+                        brain.AddReward(_gameConfig != null ? _gameConfig.RewardRetreatLowHP : 0.2f);
                     break;
 
                 case CombatBrain.Action.Flank:
@@ -744,7 +747,7 @@ namespace ForeverEngine.Demo.Battle
                     {
                         ResolveAttack(ai, player);
                         ai.HasAction = false;
-                        brain.AddReward(0.3f);
+                        brain.AddReward(_gameConfig != null ? _gameConfig.RewardAttackAdjacent : 0.3f);
                     }
                     else
                     {
@@ -753,7 +756,9 @@ namespace ForeverEngine.Demo.Battle
                     break;
 
                 case CombatBrain.Action.Hold:
-                    brain.AddReward(ai.Behavior == "guard" ? 0.1f : -0.05f);
+                    brain.AddReward(ai.Behavior == "guard"
+                        ? (_gameConfig != null ? _gameConfig.RewardHoldGuard : 0.1f)
+                        : (_gameConfig != null ? _gameConfig.PenaltyHoldChase : -0.05f));
                     break;
             }
 
@@ -917,6 +922,14 @@ namespace ForeverEngine.Demo.Battle
                 int hpDamage = dmgResult.HPDamage;
                 if (hpDamage < 1 && dmgResult.AfterResistance > 0) hpDamage = 1;
 
+                // Apply DDA damage multiplier for enemy attackers
+                if (!attacker.IsPlayer)
+                {
+                    var dda = AI.Learning.DynamicDifficulty.Instance;
+                    if (dda != null)
+                        hpDamage = Mathf.RoundToInt(hpDamage * dda.EnemyDamageMult);
+                }
+
                 // Handle damage at 0 HP (death save failures)
                 if (target.HP <= 0 && target.IsPlayer && target.DeathSaves != null && target.DeathSaves.IsActive)
                 {
@@ -995,12 +1008,14 @@ namespace ForeverEngine.Demo.Battle
                     {
                         Log.Add($"{target.Name} is defeated!");
                         Demo.AI.DirectorEvents.Send($"killed {target.Name}", targetId: target.Name);
+                        if (!attacker.IsPlayer && _brains.TryGetValue(attacker, out var killerBrain))
+                            killerBrain.AddReward(_gameConfig != null ? _gameConfig.RewardKill : 0.5f);
                     }
                 }
 
-                // Q-learning: penalize target enemy for taking damage (preserved)
+                // Q-learning: penalize target enemy for taking damage
                 if (!target.IsPlayer && _brains.TryGetValue(target, out var tgtBrain))
-                    tgtBrain.AddReward(-0.3f);
+                    tgtBrain.AddReward(_gameConfig != null ? _gameConfig.PenaltyDamageTaken : -0.1f);
 
                 // All enemies rewarded for downing player (preserved)
                 if (target.HP <= 0 && target.IsPlayer)
@@ -1015,9 +1030,11 @@ namespace ForeverEngine.Demo.Battle
                     Demo.AI.DirectorEvents.Send($"missed {target.Name}", targetId: target.Name);
             }
 
-            // Q-learning: reward/penalize enemy attacker for hit/miss (preserved)
+            // Q-learning: reward/penalize enemy attacker for hit/miss
             if (!attacker.IsPlayer && _brains.TryGetValue(attacker, out var atkBrain))
-                atkBrain.AddReward(atkResult.Hit ? 0.5f : -0.1f);
+                atkBrain.AddReward(atkResult.Hit
+                    ? (_gameConfig != null ? _gameConfig.RewardHit : 0.5f)
+                    : (_gameConfig != null ? _gameConfig.PenaltyMiss : -0.1f));
         }
 
         private bool IsAdjacent(BattleCombatant a, BattleCombatant b) =>
