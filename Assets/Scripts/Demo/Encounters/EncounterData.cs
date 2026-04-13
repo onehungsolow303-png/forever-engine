@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using ForeverEngine.RPG.Enums;
+using UnityEngine;
 
 namespace ForeverEngine.Demo.Encounters
 {
@@ -57,17 +58,43 @@ namespace ForeverEngine.Demo.Encounters
             // DirectorClient in a follow-up.
             float pacingMult = 1.0f;
 
-            // XP budget: Medium difficulty baseline (40 x level), night = Hard (60 x level).
+            // XP budget: Medium difficulty baseline, night = Hard.
+            // Rates read from GameConfig when available so they can be tuned in the Inspector.
             // Tamed from the original 50/75 per the combat-balance-audit.md Option C
             // recommendation. Player HP scales 20 + (level-1)*5 via PlayerData.LevelUp(),
             // so a level-5 player has 40 HP and can survive a tamed encounter without
             // dying in round 2. The audit's player-first-in-round-1 fix from c6fc22d
             // handles "no turn"; this handles "still dies after one turn."
-            int xpBudget = (int)((night ? 60 : 40) * playerLevel * pacingMult);
+            var config = Resources.Load<GameConfig>("GameConfig");
+            int dayMult = config != null ? config.DayXPBudgetPerLevel : 40;
+            int nightMult = config != null ? config.NightXPBudgetPerLevel : 60;
+            int maxEnemies = config != null ? config.MaxEnemiesPerEncounter : 4;
+            int xpBudget = (int)((night ? nightMult : dayMult) * playerLevel * pacingMult);
 
             // RNG seeded off the encounter ID + player level so the same hex
             // doesn't always spawn the same composition.
             var rng = new System.Random(id.GetHashCode() ^ (playerLevel * 7919));
+
+            // Template-based encounter selection — produces thematic heterogeneous groups.
+            float templateChance = config != null ? config.EncounterTemplateChance : 0.6f;
+            var templates = EncounterTemplate.FindMatching(xpBudget, enc.Biome ?? "plains");
+            if (templates.Count > 0 && rng.NextDouble() < templateChance)
+            {
+                var template = templates[rng.Next(templates.Count)];
+                int added = 0;
+                foreach (var slot in template.Slots)
+                {
+                    if (added >= maxEnemies) break;
+                    var def = MakeCREnemyDef(slot.Name, slot.XPCost, slot.Behavior, enc.Biome ?? "plains",
+                        DamageType.Slashing);
+                    // MakeCREnemyDef already called ModelRegistry.Resolve with the slot name
+                    enc.Enemies.Add(def);
+                    added++;
+                }
+                enc.GoldReward = template.TotalXP / 4;
+                enc.XPReward = template.TotalXP;
+                return enc;
+            }
 
             if (id.Contains("Forest"))
             {
