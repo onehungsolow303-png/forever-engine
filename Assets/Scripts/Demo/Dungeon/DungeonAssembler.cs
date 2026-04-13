@@ -32,6 +32,11 @@ namespace ForeverEngine.Demo.Dungeon
             public GameObject Root;
             public Light RoomLight;
             public string LightingPreset;
+            /// <summary>
+            /// The full intensity the light was created with.
+            /// Used by DungeonExplorer to dim visited-but-not-current rooms to 50%.
+            /// </summary>
+            public float OriginalLightIntensity;
         }
 
         private RoomInstance[] _rooms;
@@ -82,12 +87,13 @@ namespace ForeverEngine.Demo.Dungeon
 
                 _rooms[i] = new RoomInstance
                 {
-                    Index          = i,
-                    Tag            = tag,
-                    WorldPosition  = worldPos,
-                    Root           = root,
-                    RoomLight      = roomLight,
-                    LightingPreset = preset,
+                    Index                 = i,
+                    Tag                   = tag,
+                    WorldPosition         = worldPos,
+                    Root                  = root,
+                    RoomLight             = roomLight,
+                    LightingPreset        = preset,
+                    OriginalLightIntensity = roomLight != null ? roomLight.intensity : 1.2f,
                 };
 
                 // Add encounter zones to combat rooms

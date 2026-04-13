@@ -19,6 +19,7 @@ namespace ForeverEngine.Demo.Dungeon
         public bool BossDefeated;
 
         public void VisitRoom(int roomIndex) => VisitedRooms.Add(roomIndex);
+        public bool HasVisited(int roomIndex) => VisitedRooms.Contains(roomIndex);
         public void TriggerEncounter(int encounterIndex) => TriggeredEncounters.Add(encounterIndex);
         public bool IsCleared => BossDefeated;
     }

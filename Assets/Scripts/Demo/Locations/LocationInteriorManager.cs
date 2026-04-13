@@ -57,9 +57,19 @@ namespace ForeverEngine.Demo.Locations
                 return;
             }
 
-            // Route to the 3D dungeon exploration scene
-            Debug.Log($"[LocationInterior] Entering dungeon at {loc.Name}");
-            GameManager.Instance.EnterDungeon(loc.Id);
+            // Only unsafe locations enter the dungeon system.
+            // Safe locations with a MapType (e.g. town/village, fortress/castle)
+            // fall through to the popup so the player gets feedback without
+            // being routed into a combat dungeon.
+            if (!loc.IsSafe)
+            {
+                Debug.Log($"[LocationInterior] Entering dungeon at {loc.Name}");
+                GameManager.Instance.EnterDungeon(loc.Id);
+            }
+            else
+            {
+                ShowPopup(loc.Name, $"You enter {loc.Name}.\n\n(This is a safe location — no dungeon to explore.)");
+            }
         }
 
         // ── Popup helpers ─────────────────────────────────────────────────────

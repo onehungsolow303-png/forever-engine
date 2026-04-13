@@ -261,15 +261,15 @@ namespace ForeverEngine.Demo.Dungeon
                 camRight.y = 0f; camRight.Normalize();
 
                 Vector3 moveDir = (camFwd * inputZ + camRight * inputX).normalized;
-                _playerTransform.position += moveDir * MoveSpeed * Time.deltaTime;
+                _playerRb.MovePosition(_playerTransform.position + moveDir * MoveSpeed * Time.deltaTime);
 
                 if (moveDir.sqrMagnitude > 0.001f)
                     _playerTransform.rotation = Quaternion.LookRotation(moveDir);
             }
             else
             {
-                _playerTransform.position += new Vector3(inputX, 0, inputZ).normalized
-                                             * MoveSpeed * Time.deltaTime;
+                _playerRb.MovePosition(_playerTransform.position +
+                    new Vector3(inputX, 0, inputZ).normalized * MoveSpeed * Time.deltaTime);
             }
         }
 
@@ -282,16 +282,26 @@ namespace ForeverEngine.Demo.Dungeon
 
             foreach (var room in _rooms)
             {
-                float dist = Vector3.Distance(playerPos, room.WorldPosition);
-                bool near = dist <= FogRevealRange;
+                if (room.RoomLight == null) continue;
 
-                if (near)
+                float dist = Vector3.Distance(playerPos, room.WorldPosition);
+                bool isCurrent = dist <= FogRevealRange;
+
+                if (isCurrent)
                 {
-                    if (room.RoomLight != null && !room.RoomLight.enabled)
-                        room.RoomLight.enabled = true;
+                    // Fully illuminate the current room
+                    room.RoomLight.enabled   = true;
+                    room.RoomLight.intensity = room.OriginalLightIntensity;
 
                     state?.VisitRoom(room.Index);
                 }
+                else if (state != null && state.HasVisited(room.Index))
+                {
+                    // Previously visited rooms are visible but dimmed to 50%
+                    room.RoomLight.enabled   = true;
+                    room.RoomLight.intensity = room.OriginalLightIntensity * 0.5f;
+                }
+                // Unvisited rooms remain disabled (fog of war)
             }
         }
 
