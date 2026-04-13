@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using ForeverEngine.MonoBehaviour.Camera;
@@ -299,33 +300,93 @@ namespace ForeverEngine.Demo.Dungeon
 
             int currentRoom = _daBuilder.GetRoomAtPosition(playerPos);
 
+            // Use graph-based activation if the adjacency graph is available
+            var graph = _daBuilder.RoomGraph;
+            bool useGraph = graph != null && graph.Count > 0;
+
+            Dictionary<int, int> roomDepths = null;
+            if (useGraph && currentRoom >= 0)
+                roomDepths = BFSRoomDepths(graph, currentRoom, 2);
+
             foreach (var room in _daBuilder.Rooms)
             {
-                float dist = Vector3.Distance(playerPos, room.WorldBounds.center);
-                bool isNearby = dist < RoomCullDistance;
+                bool shouldBeActive;
+                int depth = -1;
 
-                // Room culling: disable distant room GameObjects to reduce GC pressure
+                if (useGraph && roomDepths != null)
+                {
+                    // Graph-based: activate rooms within 2 hops
+                    roomDepths.TryGetValue(room.Index, out depth);
+                    shouldBeActive = depth >= 0 && depth <= 2;
+                }
+                else
+                {
+                    // Fallback: distance-based (original behavior)
+                    float dist = Vector3.Distance(playerPos, room.WorldBounds.center);
+                    shouldBeActive = dist < RoomCullDistance;
+                }
+
                 if (room.RoomObject != null)
-                    room.RoomObject.SetActive(isNearby);
+                    room.RoomObject.SetActive(shouldBeActive);
 
                 if (room.FogLight == null) continue;
 
                 if (room.Index == currentRoom)
                 {
-                    room.FogLight.enabled   = true;
+                    // Current room: full light
+                    room.FogLight.enabled = true;
                     room.FogLight.intensity = room.OriginalLightIntensity;
                     state?.VisitRoom(room.Index);
                 }
-                else if (isNearby && state != null && state.HasVisited(room.Index))
+                else if (shouldBeActive && depth == 1 && state != null && state.HasVisited(room.Index))
                 {
-                    room.FogLight.enabled   = true;
+                    // 1-hop, previously visited: 50% light
+                    room.FogLight.enabled = true;
+                    room.FogLight.intensity = room.OriginalLightIntensity * 0.5f;
+                }
+                else if (shouldBeActive && depth <= 1 && !useGraph && state != null && state.HasVisited(room.Index))
+                {
+                    // Fallback path: same as original behavior for nearby visited rooms
+                    room.FogLight.enabled = true;
                     room.FogLight.intensity = room.OriginalLightIntensity * 0.5f;
                 }
                 else
                 {
+                    // 2-hop rooms: geometry visible but dark (silhouette through doorways)
+                    // Beyond 2 hops or unvisited 1-hop: dark
                     room.FogLight.enabled = false;
                 }
             }
+        }
+
+        /// <summary>
+        /// BFS from a start room, returning the depth of each reachable room up to maxDepth.
+        /// </summary>
+        private static Dictionary<int, int> BFSRoomDepths(IReadOnlyDictionary<int, List<int>> graph, int startRoom, int maxDepth)
+        {
+            var depths = new Dictionary<int, int> { [startRoom] = 0 };
+            var queue = new Queue<int>();
+            queue.Enqueue(startRoom);
+
+            while (queue.Count > 0)
+            {
+                int room = queue.Dequeue();
+                int depth = depths[room];
+                if (depth >= maxDepth) continue;
+
+                if (graph.TryGetValue(room, out var neighbors))
+                {
+                    foreach (int neighbor in neighbors)
+                    {
+                        if (!depths.ContainsKey(neighbor))
+                        {
+                            depths[neighbor] = depth + 1;
+                            queue.Enqueue(neighbor);
+                        }
+                    }
+                }
+            }
+            return depths;
         }
 
         private void SaveDungeonState(int triggeredZone)
