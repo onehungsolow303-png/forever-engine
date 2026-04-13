@@ -34,6 +34,8 @@ namespace ForeverEngine.Demo.Dungeon
         private Transform _playerTransform;
         private PerspectiveCameraController _camera;
         private Rigidbody _playerRb;
+        private int _cachedBFSRoom = -1;
+        private Dictionary<int, int> _cachedRoomDepths;
 
         private bool _initialized;
 
@@ -304,9 +306,13 @@ namespace ForeverEngine.Demo.Dungeon
             var graph = _daBuilder.RoomGraph;
             bool useGraph = graph != null && graph.Count > 0;
 
-            Dictionary<int, int> roomDepths = null;
-            if (useGraph && currentRoom >= 0)
-                roomDepths = BFSRoomDepths(graph, currentRoom, 2);
+            // Cache BFS results — only recompute when player changes room
+            if (useGraph && currentRoom >= 0 && currentRoom != _cachedBFSRoom)
+            {
+                _cachedRoomDepths = BFSRoomDepths(graph, currentRoom, 2);
+                _cachedBFSRoom = currentRoom;
+            }
+            var roomDepths = useGraph ? _cachedRoomDepths : null;
 
             foreach (var room in _daBuilder.Rooms)
             {

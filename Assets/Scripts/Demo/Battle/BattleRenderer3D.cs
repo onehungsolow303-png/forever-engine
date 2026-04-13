@@ -382,14 +382,17 @@ namespace ForeverEngine.Demo.Battle
 
             for (int i = 0; i < rockCount; i++)
             {
-                int rx, ry;
+                int rx = 0, ry = 0;
                 int attempts = 0;
+                bool valid = false;
                 do
                 {
                     rx = rng.Next(grid.Width / 4, grid.Width * 3 / 4);
                     ry = rng.Next(grid.Height / 4, grid.Height * 3 / 4);
+                    bool inSpawnZone = (rx <= 2 && ry <= 2) || (rx >= grid.Width - 3 && ry >= grid.Height - 3);
+                    valid = grid.IsWalkable(rx, ry) && !inSpawnZone;
                     attempts++;
-                } while (attempts < 20 && !grid.IsWalkable(rx, ry));
+                } while (attempts < 20 && !valid);
 
                 if (attempts >= 20) continue;
 
