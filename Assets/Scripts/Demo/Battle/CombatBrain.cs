@@ -1,4 +1,5 @@
 using ForeverEngine.AI.Learning;
+using UnityEngine;
 
 namespace ForeverEngine.Demo.Battle
 {
@@ -16,8 +17,12 @@ namespace ForeverEngine.Demo.Battle
 
         public CombatBrain(float[] savedQTable = null, int seed = 42)
         {
-            _learner = new QLearner(StateSize, ActionSize, learningRate: 0.15f,
-                discountFactor: 0.85f, explorationRate: 0.25f, seed: seed);
+            var config = Resources.Load<GameConfig>("GameConfig");
+            float lr = config != null ? config.QLearningRate : 0.15f;
+            float df = config != null ? config.QDiscountFactor : 0.85f;
+            float er = config != null ? config.QExplorationRate : 0.25f;
+            _learner = new QLearner(StateSize, ActionSize, learningRate: lr,
+                discountFactor: df, explorationRate: er, seed: seed);
             if (savedQTable != null) _learner.LoadTable(savedQTable);
         }
 
