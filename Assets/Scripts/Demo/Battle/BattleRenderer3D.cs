@@ -11,6 +11,7 @@ namespace ForeverEngine.Demo.Battle
         private BattleGridOverlay _gridOverlay;
         private ForeverEngine.MonoBehaviour.Camera.PerspectiveCameraController _camCtrl;
         private float _cellSize = 1f;
+        private Vector3 _gridOffset = Vector3.zero;
         private BattleUI _ui;
 
         public void Initialize(BattleSceneTemplate template, BattleGrid grid,
@@ -30,10 +31,25 @@ namespace ForeverEngine.Demo.Battle
                     roomPrefab = candidates[UnityEngine.Random.Range(0, candidates.Length)];
             }
 
+            bool usingRoomPrefab = false;
             if (roomPrefab != null)
             {
                 _roomInstance = Instantiate(roomPrefab, Vector3.zero, Quaternion.identity);
                 _roomInstance.name = "BattleRoom";
+                usingRoomPrefab = true;
+
+                // Find the room's floor center via raycast from above
+                var renderers = _roomInstance.GetComponentsInChildren<Renderer>();
+                if (renderers.Length > 0)
+                {
+                    var roomBounds = renderers[0].bounds;
+                    foreach (var r in renderers) roomBounds.Encapsulate(r.bounds);
+
+                    // Offset the grid to the room's center
+                    float gridOffsetX = roomBounds.center.x - (grid.Width * _cellSize / 2f);
+                    float gridOffsetZ = roomBounds.center.z - (grid.Height * _cellSize / 2f);
+                    _gridOffset = new Vector3(gridOffsetX, roomBounds.min.y + 0.1f, gridOffsetZ);
+                }
             }
             else
             {
@@ -71,7 +87,7 @@ namespace ForeverEngine.Demo.Battle
             var gridCenter = new GameObject("GridCenter");
             gridCenter.transform.position = GridToWorld(grid.Width / 2, grid.Height / 2);
             _camCtrl.FollowTarget = gridCenter.transform;
-            _camCtrl.SetDistance(15f);
+            _camCtrl.SetDistance(usingRoomPrefab ? 8f : 15f);
             _camCtrl.SnapToTarget();
 
             // Spawn combatant models
@@ -241,7 +257,7 @@ namespace ForeverEngine.Demo.Battle
 
         public Vector3 GridToWorld(int x, int y)
         {
-            return new Vector3(x * _cellSize + _cellSize * 0.5f, 0.1f, y * _cellSize + _cellSize * 0.5f);
+            return _gridOffset + new Vector3(x * _cellSize + _cellSize * 0.5f, 0.1f, y * _cellSize + _cellSize * 0.5f);
         }
 
         public (int x, int y) WorldToGrid(Vector3 pos)
