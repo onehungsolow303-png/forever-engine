@@ -36,7 +36,24 @@ public static class CreateDungeonScene
 
         // ── Bootstrap ─────────────────────────────────────────────────────────
         var bootstrapGO = new GameObject("DungeonBootstrap");
-        bootstrapGO.AddComponent<DungeonSceneSetup>();
+        var setup = bootstrapGO.AddComponent<DungeonSceneSetup>();
+
+        // Assign the Lordenfel DA Snap prefab directly
+        var daPrefab = AssetDatabase.LoadAssetAtPath<GameObject>(
+            "Assets/Lordenfel/Prefabs/Architecture/CompleteRooms/FirstPersonDungeon/" +
+            "DungeonArchitect_Presets/FPD_DungeonSnap_01.prefab");
+        if (daPrefab != null)
+        {
+            var so = new SerializedObject(setup);
+            so.FindProperty("_dungeonPrefab").objectReferenceValue = daPrefab;
+            so.ApplyModifiedProperties();
+            Debug.Log("[CreateDungeonScene] Assigned Lordenfel DA Snap prefab to DungeonSceneSetup.");
+        }
+        else
+        {
+            Debug.LogWarning("[CreateDungeonScene] Lordenfel FPD_DungeonSnap_01 not found — " +
+                "assign manually or place at Resources/DungeonSnap");
+        }
 
         // ── EventSystem ───────────────────────────────────────────────────────
         var eventGO = new GameObject("EventSystem");
