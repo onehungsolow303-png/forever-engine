@@ -20,5 +20,8 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/Overworld3D.unity
     guid: 906eccc75961b8445909df33836cfc06
+  - enabled: 1
+    path: Assets/Scenes/DungeonExploration.unity
+    guid: 046a0b6141b3ddf4b8c35a66933fa4ad
   m_configObjects:
     com.unity.dt.app-ui: {fileID: 11400000, guid: 1b1c20d82303e4b5781c3ef50ac1449f, type: 2}
