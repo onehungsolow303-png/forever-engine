@@ -72,6 +72,21 @@ namespace ForeverEngine.Demo.Encounters
             int maxEnemies = config != null ? config.MaxEnemiesPerEncounter : 4;
             int xpBudget = (int)((night ? nightMult : dayMult) * playerLevel * pacingMult);
 
+            // Parse tier from dungeon encounter ID (e.g. "random_dungeon_t2_room3")
+            int tier = 1; // default
+            if (id.Contains("_t1_")) tier = 1;
+            else if (id.Contains("_t2_")) tier = 2;
+            else if (id.Contains("_t3_")) tier = 3;
+
+            // Tier scaling: budget multiplier and minimum XP floor per enemy
+            float tierBudgetMult = tier switch { 1 => 0.8f, 2 => 1.2f, 3 => 1.6f, _ => 1f };
+            int tierMinXP = tier switch { 1 => 0, 2 => 50, 3 => 100, _ => 0 }; // skip weak enemies
+            float tierRewardMult = tier switch { 1 => 1.0f, 2 => 1.3f, 3 => 1.6f, _ => 1f };
+
+            // Only apply tier scaling to dungeon encounters
+            if (id.Contains("dungeon"))
+                xpBudget = (int)(xpBudget * tierBudgetMult);
+
             // RNG seeded off the encounter ID + player level so the same hex
             // doesn't always spawn the same composition.
             var rng = new System.Random(id.GetHashCode() ^ (playerLevel * 7919));
@@ -150,7 +165,8 @@ namespace ForeverEngine.Demo.Encounters
                 if (rollF < 0.3f)
                 {
                     // Skeleton garrison
-                    int count = System.Math.Min(xpBudget / 50, maxEnemies);
+                    int effectiveXP = System.Math.Max(50, tierMinXP);
+                    int count = System.Math.Min(xpBudget / effectiveXP, maxEnemies);
                     count = System.Math.Max(1, count);
                     for (int i = 0; i < count; i++)
                     {
@@ -173,11 +189,12 @@ namespace ForeverEngine.Demo.Encounters
                         enc.Enemies.Add(boss);
                         remainBudget -= 200;
                     }
-                    int minions = System.Math.Min(remainBudget / 25, maxEnemies - enc.Enemies.Count);
+                    int minionXP = System.Math.Max(25, tierMinXP);
+                    int minions = System.Math.Min(remainBudget / minionXP, maxEnemies - enc.Enemies.Count);
                     minions = System.Math.Max(0, minions);
                     for (int i = 0; i < minions; i++)
                     {
-                        var def = MakeCREnemyDef("Skeleton", 25, "guard", "Ruins", DamageType.Slashing);
+                        var def = MakeCREnemyDef("Skeleton", minionXP, "guard", "Ruins", DamageType.Slashing);
                         def.Vulnerabilities = DamageType.Bludgeoning;
                         def.Resistances = DamageType.Piercing;
                         enc.Enemies.Add(def);
@@ -188,7 +205,8 @@ namespace ForeverEngine.Demo.Encounters
                 else
                 {
                     // Lizardfolk patrol
-                    int count = System.Math.Min(xpBudget / 50, maxEnemies);
+                    int effectiveXP2 = System.Math.Max(50, tierMinXP);
+                    int count = System.Math.Min(xpBudget / effectiveXP2, maxEnemies);
                     count = System.Math.Max(1, count);
                     for (int i = 0; i < count; i++)
                     {
@@ -292,6 +310,13 @@ namespace ForeverEngine.Demo.Encounters
                         enc.Enemies.Add(MakeCREnemyDef("Bandit", 50, "chase", "Plains", DamageType.Slashing));
                     enc.GoldReward = 15 * count; enc.XPReward = 50 * count;
                 }
+            }
+
+            // Apply tier reward scaling for dungeon encounters
+            if (id.Contains("dungeon") && tierRewardMult != 1f)
+            {
+                enc.GoldReward = (int)(enc.GoldReward * tierRewardMult);
+                enc.XPReward = (int)(enc.XPReward * tierRewardMult);
             }
 
             return enc;
