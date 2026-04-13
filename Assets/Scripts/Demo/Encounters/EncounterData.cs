@@ -16,6 +16,7 @@ namespace ForeverEngine.Demo.Encounters
         public DamageType Vulnerabilities;
         public DamageType Immunities;
         public string ModelId;
+        public float ModelScale = 1f;
     }
 
     [System.Serializable]
@@ -214,7 +215,7 @@ namespace ForeverEngine.Demo.Encounters
             DamageType atkDmgType)
         {
             // Stat block by XP tier
-            return xp switch
+            var def = xp switch
             {
                 <= 25  => new EnemyDef { Name = name, HP = 10, AC = 11, Str = 12, Dex = 14, Spd = 6, AtkDice = "1d6+1",  Behavior = behavior, CR = 0, AttackDamageType = atkDmgType },
                 <= 50  => new EnemyDef { Name = name, HP = 15, AC = 12, Str = 12, Dex = 12, Spd = 6, AtkDice = "1d8+1",  Behavior = behavior, CR = 1, AttackDamageType = atkDmgType },
@@ -223,6 +224,13 @@ namespace ForeverEngine.Demo.Encounters
                 <= 450 => new EnemyDef { Name = name, HP = 55, AC = 15, Str = 16, Dex = 10, Spd = 5, AtkDice = "2d8+3",  Behavior = behavior, CR = 3, AttackDamageType = atkDmgType },
                 _      => new EnemyDef { Name = name, HP = 80, AC = 16, Str = 18, Dex = 12, Spd = 5, AtkDice = "2d10+4", Behavior = behavior, CR = 5, AttackDamageType = atkDmgType },
             };
+            var (modelPath, modelScale) = ForeverEngine.Demo.Battle.ModelRegistry.Resolve(def.Name);
+            if (modelPath != null)
+            {
+                def.ModelId = modelPath;
+                def.ModelScale = modelScale;
+            }
+            return def;
         }
 
         private static EncounterData DefaultEncounter()
