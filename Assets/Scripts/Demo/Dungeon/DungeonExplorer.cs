@@ -24,6 +24,7 @@ namespace ForeverEngine.Demo.Dungeon
 
         // ── Config ──────────────────────────────────────────────────────────
         private const float MoveSpeed = 6f;
+        private const float SprintMultiplier = 1.8f;
 
         // ── State ───────────────────────────────────────────────────────────
         private string _locationId;
@@ -270,7 +271,8 @@ namespace ForeverEngine.Demo.Dungeon
                 camRight.y = 0f; camRight.Normalize();
 
                 Vector3 moveDir = (camFwd * inputZ + camRight * inputX).normalized;
-                Vector3 vel = moveDir * MoveSpeed;
+                float speed = Input.GetKey(KeyCode.LeftShift) ? MoveSpeed * SprintMultiplier : MoveSpeed;
+                Vector3 vel = moveDir * speed;
                 vel.y = _playerRb.linearVelocity.y; // preserve gravity
                 _playerRb.linearVelocity = vel;
 
@@ -279,7 +281,8 @@ namespace ForeverEngine.Demo.Dungeon
             }
             else
             {
-                Vector3 vel = new Vector3(inputX, 0, inputZ).normalized * MoveSpeed;
+                float fallbackSpeed = Input.GetKey(KeyCode.LeftShift) ? MoveSpeed * SprintMultiplier : MoveSpeed;
+                Vector3 vel = new Vector3(inputX, 0, inputZ).normalized * fallbackSpeed;
                 vel.y = _playerRb.linearVelocity.y;
                 _playerRb.linearVelocity = vel;
             }
