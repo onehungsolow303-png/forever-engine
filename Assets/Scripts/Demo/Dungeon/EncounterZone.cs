@@ -8,6 +8,7 @@ namespace ForeverEngine.Demo.Dungeon
         public string EncounterId;
         public int ZoneIndex;
         public bool IsBoss;
+        public int Tier;
         private bool _triggered;
 
         private void Awake()

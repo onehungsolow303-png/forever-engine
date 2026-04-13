@@ -120,7 +120,8 @@ namespace ForeverEngine.Demo.Dungeon
                     zone.ZoneIndex = i;
                     zone.IsBoss = isBoss;
                     // Encounter ID encodes biome + room index for EncounterData to resolve
-                    zone.EncounterId = isBoss ? "boss_dungeon" : $"random_dungeon_room{i}";
+                    zone.EncounterId = isBoss ? "boss_dungeon" : $"random_dungeon_t{tier}_room{i}";
+                    zone.Tier = tier;
                 }
             }
 
