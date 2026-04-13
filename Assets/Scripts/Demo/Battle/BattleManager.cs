@@ -87,6 +87,14 @@ namespace ForeverEngine.Demo.Battle
             _encounterData = Encounters.EncounterData.Get(encId);
             _rngSeed = (uint)(gm.CurrentSeed + encId.GetHashCode());
 
+            // Override grid size for overworld encounters
+            string rawEncId = _encounterData.Id ?? "";
+            if (!rawEncId.Contains("dungeon") && !rawEncId.Contains("Dungeon") && !rawEncId.Contains("boss") && !rawEncId.Contains("Crypt"))
+            {
+                if (_encounterData.GridWidth <= 8) _encounterData.GridWidth = 16;
+                if (_encounterData.GridHeight <= 8) _encounterData.GridHeight = 16;
+            }
+
             // Build grid
             Grid = new BattleGrid(_encounterData.GridWidth, _encounterData.GridHeight, (int)_rngSeed);
 
@@ -148,6 +156,15 @@ namespace ForeverEngine.Demo.Battle
             var template = FindBattleTemplate(_encounterData);
             if (template != null)
             {
+                // Determine arena type from encounter context
+                string encId = _encounterData.Id ?? "";
+                if (encId.Contains("boss"))
+                    template.Arena = ArenaType.Boss;
+                else if (encId.Contains("dungeon") || encId.Contains("Dungeon") || encId.Contains("Crypt"))
+                    template.Arena = ArenaType.Dungeon;
+                else
+                    template.Arena = ArenaType.Overworld;
+
                 var rendererGO = new GameObject("BattleRenderer3D");
                 var renderer3D = rendererGO.AddComponent<BattleRenderer3D>();
                 renderer3D.Initialize(template, Grid, Combatants, Camera.main);
