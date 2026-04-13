@@ -199,7 +199,8 @@ namespace ForeverEngine.Demo.Dungeon
             // Derive model key from CharacterSheet if available
             string modelKey = null;
             if (gm.Character != null)
-                modelKey = $"{gm.Character.Race}_{gm.Character.CharacterClass}";
+                modelKey = gm.Character.ModelId
+                    ?? $"{gm.Character.Species?.Name?.Replace(" ", "")}_{(gm.Character.ClassLevels.Count > 0 ? gm.Character.ClassLevels[0].ClassRef?.Name : "Fighter")}";
             else if (gm.Player != null)
                 modelKey = "Default_Player";
 

@@ -925,7 +925,7 @@ namespace ForeverEngine.Demo.Battle
                 // Apply DDA damage multiplier for enemy attackers
                 if (!attacker.IsPlayer)
                 {
-                    var dda = AI.Learning.DynamicDifficulty.Instance;
+                    var dda = ForeverEngine.AI.Learning.DynamicDifficulty.Instance;
                     if (dda != null)
                         hpDamage = Mathf.RoundToInt(hpDamage * dda.EnemyDamageMult);
                 }
