@@ -162,16 +162,14 @@ namespace ForeverEngine.Demo.Dungeon
             }
             else if (_daBuilder != null && _daBuilder.Rooms != null && _daBuilder.EntranceIndex >= 0)
             {
-                // Spawn at entrance room center, raycast down to find actual floor
+                // Raycast from room center downward to find the floor
                 var bounds = _daBuilder.Rooms[_daBuilder.EntranceIndex].WorldBounds;
-                var spawnPos = new Vector3(bounds.center.x, bounds.max.y + 2f, bounds.center.z);
+                var rayOrigin = bounds.center; // inside the room, not above the roof
 
-                if (Physics.Raycast(spawnPos, Vector3.down, out var hit, bounds.size.y + 10f))
-                    spawnPos = hit.point + Vector3.up * 1f;
+                if (Physics.Raycast(rayOrigin, Vector3.down, out var hit, bounds.size.y))
+                    playerGO.transform.position = hit.point + Vector3.up * 1f;
                 else
-                    spawnPos = new Vector3(bounds.center.x, bounds.min.y + 1f, bounds.center.z);
-
-                playerGO.transform.position = spawnPos;
+                    playerGO.transform.position = new Vector3(bounds.center.x, bounds.min.y + 1f, bounds.center.z);
             }
 
             playerGO.transform.rotation = Quaternion.Euler(0, state.PlayerRotationY, 0);
