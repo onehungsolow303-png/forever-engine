@@ -26,10 +26,10 @@ namespace ForeverEngine.Demo.Battle
 
             // Road / Ruins biome
             ["Skeleton"]        = new(1.0f, "Monsters/skeleton Fighter"),
-            ["Skeleton Archer"] = new(1.0f, "Monsters/skeleton archer"),
+            ["Skeleton Archer"] = new(1.0f, "Monsters/skeleton archer "),
             ["Mutant"]          = new(1.0f, "Monsters/Zombie male fighter",
                                            "Monsters/Zombie female fighter"),
-            ["Mutant Hulk"]     = new(1.3f, "Monsters/zombie male warrior"),
+            ["Mutant Hulk"]     = new(1.3f, "Monsters/zombie male warrior "),
 
             // Plains biome
             ["Bandit"]         = new(1.0f, "Monsters/Human Female Bandit",
@@ -43,7 +43,7 @@ namespace ForeverEngine.Demo.Battle
             // Dungeon biome (for Phase 2 encounter expansion)
             ["Goblin"]       = new(0.9f, "Monsters/goblin female fighter",
                                          "Monsters/Goblin male archer",
-                                         "Monsters/goblin male rogue"),
+                                         "Monsters/goblin male rogue "),
             ["Goblin King"]  = new(1.1f, "Monsters/Goblin King"),
             ["Mummy"]        = new(1.0f, "Monsters/Mummy"),
             ["Plague Rat"]   = new(0.6f, "Monsters/Giant Rat"),
