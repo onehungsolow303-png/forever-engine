@@ -46,7 +46,8 @@ namespace ForeverEngine.Demo.Encounters
             bool night = id.Contains("night");
             var enc = new EncounterData { Id = id, GridWidth = 8, GridHeight = 8 };
             if (id.Contains("Forest")) enc.Biome = "forest";
-            else if (id.Contains("Road")) enc.Biome = "dungeon";
+            else if (id.Contains("Dungeon") || id.Contains("Crypt")) enc.Biome = "dungeon";
+            else if (id.Contains("Road")) enc.Biome = "ruins";
             else enc.Biome = "plains";
 
             // Get player level for XP budget calculation
@@ -98,8 +99,9 @@ namespace ForeverEngine.Demo.Encounters
 
             if (id.Contains("Forest"))
             {
-                // Wolf encounters. 60% pack of CR1/4 wolves, 25% pack with a
-                // CR1/2 lead Dire Wolf, 15% (level 3+) lone CR2 Alpha + 1-2 pups.
+                // Wolf encounters. 50% pack of CR1/4 wolves, 25% pack with a
+                // CR1/2 lead Dire Wolf, 15% (level 3+) lone CR2 Alpha + 1-2 pups,
+                // 10% Orc raiding party.
                 int roll = rng.Next(100);
                 int count;
                 if (playerLevel >= 3 && roll < 15)
@@ -121,7 +123,7 @@ namespace ForeverEngine.Demo.Encounters
                         enc.Enemies.Add(MakeCREnemyDef("Wolf", 25, "chase", "Forest", DamageType.Piercing));
                     enc.GoldReward = 15 + 5 * count; enc.XPReward = 100 + 25 * count;
                 }
-                else
+                else if (roll < 90 || playerLevel < 2)
                 {
                     // Standard pack — capped at 4 (was 5) per balance audit Option C
                     count = System.Math.Max(1, xpBudget / 25);
@@ -129,6 +131,73 @@ namespace ForeverEngine.Demo.Encounters
                     for (int i = 0; i < count; i++)
                         enc.Enemies.Add(MakeCREnemyDef("Wolf", 25, "chase", "Forest", DamageType.Piercing));
                     enc.GoldReward = 5 * count; enc.XPReward = 25 * count;
+                }
+                else
+                {
+                    // Orc raiding party — 10% chance (level 2+) for variety
+                    enc.Enemies.Add(MakeCREnemyDef("Orc", 100, "guard", "Forest", DamageType.Slashing));
+                    count = System.Math.Max(0, (xpBudget - 100) / 25);
+                    count = System.Math.Min(count, maxEnemies - 1);
+                    for (int i = 0; i < count; i++)
+                        enc.Enemies.Add(MakeCREnemyDef("Kobold", 25, "chase", "Forest", DamageType.Slashing));
+                    enc.GoldReward = 20 + 5 * count; enc.XPReward = 100 + 25 * count;
+                }
+            }
+            else if (id.Contains("Dungeon") || id.Contains("Crypt"))
+            {
+                // Dungeon / crypt encounters — undead and lizardfolk patrols.
+                float rollF = (float)rng.NextDouble();
+                if (rollF < 0.3f)
+                {
+                    // Skeleton garrison
+                    int count = System.Math.Min(xpBudget / 50, maxEnemies);
+                    count = System.Math.Max(1, count);
+                    for (int i = 0; i < count; i++)
+                    {
+                        var def = MakeCREnemyDef(
+                            rng.NextDouble() < 0.5 ? "Skeleton" : "Skeleton Archer",
+                            50, "guard", "Ruins", DamageType.Slashing);
+                        def.Vulnerabilities = DamageType.Bludgeoning;
+                        def.Resistances = DamageType.Piercing;
+                        enc.Enemies.Add(def);
+                    }
+                    enc.GoldReward = 10 * count; enc.XPReward = 50 * count;
+                }
+                else if (rollF < 0.6f)
+                {
+                    // Mummy + minions
+                    int remainBudget = xpBudget;
+                    if (remainBudget >= 200)
+                    {
+                        var boss = MakeCREnemyDef("Mummy", 200, "chase", "Ruins", DamageType.Bludgeoning);
+                        enc.Enemies.Add(boss);
+                        remainBudget -= 200;
+                    }
+                    int minions = System.Math.Min(remainBudget / 25, maxEnemies - enc.Enemies.Count);
+                    minions = System.Math.Max(0, minions);
+                    for (int i = 0; i < minions; i++)
+                    {
+                        var def = MakeCREnemyDef("Skeleton", 25, "guard", "Ruins", DamageType.Slashing);
+                        def.Vulnerabilities = DamageType.Bludgeoning;
+                        def.Resistances = DamageType.Piercing;
+                        enc.Enemies.Add(def);
+                    }
+                    bool hasMummy = enc.Enemies.Count > 0;
+                    enc.GoldReward = 25 + 5 * minions; enc.XPReward = (hasMummy ? 200 : 0) + 25 * minions;
+                }
+                else
+                {
+                    // Lizardfolk patrol
+                    int count = System.Math.Min(xpBudget / 50, maxEnemies);
+                    count = System.Math.Max(1, count);
+                    for (int i = 0; i < count; i++)
+                    {
+                        var def = MakeCREnemyDef(
+                            rng.NextDouble() < 0.4 ? "Lizard Folk Archer" : "Lizard Folk",
+                            50, i == 0 ? "guard" : "chase", "Ruins", DamageType.Slashing);
+                        enc.Enemies.Add(def);
+                    }
+                    enc.GoldReward = 15 * count; enc.XPReward = 50 * count;
                 }
             }
             else if (id.Contains("Road")) // Ruins
