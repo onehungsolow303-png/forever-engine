@@ -46,7 +46,7 @@ namespace ForeverEngine.Demo.Encounters
             bool night = id.Contains("night");
             var enc = new EncounterData { Id = id, GridWidth = 8, GridHeight = 8 };
             if (id.Contains("Forest")) enc.Biome = "forest";
-            else if (id.Contains("Dungeon") || id.Contains("Crypt")) enc.Biome = "dungeon";
+            else if (id.Contains("Dungeon") || id.Contains("dungeon") || id.Contains("Crypt")) enc.Biome = "dungeon";
             else if (id.Contains("Road")) enc.Biome = "ruins";
             else enc.Biome = "plains";
 
@@ -158,7 +158,7 @@ namespace ForeverEngine.Demo.Encounters
                     enc.GoldReward = 20 + 5 * count; enc.XPReward = 100 + 25 * count;
                 }
             }
-            else if (id.Contains("Dungeon") || id.Contains("Crypt"))
+            else if (id.Contains("Dungeon") || id.Contains("dungeon") || id.Contains("Crypt"))
             {
                 // Dungeon / crypt encounters — undead and lizardfolk patrols.
                 float rollF = (float)rng.NextDouble();
