@@ -1606,9 +1606,13 @@ namespace ForeverEngine.Demo.Battle
                 float endReward = PlayerWon ? -0.5f : 0.5f;
                 foreach (var b in _brains.Values) b.OnEpisodeEnd(endReward);
 
-                // Phase 3 pivot: Q-table persistence to LongTermMemory archived
-                // alongside MemoryManager. Will be reintroduced via Director Hub
-                // memory tools in a follow-up. The brain still trains in-session.
+                // Persist the first brain's Q-table so training carries over to the next session.
+                var brainList = new List<CombatBrain>(_brains.Values);
+                if (brainList.Count > 0)
+                {
+                    float[] table = brainList[0].SaveQTable();
+                    QTableStore.Save(table, QTableStore.LoadedEpisodes + 1);
+                }
             }
         }
 

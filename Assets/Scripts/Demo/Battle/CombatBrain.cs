@@ -33,9 +33,22 @@ namespace ForeverEngine.Demo.Battle
             float lr = config != null ? config.QLearningRate : 0.12f;
             float df = config != null ? config.QDiscountFactor : 0.9f;
             float er = config != null ? config.QExplorationRate : 0.15f;
+
+            // Fall back to persisted table when no explicit table is supplied.
+            if (savedQTable == null)
+                savedQTable = QTableStore.Load();
+
             _learner = new QLearner(StateSize, ActionSize, learningRate: lr,
                 discountFactor: df, explorationRate: er, seed: seed);
             if (savedQTable != null) _learner.LoadTable(savedQTable);
+
+            // Decay exploration based on accumulated training maturity so that
+            // a well-trained brain exploits rather than explores.
+            int episodes = QTableStore.LoadedEpisodes;
+            if (episodes > 500)
+                _learner.SetExplorationRate(er * 0.25f);
+            else if (episodes > 100)
+                _learner.SetExplorationRate(er * 0.50f);
         }
 
         public int EncodeState(BattleCombatant self, BattleCombatant player,
