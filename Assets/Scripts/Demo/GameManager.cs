@@ -7,6 +7,8 @@ using ForeverEngine.RPG.Character;
 using ForeverEngine.Bridges;
 using ForeverEngine.Demo.Dungeon;
 using ForeverEngine.Demo.UI;
+using ForeverEngine.ECS.Data;
+using ForeverEngine.ECS.Systems;
 
 namespace ForeverEngine.Demo
 {
@@ -170,6 +172,78 @@ namespace ForeverEngine.Demo
             RPGBridge.SyncPlayerFromCharacter(Character, Player);
         }
 
+        /// <summary>
+        /// Parses a Director Hub response for embedded quest markers and registers
+        /// + starts the quest via QuestSystem. Markers:
+        ///   QUEST_TITLE: &lt;title&gt;
+        ///   QUEST_DESC: &lt;description&gt;
+        ///   QUEST_OBJ: &lt;description&gt;|&lt;count&gt;
+        ///   QUEST_REWARD_GOLD: &lt;amount&gt;
+        ///   QUEST_REWARD_XP: &lt;amount&gt;
+        /// If no QUEST_TITLE or QUEST_OBJ markers are found the response is
+        /// treated as normal dialogue and this method returns silently.
+        /// </summary>
+        public void AcceptQuestFromResponse(string response)
+        {
+            if (string.IsNullOrEmpty(response)) return;
+
+            string title = null, desc = null, objDesc = null;
+            int objCount = 1, gold = 0, xp = 0;
+
+            foreach (var line in response.Split('\n'))
+            {
+                var trimmed = line.Trim();
+                if (trimmed.StartsWith("QUEST_TITLE:"))
+                    title = trimmed.Substring(12).Trim();
+                else if (trimmed.StartsWith("QUEST_DESC:"))
+                    desc = trimmed.Substring(11).Trim();
+                else if (trimmed.StartsWith("QUEST_OBJ:"))
+                {
+                    var parts = trimmed.Substring(10).Trim().Split('|');
+                    objDesc = parts[0].Trim();
+                    if (parts.Length > 1) int.TryParse(parts[1].Trim(), out objCount);
+                }
+                else if (trimmed.StartsWith("QUEST_REWARD_GOLD:"))
+                    int.TryParse(trimmed.Substring(18).Trim(), out gold);
+                else if (trimmed.StartsWith("QUEST_REWARD_XP:"))
+                    int.TryParse(trimmed.Substring(16).Trim(), out xp);
+            }
+
+            // If the response contains no quest markers it is normal dialogue — ignore.
+            if (title == null || objDesc == null) return;
+
+            var qs = QuestSystem.Instance;
+            if (qs == null)
+            {
+                Debug.LogWarning("[GameManager] QuestSystem not available — quest not started.");
+                return;
+            }
+
+            // Build a deterministic ID from the title so re-offering the same
+            // quest by name doesn't create duplicate registrations.
+            string questId = "quest_" + title.ToLower().Replace(' ', '_');
+
+            var def = new QuestDefinition
+            {
+                Id          = questId,
+                Title       = title,
+                Description = desc ?? string.Empty,
+                Objectives  = new QuestObjective[]
+                {
+                    new QuestObjective { Id = "kill", Description = objDesc, RequiredCount = objCount }
+                },
+                GoldReward  = gold,
+                XPReward    = xp,
+            };
+
+            qs.RegisterQuest(def);
+            var instance = qs.StartQuest(questId);
+            if (instance != null)
+                Debug.Log($"[GameManager] Quest accepted: '{title}' — {objDesc} x{objCount} for {gold}g / {xp} XP");
+            else
+                Debug.LogWarning($"[GameManager] StartQuest failed for id='{questId}'");
+        }
+
         public void EnterBattle(string encounterId)
         {
             PendingEncounterId = encounterId;
@@ -269,6 +343,16 @@ namespace ForeverEngine.Demo
                 // Persist all battle rewards (gold, XP, loot) before returning
                 // to the overworld or dungeon, so a crash/quit cannot roll them back.
                 SaveManager.Save();
+
+                // Progress active quest objectives for this encounter's enemy kills.
+                // All active quests use the "kill" objective ID (set by AcceptQuestFromResponse).
+                var qs = QuestSystem.Instance;
+                if (qs != null)
+                {
+                    int killCount = encounterData.Enemies.Count;
+                    foreach (var quest in qs.GetActiveQuests())
+                        qs.ProgressQuest(quest.Definition.Id, "kill", killCount);
+                }
             }
 
             foreach (var zone in _activeZones)

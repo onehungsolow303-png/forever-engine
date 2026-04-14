@@ -229,7 +229,10 @@ namespace ForeverEngine.Demo.Dungeon
                 onResponse: response =>
                 {
                     if (!string.IsNullOrEmpty(response))
+                    {
                         Debug.Log($"[DungeonNPC] QuestGiver '{NPCName}': {response}");
+                        GameManager.Instance?.AcceptQuestFromResponse(response);
+                    }
                 },
                 locationId: locationId);
         }
