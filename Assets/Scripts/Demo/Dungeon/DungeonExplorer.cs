@@ -60,6 +60,24 @@ namespace ForeverEngine.Demo.Dungeon
             if (Input.GetKeyDown(KeyCode.Tab) && _minimap != null)
                 _minimap.ToggleFullMap();
 
+            // R triggers long rest (if not in combat)
+            if (Input.GetKeyDown(KeyCode.R) && GameManager.Instance?.IsInCombat != true)
+            {
+                var restMgr = FindFirstObjectByType<ForeverEngine.MonoBehaviour.RPG.RestManager>();
+                if (restMgr != null)
+                {
+                    restMgr.RequestLongRest();
+                    Debug.Log("[DungeonExplorer] Long rest requested.");
+                    // Reset encounter suppression counter
+                    var overworldMgr = Overworld.OverworldManager.Instance;
+                    if (overworldMgr != null) overworldMgr.EncountersSinceRest = 0;
+                }
+                else
+                {
+                    Debug.Log("[DungeonExplorer] No RestManager found — resting unavailable.");
+                }
+            }
+
             // Suppress movement when full map is open
             if (_minimap != null && _minimap.IsFullOpen) return;
 
