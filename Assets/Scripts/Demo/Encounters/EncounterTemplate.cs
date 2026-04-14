@@ -91,6 +91,69 @@ namespace ForeverEngine.Demo.Encounters
                 new EnemySlot("Orc", "chase", 100),
                 new EnemySlot("Kobold", "chase", 25),
                 new EnemySlot("Kobold", "chase", 25)),
+
+            // --- Forest biome ---
+            new EncounterTemplate("Spider Ambush", 150, 300,
+                new[] { "forest" },
+                new EnemySlot("Giant Spider", "guard", 200),
+                new EnemySlot("Spider Swarm", "chase", 25),
+                new EnemySlot("Spider Swarm", "chase", 25)),
+
+            new EncounterTemplate("Treant's Grove", 400, 600,
+                new[] { "forest" },
+                new EnemySlot("Treant", "guard", 450),
+                new EnemySlot("Twig Blight", "chase", 25),
+                new EnemySlot("Twig Blight", "chase", 25)),
+
+            // --- Dungeon biome ---
+            new EncounterTemplate("Necromancer's Lab", 200, 400,
+                new[] { "dungeon" },
+                new EnemySlot("Necromancer", "guard", 200),
+                new EnemySlot("Skeleton", "chase", 25),
+                new EnemySlot("Skeleton", "chase", 25),
+                new EnemySlot("Skeleton", "chase", 25)),
+
+            new EncounterTemplate("Mimic Trap", 150, 300,
+                new[] { "dungeon" },
+                new EnemySlot("Mimic", "guard", 200)),
+
+            new EncounterTemplate("Rat King", 150, 350,
+                new[] { "dungeon" },
+                new EnemySlot("Giant Rat", "guard", 100),
+                new EnemySlot("Rat Swarm", "chase", 25),
+                new EnemySlot("Rat Swarm", "chase", 25),
+                new EnemySlot("Rat Swarm", "chase", 25),
+                new EnemySlot("Rat Swarm", "chase", 25)),
+
+            // --- Plains biome ---
+            new EncounterTemplate("Merchant Guard", 200, 400,
+                new[] { "plains" },
+                new EnemySlot("Bandit Captain", "guard", 200),
+                new EnemySlot("Bandit", "chase", 50),
+                new EnemySlot("Bandit Archer", "guard", 50)),
+
+            new EncounterTemplate("Gnoll Hunting Party", 300, 550,
+                new[] { "plains" },
+                new EnemySlot("Gnoll Pack Lord", "guard", 200),
+                new EnemySlot("Gnoll", "chase", 100),
+                new EnemySlot("Gnoll", "chase", 100)),
+
+            // --- Ruins biome ---
+            new EncounterTemplate("Ghoul Pack", 200, 400,
+                new[] { "ruins" },
+                new EnemySlot("Ghoul", "chase", 200),
+                new EnemySlot("Zombie", "chase", 50),
+                new EnemySlot("Zombie", "chase", 50)),
+
+            new EncounterTemplate("Wraith Haunting", 400, 600,
+                new[] { "ruins" },
+                new EnemySlot("Wraith", "guard", 450)),
+
+            new EncounterTemplate("Cursed Knights", 250, 450,
+                new[] { "ruins" },
+                new EnemySlot("Death Knight", "guard", 200),
+                new EnemySlot("Skeleton Archer", "guard", 50),
+                new EnemySlot("Skeleton Archer", "guard", 50)),
         };
 
         public static List<EncounterTemplate> FindMatching(int xpBudget, string biome)
