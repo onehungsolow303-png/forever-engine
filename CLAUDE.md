@@ -83,12 +83,31 @@ The existing 2D systems (DialoguePanel, BattleHUD, OverworldHUD, ECS game logic)
 - **Overworld Prefab System** (`OverworldPrefabMapper.cs` + `OverworldPrefabPopulator.cs`) — Maps biome types to real asset pack prefabs
 - **61 GLB Models** in `Resources/Models/` — 39 monsters + 22 NPCs, all registered in `ModelRegistry.cs`
 
+### Systems Added 2026-04-14
+
+- **Inventory UI** (`InventoryScreen.cs`) — Tab-toggled IMGUI panel with equipment slots, scrollable item list, equip/use/drop buttons. Uses `ItemRegistry.cs` for item ID → name reverse lookup.
+- **Quest System** — End-to-end: QuestGiver NPC → Director Hub `/dialogue` with QUEST_TITLE markers → `GameManager.AcceptQuestFromResponse()` parser → `QuestSystem.StartQuest()`. Battle kills auto-progress active quest objectives.
+- **Spell Panel** (`SpellPanel.cs`) — IMGUI overlay during combat showing prepared spells with hotkeys, damage/healing info, school, slot availability.
+- **Level-Up Screen** (`LevelUpScreen.cs`) — Triggered on XP threshold. Shows ability score improvement (+2 points to allocate across STR/DEX/CON/INT/WIS/CHA).
+- **Victory Screen** (`VictoryScreen.cs`) — Triggered when `castle_boss` (The Rot King) is defeated. Stats summary + return to menu.
+- **Procedural Animation** (`ModelAnimator.cs`) — Transform-based animations on all combat models: idle bob, attack lunge, hit recoil, death topple.
+- **Audio System** — `SoundManager.cs` wired to `AudioConfig.asset` (auto-populated by `AudioPopulator.cs` editor script).
+- **Combat VFX** — Procedural `ParticleSystem` bursts in `BattleEffects.cs` for hit (white) and death (dark red) effects.
+- **Q-Table Persistence** (`QTableStore.cs`) — Saves Q-learning tables to `Application.persistentDataPath/qtable_combat.json` with episode counting. Exploration rate decays with training maturity.
+- **Self-Play Trainer** (`SelfPlayTrainer.cs`) — Editor script: "Forever Engine → Train Combat AI (500/2000 battles)". Headless battle simulation for pre-training.
+- **Save/Load Hardening** — Inventory serialization (parallel arrays), ModelId, MaxHunger/MaxThirst, DungeonState persistence, SaveVersion field for future migration.
+- **17 Encounter Templates** — Up from 7. Spiders, treants, necromancers, mimics, gnolls, wraiths, cursed knights, and more across forest/dungeon/plains/ruins biomes.
+- **Standalone Build** (`StandaloneBuild.cs`) — "Forever Engine → Build Standalone (Windows)" or batchmode `-executeMethod ForeverEngine.Editor.StandaloneBuild.Build`.
+
 ### Editor Menu Items
 - **Forever Engine → Setup URP & Convert Materials** — converts all pack materials to URP
 - **Forever Engine → Populate Overworld Prefabs** — discovers and assigns pack prefabs to mapper
 - **Forever Engine → Populate Room Catalog** — discovers dungeon prop prefabs
 - **Forever Engine → Create Missing Assets** — creates GameConfig, RoomCatalog, DungeonNPCConfig SOs
 - **Forever Engine → Create Dungeon Exploration Scene** — generates the dungeon scene
+- **Forever Engine → Populate Audio Config** — discovers pack audio clips and assigns to AudioConfig SO
+- **Forever Engine → Train Combat AI (500/2000 battles)** — headless self-play pre-training
+- **Forever Engine → Build Standalone (Windows)** — builds to `Builds/ShatteredKingdom/ShatteredKingdom.exe`
 
 ## Boot sequence
 1. Demo scene loads → `GameManager.Awake()` constructs `AssetClient`, `DirectorClient`, `ServiceWatchdog`, `GameStateServer`
