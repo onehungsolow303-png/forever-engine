@@ -317,9 +317,8 @@ namespace ForeverEngine.Demo.Overworld
 
                 Vector3 worldPos = HexToWorld3D(loc.HexQ, loc.HexR, height, hexSize, elevScale);
 
-                // Always use procedural markers — pack prefabs all resolve to the same
-                // dark-cube medieval buildings and are visually indistinguishable.
-                GameObject marker = CreateLocationMarker(loc.Type ?? "town", worldPos);
+                string locType = (loc.Type ?? "town").ToLowerInvariant();
+                GameObject marker = CreateLocationMarker(locType, worldPos);
                 marker.transform.SetParent(transform);
 
                 marker.name = $"Location_{loc.Id}";
@@ -344,19 +343,101 @@ namespace ForeverEngine.Demo.Overworld
         }
 
         /// <summary>
-        /// Build a visually distinct procedural marker for each location type.
-        /// Each type uses a unique shape + colour so players can identify locations at a glance.
+        /// Instantiate an asset pack prefab for the location, with a point light for visibility.
+        /// Falls back to procedural markers when prefabs aren't assigned.
+        /// For camps, places both a brazier and a small building nearby.
         /// </summary>
         private GameObject CreateLocationMarker(string locationType, Vector3 position)
         {
+            if (_prefabMap == null) return CreateFallbackMarker(locationType, position);
+
+            // Per-type scale tuning so each location reads well on the overworld
+            float scale = locationType switch
+            {
+                "camp"     => 0.4f,
+                "town"     => 0.5f,
+                "shrine"   => 0.5f,
+                "glade"    => 0.45f,
+                "dungeon"  => 0.5f,
+                "fortress" => 0.35f,
+                "castle"   => 0.3f,
+                "ruins"    => 0.45f,
+                _          => 0.5f,
+            };
+
+            GameObject prefab = locationType switch
+            {
+                "camp"     => _prefabMap.CampFirePrefab ?? _prefabMap.CampPrefab,
+                "town"     => _prefabMap.TownPrefab,
+                "shrine"   => _prefabMap.ShrinePrefab,
+                "glade"    => _prefabMap.GladePrefab,
+                "dungeon"  => _prefabMap.DungeonEntrancePrefab,
+                "fortress" => _prefabMap.FortressPrefab,
+                "castle"   => _prefabMap.CastlePrefab,
+                "ruins"    => _prefabMap.LocationRuinsPrefabs is { Length: > 0 }
+                    ? _prefabMap.LocationRuinsPrefabs[Random.Range(0, _prefabMap.LocationRuinsPrefabs.Length)]
+                    : null,
+                _          => _prefabMap.TownPrefab,
+            };
+
+            if (prefab == null) return CreateFallbackMarker(locationType, position);
+
             var root = new GameObject($"Marker_{locationType}");
+            root.transform.position = position;
+
+            var main = Instantiate(prefab, root.transform);
+            main.transform.localPosition = Vector3.zero;
+            main.transform.localScale = Vector3.one * scale;
+            StripMissingScripts(main);
+
+            // For camps: also place a small building (market stall / tent substitute) nearby
+            if (locationType == "camp" && _prefabMap.CampPrefab != null
+                && _prefabMap.CampFirePrefab != null) // only add building if fire is the primary
+            {
+                var building = Instantiate(_prefabMap.CampPrefab, root.transform);
+                building.transform.localPosition = new Vector3(1.5f, 0f, 0.8f);
+                building.transform.localScale = Vector3.one * 0.35f;
+                building.transform.localRotation = Quaternion.Euler(0f, -30f, 0f);
+                StripMissingScripts(building);
+            }
+
+            // Add a warm point light so the location is visible
+            var light = root.AddComponent<Light>();
+            light.type = LightType.Point;
+            light.range = 8f;
+            light.intensity = 2f;
+            light.color = locationType switch
+            {
+                "camp"     => new Color(1f, 0.6f, 0.2f),
+                "shrine"   => new Color(0.8f, 0.9f, 1f),
+                "dungeon"  => new Color(0.5f, 0.3f, 0.7f),
+                "glade"    => new Color(0.4f, 0.9f, 0.4f),
+                "fortress" => new Color(0.8f, 0.7f, 0.5f),
+                "castle"   => new Color(1f, 0.85f, 0.5f),
+                "ruins"    => new Color(0.6f, 0.55f, 0.45f),
+                _          => new Color(1f, 0.85f, 0.6f),
+            };
+
+            // Strip colliders — these are decorative markers only
+            foreach (var col in root.GetComponentsInChildren<Collider>())
+                DestroyImmediate(col);
+
+            return root;
+        }
+
+        /// <summary>
+        /// Procedural fallback markers for when asset pack prefabs aren't assigned.
+        /// Each type uses a unique shape + colour so players can identify locations at a glance.
+        /// </summary>
+        private GameObject CreateFallbackMarker(string locationType, Vector3 position)
+        {
+            var root = new GameObject($"Marker_{locationType}_fallback");
             root.transform.position = position;
 
             switch (locationType.ToLowerInvariant())
             {
                 case "camp":
                 {
-                    // Campfire: brown log base + orange flame sphere + warm point light
                     var fireBase = GameObject.CreatePrimitive(PrimitiveType.Cylinder);
                     fireBase.transform.SetParent(root.transform);
                     fireBase.transform.localPosition = new Vector3(0f, 0.15f, 0f);
@@ -385,7 +466,6 @@ namespace ForeverEngine.Demo.Overworld
 
                 case "town":
                 {
-                    // Brown building with a red pitched roof
                     var building = GameObject.CreatePrimitive(PrimitiveType.Cube);
                     building.transform.SetParent(root.transform);
                     building.transform.localPosition = new Vector3(0f, 0.5f, 0f);
@@ -409,7 +489,6 @@ namespace ForeverEngine.Demo.Overworld
 
                 case "shrine":
                 {
-                    // White/gold pillar with a glowing sphere on top
                     var pillar = GameObject.CreatePrimitive(PrimitiveType.Cylinder);
                     pillar.transform.SetParent(root.transform);
                     pillar.transform.localPosition = new Vector3(0f, 0.75f, 0f);
@@ -438,7 +517,6 @@ namespace ForeverEngine.Demo.Overworld
 
                 case "glade":
                 {
-                    // Green tree cluster: 3 green spheres on brown cylinders
                     for (int i = 0; i < 3; i++)
                     {
                         float angle = i * 120f * Mathf.Deg2Rad;
@@ -469,7 +547,6 @@ namespace ForeverEngine.Demo.Overworld
 
                 case "dungeon":
                 {
-                    // Dark stone archway: dark gray lintel box + darker entrance rectangle
                     var arch = GameObject.CreatePrimitive(PrimitiveType.Cube);
                     arch.transform.SetParent(root.transform);
                     arch.transform.localPosition = new Vector3(0f, 0.6f, 0f);
@@ -492,14 +569,12 @@ namespace ForeverEngine.Demo.Overworld
 
                 case "fortress":
                 {
-                    // Large gray castle tower with crenellations
                     var tower = GameObject.CreatePrimitive(PrimitiveType.Cylinder);
                     tower.transform.SetParent(root.transform);
                     tower.transform.localPosition = new Vector3(0f, 0.75f, 0f);
                     tower.transform.localScale = new Vector3(0.55f, 0.75f, 0.55f);
                     tower.GetComponent<Renderer>().material = CreateLitMaterial(new Color(0.45f, 0.43f, 0.4f));
 
-                    // Four crenellations
                     for (int i = 0; i < 4; i++)
                     {
                         float ca = i * 90f * Mathf.Deg2Rad;
@@ -521,14 +596,12 @@ namespace ForeverEngine.Demo.Overworld
 
                 case "castle":
                 {
-                    // Like fortress but bigger + two corner turrets
                     var keep = GameObject.CreatePrimitive(PrimitiveType.Cylinder);
                     keep.transform.SetParent(root.transform);
                     keep.transform.localPosition = new Vector3(0f, 0.9f, 0f);
                     keep.transform.localScale = new Vector3(0.7f, 0.9f, 0.7f);
                     keep.GetComponent<Renderer>().material = CreateLitMaterial(new Color(0.42f, 0.4f, 0.38f));
 
-                    // Corner turrets
                     Vector3[] turretOffsets = {
                         new Vector3( 0.4f, 0f,  0.4f),
                         new Vector3(-0.4f, 0f, -0.4f),
@@ -542,7 +615,6 @@ namespace ForeverEngine.Demo.Overworld
                         turret.GetComponent<Renderer>().material = CreateLitMaterial(new Color(0.38f, 0.36f, 0.34f));
                     }
 
-                    // Four crenellations on keep
                     for (int i = 0; i < 4; i++)
                     {
                         float ca = i * 90f * Mathf.Deg2Rad;
@@ -564,7 +636,6 @@ namespace ForeverEngine.Demo.Overworld
 
                 case "ruins":
                 {
-                    // 3 tilted broken stone walls
                     float[] ruinAngles = { 12f, -8f, 5f };
                     Vector3[] ruinOffsets = {
                         new Vector3(-0.25f, 0.3f,  0.05f),
@@ -591,7 +662,6 @@ namespace ForeverEngine.Demo.Overworld
 
                 default:
                 {
-                    // Generic beacon tower for any unknown type
                     var defBase = GameObject.CreatePrimitive(PrimitiveType.Cylinder);
                     defBase.transform.SetParent(root.transform);
                     defBase.transform.localPosition = Vector3.up * 0.5f;

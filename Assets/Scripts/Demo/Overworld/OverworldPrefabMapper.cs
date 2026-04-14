@@ -31,6 +31,14 @@ namespace ForeverEngine.Demo.Overworld
         public GameObject CampPrefab;
         public GameObject DungeonEntrancePrefab;
 
+        [Header("Location Markers")]
+        public GameObject ShrinePrefab;      // Stone altar or portal base
+        public GameObject GladePrefab;       // Arch alley or column arrangement
+        public GameObject FortressPrefab;    // Tower prefab
+        public GameObject CastlePrefab;      // Larger tower or building set
+        public GameObject[] LocationRuinsPrefabs;  // Broken buildings/walls (random pick)
+        public GameObject CampFirePrefab;    // Brazier for campsite
+
         [Header("Player")]
         public GameObject PlayerPrefab;
 
@@ -85,11 +93,18 @@ namespace ForeverEngine.Demo.Overworld
 
         public GameObject GetLocationPrefab(string locationType)
         {
-            return locationType switch
+            return (locationType ?? "").ToLowerInvariant() switch
             {
-                "town" or "fortress" or "castle" or "glade" => TownPrefab,
-                "camp" or "shrine" => CampPrefab,
+                "camp" => CampFirePrefab != null ? CampFirePrefab : CampPrefab,
+                "town" => TownPrefab,
+                "shrine" => ShrinePrefab,
+                "glade" => GladePrefab,
                 "dungeon" => DungeonEntrancePrefab,
+                "fortress" => FortressPrefab,
+                "castle" => CastlePrefab,
+                "ruins" => LocationRuinsPrefabs is { Length: > 0 }
+                    ? LocationRuinsPrefabs[UnityEngine.Random.Range(0, LocationRuinsPrefabs.Length)]
+                    : TownPrefab,
                 _ => TownPrefab,
             };
         }

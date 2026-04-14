@@ -32,6 +32,32 @@ public static class OverworldPrefabPopulator
         "Assets/Lordenfel/Source/Materials/MI_Mountain_02_Grass.mat",
     };
 
+    // ── Location marker prefab paths ────────────────────────────────────
+
+    private static readonly string CampFirePath =
+        "Assets/Lordenfel/Prefabs/Props/SM_Brazier_02_Lit.prefab";
+
+    private static readonly string ShrinePath =
+        "Assets/Eternal Temple/Prefabs/Props/Furniture/Stone_Altar_01.prefab";
+
+    private static readonly string GladePath =
+        "Assets/Eternal Temple/Prefabs/Arch Alley/Arch_Alley_01.prefab";
+
+    private static readonly string FortressPath =
+        "Assets/Magic Pig Games (Infinity PBR)/Medieval Environment Pack/_Prefabs/Buiding Parts/Tower1a.prefab";
+
+    private static readonly string CastlePath =
+        "Assets/Magic Pig Games (Infinity PBR)/Medieval Environment Pack/_Prefabs/Buiding Parts/Tower6a.prefab";
+
+    private static readonly string[] RuinsPaths =
+    {
+        "Assets/Eternal Temple/Prefabs/Damaged/Building_Ruins_01.prefab",
+        "Assets/Eternal Temple/Prefabs/Damaged/Building_Ruins_02.prefab",
+        "Assets/Eternal Temple/Prefabs/Damaged/Building_Ruins_03.prefab",
+        "Assets/Eternal Temple/Prefabs/Damaged/Building_Ruins_04.prefab",
+        "Assets/Eternal Temple/Prefabs/Damaged/Building_Ruins_05.prefab",
+    };
+
     // ── Menu entry ────────────────────────────────────────────────────────
 
     [MenuItem("Forever Engine/Populate Overworld Prefabs")]
@@ -148,10 +174,52 @@ public static class OverworldPrefabPopulator
         if (trees.Count > 3)
             mapper.MountainScatter = new[] { trees[0], trees[trees.Count / 2] };
 
+        // ── Location marker prefabs ─────────────────────────────────────
+
+        int locationCount = 0;
+
+        var campFire = AssetDatabase.LoadAssetAtPath<GameObject>(CampFirePath);
+        if (campFire != null) { mapper.CampFirePrefab = campFire; locationCount++; }
+        else Debug.LogWarning($"[OverworldPrefabPopulator] CampFire prefab not found: {CampFirePath}");
+
+        var shrine = AssetDatabase.LoadAssetAtPath<GameObject>(ShrinePath);
+        if (shrine != null) { mapper.ShrinePrefab = shrine; locationCount++; }
+        else Debug.LogWarning($"[OverworldPrefabPopulator] Shrine prefab not found: {ShrinePath}");
+
+        var glade = AssetDatabase.LoadAssetAtPath<GameObject>(GladePath);
+        if (glade != null) { mapper.GladePrefab = glade; locationCount++; }
+        else Debug.LogWarning($"[OverworldPrefabPopulator] Glade prefab not found: {GladePath}");
+
+        var fortress = AssetDatabase.LoadAssetAtPath<GameObject>(FortressPath);
+        if (fortress != null) { mapper.FortressPrefab = fortress; locationCount++; }
+        else Debug.LogWarning($"[OverworldPrefabPopulator] Fortress prefab not found: {FortressPath}");
+
+        var castle = AssetDatabase.LoadAssetAtPath<GameObject>(CastlePath);
+        if (castle != null) { mapper.CastlePrefab = castle; locationCount++; }
+        else Debug.LogWarning($"[OverworldPrefabPopulator] Castle prefab not found: {CastlePath}");
+
+        var ruinsList = new System.Collections.Generic.List<GameObject>();
+        foreach (string ruinPath in RuinsPaths)
+        {
+            var ruin = AssetDatabase.LoadAssetAtPath<GameObject>(ruinPath);
+            if (ruin != null) ruinsList.Add(ruin);
+        }
+        if (ruinsList.Count > 0)
+        {
+            mapper.LocationRuinsPrefabs = ruinsList.ToArray();
+            locationCount += ruinsList.Count;
+        }
+        else
+        {
+            Debug.LogWarning("[OverworldPrefabPopulator] No ruin prefabs found in Eternal Temple/Prefabs/Damaged/");
+        }
+
+        Debug.Log($"[OverworldPrefabPopulator] Assigned {locationCount} location marker prefabs");
+
         EditorUtility.SetDirty(mapper);
         AssetDatabase.SaveAssets();
 
-        int total = trees.Count + buildings.Count;
+        int total = trees.Count + buildings.Count + locationCount;
         Debug.Log($"[OverworldPrefabPopulator] Done — {total} total prefabs assigned to mapper");
     }
 
