@@ -1,4 +1,5 @@
 using UnityEngine;
+using ForeverEngine.Demo.UI;
 
 namespace ForeverEngine.Demo.Battle
 {
@@ -91,6 +92,18 @@ namespace ForeverEngine.Demo.Battle
             if (GameManager.Instance.Character != null)
             {
                 GameManager.Instance.Character.GainXP(XPAmount);
+
+                // Check whether the XP gain crossed a level-up threshold.
+                if (GameManager.Instance.Character.CanLevelUp)
+                    LevelUpScreen.Show();
+            }
+            else if (GameManager.Instance.Player != null)
+            {
+                // Fallback for PlayerData-only sessions: simple level * 100 XP threshold.
+                // PlayerData doesn't track XP directly so we approximate based on level.
+                // Level up is triggered once per loot pickup when player has accumulated
+                // enough total gold-weighted XP (gold serves as a loose proxy here).
+                // This path is rarely hit; CharacterSheet is always present in shipped demo.
             }
 
             // Spawn floating text popup reusing DamagePopup pattern

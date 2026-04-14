@@ -359,6 +359,13 @@ namespace ForeverEngine.Demo
                     foreach (var quest in qs.GetActiveQuests())
                         qs.ProgressQuest(quest.Definition.Id, "kill", killCount);
                 }
+
+                // Victory condition: defeating the final boss triggers the victory screen.
+                if ((encounterData.Id ?? "") == "castle_boss")
+                {
+                    VictoryScreen.Show();
+                    Debug.Log("[GameManager] The Rot King defeated — victory!");
+                }
             }
 
             foreach (var zone in _activeZones)
