@@ -151,6 +151,11 @@ namespace ForeverEngine.Demo.Battle
             model.name = $"Model_{combatant.Name}";
             model.transform.position = zone.GridToWorld(combatant.X, combatant.Y);
             _models[combatant] = model;
+
+            // Attach procedural animator
+            var anim = model.AddComponent<ModelAnimator>();
+            anim.SetBasePosition(model.transform.position);
+            combatant.Animator = anim;
         }
 
         private void Update()
@@ -224,9 +229,8 @@ namespace ForeverEngine.Demo.Battle
 
                 if (!combatant.IsAlive && !combatant.IsPlayer)
                 {
-                    // Dead enemy: rotate to lying down, fade out, then deactivate
-                    var rot = model.transform.rotation;
-                    model.transform.rotation = Quaternion.Slerp(rot, Quaternion.Euler(90f, rot.eulerAngles.y, 0f), dt * 3f);
+                    // Dead enemy: procedural topple via ModelAnimator, then fade out
+                    combatant.Animator?.PlayDeath();
 
                     var mr = model.GetComponentInChildren<Renderer>();
                     if (mr != null)
@@ -240,8 +244,12 @@ namespace ForeverEngine.Demo.Battle
                 }
                 else
                 {
-                    // Alive: lerp position toward grid target
-                    model.transform.position = Vector3.Lerp(model.transform.position, targetPos, dt * 8f);
+                    // Alive: lerp base position toward grid target; ModelAnimator handles idle bob
+                    Vector3 lerpedPos = Vector3.Lerp(model.transform.position, targetPos, dt * 8f);
+                    combatant.Animator?.SetBasePosition(lerpedPos);
+                    // If no animator, move directly
+                    if (combatant.Animator == null)
+                        model.transform.position = lerpedPos;
 
                     // Current turn combatant: pulsate scale
                     if (combatant == CurrentTurn)
@@ -1244,6 +1252,9 @@ namespace ForeverEngine.Demo.Battle
 
                 _renderer?.ShowDamageNumber(new Vector3(target.X, target.Y, 0), hpDamage, atkResult.Critical);
                 Audio.SoundManager.Instance?.PlayHit();
+                target.Animator?.PlayHit();
+                if (_models.TryGetValue(target, out var rangedTargetModel))
+                    attacker.Animator?.PlayAttack(rangedTargetModel.transform.position);
 
                 if (!attacker.IsPlayer)
                     Demo.AI.DirectorEvents.Send(
@@ -1260,6 +1271,7 @@ namespace ForeverEngine.Demo.Battle
                 {
                     Log.Add($"{target.Name} is defeated!");
                     Demo.AI.DirectorEvents.Send($"killed {target.Name}", targetId: target.Name);
+                    target.Animator?.PlayDeath();
                 }
                 CheckBattleEnd();
             }
@@ -1426,6 +1438,9 @@ namespace ForeverEngine.Demo.Battle
                     BattleEffectsHelper.ShowDamage(targetModel, dmgResult.AfterResistance, atkResult.Critical);
                     BattleEffectsHelper.ShowHitFlash(targetModel);
                     BattleEffectsHelper.SpawnHitVFX(targetModel.transform.position);
+                    target.Animator?.PlayHit();
+                    if (_models.TryGetValue(attacker, out var attackerModel))
+                        attacker.Animator?.PlayAttack(targetModel.transform.position);
                 }
                 else if (_renderer3D != null)
                 {
@@ -1487,6 +1502,7 @@ namespace ForeverEngine.Demo.Battle
                         Demo.AI.DirectorEvents.Send($"killed {target.Name}", targetId: target.Name);
                         if (!attacker.IsPlayer && _brains.TryGetValue(attacker, out var killerBrain))
                             killerBrain.AddReward(_gameConfig != null ? _gameConfig.RewardKill : 0.5f);
+                        target.Animator?.PlayDeath();
                     }
                 }
 

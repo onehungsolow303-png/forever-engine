@@ -38,6 +38,7 @@ namespace ForeverEngine.Demo.Battle
         public int TempHP;
         public string ModelId;
         public float ModelScale = 1f;
+        public ModelAnimator Animator;
         public bool HasRangedAttack;
         public int AttackRange;
         public int RangedAtkCount, RangedAtkSides, RangedAtkBonus;
