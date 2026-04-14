@@ -121,6 +121,8 @@ namespace ForeverEngine.Demo.Overworld
             if (UI.DialoguePanel.Instance != null && UI.DialoguePanel.Instance.IsOpen)
                 return;
 
+            if (GameManager.Instance?.IsInCombat == true) return;
+
             // Free movement: WASD relative to camera direction
             float inputX = 0f, inputZ = 0f;
             if (Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.UpArrow))    inputZ += 1f;
@@ -266,7 +268,8 @@ namespace ForeverEngine.Demo.Overworld
             if (Random.Range(0f, 1f) < chance)
             {
                 EncountersSinceRest++;
-                GameManager.Instance.EnterBattle($"random_{tile.Type}_{(IsNight ? "night" : "day")}");
+                var playerPos = Player?.transform?.position ?? Vector3.zero;
+                GameManager.Instance.StartSeamlessBattle(playerPos, $"random_{tile.Type}_{(IsNight ? "night" : "day")}");
             }
         }
     }
