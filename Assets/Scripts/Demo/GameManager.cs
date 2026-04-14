@@ -244,6 +244,16 @@ namespace ForeverEngine.Demo
                         loot.XPAmount = xpPer;
                     }
                 }
+
+                // Generate equipment drops via LootGenerator
+                var lootItems = Battle.LootGenerator.GenerateLoot(encounterData.XPReward, encounterData.GoldReward);
+                foreach (var itemName in lootItems)
+                {
+                    Debug.Log($"[GameManager] Equipment drop: {itemName}");
+                    // Add to player inventory if available
+                    if (Player?.Inventory != null)
+                        Player.Inventory.Add(new ForeverEngine.ECS.Data.ItemInstance { ItemId = itemName.GetHashCode(), StackCount = 1, MaxStack = 1 });
+                }
             }
 
             foreach (var zone in _activeZones)
