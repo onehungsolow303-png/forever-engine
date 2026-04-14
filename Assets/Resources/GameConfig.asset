@@ -1,0 +1,53 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 15d52b3d177bd804494119188481d7f3, type: 3}
+  m_Name: GameConfig
+  m_EditorClassIdentifier: ForeverEngine::ForeverEngine.GameConfig
+  TileSize: 32
+  TargetFPS: 60
+  FogSightRadius: 16
+  CombatDetectRange: 12
+  DefaultMovementPerTurn: 6
+  ParallaxStrength: 0.05
+  PlayerColor: {r: 0.2, g: 0.4, b: 1, a: 1}
+  EnemyColor: {r: 1, g: 0.2, b: 0.2, a: 1}
+  NPCColor: {r: 1, g: 0.84, b: 0, a: 1}
+  NeutralColor: {r: 0.6, g: 0.6, b: 0.6, a: 1}
+  FogUnexplored: {r: 0, g: 0, b: 0, a: 1}
+  FogExplored: {r: 0, g: 0, b: 0, a: 0.6}
+  UIBackground: {r: 0.12, g: 0.12, b: 0.15, a: 0.86}
+  UIText: {r: 0.85, g: 0.85, b: 0.85, a: 1}
+  HPGreen: {r: 0.2, g: 0.8, b: 0.2, a: 1}
+  HPRed: {r: 0.8, g: 0.2, b: 0.2, a: 1}
+  TokenRadius: 10
+  TokenBorder: 2
+  AITurnDelay: 0.33
+  QLearningRate: 0.12
+  QDiscountFactor: 0.9
+  QExplorationRate: 0.15
+  RewardAdvanceHit: 0.15
+  RewardAttackAdjacent: 0.35
+  RewardHit: 0.4
+  PenaltyMiss: -0.15
+  RewardRangedHit: 0.35
+  PenaltyRangedMiss: -0.2
+  RewardKill: 0.6
+  RewardRetreatLowHP: 0.25
+  RewardHoldGuard: 0.15
+  PenaltyHoldChase: -0.08
+  PenaltyDamageTaken: -0.12
+  RewardProtectAlly: 0.3
+  DayXPBudgetPerLevel: 40
+  NightXPBudgetPerLevel: 60
+  MaxEnemiesPerEncounter: 4
+  EncounterTemplateChance: 0.6
+  SharedSchemaPath: C:\Dev\.shared\schemas

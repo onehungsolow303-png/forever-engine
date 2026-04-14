@@ -1,0 +1,41 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 704461b7d058a7846bda6952d1302ee2, type: 3}
+  m_Name: DungeonNPCConfig
+  m_EditorClassIdentifier: ForeverEngine::ForeverEngine.Demo.Dungeon.DungeonNPCConfig
+  FriendlyRules:
+  - Role: 0
+    TierFilter: 01000000
+    SpawnChance: 0.7
+    MaxPerDungeon: 1
+    ModelKeys:
+    - Default_Player
+  - Role: 1
+    TierFilter: 0100000002000000
+    SpawnChance: 0.4
+    MaxPerDungeon: 2
+    ModelKeys:
+    - Default_Player
+  - Role: 2
+    TierFilter: 03000000
+    SpawnChance: 0.3
+    MaxPerDungeon: 1
+    ModelKeys:
+    - Default_Player
+  EnemyRules:
+  - TierFilter: 0200000003000000
+    EnemyNames:
+    - Skeleton
+    - Lizard Folk
+    CountRange: {x: 1, y: 2}
+    PatrolRadius: 3
+  DirectorOverrides: 1

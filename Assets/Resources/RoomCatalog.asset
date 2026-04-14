@@ -1,0 +1,1262 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f31af3c7fdd7663469b0aa3f731bc35d, type: 3}
+  m_Name: RoomCatalog
+  m_EditorClassIdentifier: ForeverEngine::ForeverEngine.RoomCatalog
+  Props:
+  - Prefab: {fileID: 1216724022068127368, guid: 9a5cd2681bb9ff44e8d535d3c258d5f0, type: 3}
+    Category: 2
+    WallMounted: 0
+    YOffset: 0
+  - Prefab: {fileID: 6443881790918972777, guid: 3acd532d2f33c10458dea6ab3d60f15a, type: 3}
+    Category: 4
+    WallMounted: 0
+    YOffset: 0
+  - Prefab: {fileID: 9209693718873482862, guid: d84a7b68d1e11ba4ea1006f14f598126, type: 3}
+    Category: 4
+    WallMounted: 0
+    YOffset: 0
+  - Prefab: {fileID: 903002097845843850, guid: 252118587069e0545ac347dc5be43a8d, type: 3}
+    Category: 4
+    WallMounted: 0
+    YOffset: 0
+  - Prefab: {fileID: 5742211773395804356, guid: 1bdfdb52c3fe37b4ebac1b3c8a675932, type: 3}
+    Category: 4
+    WallMounted: 0
+    YOffset: 0
+  - Prefab: {fileID: 5803977969310622633, guid: 46820db0d01519a4088cdbf0e61acdf6, type: 3}
+    Category: 4
+    WallMounted: 0
+    YOffset: 0
+  - Prefab: {fileID: 9182073933923387182, guid: cda1b5b137b0961488aeb8916648b641, type: 3}
+    Category: 2
+    WallMounted: 0
+    YOffset: 0
+  - Prefab: {fileID: 1788949140208525721, guid: 4f42300aade730c41b3e3fd6d7166505, type: 3}
+    Category: 2
+    WallMounted: 0
+    YOffset: 0
+  - Prefab: {fileID: 1607394443054077647, guid: 28dac9721771f714b96679113e6c3e2a, type: 3}
+    Category: 2
+    WallMounted: 0
+    YOffset: 0
+  - Prefab: {fileID: 7405029544953985589, guid: 18e901594bf3ee74d96c6d3eeefd6991, type: 3}
+    Category: 2
+    WallMounted: 0
+    YOffset: 0
+  - Prefab: {fileID: 6172180903118336656, guid: d32d771da89ed5940967c8dad94b6fed, type: 3}
+    Category: 2
+    WallMounted: 0
+    YOffset: 0
+  - Prefab: {fileID: 5238084385869016721, guid: e1766214d061ee645a4e48ad337d4a2e, type: 3}
+    Category: 4
+    WallMounted: 0
+    YOffset: 0
+  - Prefab: {fileID: 7812859188470083926, guid: 3d1b21c28ecceed40a570e10fbd6376c, type: 3}
+    Category: 4
+    WallMounted: 0
+    YOffset: 0
+  - Prefab: {fileID: 6435698057366855196, guid: aa0bbdb18f92bce47a0aed50a6c43906, type: 3}
+    Category: 1
+    WallMounted: 0
+    YOffset: 0
+  - Prefab: {fileID: 7714259810056424334, guid: 0e6f3d608f8a5604d82835f0b776b256, type: 3}
+    Category: 0
+    WallMounted: 0
+    YOffset: 0
+  - Prefab: {fileID: 2577684339687543426, guid: 8d17b7e24b8a9454d98728c9db667ad0, type: 3}
+    Category: 0
+    WallMounted: 0
+    YOffset: 0
+  - Prefab: {fileID: 5806492426801353557, guid: 15e7dd998cfc7e844b25ea84ad3347a8, type: 3}
+    Category: 0
+    WallMounted: 0
+    YOffset: 0
+  - Prefab: {fileID: 3618642054974718708, guid: 16256aba866c72443b1b450dcccd3fdd, type: 3}
+    Category: 0
+    WallMounted: 0
+    YOffset: 0
+  - Prefab: {fileID: 4761139769790778233, guid: a0e6f83aed4cdd643b68dcf640d5876e, type: 3}
+    Category: 2
+    WallMounted: 0
+    YOffset: 0
+  - Prefab: {fileID: 1710471841667525764, guid: eb09231dd0c1d13438e155840ea1516b, type: 3}
+    Category: 0
+    WallMounted: 0
+    YOffset: 0
+  - Prefab: {fileID: 6008989404142969698, guid: 0136aedfbddb2c14bb2122171e4967bb, type: 3}
+    Category: 0
+    WallMounted: 0
+    YOffset: 0
+  - Prefab: {fileID: 1007747665827256707, guid: a5a69349dd396fb4199092016aea9409, type: 3}
+    Category: 0
+    WallMounted: 0
+    YOffset: 0
+  - Prefab: {fileID: 5376475803841422153, guid: 9522d1bbe49066f498d5696db6129057, type: 3}
+    Category: 0
+    WallMounted: 0
+    YOffset: 0
+  - Prefab: {fileID: 1406311652229521723, guid: 14403eddc486f094a83425665894e4a3, type: 3}
+    Category: 0
+    WallMounted: 0
+    YOffset: 0
+  - Prefab: {fileID: 1502957089986306224, guid: da0518da1e79f694e8177896e6060b39, type: 3}
+    Category: 0
+    WallMounted: 0
+    YOffset: 0
+  - Prefab: {fileID: 1641137837519011183, guid: d05e8004c2416d84cb937109b9ad64f4, type: 3}
+    Category: 0
+    WallMounted: 0
+    YOffset: 0
+  - Prefab: {fileID: 4223627203684532777, guid: b79beb6d8eba13d4d9fc769416ec2c87, type: 3}
+    Category: 0
+    WallMounted: 0
+    YOffset: 0
+  - Prefab: {fileID: 4420567221403213012, guid: a6f98fd063a7c644aa6b062b7a42b387, type: 3}
+    Category: 0
+    WallMounted: 0
+    YOffset: 0
+  - Prefab: {fileID: 1216902169601250925, guid: b27285463d184a049a7e1aee4f0b028d, type: 3}
+    Category: 0
+    WallMounted: 0
+    YOffset: 0
+  - Prefab: {fileID: 5257173143683713691, guid: 07a42fa942cadfd4e9a704b9e7fc8a80, type: 3}
+    Category: 0
+    WallMounted: 0
+    YOffset: 0
+  - Prefab: {fileID: 5842754116375657126, guid: b5a72df657a854041b7f5a278148ef9a, type: 3}
+    Category: 0
+    WallMounted: 0
+    YOffset: 0
+  - Prefab: {fileID: 861717049901066225, guid: e5385a7b28032324a968707b29e5cfb0, type: 3}
+    Category: 0
+    WallMounted: 0
+    YOffset: 0
+  - Prefab: {fileID: 861717049901066225, guid: c6c2e541576c7e045b92bfca6a98a87e, type: 3}
+    Category: 0
+    WallMounted: 0
+    YOffset: 0
+  - Prefab: {fileID: 6918180424291716008, guid: 1d223851adfc5f043a79a9380a5d35a6, type: 3}
+    Category: 0
+    WallMounted: 0
+    YOffset: 0
+  - Prefab: {fileID: 1244505103376080848, guid: 7ecc82d399b775944acbfbf30bc86c95, type: 3}
+    Category: 0
+    WallMounted: 0
+    YOffset: 0
+  - Prefab: {fileID: 8970612975571377558, guid: 5a1430088c7d81149baf649399f66b3b, type: 3}
+    Category: 0
+    WallMounted: 0
+    YOffset: 0
+  - Prefab: {fileID: 9164019927676627365, guid: 7d34b8a23a6efcf41aa456dfe1367aff, type: 3}
+    Category: 0
+    WallMounted: 0
+    YOffset: 0
+  - Prefab: {fileID: 8800732622504208233, guid: ddb38d494ea97ba47bc9eedfd8a1ff9e, type: 3}
+    Category: 0
+    WallMounted: 0
+    YOffset: 0
+  - Prefab: {fileID: 5221652777479134869, guid: 883efd0e201eed641a0456049a747f60, type: 3}
+    Category: 0
+    WallMounted: 0
+    YOffset: 0
+  - Prefab: {fileID: 7216512472862987577, guid: d651a1a13123c584fb49508051daf732, type: 3}
+    Category: 1
+    WallMounted: 0
+    YOffset: 0
+  - Prefab: {fileID: 178697608244679660, guid: 574b437b0fd61474183bbb0497b936f6, type: 3}
+    Category: 1
+    WallMounted: 0
+    YOffset: 0
+  - Prefab: {fileID: 8130107665865977906, guid: 85cb75aca6fc60d45bf07fa4c255279a, type: 3}
+    Category: 2
+    WallMounted: 0
+    YOffset: 0
+  - Prefab: {fileID: 1324386134015464121, guid: 79a388a94862f9e4ea6a7546ef35170d, type: 3}
+    Category: 2
+    WallMounted: 0
+    YOffset: 0
+  - Prefab: {fileID: 9214964341029520423, guid: df4ba7ff9a8901b45af198d408fcccef, type: 3}
+    Category: 2
+    WallMounted: 0
+    YOffset: 0
+  - Prefab: {fileID: 145721178695525170, guid: afb17377675ba8b4681c168a63232060, type: 3}
+    Category: 2
+    WallMounted: 0
+    YOffset: 0
+  - Prefab: {fileID: 7516004155725684138, guid: 2f8c2cfafb3961d49a022aa5717e11b4, type: 3}
+    Category: 2
+    WallMounted: 0
+    YOffset: 0
+  - Prefab: {fileID: 1287486362959050560, guid: b94613095ac99f1498e6395683ad064b, type: 3}
+    Category: 2
+    WallMounted: 0
+    YOffset: 0
+  - Prefab: {fileID: 7360701640561975381, guid: 0b5056a510321a442bfd2ff7fde335b3, type: 3}
+    Category: 2
+    WallMounted: 0
+    YOffset: 0
+  - Prefab: {fileID: 1370701005121857211, guid: fae650f1706c3d844a56793b91a5e3a4, type: 3}
+    Category: 2
+    WallMounted: 0
+    YOffset: 0
+  - Prefab: {fileID: 7150941037498071583, guid: 78d76935d5d687f46804a6cbd2fc9f5f, type: 3}
+    Category: 2
+    WallMounted: 0
+    YOffset: 0
+  - Prefab: {fileID: 6169206240939852974, guid: 6614b0ee7fcd70547b358f28d6f0c6df, type: 3}
+    Category: 1
+    WallMounted: 0
+    YOffset: 0
+  - Prefab: {fileID: 4496504628306727248, guid: 30c48fb18ac524e44843439438a3e26a, type: 3}
+    Category: 1
+    WallMounted: 0
+    YOffset: 0
+  - Prefab: {fileID: 59082382090731556, guid: efdf17468a8a6d64d99a5fc8b1af62cd, type: 3}
+    Category: 1
+    WallMounted: 1
+    YOffset: 0
+  - Prefab: {fileID: 6604975097963190884, guid: a8fcdb2fbadb767429ba4c7f4ef65ce5, type: 3}
+    Category: 1
+    WallMounted: 1
+    YOffset: 0
+  - Prefab: {fileID: 2378043254597280626, guid: 20f69bf1a65945f4790fb00369d37e5e, type: 3}
+    Category: 4
+    WallMounted: 0
+    YOffset: 0
+  - Prefab: {fileID: 8854899098856198224, guid: bf53f8be603300849896a2583c8f4127, type: 3}
+    Category: 4
+    WallMounted: 0
+    YOffset: 0
+  - Prefab: {fileID: 1032887246408495576, guid: 268acbbf6b1b21d42afb84a0375f970b, type: 3}
+    Category: 4
+    WallMounted: 1
+    YOffset: 0
+  - Prefab: {fileID: 7269885926102026035, guid: 930569b24c72da346ae31d1eb97e9e73, type: 3}
+    Category: 4
+    WallMounted: 1
+    YOffset: 0
+  - Prefab: {fileID: 3653117747600457943, guid: 2d56d524d5c1ba3449987e6e184ea029, type: 3}
+    Category: 4
+    WallMounted: 1
+    YOffset: 0
+  - Prefab: {fileID: 126207422234501396, guid: 440de3df58805184298bc6fca044c76a, type: 3}
+    Category: 1
+    WallMounted: 0
+    YOffset: 0
+  - Prefab: {fileID: 6795245809345036481, guid: e8cdf3183c8d32240acb64bf55547f25, type: 3}
+    Category: 0
+    WallMounted: 1
+    YOffset: 1.8
+  - Prefab: {fileID: 8525423573680825263, guid: 0a5a7696c97fb0e4499288625e245d67, type: 3}
+    Category: 0
+    WallMounted: 1
+    YOffset: 1.8
+  - Prefab: {fileID: 5579890570934002875, guid: 1aaffb9b65d4cf14a9c254e895f8c055, type: 3}
+    Category: 0
+    WallMounted: 1
+    YOffset: 1.8
+  - Prefab: {fileID: 4977839225008235974, guid: 87f1618d3fc825341844ce355c17a1af, type: 3}
+    Category: 0
+    WallMounted: 1
+    YOffset: 1.8
+  - Prefab: {fileID: 5939144949887780450, guid: 4f7bdcc1b729fbb4489356985faa81c1, type: 3}
+    Category: 0
+    WallMounted: 1
+    YOffset: 1.8
+  - Prefab: {fileID: 2859001696156064835, guid: ff8f16316d0774f438d0931a79db6bc6, type: 3}
+    Category: 0
+    WallMounted: 1
+    YOffset: 1.8
+  - Prefab: {fileID: 8752780081504816852, guid: 8061fba97a47e9e4691353aa4b87fb83, type: 3}
+    Category: 0
+    WallMounted: 1
+    YOffset: 1.8
+  - Prefab: {fileID: 8752780081504816852, guid: 01e50c5fd3c24cf498403073c9b6ede1, type: 3}
+    Category: 0
+    WallMounted: 1
+    YOffset: 1.8
+  - Prefab: {fileID: 1067439689286839041, guid: 7410d36d8a2814646895dfb966924ba7, type: 3}
+    Category: 0
+    WallMounted: 1
+    YOffset: 1.8
+  - Prefab: {fileID: 7538318627096256894, guid: 292896d9c57c52c459ef4b24b723ebad, type: 3}
+    Category: 0
+    WallMounted: 1
+    YOffset: 1.8
+  - Prefab: {fileID: 1543946104769975215, guid: 5bd3217184fe27548a6486313ab9a9bf, type: 3}
+    Category: 4
+    WallMounted: 1
+    YOffset: 1.5
+  - Prefab: {fileID: 2810880068499793329, guid: 8f2161821ab2ce548af4df169110110f, type: 3}
+    Category: 4
+    WallMounted: 0
+    YOffset: 0
+  - Prefab: {fileID: 3832829660656969250, guid: 33f9545085e726441a3e8207c2a6b9df, type: 3}
+    Category: 4
+    WallMounted: 0
+    YOffset: 0
+  - Prefab: {fileID: 1754731494639103977, guid: 10ca259fd12c2d7408fbed20c01c8860, type: 3}
+    Category: 4
+    WallMounted: 0
+    YOffset: 0
+  - Prefab: {fileID: 6410007101961676661, guid: cc8c309f7894a3c4e88e76a810a5de59, type: 3}
+    Category: 4
+    WallMounted: 0
+    YOffset: 0
+  - Prefab: {fileID: 127120, guid: 6b5fd7cab1f845b289850db8ab502261, type: 3}
+    Category: 2
+    WallMounted: 0
+    YOffset: 0
+  - Prefab: {fileID: 143570, guid: b15f5745a0d64fb5b2ae7554210dff7a, type: 3}
+    Category: 2
+    WallMounted: 0
+    YOffset: 0
+  - Prefab: {fileID: 102532, guid: 15fd5903be7b4cd68505a9c33fb0cd77, type: 3}
+    Category: 2
+    WallMounted: 0
+    YOffset: 0
+  - Prefab: {fileID: 193222, guid: c0ec564d1f2148c99703100107fde91c, type: 3}
+    Category: 2
+    WallMounted: 0
+    YOffset: 0
+  - Prefab: {fileID: 127408, guid: 1de99f1c9e134fa8b97f4d761833de57, type: 3}
+    Category: 2
+    WallMounted: 0
+    YOffset: 0
+  - Prefab: {fileID: 116136, guid: 0e749be40a6b4f60935cf7e490b57d1e, type: 3}
+    Category: 2
+    WallMounted: 0
+    YOffset: 0
+  - Prefab: {fileID: 122276, guid: 131a112cf67c4e98af44b350b210ef43, type: 3}
+    Category: 4
+    WallMounted: 0
+    YOffset: 0
+  - Prefab: {fileID: 139814, guid: 525d19f14f3748b0b2fa10caecab6b1c, type: 3}
+    Category: 4
+    WallMounted: 0
+    YOffset: 0
+  - Prefab: {fileID: 111320, guid: a693f8c2201b4b60b2569dad07d1945f, type: 3}
+    Category: 4
+    WallMounted: 0
+    YOffset: 0
+  - Prefab: {fileID: 124098, guid: 197a3bf124274ac5a1dd23cf272a9a3a, type: 3}
+    Category: 4
+    WallMounted: 0
+    YOffset: 0
+  - Prefab: {fileID: 133132, guid: 6c430e2339b04d49a5ca113f066609b8, type: 3}
+    Category: 4
+    WallMounted: 0
+    YOffset: 0
+  - Prefab: {fileID: 173732, guid: 147f183af15640289aa7154f0ea2de5c, type: 3}
+    Category: 4
+    WallMounted: 0
+    YOffset: 0
+  - Prefab: {fileID: 109190, guid: a4cadd393c8c41bd8946346a453ee36a, type: 3}
+    Category: 4
+    WallMounted: 0
+    YOffset: 0
+  - Prefab: {fileID: 168470, guid: 1d040883b4c941fa9ab5cfdcce009a7b, type: 3}
+    Category: 4
+    WallMounted: 0
+    YOffset: 0
+  - Prefab: {fileID: 162312, guid: cab518aa9b9d42f3813edffa01162bb8, type: 3}
+    Category: 4
+    WallMounted: 0
+    YOffset: 0
+  - Prefab: {fileID: 126818, guid: d79ee02934624ec8bdf62b8918e9d8a4, type: 3}
+    Category: 4
+    WallMounted: 0
+    YOffset: 0
+  - Prefab: {fileID: 168468, guid: cfbebb7126464c7b9b9300fb0b51dfb1, type: 3}
+    Category: 4
+    WallMounted: 0
+    YOffset: 0
+  - Prefab: {fileID: 177492, guid: 25b65563c564407d8b1214934a3cce01, type: 3}
+    Category: 4
+    WallMounted: 0
+    YOffset: 0
+  - Prefab: {fileID: 112190, guid: 90453fdc09234512bd43221d2b5f5569, type: 3}
+    Category: 4
+    WallMounted: 0
+    YOffset: 0
+  - Prefab: {fileID: 154784, guid: 36ac7bb4677d46aa8368525fc9a82bdf, type: 3}
+    Category: 4
+    WallMounted: 0
+    YOffset: 0
+  - Prefab: {fileID: 142944, guid: 0ed3201858cd4194bbf2553c8517321b, type: 3}
+    Category: 4
+    WallMounted: 0
+    YOffset: 0
+  - Prefab: {fileID: 183152, guid: 11974f92aea44b97a97ff84cc6182945, type: 3}
+    Category: 4
+    WallMounted: 0
+    YOffset: 0
+  - Prefab: {fileID: 196770, guid: 5d77920e991c410ab2bec909ec78a579, type: 3}
+    Category: 4
+    WallMounted: 0
+    YOffset: 0
+  - Prefab: {fileID: 152992, guid: a9c924e80c494a0187ef4b735a3c46b8, type: 3}
+    Category: 4
+    WallMounted: 0
+    YOffset: 0
+  - Prefab: {fileID: 187564, guid: fd69dd2a121e4509a1e7ed3ab107ba7b, type: 3}
+    Category: 4
+    WallMounted: 0
+    YOffset: 0
+  - Prefab: {fileID: 143762, guid: 00f3d6cec2fd439dad128145ad2a3048, type: 3}
+    Category: 4
+    WallMounted: 0
+    YOffset: 0
+  - Prefab: {fileID: 188430, guid: ca65590ee38a4f878c549a1c596e4137, type: 3}
+    Category: 4
+    WallMounted: 0
+    YOffset: 0
+  - Prefab: {fileID: 157466, guid: b7861b2ee4d6486d8d0fa7a14cc3939a, type: 3}
+    Category: 4
+    WallMounted: 0
+    YOffset: 0
+  - Prefab: {fileID: 141946, guid: 452a86ca4bb346709707701376fdcd66, type: 3}
+    Category: 4
+    WallMounted: 0
+    YOffset: 0
+  - Prefab: {fileID: 198320, guid: 90f6956632cd4b0b990455ee7dee97ff, type: 3}
+    Category: 4
+    WallMounted: 0
+    YOffset: 0
+  - Prefab: {fileID: 112500, guid: 747dab04a1084dd1805bd446e606e5a4, type: 3}
+    Category: 4
+    WallMounted: 0
+    YOffset: 0
+  - Prefab: {fileID: 187878, guid: 4efba74564624dfea3803661732fd71c, type: 3}
+    Category: 4
+    WallMounted: 0
+    YOffset: 0
+  - Prefab: {fileID: 142692, guid: e0e444834ba54dcd863b19283e180747, type: 3}
+    Category: 4
+    WallMounted: 0
+    YOffset: 0
+  - Prefab: {fileID: 125586, guid: d8c1ecd27d8b494f99c904bd9a3be8bf, type: 3}
+    Category: 4
+    WallMounted: 0
+    YOffset: 0
+  - Prefab: {fileID: 127188, guid: ec9920e44a9241b0bed559c0b9d90d5c, type: 3}
+    Category: 4
+    WallMounted: 0
+    YOffset: 0
+  - Prefab: {fileID: 171450, guid: 845c09bb5de54859a6c48651aa011c28, type: 3}
+    Category: 4
+    WallMounted: 0
+    YOffset: 0
+  - Prefab: {fileID: 132158, guid: b29b15951e3f4f2f83b65c4b43aff9d2, type: 3}
+    Category: 4
+    WallMounted: 0
+    YOffset: 0
+  - Prefab: {fileID: 153092, guid: 86e6f19df467456c98668b86a7963358, type: 3}
+    Category: 4
+    WallMounted: 0
+    YOffset: 0
+  - Prefab: {fileID: 191050, guid: b5b903da71f948758cc8f65f59d30edc, type: 3}
+    Category: 4
+    WallMounted: 0
+    YOffset: 0
+  - Prefab: {fileID: 161476, guid: 95df6f7f30e343db95014a0a7537ce7d, type: 3}
+    Category: 4
+    WallMounted: 0
+    YOffset: 0
+  - Prefab: {fileID: 152484, guid: 702c6bea8ac34b64bc7b7584ede296ab, type: 3}
+    Category: 4
+    WallMounted: 0
+    YOffset: 0
+  - Prefab: {fileID: 165094, guid: 26cc087b299f42a4a1923da599fe03cc, type: 3}
+    Category: 4
+    WallMounted: 0
+    YOffset: 0
+  - Prefab: {fileID: 171982, guid: 6a61beb91ee14785add56c8d67ee6e6a, type: 3}
+    Category: 4
+    WallMounted: 0
+    YOffset: 0
+  - Prefab: {fileID: 141776, guid: aaa89c406a964d7780afb86370e3860d, type: 3}
+    Category: 4
+    WallMounted: 0
+    YOffset: 0
+  - Prefab: {fileID: 161854, guid: 1f97f333a6bf4fba95ee13cc9b3df973, type: 3}
+    Category: 4
+    WallMounted: 0
+    YOffset: 0
+  - Prefab: {fileID: 173006, guid: d0e39f206f1e4ca082d2fd38f5475d00, type: 3}
+    Category: 4
+    WallMounted: 0
+    YOffset: 0
+  - Prefab: {fileID: 121558, guid: 710caedd8bff451d82b2ab398533e070, type: 3}
+    Category: 4
+    WallMounted: 0
+    YOffset: 0
+  - Prefab: {fileID: 162484, guid: b750cae05681454bba80ad81d7252818, type: 3}
+    Category: 4
+    WallMounted: 0
+    YOffset: 0
+  - Prefab: {fileID: 196834, guid: 3e0ed916ce4c426c887d47337b536aba, type: 3}
+    Category: 4
+    WallMounted: 0
+    YOffset: 0
+  - Prefab: {fileID: 181342, guid: 56d044af64e145bb9ab7eb6ed864ba74, type: 3}
+    Category: 4
+    WallMounted: 0
+    YOffset: 0
+  - Prefab: {fileID: 134562, guid: 8f91923b9a9c4dd2a622b3b1c3231268, type: 3}
+    Category: 2
+    WallMounted: 0
+    YOffset: 0
+  - Prefab: {fileID: 169992, guid: f92572ee929e4eb7a01d7dfecc063a29, type: 3}
+    Category: 0
+    WallMounted: 0
+    YOffset: 0
+  - Prefab: {fileID: 125266, guid: 374b0997db81407ca6f741e55d078c80, type: 3}
+    Category: 0
+    WallMounted: 0
+    YOffset: 0
+  - Prefab: {fileID: 198108, guid: bd3e98b7af3649949b2bbab0ea7fe8aa, type: 3}
+    Category: 0
+    WallMounted: 0
+    YOffset: 0
+  - Prefab: {fileID: 111900, guid: 1960faf6eb584ed791bfca46bf40ecf4, type: 3}
+    Category: 0
+    WallMounted: 0
+    YOffset: 0
+  - Prefab: {fileID: 135990, guid: b83d1fb4a7e14defb6ab7dd86e0ff3af, type: 3}
+    Category: 0
+    WallMounted: 0
+    YOffset: 0
+  - Prefab: {fileID: 113102, guid: 502607ad5cbe456193f957ac30014e3a, type: 3}
+    Category: 0
+    WallMounted: 0
+    YOffset: 0
+  - Prefab: {fileID: 195364, guid: 57216b0d7e1f41d396ea9e5bb9117953, type: 3}
+    Category: 0
+    WallMounted: 0
+    YOffset: 0
+  - Prefab: {fileID: 100858, guid: 4ca27bc633e2469a911874c5d25aa6a9, type: 3}
+    Category: 0
+    WallMounted: 0
+    YOffset: 0
+  - Prefab: {fileID: 157436, guid: 9787aadb1e7e4d40967ab15f624bffc9, type: 3}
+    Category: 0
+    WallMounted: 0
+    YOffset: 0
+  - Prefab: {fileID: 154092, guid: ba33a658c88349bb9fd179f37638e904, type: 3}
+    Category: 0
+    WallMounted: 0
+    YOffset: 0
+  - Prefab: {fileID: 113274, guid: aa299f61244143f084a68a37435cb7c4, type: 3}
+    Category: 0
+    WallMounted: 0
+    YOffset: 0
+  - Prefab: {fileID: 118522, guid: aebf24aa57894961bfe5b60492dd5bdd, type: 3}
+    Category: 0
+    WallMounted: 0
+    YOffset: 0
+  - Prefab: {fileID: 124456, guid: 37c3c9bac33a4b9dafcace5d47746041, type: 3}
+    Category: 1
+    WallMounted: 0
+    YOffset: 0
+  - Prefab: {fileID: 146742, guid: b8f3e8c6f9dc4b0cb6f7ee0bec988dcb, type: 3}
+    Category: 1
+    WallMounted: 0
+    YOffset: 0
+  - Prefab: {fileID: 138372, guid: 1efd93450a4746d1bf94bff601cf447c, type: 3}
+    Category: 1
+    WallMounted: 0
+    YOffset: 0
+  - Prefab: {fileID: 138348, guid: 28204d4732d744778287ba981af91906, type: 3}
+    Category: 1
+    WallMounted: 0
+    YOffset: 0
+  - Prefab: {fileID: 155530, guid: 064ab94ee3ce4c9892a2682dc57ce18e, type: 3}
+    Category: 1
+    WallMounted: 0
+    YOffset: 0
+  - Prefab: {fileID: 156840, guid: 1190fd8687304efb8e8af180203c5fb5, type: 3}
+    Category: 1
+    WallMounted: 0
+    YOffset: 0
+  - Prefab: {fileID: 156020, guid: dbd2951b893941f1821fa65212a274cd, type: 3}
+    Category: 1
+    WallMounted: 0
+    YOffset: 0
+  - Prefab: {fileID: 149116, guid: 7d6463315d4e403f9ccc2aea0d6ecc77, type: 3}
+    Category: 1
+    WallMounted: 0
+    YOffset: 0
+  - Prefab: {fileID: 187698, guid: 847b726f2c6045299e636f76a384a436, type: 3}
+    Category: 1
+    WallMounted: 0
+    YOffset: 0
+  - Prefab: {fileID: 182456, guid: 662dc20108624032b4ce7f54157a9ac2, type: 3}
+    Category: 1
+    WallMounted: 0
+    YOffset: 0
+  - Prefab: {fileID: 131308, guid: 0648a8654321442ba88d4834921d373a, type: 3}
+    Category: 1
+    WallMounted: 0
+    YOffset: 0
+  - Prefab: {fileID: 181168, guid: dbfc6d66c8564f40ac4701c24ba5d15b, type: 3}
+    Category: 1
+    WallMounted: 0
+    YOffset: 0
+  - Prefab: {fileID: 168138, guid: 7ffc0d413ee44a1da7ef41392c80053d, type: 3}
+    Category: 1
+    WallMounted: 0
+    YOffset: 0
+  - Prefab: {fileID: 184700, guid: d3f5491481ca44e6a5445d9009794c0c, type: 3}
+    Category: 1
+    WallMounted: 0
+    YOffset: 0
+  - Prefab: {fileID: 175604, guid: 2c3e3f4479824bceb3d0cece5ec5697f, type: 3}
+    Category: 1
+    WallMounted: 0
+    YOffset: 0
+  - Prefab: {fileID: 124932, guid: 0f9a358951884939a03ac8f1035237f7, type: 3}
+    Category: 1
+    WallMounted: 0
+    YOffset: 0
+  - Prefab: {fileID: 173418, guid: 9ca80a708cb044a896bdc73595df86e4, type: 3}
+    Category: 1
+    WallMounted: 0
+    YOffset: 0
+  - Prefab: {fileID: 107378, guid: 6bbaf0f5eff14833833d82961e6f0504, type: 3}
+    Category: 1
+    WallMounted: 0
+    YOffset: 0
+  - Prefab: {fileID: 157522, guid: 05321276d9d746b7b382f6d02305b9c4, type: 3}
+    Category: 1
+    WallMounted: 0
+    YOffset: 0
+  - Prefab: {fileID: 159568, guid: 34b63ad9eee444f5a16ccab020f97c56, type: 3}
+    Category: 1
+    WallMounted: 0
+    YOffset: 0
+  - Prefab: {fileID: 198586, guid: 7084b5a21de241c98d3a4063be79c075, type: 3}
+    Category: 1
+    WallMounted: 0
+    YOffset: 0
+  - Prefab: {fileID: 115566, guid: d8f3e38cbedc47d88632b646b8e53412, type: 3}
+    Category: 4
+    WallMounted: 0
+    YOffset: 0
+  - Prefab: {fileID: 199210, guid: ba54338b1750435fa5051af844563833, type: 3}
+    Category: 4
+    WallMounted: 0
+    YOffset: 0
+  - Prefab: {fileID: 189114, guid: b2c20920a51e43e39c7bc73ae33fa1df, type: 3}
+    Category: 4
+    WallMounted: 0
+    YOffset: 0
+  - Prefab: {fileID: 119458, guid: 871313d097424a8da9d90dc4db5a48ba, type: 3}
+    Category: 1
+    WallMounted: 1
+    YOffset: 0
+  - Prefab: {fileID: 179442, guid: f8eaf7aab1f841ffa2a822ddbbe33ac7, type: 3}
+    Category: 4
+    WallMounted: 0
+    YOffset: 0
+  - Prefab: {fileID: 101910, guid: 663177e7db344bd692306990641ca5e1, type: 3}
+    Category: 4
+    WallMounted: 0
+    YOffset: 0
+  - Prefab: {fileID: 175946, guid: 0204815ed6d44124b96dba2ddd5ec69e, type: 3}
+    Category: 1
+    WallMounted: 0
+    YOffset: 0
+  - Prefab: {fileID: 171690, guid: b1dddcd355c246b6b4f0139d24727cc3, type: 3}
+    Category: 1
+    WallMounted: 0
+    YOffset: 0
+  - Prefab: {fileID: 130918, guid: 517e2520ef6b4a098fa2b4d0d98d7a39, type: 3}
+    Category: 1
+    WallMounted: 0
+    YOffset: 0
+  - Prefab: {fileID: 110180, guid: b8606597093e47dbb476bdb09448f37f, type: 3}
+    Category: 1
+    WallMounted: 0
+    YOffset: 0
+  - Prefab: {fileID: 149138, guid: d7a5e14202ef45918353047c81112c8a, type: 3}
+    Category: 1
+    WallMounted: 0
+    YOffset: 0
+  - Prefab: {fileID: 142046, guid: 7898d54b47c340b59a0491e6a61aded1, type: 3}
+    Category: 1
+    WallMounted: 0
+    YOffset: 0
+  - Prefab: {fileID: 130168, guid: 1c622154ca804fc7884d0df9b51f903d, type: 3}
+    Category: 1
+    WallMounted: 0
+    YOffset: 0
+  - Prefab: {fileID: 169384, guid: 4b15c1d3e1d14381be7a78f4ac797171, type: 3}
+    Category: 1
+    WallMounted: 0
+    YOffset: 0
+  - Prefab: {fileID: 114742, guid: 065f770c0c58456e929d9ea17079d78d, type: 3}
+    Category: 1
+    WallMounted: 0
+    YOffset: 0
+  - Prefab: {fileID: 108694, guid: 10fa83c6e3d4469d8bd4bff9470da469, type: 3}
+    Category: 1
+    WallMounted: 0
+    YOffset: 0
+  - Prefab: {fileID: 141524, guid: ac54d2d6fecb48fe86a84515a8d01eb9, type: 3}
+    Category: 1
+    WallMounted: 0
+    YOffset: 0
+  - Prefab: {fileID: 164848, guid: 1fba721680014217bdaceed4f6fe154d, type: 3}
+    Category: 1
+    WallMounted: 0
+    YOffset: 0
+  - Prefab: {fileID: 159074, guid: ebca31b02b704c8fba1ab8328306f126, type: 3}
+    Category: 1
+    WallMounted: 0
+    YOffset: 0
+  - Prefab: {fileID: 117982, guid: d608e743b49844edae196bc799723896, type: 3}
+    Category: 1
+    WallMounted: 0
+    YOffset: 0
+  - Prefab: {fileID: 101314, guid: 58d83b4a8dd8477883ef7bd4c4718519, type: 3}
+    Category: 4
+    WallMounted: 0
+    YOffset: 0
+  - Prefab: {fileID: 128774, guid: 39b63f09de6a49acb8aac784141edeaa, type: 3}
+    Category: 4
+    WallMounted: 0
+    YOffset: 0
+  - Prefab: {fileID: 172262, guid: 6b3445fc9bfc4619a05c2ce6d9344db2, type: 3}
+    Category: 4
+    WallMounted: 0
+    YOffset: 0
+  - Prefab: {fileID: 147182, guid: 3c48fffcc1564b28b55bbdf60e5b9a8d, type: 3}
+    Category: 4
+    WallMounted: 0
+    YOffset: 0
+  - Prefab: {fileID: 151694, guid: f59e02d325704d6e9f804b133aa7b6f1, type: 3}
+    Category: 4
+    WallMounted: 0
+    YOffset: 0
+  - Prefab: {fileID: 111526, guid: 46bf1c52d3624c7f815b3faaf29b4d83, type: 3}
+    Category: 4
+    WallMounted: 0
+    YOffset: 0
+  - Prefab: {fileID: 112938, guid: dfbde792590a4220a339d2b776e63f3b, type: 3}
+    Category: 0
+    WallMounted: 0
+    YOffset: 0
+  - Prefab: {fileID: 148094, guid: 17167dc6dc844dad8cef726ac45a016a, type: 3}
+    Category: 0
+    WallMounted: 0
+    YOffset: 0
+  - Prefab: {fileID: 179760, guid: c2b5621c0df447c6832963ba7245f335, type: 3}
+    Category: 0
+    WallMounted: 0
+    YOffset: 0
+  - Prefab: {fileID: 126712, guid: c35b4f7b6db0440a8b9972af1d27adea, type: 3}
+    Category: 0
+    WallMounted: 1
+    YOffset: 1.8
+  - Prefab: {fileID: 132240, guid: 28bbda36f51a405f8e8a661d2246404a, type: 3}
+    Category: 0
+    WallMounted: 1
+    YOffset: 1.8
+  - Prefab: {fileID: 143220, guid: 8ae5714440a54f42a374a1787987d54f, type: 3}
+    Category: 2
+    WallMounted: 0
+    YOffset: 0
+  - Prefab: {fileID: 101712, guid: f145d8a31a7a4126899cac55d3396d94, type: 3}
+    Category: 2
+    WallMounted: 0
+    YOffset: 0
+  - Prefab: {fileID: 172694, guid: 1a10e548b67980b4f8d1ae9596154a51, type: 3}
+    Category: 2
+    WallMounted: 0
+    YOffset: 0
+  - Prefab: {fileID: 174638, guid: 599dd573694ca3748bef6203bd377b71, type: 3}
+    Category: 2
+    WallMounted: 0
+    YOffset: 0
+  - Prefab: {fileID: 128792, guid: 5c431f9e7f5b4c342ae6ac78a7e9aca3, type: 3}
+    Category: 2
+    WallMounted: 0
+    YOffset: 0
+  - Prefab: {fileID: 199192, guid: bf5e1a0b481a17c4cb06d14bddb00c73, type: 3}
+    Category: 2
+    WallMounted: 0
+    YOffset: 0
+  - Prefab: {fileID: 110192, guid: 586acd51cf9cd4a4b9d7ad6a8fc51d01, type: 3}
+    Category: 2
+    WallMounted: 0
+    YOffset: 0
+  - Prefab: {fileID: 153546, guid: 628183b343776a84c92c4acdd786773c, type: 3}
+    Category: 2
+    WallMounted: 0
+    YOffset: 0
+  - Prefab: {fileID: 106992, guid: 91485e95188c2ff43b23286a164eed62, type: 3}
+    Category: 2
+    WallMounted: 0
+    YOffset: 0
+  - Prefab: {fileID: 196552, guid: 195d9683292c7d54980baf4f80b4f943, type: 3}
+    Category: 2
+    WallMounted: 0
+    YOffset: 0
+  - Prefab: {fileID: 110948, guid: ab5e5ede4bbdb5541afcd9b10c572d2f, type: 3}
+    Category: 2
+    WallMounted: 0
+    YOffset: 0
+  - Prefab: {fileID: 177958, guid: 4b4180c8faf6c7c41ae8b3a434267172, type: 3}
+    Category: 2
+    WallMounted: 0
+    YOffset: 0
+  - Prefab: {fileID: 190704, guid: 5c5be3010c5038d44aba0d64fad8507b, type: 3}
+    Category: 2
+    WallMounted: 0
+    YOffset: 0
+  - Prefab: {fileID: 129640, guid: 1a065ce8573bd9c44aafde82ef17fabb, type: 3}
+    Category: 2
+    WallMounted: 0
+    YOffset: 0
+  - Prefab: {fileID: 153336, guid: 82de2dce65bfb424eab4a381a8b215b4, type: 3}
+    Category: 2
+    WallMounted: 0
+    YOffset: 0
+  - Prefab: {fileID: 120126, guid: 57456e20de080114c829bf6e74b780e4, type: 3}
+    Category: 2
+    WallMounted: 0
+    YOffset: 0
+  - Prefab: {fileID: 150816, guid: d84af0d92b16a9541b198372bd0ef5dc, type: 3}
+    Category: 4
+    WallMounted: 0
+    YOffset: 0
+  - Prefab: {fileID: 141068, guid: de1f9a3a96eb2884cbef2023304b8d70, type: 3}
+    Category: 4
+    WallMounted: 0
+    YOffset: 0
+  - Prefab: {fileID: 156904, guid: 09f86c3e003df284babe42e9c1b408f4, type: 3}
+    Category: 4
+    WallMounted: 0
+    YOffset: 0
+  - Prefab: {fileID: 106116, guid: 7fe4c4b095edac84ba30ea51fd194116, type: 3}
+    Category: 4
+    WallMounted: 0
+    YOffset: 0
+  - Prefab: {fileID: 102948, guid: 42a2746028e567e44962fba164918b77, type: 3}
+    Category: 4
+    WallMounted: 0
+    YOffset: 0
+  - Prefab: {fileID: 139084, guid: abd7f971b552c784dabe2bfbe1764a91, type: 3}
+    Category: 4
+    WallMounted: 0
+    YOffset: 0
+  - Prefab: {fileID: 115202, guid: eb9730c92a012564f8aaca24d4cc96f9, type: 3}
+    Category: 4
+    WallMounted: 0
+    YOffset: 0
+  - Prefab: {fileID: 189906, guid: 3d4de56a509f8734f959e1ca1ee0da62, type: 3}
+    Category: 2
+    WallMounted: 0
+    YOffset: 0
+  - Prefab: {fileID: 132516, guid: 146a2ccd3c2938847910d4bf0e36f091, type: 3}
+    Category: 4
+    WallMounted: 0
+    YOffset: 0
+  - Prefab: {fileID: 193362, guid: e94c2cacd3ffb3b478264fef668822c7, type: 3}
+    Category: 1
+    WallMounted: 0
+    YOffset: 0
+  - Prefab: {fileID: 194326, guid: 46a9d895f60674c44bceedaa994755b1, type: 3}
+    Category: 1
+    WallMounted: 0
+    YOffset: 0
+  - Prefab: {fileID: 197044, guid: 172feef8131c74a43bde2aca74c04b43, type: 3}
+    Category: 1
+    WallMounted: 0
+    YOffset: 0
+  - Prefab: {fileID: 102200, guid: 67323d83537ea7e4d876db7e4d5b1673, type: 3}
+    Category: 1
+    WallMounted: 0
+    YOffset: 0
+  - Prefab: {fileID: 118622, guid: 0d6f332ae96548343898a373d0b4472a, type: 3}
+    Category: 1
+    WallMounted: 0
+    YOffset: 0
+  - Prefab: {fileID: 181556, guid: b7a2d95b91f57754f9da8072d3536bd6, type: 3}
+    Category: 1
+    WallMounted: 0
+    YOffset: 0
+  - Prefab: {fileID: 106896, guid: b416d4e753bcd19479c3ab25cceb5681, type: 3}
+    Category: 1
+    WallMounted: 0
+    YOffset: 0
+  - Prefab: {fileID: 155852, guid: c3ab7c13629ae6745a4934dae843577a, type: 3}
+    Category: 1
+    WallMounted: 0
+    YOffset: 0
+  - Prefab: {fileID: 195274, guid: 3a3a129713a72c7459efcf22ed39aef8, type: 3}
+    Category: 1
+    WallMounted: 0
+    YOffset: 0
+  - Prefab: {fileID: 107806, guid: 9e55faa2c9e3b5844826693f5992c584, type: 3}
+    Category: 1
+    WallMounted: 0
+    YOffset: 0
+  - Prefab: {fileID: 122172, guid: a9d46ffa8b8dd8c48a91c8477561f1fd, type: 3}
+    Category: 1
+    WallMounted: 0
+    YOffset: 0
+  - Prefab: {fileID: 169218, guid: 9177cb6340633a64a8fe2448f65b9a3c, type: 3}
+    Category: 1
+    WallMounted: 0
+    YOffset: 0
+  - Prefab: {fileID: 131000, guid: 884c1cffa1ba7fc4a82dcdb0d3d31a5b, type: 3}
+    Category: 1
+    WallMounted: 0
+    YOffset: 0
+  - Prefab: {fileID: 122708, guid: 0e90ff7ea0201464fabf1a82b1401241, type: 3}
+    Category: 1
+    WallMounted: 0
+    YOffset: 0
+  - Prefab: {fileID: 194574, guid: 0e14c71f9f433a34a864de7ee2ec53a2, type: 3}
+    Category: 1
+    WallMounted: 0
+    YOffset: 0
+  - Prefab: {fileID: 104430, guid: 3cd67d4bf3be88749aac7e3331d9f564, type: 3}
+    Category: 1
+    WallMounted: 0
+    YOffset: 0
+  - Prefab: {fileID: 194332, guid: e5d683159be572d46bb4edc6554b120e, type: 3}
+    Category: 4
+    WallMounted: 0
+    YOffset: 0
+  - Prefab: {fileID: 116148, guid: aae7f6d764a6df34f9ba9d81e32b3727, type: 3}
+    Category: 4
+    WallMounted: 0
+    YOffset: 0
+  - Prefab: {fileID: 142998, guid: c9a39315d454a7b42a35f15479b8db0f, type: 3}
+    Category: 4
+    WallMounted: 0
+    YOffset: 0
+  - Prefab: {fileID: 164374, guid: a7d81d0bb9ae595409e489d2703c8883, type: 3}
+    Category: 4
+    WallMounted: 0
+    YOffset: 0
+  - Prefab: {fileID: 130438, guid: c373e932985d5a4438c3940f41b5e324, type: 3}
+    Category: 1
+    WallMounted: 0
+    YOffset: 0
+  - Prefab: {fileID: 145418, guid: 2e1d9fbc1d8e29e499c8d7bb1c039dba, type: 3}
+    Category: 1
+    WallMounted: 0
+    YOffset: 0
+  - Prefab: {fileID: 125136, guid: ce9007f749d072d4c90b80c399d32509, type: 3}
+    Category: 1
+    WallMounted: 0
+    YOffset: 0
+  - Prefab: {fileID: 195846, guid: ad143ea0a32a6034a951b62e8a5038b1, type: 3}
+    Category: 1
+    WallMounted: 0
+    YOffset: 0
+  - Prefab: {fileID: 167334, guid: e7cc775611993334280cd8aa9b19b24f, type: 3}
+    Category: 1
+    WallMounted: 0
+    YOffset: 0
+  - Prefab: {fileID: 145768, guid: d7f31d4df91d32e48b53a6f5279e6b88, type: 3}
+    Category: 4
+    WallMounted: 0
+    YOffset: 0
+  - Prefab: {fileID: 106788, guid: 92157b7b9ceeab84397b33d9b94f8a38, type: 3}
+    Category: 4
+    WallMounted: 0
+    YOffset: 0
+  - Prefab: {fileID: 121362, guid: a715cc1f0957eb841a77c2494881d3cb, type: 3}
+    Category: 4
+    WallMounted: 0
+    YOffset: 0
+  - Prefab: {fileID: 125990, guid: 9f9866d2ad3825145b6ac9b05f73f33b, type: 3}
+    Category: 4
+    WallMounted: 0
+    YOffset: 0
+  - Prefab: {fileID: 132330, guid: 9108cde1d42cb164289675a441617020, type: 3}
+    Category: 4
+    WallMounted: 0
+    YOffset: 0
+  - Prefab: {fileID: 128284, guid: 4a2a6cf2b6ff94943bf7512910b6fb3c, type: 3}
+    Category: 4
+    WallMounted: 0
+    YOffset: 0
+  - Prefab: {fileID: 113888, guid: aa4a7ba4efc6d494382d4cd68d15d515, type: 3}
+    Category: 4
+    WallMounted: 0
+    YOffset: 0
+  - Prefab: {fileID: 131390, guid: 1ff226b88860e6944acdff1468bcbc12, type: 3}
+    Category: 4
+    WallMounted: 0
+    YOffset: 0
+  - Prefab: {fileID: 199800, guid: ee7ce2264e8e46c4aa18dcd6340cded2, type: 3}
+    Category: 4
+    WallMounted: 0
+    YOffset: 0
+  - Prefab: {fileID: 118300, guid: 63f9ac2ec64c01d4793ffe9f4aa91d04, type: 3}
+    Category: 4
+    WallMounted: 0
+    YOffset: 0
+  - Prefab: {fileID: 119536, guid: f35e55700bf85b34bbdf6500c74f47eb, type: 3}
+    Category: 4
+    WallMounted: 0
+    YOffset: 0
+  - Prefab: {fileID: 141306, guid: 14cc2321eea8de940b984c93dab10e9f, type: 3}
+    Category: 1
+    WallMounted: 0
+    YOffset: 0
+  - Prefab: {fileID: 167540, guid: 263faadeed6c69447902cc29238b9572, type: 3}
+    Category: 4
+    WallMounted: 0
+    YOffset: 0
+  - Prefab: {fileID: 118826, guid: b3ca38c8797554d458163cea74ffa491, type: 3}
+    Category: 4
+    WallMounted: 0
+    YOffset: 0
+  - Prefab: {fileID: 141928, guid: 6130968e4d95b644c960dec092fedeca, type: 3}
+    Category: 4
+    WallMounted: 0
+    YOffset: 0
+  - Prefab: {fileID: 106782, guid: 59e4312e56899be468e9733f386858c6, type: 3}
+    Category: 4
+    WallMounted: 0
+    YOffset: 0
+  - Prefab: {fileID: 157476, guid: d2acaae1debf739499bbf45a5b02729a, type: 3}
+    Category: 4
+    WallMounted: 0
+    YOffset: 0
+  - Prefab: {fileID: 115276, guid: f136a3e83d208f24eb3f19b1ada3972a, type: 3}
+    Category: 4
+    WallMounted: 0
+    YOffset: 0
+  - Prefab: {fileID: 121508, guid: 89a8969c22d0b444a9bea66ab11bd459, type: 3}
+    Category: 4
+    WallMounted: 0
+    YOffset: 0
+  - Prefab: {fileID: 111746, guid: b69041ced5aea444aadc7201e6cf64c5, type: 3}
+    Category: 4
+    WallMounted: 0
+    YOffset: 0
+  - Prefab: {fileID: 168756, guid: 2dbef9a611857b44ea6f196f4729c63a, type: 3}
+    Category: 4
+    WallMounted: 0
+    YOffset: 0
+  - Prefab: {fileID: 129694, guid: 9f46412553febce41bf9936a7bb3b78d, type: 3}
+    Category: 1
+    WallMounted: 0
+    YOffset: 0
+  - Prefab: {fileID: 122974, guid: 0357858e770630846b2573a0a583e133, type: 3}
+    Category: 1
+    WallMounted: 0
+    YOffset: 0
+  - Prefab: {fileID: 154566, guid: aaf3568a13873384d8ab139317006c46, type: 3}
+    Category: 1
+    WallMounted: 0
+    YOffset: 0
+  - Prefab: {fileID: 133308, guid: 7c4e7240c1838f2438e940e2b47be00e, type: 3}
+    Category: 1
+    WallMounted: 0
+    YOffset: 0
+  - Prefab: {fileID: 108694, guid: 15847f8b53f29c14a87fd8c6989d050e, type: 3}
+    Category: 1
+    WallMounted: 0
+    YOffset: 0
+  - Prefab: {fileID: 135174, guid: f627182d96fa0cc4ea88ef450e45bad9, type: 3}
+    Category: 1
+    WallMounted: 0
+    YOffset: 0
+  - Prefab: {fileID: 194104, guid: 351d65e883dd829418a423f8db52ab29, type: 3}
+    Category: 4
+    WallMounted: 0
+    YOffset: 0
+  - Prefab: {fileID: 124800, guid: 1b7ede7b244604242b2ff062fbd2cc5f, type: 3}
+    Category: 4
+    WallMounted: 0
+    YOffset: 0
+  - Prefab: {fileID: 193766, guid: 2e086dc7b2f9b8748824484aded0772f, type: 3}
+    Category: 4
+    WallMounted: 0
+    YOffset: 0
+  - Prefab: {fileID: 177600, guid: 97113f6efb19a9344b6c434ee073dbb7, type: 3}
+    Category: 4
+    WallMounted: 0
+    YOffset: 0
+  - Prefab: {fileID: 185432, guid: 0f7d86fb8fde8314e837ce2469a17904, type: 3}
+    Category: 4
+    WallMounted: 0
+    YOffset: 0
+  - Prefab: {fileID: 182518, guid: 47be24c3ed8d0bd4ea9f3d7bf17139c8, type: 3}
+    Category: 4
+    WallMounted: 0
+    YOffset: 0
+  - Prefab: {fileID: 120586, guid: 6a41c6f9e2f62b44fb4e07ee2e56096e, type: 3}
+    Category: 4
+    WallMounted: 0
+    YOffset: 0
+  - Prefab: {fileID: 164284, guid: a1ffceb9106992e448c74a77d3a8d22a, type: 3}
+    Category: 4
+    WallMounted: 0
+    YOffset: 0
+  - Prefab: {fileID: 152036, guid: 705b0ac6bc5ceb4439b5e34a73dd5952, type: 3}
+    Category: 1
+    WallMounted: 0
+    YOffset: 0
+  - Prefab: {fileID: 152232, guid: 7caaddde7c0663c46a1ab648b5bc696e, type: 3}
+    Category: 4
+    WallMounted: 0
+    YOffset: 0
+  - Prefab: {fileID: 160652, guid: 448703a94940d324faefcc528a75e0c6, type: 3}
+    Category: 4
+    WallMounted: 0
+    YOffset: 0
+  - Prefab: {fileID: 151186, guid: 0caa7d7c594bba340ae164eb23e164a6, type: 3}
+    Category: 4
+    WallMounted: 0
+    YOffset: 0
+  - Prefab: {fileID: 164342, guid: a574d0e8c98fd22418c6b78dcf146da9, type: 3}
+    Category: 4
+    WallMounted: 0
+    YOffset: 0
+  - Prefab: {fileID: 141730, guid: 9334c520986ab63469fc95b8ca96b94e, type: 3}
+    Category: 4
+    WallMounted: 0
+    YOffset: 0
+  - Prefab: {fileID: 140044, guid: 1a194f9247fde5c418a20ce69c715a0d, type: 3}
+    Category: 4
+    WallMounted: 0
+    YOffset: 0
+  - Prefab: {fileID: 186880, guid: 317d31937f862dd479b733abab809fdb, type: 3}
+    Category: 4
+    WallMounted: 0
+    YOffset: 0
+  - Prefab: {fileID: 161936, guid: 1f995ac056ccfbe4ab008beb9a3f702b, type: 3}
+    Category: 4
+    WallMounted: 0
+    YOffset: 0
+  - Prefab: {fileID: 109074, guid: 7c7508431316e92499f56b93e51b6200, type: 3}
+    Category: 4
+    WallMounted: 0
+    YOffset: 0
+  - Prefab: {fileID: 159514, guid: 33f7fd3f144d2604c8c4c6739bf221c0, type: 3}
+    Category: 4
+    WallMounted: 0
+    YOffset: 0
+  - Prefab: {fileID: 178146, guid: f82eda098da6b7a4eb59d75bc84e5b67, type: 3}
+    Category: 0
+    WallMounted: 0
+    YOffset: 0
+  - Prefab: {fileID: 172332, guid: 9baf64a5dee82cf43b24bf45a8d7ed77, type: 3}
+    Category: 0
+    WallMounted: 0
+    YOffset: 0
+  - Prefab: {fileID: 133236, guid: fde0863b3b38bed4682dcbfdbcd96af2, type: 3}
+    Category: 0
+    WallMounted: 0
+    YOffset: 0
+  - Prefab: {fileID: 187190, guid: 84fb4c70d60026041a43debd7289dd49, type: 3}
+    Category: 0
+    WallMounted: 0
+    YOffset: 0
+  - Prefab: {fileID: 139072, guid: d3038081f72280f46a593902d7c017c1, type: 3}
+    Category: 0
+    WallMounted: 0
+    YOffset: 0
+  - Prefab: {fileID: 115180, guid: db0c9fcf3022292439cf9287fed834c1, type: 3}
+    Category: 0
+    WallMounted: 0
+    YOffset: 0
+  - Prefab: {fileID: 192638, guid: 022154e4f8ed11f47b1726b6b750eea9, type: 3}
+    Category: 0
+    WallMounted: 0
+    YOffset: 0
+  - Prefab: {fileID: 127354, guid: e365fa34a2f82fd4ca9cfe74b3a09599, type: 3}
+    Category: 0
+    WallMounted: 0
+    YOffset: 0
+  - Prefab: {fileID: 198444, guid: ecd005ddf414d9341b4e38851d0904a3, type: 3}
+    Category: 0
+    WallMounted: 0
+    YOffset: 0
+  - Prefab: {fileID: 107668, guid: 7b86858d58384a644a311c7374762957, type: 3}
+    Category: 4
+    WallMounted: 0
+    YOffset: 0
+  - Prefab: {fileID: 135486, guid: 41942a08502ad01498769465ac588030, type: 3}
+    Category: 4
+    WallMounted: 0
+    YOffset: 0
+  - Prefab: {fileID: 131512, guid: 85c245d9250b0e74ea6ca36b23280f4a, type: 3}
+    Category: 0
+    WallMounted: 1
+    YOffset: 1.8
+  - Prefab: {fileID: 192170, guid: be0c38a9cef12234a9e4f20d2e5d1e9b, type: 3}
+    Category: 0
+    WallMounted: 1
+    YOffset: 1.8
+  Presets:
+  - Name: Corridor
+    MinTier: 0
+    MaxTier: 0
+    ForCorridor: 1
+    ForBoss: 0
+    LightingCount: 2
+    FurnitureCount: 0
+    ContainerCount: 0
+    DebrisCount: 1
+    DecorativeCount: 0
+  - Name: Chamber T1
+    MinTier: 0
+    MaxTier: 1
+    ForCorridor: 0
+    ForBoss: 0
+    LightingCount: 3
+    FurnitureCount: 1
+    ContainerCount: 2
+    DebrisCount: 1
+    DecorativeCount: 1
+  - Name: Chamber T2
+    MinTier: 2
+    MaxTier: 2
+    ForCorridor: 0
+    ForBoss: 0
+    LightingCount: 3
+    FurnitureCount: 2
+    ContainerCount: 2
+    DebrisCount: 2
+    DecorativeCount: 2
+  - Name: Chamber T3
+    MinTier: 3
+    MaxTier: 3
+    ForCorridor: 0
+    ForBoss: 0
+    LightingCount: 4
+    FurnitureCount: 2
+    ContainerCount: 3
+    DebrisCount: 2
+    DecorativeCount: 3
+  - Name: Boss Chamber
+    MinTier: 0
+    MaxTier: 0
+    ForCorridor: 0
+    ForBoss: 1
+    LightingCount: 6
+    FurnitureCount: 2
+    ContainerCount: 1
+    DebrisCount: 3
+    DecorativeCount: 4
