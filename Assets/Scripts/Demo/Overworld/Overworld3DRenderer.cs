@@ -317,51 +317,10 @@ namespace ForeverEngine.Demo.Overworld
 
                 Vector3 worldPos = HexToWorld3D(loc.HexQ, loc.HexR, height, hexSize, elevScale);
 
-                // Try pack prefab for location marker
-                GameObject marker = null;
-                if (_prefabMap != null)
-                {
-                    var prefab = _prefabMap.GetLocationPrefab(loc.Type ?? "town");
-                    if (prefab != null)
-                    {
-                        marker = Instantiate(prefab, transform);
-                        marker.transform.position = worldPos;
-                        marker.transform.localScale = Vector3.one * 0.35f;
-                        StripMissingScripts(marker);
-                    }
-                }
-
-                if (marker == null)
-                {
-                    // Fallback: beacon tower
-                    marker = new GameObject("MarkerGroup");
-                    marker.transform.SetParent(transform);
-                    marker.transform.position = worldPos;
-
-                    var markerBase = GameObject.CreatePrimitive(PrimitiveType.Cylinder);
-                    markerBase.transform.SetParent(marker.transform);
-                    markerBase.transform.localPosition = Vector3.up * 0.5f;
-                    markerBase.transform.localScale = new Vector3(0.8f, 0.5f, 0.8f);
-                    markerBase.GetComponent<Renderer>().material = CreateLitMaterial(new Color(0.55f, 0.45f, 0.3f));
-                    DestroyImmediate(markerBase.GetComponent<Collider>());
-
-                    var tower = GameObject.CreatePrimitive(PrimitiveType.Cylinder);
-                    tower.transform.SetParent(marker.transform);
-                    tower.transform.localPosition = Vector3.up * 2f;
-                    tower.transform.localScale = new Vector3(0.3f, 1.5f, 0.3f);
-                    tower.GetComponent<Renderer>().material = CreateLitMaterial(new Color(0.6f, 0.5f, 0.35f));
-                    DestroyImmediate(tower.GetComponent<Collider>());
-                }
-
-                // Beacon light at location
-                var beaconLight = new GameObject("BeaconLight");
-                beaconLight.transform.SetParent(marker.transform);
-                beaconLight.transform.localPosition = Vector3.up * 3f;
-                var pointLight = beaconLight.AddComponent<Light>();
-                pointLight.type = LightType.Point;
-                pointLight.color = new Color(1f, 0.8f, 0.4f);
-                pointLight.intensity = 2f;
-                pointLight.range = 8f;
+                // Always use procedural markers — pack prefabs all resolve to the same
+                // dark-cube medieval buildings and are visually indistinguishable.
+                GameObject marker = CreateLocationMarker(loc.Type ?? "town", worldPos);
+                marker.transform.SetParent(transform);
 
                 marker.name = $"Location_{loc.Id}";
 
@@ -382,6 +341,283 @@ namespace ForeverEngine.Demo.Overworld
 
                 _locationMarkers[loc.Id] = marker;
             }
+        }
+
+        /// <summary>
+        /// Build a visually distinct procedural marker for each location type.
+        /// Each type uses a unique shape + colour so players can identify locations at a glance.
+        /// </summary>
+        private GameObject CreateLocationMarker(string locationType, Vector3 position)
+        {
+            var root = new GameObject($"Marker_{locationType}");
+            root.transform.position = position;
+
+            switch (locationType.ToLowerInvariant())
+            {
+                case "camp":
+                {
+                    // Campfire: brown log base + orange flame sphere + warm point light
+                    var fireBase = GameObject.CreatePrimitive(PrimitiveType.Cylinder);
+                    fireBase.transform.SetParent(root.transform);
+                    fireBase.transform.localPosition = new Vector3(0f, 0.15f, 0f);
+                    fireBase.transform.localScale = new Vector3(0.3f, 0.15f, 0.3f);
+                    fireBase.GetComponent<Renderer>().material = CreateLitMaterial(new Color(0.4f, 0.25f, 0.1f));
+
+                    var flame = GameObject.CreatePrimitive(PrimitiveType.Sphere);
+                    flame.transform.SetParent(root.transform);
+                    flame.transform.localPosition = new Vector3(0f, 0.45f, 0f);
+                    flame.transform.localScale = Vector3.one * 0.25f;
+                    var flameMat = CreateLitMaterial(new Color(1f, 0.5f, 0.1f));
+                    if (flameMat.HasProperty("_EmissionColor"))
+                    {
+                        flameMat.EnableKeyword("_EMISSION");
+                        flameMat.SetColor("_EmissionColor", new Color(1f, 0.4f, 0f) * 2f);
+                    }
+                    flame.GetComponent<Renderer>().material = flameMat;
+
+                    var campLight = root.AddComponent<Light>();
+                    campLight.type = LightType.Point;
+                    campLight.color = new Color(1f, 0.6f, 0.2f);
+                    campLight.intensity = 3f;
+                    campLight.range = 5f;
+                    break;
+                }
+
+                case "town":
+                {
+                    // Brown building with a red pitched roof
+                    var building = GameObject.CreatePrimitive(PrimitiveType.Cube);
+                    building.transform.SetParent(root.transform);
+                    building.transform.localPosition = new Vector3(0f, 0.5f, 0f);
+                    building.transform.localScale = new Vector3(0.6f, 1f, 0.5f);
+                    building.GetComponent<Renderer>().material = CreateLitMaterial(new Color(0.5f, 0.35f, 0.2f));
+
+                    var roof = GameObject.CreatePrimitive(PrimitiveType.Cube);
+                    roof.transform.SetParent(root.transform);
+                    roof.transform.localPosition = new Vector3(0f, 1.15f, 0f);
+                    roof.transform.localScale = new Vector3(0.7f, 0.3f, 0.6f);
+                    roof.transform.localRotation = Quaternion.Euler(0f, 0f, 45f);
+                    roof.GetComponent<Renderer>().material = CreateLitMaterial(new Color(0.6f, 0.15f, 0.1f));
+
+                    var townLight = root.AddComponent<Light>();
+                    townLight.type = LightType.Point;
+                    townLight.color = new Color(1f, 0.9f, 0.6f);
+                    townLight.intensity = 1.5f;
+                    townLight.range = 6f;
+                    break;
+                }
+
+                case "shrine":
+                {
+                    // White/gold pillar with a glowing sphere on top
+                    var pillar = GameObject.CreatePrimitive(PrimitiveType.Cylinder);
+                    pillar.transform.SetParent(root.transform);
+                    pillar.transform.localPosition = new Vector3(0f, 0.75f, 0f);
+                    pillar.transform.localScale = new Vector3(0.15f, 0.75f, 0.15f);
+                    pillar.GetComponent<Renderer>().material = CreateLitMaterial(new Color(0.9f, 0.88f, 0.75f));
+
+                    var orb = GameObject.CreatePrimitive(PrimitiveType.Sphere);
+                    orb.transform.SetParent(root.transform);
+                    orb.transform.localPosition = new Vector3(0f, 1.65f, 0f);
+                    orb.transform.localScale = Vector3.one * 0.3f;
+                    var orbMat = CreateLitMaterial(new Color(1f, 0.95f, 0.6f));
+                    if (orbMat.HasProperty("_EmissionColor"))
+                    {
+                        orbMat.EnableKeyword("_EMISSION");
+                        orbMat.SetColor("_EmissionColor", new Color(1f, 0.85f, 0.2f) * 1.5f);
+                    }
+                    orb.GetComponent<Renderer>().material = orbMat;
+
+                    var shrineLight = root.AddComponent<Light>();
+                    shrineLight.type = LightType.Point;
+                    shrineLight.color = new Color(0.9f, 0.95f, 1f);
+                    shrineLight.intensity = 2f;
+                    shrineLight.range = 5f;
+                    break;
+                }
+
+                case "glade":
+                {
+                    // Green tree cluster: 3 green spheres on brown cylinders
+                    for (int i = 0; i < 3; i++)
+                    {
+                        float angle = i * 120f * Mathf.Deg2Rad;
+                        float rx = Mathf.Cos(angle) * 0.3f;
+                        float rz = Mathf.Sin(angle) * 0.3f;
+                        float ts = 0.7f + i * 0.1f;
+
+                        var trunk = GameObject.CreatePrimitive(PrimitiveType.Cylinder);
+                        trunk.transform.SetParent(root.transform);
+                        trunk.transform.localPosition = new Vector3(rx, ts * 0.5f, rz);
+                        trunk.transform.localScale = new Vector3(0.1f, ts * 0.5f, 0.1f);
+                        trunk.GetComponent<Renderer>().material = CreateLitMaterial(new Color(0.35f, 0.22f, 0.1f));
+
+                        var canopy = GameObject.CreatePrimitive(PrimitiveType.Sphere);
+                        canopy.transform.SetParent(root.transform);
+                        canopy.transform.localPosition = new Vector3(rx, ts * 1.1f, rz);
+                        canopy.transform.localScale = Vector3.one * (0.4f + i * 0.05f);
+                        canopy.GetComponent<Renderer>().material = CreateLitMaterial(new Color(0.2f, 0.6f, 0.2f));
+                    }
+
+                    var gladeLight = root.AddComponent<Light>();
+                    gladeLight.type = LightType.Point;
+                    gladeLight.color = new Color(0.4f, 0.9f, 0.4f);
+                    gladeLight.intensity = 1f;
+                    gladeLight.range = 4f;
+                    break;
+                }
+
+                case "dungeon":
+                {
+                    // Dark stone archway: dark gray lintel box + darker entrance rectangle
+                    var arch = GameObject.CreatePrimitive(PrimitiveType.Cube);
+                    arch.transform.SetParent(root.transform);
+                    arch.transform.localPosition = new Vector3(0f, 0.6f, 0f);
+                    arch.transform.localScale = new Vector3(0.8f, 1.2f, 0.15f);
+                    arch.GetComponent<Renderer>().material = CreateLitMaterial(new Color(0.25f, 0.22f, 0.2f));
+
+                    var entrance = GameObject.CreatePrimitive(PrimitiveType.Cube);
+                    entrance.transform.SetParent(root.transform);
+                    entrance.transform.localPosition = new Vector3(0f, 0.45f, -0.01f);
+                    entrance.transform.localScale = new Vector3(0.4f, 0.7f, 0.18f);
+                    entrance.GetComponent<Renderer>().material = CreateLitMaterial(new Color(0.05f, 0.04f, 0.04f));
+
+                    var dungeonLight = root.AddComponent<Light>();
+                    dungeonLight.type = LightType.Point;
+                    dungeonLight.color = new Color(0.5f, 0.2f, 0.6f);
+                    dungeonLight.intensity = 1.5f;
+                    dungeonLight.range = 5f;
+                    break;
+                }
+
+                case "fortress":
+                {
+                    // Large gray castle tower with crenellations
+                    var tower = GameObject.CreatePrimitive(PrimitiveType.Cylinder);
+                    tower.transform.SetParent(root.transform);
+                    tower.transform.localPosition = new Vector3(0f, 0.75f, 0f);
+                    tower.transform.localScale = new Vector3(0.55f, 0.75f, 0.55f);
+                    tower.GetComponent<Renderer>().material = CreateLitMaterial(new Color(0.45f, 0.43f, 0.4f));
+
+                    // Four crenellations
+                    for (int i = 0; i < 4; i++)
+                    {
+                        float ca = i * 90f * Mathf.Deg2Rad;
+                        var crenel = GameObject.CreatePrimitive(PrimitiveType.Cube);
+                        crenel.transform.SetParent(root.transform);
+                        crenel.transform.localPosition = new Vector3(
+                            Mathf.Cos(ca) * 0.22f, 1.6f, Mathf.Sin(ca) * 0.22f);
+                        crenel.transform.localScale = new Vector3(0.15f, 0.2f, 0.15f);
+                        crenel.GetComponent<Renderer>().material = CreateLitMaterial(new Color(0.4f, 0.38f, 0.35f));
+                    }
+
+                    var fortLight = root.AddComponent<Light>();
+                    fortLight.type = LightType.Point;
+                    fortLight.color = new Color(0.8f, 0.7f, 0.5f);
+                    fortLight.intensity = 2f;
+                    fortLight.range = 7f;
+                    break;
+                }
+
+                case "castle":
+                {
+                    // Like fortress but bigger + two corner turrets
+                    var keep = GameObject.CreatePrimitive(PrimitiveType.Cylinder);
+                    keep.transform.SetParent(root.transform);
+                    keep.transform.localPosition = new Vector3(0f, 0.9f, 0f);
+                    keep.transform.localScale = new Vector3(0.7f, 0.9f, 0.7f);
+                    keep.GetComponent<Renderer>().material = CreateLitMaterial(new Color(0.42f, 0.4f, 0.38f));
+
+                    // Corner turrets
+                    Vector3[] turretOffsets = {
+                        new Vector3( 0.4f, 0f,  0.4f),
+                        new Vector3(-0.4f, 0f, -0.4f),
+                    };
+                    foreach (var offset in turretOffsets)
+                    {
+                        var turret = GameObject.CreatePrimitive(PrimitiveType.Cylinder);
+                        turret.transform.SetParent(root.transform);
+                        turret.transform.localPosition = offset + Vector3.up * 0.6f;
+                        turret.transform.localScale = new Vector3(0.25f, 0.6f, 0.25f);
+                        turret.GetComponent<Renderer>().material = CreateLitMaterial(new Color(0.38f, 0.36f, 0.34f));
+                    }
+
+                    // Four crenellations on keep
+                    for (int i = 0; i < 4; i++)
+                    {
+                        float ca = i * 90f * Mathf.Deg2Rad;
+                        var crenel = GameObject.CreatePrimitive(PrimitiveType.Cube);
+                        crenel.transform.SetParent(root.transform);
+                        crenel.transform.localPosition = new Vector3(
+                            Mathf.Cos(ca) * 0.28f, 1.9f, Mathf.Sin(ca) * 0.28f);
+                        crenel.transform.localScale = new Vector3(0.17f, 0.22f, 0.17f);
+                        crenel.GetComponent<Renderer>().material = CreateLitMaterial(new Color(0.38f, 0.36f, 0.33f));
+                    }
+
+                    var castleLight = root.AddComponent<Light>();
+                    castleLight.type = LightType.Point;
+                    castleLight.color = new Color(1f, 0.85f, 0.5f);
+                    castleLight.intensity = 3f;
+                    castleLight.range = 9f;
+                    break;
+                }
+
+                case "ruins":
+                {
+                    // 3 tilted broken stone walls
+                    float[] ruinAngles = { 12f, -8f, 5f };
+                    Vector3[] ruinOffsets = {
+                        new Vector3(-0.25f, 0.3f,  0.05f),
+                        new Vector3( 0.25f, 0.25f, -0.1f),
+                        new Vector3( 0f,    0.2f,   0.3f),
+                    };
+                    for (int i = 0; i < 3; i++)
+                    {
+                        var wall = GameObject.CreatePrimitive(PrimitiveType.Cube);
+                        wall.transform.SetParent(root.transform);
+                        wall.transform.localPosition = ruinOffsets[i];
+                        wall.transform.localScale = new Vector3(0.12f, 0.6f, 0.4f);
+                        wall.transform.localRotation = Quaternion.Euler(ruinAngles[i], i * 40f, ruinAngles[i] * 0.5f);
+                        wall.GetComponent<Renderer>().material = CreateLitMaterial(new Color(0.48f, 0.44f, 0.38f));
+                    }
+
+                    var ruinsLight = root.AddComponent<Light>();
+                    ruinsLight.type = LightType.Point;
+                    ruinsLight.color = new Color(0.6f, 0.55f, 0.45f);
+                    ruinsLight.intensity = 0.8f;
+                    ruinsLight.range = 4f;
+                    break;
+                }
+
+                default:
+                {
+                    // Generic beacon tower for any unknown type
+                    var defBase = GameObject.CreatePrimitive(PrimitiveType.Cylinder);
+                    defBase.transform.SetParent(root.transform);
+                    defBase.transform.localPosition = Vector3.up * 0.5f;
+                    defBase.transform.localScale = new Vector3(0.8f, 0.5f, 0.8f);
+                    defBase.GetComponent<Renderer>().material = CreateLitMaterial(new Color(0.55f, 0.45f, 0.3f));
+
+                    var defTower = GameObject.CreatePrimitive(PrimitiveType.Cylinder);
+                    defTower.transform.SetParent(root.transform);
+                    defTower.transform.localPosition = Vector3.up * 2f;
+                    defTower.transform.localScale = new Vector3(0.3f, 1.5f, 0.3f);
+                    defTower.GetComponent<Renderer>().material = CreateLitMaterial(new Color(0.6f, 0.5f, 0.35f));
+
+                    var defLight = root.AddComponent<Light>();
+                    defLight.type = LightType.Point;
+                    defLight.color = new Color(1f, 0.8f, 0.4f);
+                    defLight.intensity = 2f;
+                    defLight.range = 8f;
+                    break;
+                }
+            }
+
+            // Strip colliders — these are decorative markers only
+            foreach (var col in root.GetComponentsInChildren<Collider>())
+                DestroyImmediate(col);
+
+            return root;
         }
 
         public void UpdateVisuals(int playerQ, int playerR, OverworldFog fog, bool isNight)
