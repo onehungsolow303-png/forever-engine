@@ -246,7 +246,13 @@ namespace ForeverEngine.Demo
                 }
 
                 // Generate equipment drops via LootGenerator
-                var lootItems = Battle.LootGenerator.GenerateLoot(encounterData.XPReward, encounterData.GoldReward);
+                // Parse tier from encounter ID for rarity scaling
+                int lootTier = 1;
+                string encId = encounterData.Id ?? "";
+                if (encId.Contains("_t1_")) lootTier = 1;
+                else if (encId.Contains("_t2_")) lootTier = 2;
+                else if (encId.Contains("_t3_")) lootTier = 3;
+                var lootItems = Battle.LootGenerator.GenerateLoot(encounterData.XPReward, encounterData.GoldReward, lootTier);
                 foreach (var itemName in lootItems)
                 {
                     Debug.Log($"[GameManager] Equipment drop: {itemName}");

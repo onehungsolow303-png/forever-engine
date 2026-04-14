@@ -60,6 +60,17 @@ namespace ForeverEngine.Demo.Battle
             return items.ToArray();
         }
 
+        /// <summary>
+        /// Tier-scaled loot generation. Higher tiers boost effective CR for rarity calculation.
+        /// </summary>
+        public static string[] GenerateLoot(int encounterCR, int goldReward, int tier)
+        {
+            // Tier multiplier boosts the CR used for rarity thresholds
+            float tierMult = tier switch { 1 => 0.8f, 2 => 1.2f, 3 => 1.6f, _ => 1f };
+            int scaledCR = (int)(encounterCR * tierMult);
+            return GenerateLoot(scaledCR, goldReward);
+        }
+
         private static void EnsureLoaded()
         {
             if (_allWeapons != null) return;
