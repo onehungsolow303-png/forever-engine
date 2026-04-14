@@ -59,6 +59,12 @@ namespace ForeverEngine.Demo
             StateServer = gameObject.AddComponent<GameStateServer>();
             // Inventory screen — Tab-toggled, persists across scenes with GameManager.
             gameObject.AddComponent<InventoryScreen>();
+            // Spell panel — shows prepared spells with hotkeys when spell menu is open.
+            gameObject.AddComponent<SpellPanel>();
+            // Level-up screen — shown when XP threshold is reached after loot collection.
+            gameObject.AddComponent<LevelUpScreen>();
+            // Victory screen — shown on defeat of the castle_boss (The Rot King).
+            gameObject.AddComponent<VictoryScreen>();
         }
 
         private IEnumerator Start()
