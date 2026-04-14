@@ -230,6 +230,12 @@ namespace ForeverEngine.Demo.Overworld
 
         private void OnPlayerMoved(int q, int r)
         {
+            // Keep PlayerData in sync with the player's actual hex position so
+            // that StartSeamlessBattle (and save/load) always see the current
+            // location rather than the stale starting-camp coordinates.
+            var gmp = GameManager.Instance?.Player;
+            if (gmp != null) { gmp.HexQ = q; gmp.HexR = r; }
+
             // Check for location
             foreach (var loc in LocationData.GetAll())
             {
