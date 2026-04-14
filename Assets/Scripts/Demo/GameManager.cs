@@ -260,6 +260,10 @@ namespace ForeverEngine.Demo
                     if (Player?.Inventory != null)
                         Player.Inventory.Add(new ForeverEngine.ECS.Data.ItemInstance { ItemId = itemName.GetHashCode(), StackCount = 1, MaxStack = 1 });
                 }
+
+                // Persist all battle rewards (gold, XP, loot) before returning
+                // to the overworld or dungeon, so a crash/quit cannot roll them back.
+                SaveManager.Save();
             }
 
             foreach (var zone in _activeZones)
