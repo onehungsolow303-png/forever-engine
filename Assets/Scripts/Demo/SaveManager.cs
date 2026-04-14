@@ -37,6 +37,7 @@ namespace ForeverEngine.Demo
                 string json = File.ReadAllText(SavePath);
                 var data = JsonUtility.FromJson<SaveData>(json);
                 var player = data.ToPlayer();
+                player.EnsureHPScaled();
 
                 // Restore seed to GameManager
                 if (GameManager.Instance != null)

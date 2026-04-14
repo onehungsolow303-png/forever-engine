@@ -87,6 +87,7 @@ namespace ForeverEngine.Demo
                 : "Fighter";
             pd.ModelId = $"{speciesKey}_{classKey}";
 
+            pd.EnsureHPScaled();
             return pd;
         }
 
@@ -121,5 +122,17 @@ namespace ForeverEngine.Demo
         public void TakeDamage(int amount) { HP = System.Math.Max(0, HP - amount); }
         public void LevelUp() { Level++; MaxHP += 5; HP = MaxHP; }
         public void FullRest() { HP = MaxHP; Hunger = MaxHunger; Thirst = MaxThirst; }
+
+        /// <summary>
+        /// Safety floor: ensures MaxHP is never below the level-scaled minimum.
+        /// Called after load, level set, or character creation.
+        /// Formula: 20 + (Level - 1) * 5  (matches LevelUp() increments).
+        /// </summary>
+        public void EnsureHPScaled()
+        {
+            int floor = 20 + (Level - 1) * 5;
+            if (MaxHP < floor) MaxHP = floor;
+            if (HP > MaxHP) HP = MaxHP;
+        }
     }
 }
