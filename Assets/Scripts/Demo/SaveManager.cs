@@ -90,6 +90,18 @@ namespace ForeverEngine.Demo
             public int[] InvStackCounts;
             public int[] InvMaxStacks;
 
+            // Dungeon state (null/empty if not in dungeon)
+            public bool HasDungeonState;
+            public string DungeonLocationId;
+            public float DungeonPlayerPosX, DungeonPlayerPosY, DungeonPlayerPosZ;
+            public float DungeonPlayerRotY;
+            public float DungeonCameraOrbit, DungeonCameraDist;
+            public int[] DungeonVisitedRooms;
+            public int[] DungeonTriggeredEncounters;
+            public int DungeonRoomCount;
+            public int DungeonBossRoomIndex;
+            public bool DungeonBossDefeated;
+
             public void FromPlayer(PlayerData p)
             {
                 HexQ = p.HexQ; HexR = p.HexR;
@@ -128,6 +140,25 @@ namespace ForeverEngine.Demo
                     InvItemIds[i] = items[i].ItemId;
                     InvStackCounts[i] = items[i].StackCount;
                     InvMaxStacks[i] = items[i].MaxStack;
+                }
+
+                // Dungeon state
+                var dungeon = GameManager.Instance?.PendingDungeonState;
+                if (dungeon != null)
+                {
+                    HasDungeonState = true;
+                    DungeonLocationId = dungeon.LocationId;
+                    DungeonPlayerPosX = dungeon.PlayerPosition.x;
+                    DungeonPlayerPosY = dungeon.PlayerPosition.y;
+                    DungeonPlayerPosZ = dungeon.PlayerPosition.z;
+                    DungeonPlayerRotY = dungeon.PlayerRotationY;
+                    DungeonCameraOrbit = dungeon.CameraOrbitAngle;
+                    DungeonCameraDist = dungeon.CameraDistance;
+                    DungeonVisitedRooms = new List<int>(dungeon.VisitedRooms).ToArray();
+                    DungeonTriggeredEncounters = new List<int>(dungeon.TriggeredEncounters).ToArray();
+                    DungeonRoomCount = dungeon.RoomCount;
+                    DungeonBossRoomIndex = dungeon.BossRoomIndex;
+                    DungeonBossDefeated = dungeon.BossDefeated;
                 }
             }
 
@@ -173,6 +204,29 @@ namespace ForeverEngine.Demo
                             MaxStack = InvMaxStacks[i]
                         });
                     }
+                }
+
+                // Restore dungeon state if saved mid-dungeon
+                if (HasDungeonState && !string.IsNullOrEmpty(DungeonLocationId))
+                {
+                    var dungeon = new ForeverEngine.Demo.Dungeon.DungeonState
+                    {
+                        LocationId = DungeonLocationId,
+                        PlayerPosition = new UnityEngine.Vector3(DungeonPlayerPosX, DungeonPlayerPosY, DungeonPlayerPosZ),
+                        PlayerRotationY = DungeonPlayerRotY,
+                        CameraOrbitAngle = DungeonCameraOrbit,
+                        CameraDistance = DungeonCameraDist,
+                        RoomCount = DungeonRoomCount,
+                        BossRoomIndex = DungeonBossRoomIndex,
+                        BossDefeated = DungeonBossDefeated
+                    };
+                    if (DungeonVisitedRooms != null)
+                        foreach (int r in DungeonVisitedRooms) dungeon.VisitedRooms.Add(r);
+                    if (DungeonTriggeredEncounters != null)
+                        foreach (int e in DungeonTriggeredEncounters) dungeon.TriggeredEncounters.Add(e);
+
+                    if (GameManager.Instance != null)
+                        GameManager.Instance.PendingDungeonState = dungeon;
                 }
 
                 return p;
