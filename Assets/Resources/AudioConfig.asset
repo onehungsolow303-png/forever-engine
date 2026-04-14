@@ -1,0 +1,36 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5cbf840b461f91942a8fc765721164be, type: 3}
+  m_Name: AudioConfig
+  m_EditorClassIdentifier: ForeverEngine::ForeverEngine.MonoBehaviour.Audio.AudioConfig
+  MasterVolume: 1
+  SFXVolume: 0.8
+  MusicVolume: 0.5
+  AmbientVolume: 0.3
+  HitSounds: []
+  MissSounds: []
+  FootstepSounds: []
+  DeathSounds:
+  - {fileID: 8300000, guid: 8c615fd0429f34edf85539d70279360d, type: 3}
+  - {fileID: 8300000, guid: d36a393bca4582043982db9089e1694f, type: 3}
+  - {fileID: 8300000, guid: 62366b8d2c37a49dca550841c741317f, type: 3}
+  - {fileID: 8300000, guid: 1d3bfb9269f136947bf8ac164cace1ff, type: 3}
+  UIClickSounds: []
+  DoorOpenSound: {fileID: 0}
+  LevelUpSound: {fileID: 0}
+  QuestCompleteSound: {fileID: 0}
+  ExplorationMusic: {fileID: 0}
+  CombatMusic: {fileID: 0}
+  MenuMusic: {fileID: 0}
+  DungeonAmbient: {fileID: 0}
+  CaveAmbient: {fileID: 0}
+  ForestAmbient: {fileID: 8300000, guid: aa9e3ce7bf3deb246a6da67c52008a87, type: 3}

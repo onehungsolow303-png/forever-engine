@@ -12,16 +12,16 @@ EditorBuildSettings:
     path: Assets/Scenes/Overworld.unity
     guid: 32adcb27f85cc5c4a8580e500b76aca2
   - enabled: 1
-    path: Assets/Scenes/BattleMap.unity
-    guid: 0547ab729e451d14e871f1c847030c35
-  - enabled: 1
-    path: Assets/Scenes/Game.unity
-    guid: 63f2b5feaba0ced4c999f4c4752c3b84
-  - enabled: 1
     path: Assets/Scenes/Overworld3D.unity
     guid: 906eccc75961b8445909df33836cfc06
   - enabled: 1
+    path: Assets/Scenes/BattleMap.unity
+    guid: 0547ab729e451d14e871f1c847030c35
+  - enabled: 1
     path: Assets/Scenes/DungeonExploration.unity
     guid: 046a0b6141b3ddf4b8c35a66933fa4ad
+  - enabled: 1
+    path: Assets/Scenes/Game.unity
+    guid: 63f2b5feaba0ced4c999f4c4752c3b84
   m_configObjects:
     com.unity.dt.app-ui: {fileID: 11400000, guid: 1b1c20d82303e4b5781c3ef50ac1449f, type: 2}
