@@ -2,6 +2,7 @@ using UnityEngine;
 using System.Collections.Generic;
 using System.Linq;
 using ForeverEngine.Bridges;
+using ForeverEngine.Demo.Dungeon;
 using ForeverEngine.ECS.Utility;
 using ForeverEngine.RPG.Combat;
 using ForeverEngine.RPG.Data;
@@ -32,20 +33,141 @@ namespace ForeverEngine.Demo.Battle
         private CombatIntelligence _neuralBrain;
         private GameConfig _gameConfig;
 
+        // Seamless in-world combat state
+        private List<BattleZone> _zones = new();
+        private Dictionary<BattleCombatant, GameObject> _models = new();
+        private bool _seamlessMode;
+        private int _lastJoinCheckRound;
+
         // Spell casting UI state
         private bool _spellMenuOpen;
         private List<SpellData> _availableSpells = new();
 
         private void Awake() => Instance = this;
 
+        /// <summary>
+        /// Entry point for seamless in-world combat. Called by GameManager.StartSeamlessBattle.
+        /// Zones and enemy combatants are already created; this method wires brains, models,
+        /// initiative, and kicks off the first turn.
+        /// </summary>
+        public void StartSeamlessBattle(List<BattleZone> zones, List<BattleCombatant> enemies,
+            BattleCombatant player, Encounters.EncounterData encounterData)
+        {
+            _gameConfig = Resources.Load<GameConfig>("GameConfig");
+            _zones = zones;
+            _encounterData = encounterData;
+            _seamlessMode = true;
+            _rngSeed = (uint)(System.DateTime.UtcNow.Ticks + (encounterData.Id ?? "").GetHashCode());
+
+            // Build combatant list
+            Combatants.Clear();
+            Combatants.Add(player);
+            foreach (var enemy in enemies)
+                Combatants.Add(enemy);
+
+            // Spawn 3D models for each enemy in its zone
+            foreach (var enemy in enemies)
+            {
+                var zone = _zones.FirstOrDefault(z => z.OwnerEnemy == enemy);
+                if (zone != null)
+                    SpawnModelForCombatant(enemy, zone);
+            }
+
+            // Wire the player model from the scene
+            var playerGO = GameObject.FindWithTag("Player");
+            if (playerGO != null)
+                _models[player] = playerGO;
+
+            // Roll initiative, player-first in round 1
+            foreach (var c in Combatants) c.RollInitiative(ref _rngSeed);
+            Combatants = Combatants.OrderByDescending(c => c.InitiativeRoll).ToList();
+            int playerIdx = Combatants.FindIndex(c => c.IsPlayer);
+            if (playerIdx > 0)
+            {
+                var p = Combatants[playerIdx];
+                Combatants.RemoveAt(playerIdx);
+                Combatants.Insert(0, p);
+            }
+
+            // Set up AI brains
+            float[] savedTable = null;
+            foreach (var c in Combatants)
+            {
+                if (!c.IsPlayer && c.IsAlive)
+                    _brains[c] = new CombatBrain(savedTable, seed: (int)_rngSeed + c.X * 100 + c.Y);
+            }
+
+            // Create neural intelligence only if InferenceEngine has a loaded model
+            var inferEngine = ForeverEngine.AI.Inference.InferenceEngine.Instance;
+            if (inferEngine != null && inferEngine.IsAvailable)
+            {
+                var go = new GameObject("CombatIntelligence");
+                go.transform.SetParent(transform);
+                _neuralBrain = go.AddComponent<CombatIntelligence>();
+            }
+
+            // Use the first zone's grid as the primary grid
+            Grid = _zones.Count > 0 ? _zones[0].Grid : new BattleGrid(BattleZone.GridSize, BattleZone.GridSize, 0);
+
+            StartTurn();
+            Log.Add($"Battle begins! {enemies.Count} enemies.");
+            Demo.AI.DirectorEvents.Send($"seamless combat started: {encounterData.Id}");
+        }
+
+        /// <summary>
+        /// Spawn a 3D model for a combatant in the given zone. Uses ModelRegistry
+        /// to resolve the prefab path; falls back to a red capsule primitive.
+        /// </summary>
+        private void SpawnModelForCombatant(BattleCombatant combatant, BattleZone zone)
+        {
+            GameObject model = null;
+
+            if (!string.IsNullOrEmpty(combatant.ModelId))
+            {
+                var prefab = Resources.Load<GameObject>($"Models/{combatant.ModelId}");
+                if (prefab != null)
+                {
+                    model = Object.Instantiate(prefab);
+                    model.transform.localScale *= combatant.ModelScale;
+                }
+            }
+
+            if (model == null)
+            {
+                model = GameObject.CreatePrimitive(PrimitiveType.Capsule);
+                model.transform.localScale = new Vector3(0.4f, 0.6f, 0.4f);
+                var mr = model.GetComponent<Renderer>();
+                var mat = new Material(Shader.Find("Universal Render Pipeline/Lit")
+                    ?? Shader.Find("Standard"));
+                if (mat.HasProperty("_BaseColor"))
+                    mat.SetColor("_BaseColor", new Color(0.9f, 0.2f, 0.2f));
+                else
+                    mat.color = new Color(0.9f, 0.2f, 0.2f);
+                mr.material = mat;
+                var col = model.GetComponent<Collider>();
+                if (col != null) Object.Destroy(col);
+            }
+
+            model.name = $"Model_{combatant.Name}";
+            model.transform.position = zone.GridToWorld(combatant.X, combatant.Y);
+            _models[combatant] = model;
+        }
+
         private void Update()
         {
-            if (_renderer3D != null)
-                _renderer3D.UpdateVisuals(Combatants, CurrentTurn);
+            if (_seamlessMode)
+            {
+                UpdateSeamlessVisuals();
+            }
             else
             {
-                if (_renderer == null) _renderer = FindAnyObjectByType<BattleRenderer>();
-                if (_renderer != null) _renderer.UpdateVisuals(Combatants, CurrentTurn);
+                if (_renderer3D != null)
+                    _renderer3D.UpdateVisuals(Combatants, CurrentTurn);
+                else
+                {
+                    if (_renderer == null) _renderer = FindAnyObjectByType<BattleRenderer>();
+                    if (_renderer != null) _renderer.UpdateVisuals(Combatants, CurrentTurn);
+                }
             }
 
             // Player input during their turn
@@ -77,8 +199,186 @@ namespace ForeverEngine.Demo.Battle
             }
         }
 
+        /// <summary>
+        /// Per-frame visuals for seamless mode: lerp models to grid positions,
+        /// handle dead-enemy fade/rotate, pulsate current-turn combatant,
+        /// and check for dynamic enemy joins once per round.
+        /// </summary>
+        private void UpdateSeamlessVisuals()
+        {
+            float dt = Time.deltaTime;
+            foreach (var combatant in Combatants)
+            {
+                if (!_models.TryGetValue(combatant, out var model) || model == null) continue;
+
+                // Find the zone this combatant belongs to
+                BattleZone zone = null;
+                if (combatant.IsPlayer && _zones.Count > 0)
+                    zone = _zones[0];
+                else
+                    zone = _zones.FirstOrDefault(z => z != null && z.OwnerEnemy == combatant);
+                if (zone == null && _zones.Count > 0) zone = _zones[0];
+                if (zone == null) continue;
+
+                Vector3 targetPos = zone.GridToWorld(combatant.X, combatant.Y);
+
+                if (!combatant.IsAlive && !combatant.IsPlayer)
+                {
+                    // Dead enemy: rotate to lying down, fade out, then deactivate
+                    var rot = model.transform.rotation;
+                    model.transform.rotation = Quaternion.Slerp(rot, Quaternion.Euler(90f, rot.eulerAngles.y, 0f), dt * 3f);
+
+                    var mr = model.GetComponentInChildren<Renderer>();
+                    if (mr != null)
+                    {
+                        Color c = mr.material.color;
+                        c.a = Mathf.MoveTowards(c.a, 0f, dt * 0.5f);
+                        mr.material.color = c;
+                        if (c.a < 0.05f)
+                            model.SetActive(false);
+                    }
+                }
+                else
+                {
+                    // Alive: lerp position toward grid target
+                    model.transform.position = Vector3.Lerp(model.transform.position, targetPos, dt * 8f);
+
+                    // Current turn combatant: pulsate scale
+                    if (combatant == CurrentTurn)
+                    {
+                        float pulse = 1f + Mathf.Sin(Time.time * 4f) * 0.05f;
+                        float baseScale = combatant.IsPlayer ? 1f : combatant.ModelScale;
+                        model.transform.localScale = Vector3.one * baseScale * pulse;
+                    }
+                }
+            }
+
+            // Check dynamic enemy join once per round
+            if (RoundNumber > _lastJoinCheckRound)
+            {
+                _lastJoinCheckRound = RoundNumber;
+                CheckDynamicEnemyJoin();
+            }
+        }
+
+        /// <summary>
+        /// After the player moves, check whether they've left any active zone.
+        /// Each zone's enemy rolls a D20 perception check to spot the escape.
+        /// </summary>
+        private void CheckPlayerEscape()
+        {
+            if (!_seamlessMode || _zones.Count == 0) return;
+
+            var player = Combatants.FirstOrDefault(c => c.IsPlayer);
+            if (player == null) return;
+
+            // Use the first zone to convert player grid → world position
+            Vector3 playerWorld = _zones[0].GridToWorld(player.X, player.Y);
+
+            for (int i = _zones.Count - 1; i >= 0; i--)
+            {
+                var zone = _zones[i];
+                if (zone == null) continue;
+                if (zone.ContainsWorldPos(playerWorld)) continue;
+
+                // Player is outside this zone — enemy rolls perception
+                int playerDex = player.Dexterity;
+                int dc = 10 + (playerDex - 10) / 2;
+                int roll = Random.Range(1, 21);
+
+                if (roll >= dc)
+                {
+                    // Enemy spots the player — pull back to nearest valid cell
+                    var (cx, cy) = zone.WorldToGrid(playerWorld);
+                    player.X = cx;
+                    player.Y = cy;
+                    Log.Add($"{zone.OwnerEnemy?.Name ?? "Enemy"} spots you trying to escape! (d20={roll} vs DC {dc})");
+                }
+                else
+                {
+                    // Escape successful — deactivate zone, remove enemy
+                    string enemyName = zone.OwnerEnemy?.Name ?? "Enemy";
+                    if (zone.OwnerEnemy != null)
+                        Combatants.Remove(zone.OwnerEnemy);
+                    zone.Deactivate();
+                    _zones.RemoveAt(i);
+                    Log.Add($"You slip away from {enemyName}! (d20={roll} vs DC {dc})");
+                }
+            }
+
+            // If no zones remain, combat is over
+            if (_zones.Count == 0)
+            {
+                BattleOver = true;
+                PlayerWon = true;
+                GameManager.Instance?.OnBattleComplete(true, _encounterData);
+            }
+        }
+
+        /// <summary>
+        /// Called once per round. Scans scene for AmbientEnemy DungeonNPCs near the player.
+        /// If one is close enough, creates a new zone and pulls the NPC into combat.
+        /// One join per round max.
+        /// </summary>
+        private void CheckDynamicEnemyJoin()
+        {
+            if (!_seamlessMode) return;
+            var player = Combatants.FirstOrDefault(c => c.IsPlayer);
+            if (player == null || !_models.TryGetValue(player, out var playerGO) || playerGO == null) return;
+
+            Vector3 playerPos = playerGO.transform.position;
+            float joinRange = BattleZone.GridSize * BattleZone.CellSize;
+
+            var npcs = Object.FindObjectsByType<DungeonNPC>(FindObjectsSortMode.None);
+            foreach (var npc in npcs)
+            {
+                if (npc.Role != DungeonNPCRole.AmbientEnemy) continue;
+                float dist = Vector3.Distance(npc.transform.position, playerPos);
+                if (dist > joinRange) continue;
+
+                // Create a new zone for this ambient enemy
+                var zoneGO = new GameObject($"BattleZone_{npc.NPCName}");
+                var zone = zoneGO.AddComponent<BattleZone>();
+
+                // Create a basic combatant for the ambient enemy: 15HP, AC12, 1d8+1
+                var combatant = new BattleCombatant
+                {
+                    Name = npc.NPCName,
+                    HP = 15, MaxHP = 15, AC = 12,
+                    Strength = 12, Dexterity = 10, Speed = 6,
+                    AtkCount = 1, AtkSides = 8, AtkBonus = 1,
+                    Behavior = "chase"
+                };
+
+                // Resolve model
+                var (modelPath, modelScale) = ModelRegistry.Resolve(npc.NPCName);
+                if (modelPath != null) { combatant.ModelId = modelPath; combatant.ModelScale = modelScale; }
+
+                zone.Activate(combatant, npc.transform.position);
+                var (gx, gy) = zone.WorldToGrid(npc.transform.position);
+                combatant.X = gx;
+                combatant.Y = gy;
+
+                _zones.Add(zone);
+                Combatants.Add(combatant);
+                combatant.RollInitiative(ref _rngSeed);
+                _brains[combatant] = new CombatBrain(null, seed: (int)_rngSeed + combatant.X * 100 + combatant.Y);
+
+                SpawnModelForCombatant(combatant, zone);
+
+                // Remove the DungeonNPC from the scene
+                Object.Destroy(npc.gameObject);
+
+                Log.Add($"{npc.NPCName} joins the battle!");
+                break; // One join per round max
+            }
+        }
+
         private void Start()
         {
+            // Seamless mode is fully initialized via StartSeamlessBattle — skip legacy scene path
+            if (_seamlessMode) return;
+
             _gameConfig = Resources.Load<GameConfig>("GameConfig");
             var gm = GameManager.Instance;
             if (gm == null) return;
@@ -413,6 +713,7 @@ namespace ForeverEngine.Demo.Battle
             if (CurrentTurn.MovementRemaining <= 0) return;
             CurrentTurn.X = nx; CurrentTurn.Y = ny;
             CurrentTurn.MovementRemaining--;
+            CheckPlayerEscape();
         }
 
         /// <summary>Move player to a specific tile (called by mouse input).</summary>
@@ -779,6 +1080,13 @@ namespace ForeverEngine.Demo.Battle
                     break;
             }
 
+            // Re-center the AI's zone around its current position
+            if (_seamlessMode && _models.TryGetValue(ai, out var aiModel) && aiModel != null)
+            {
+                var aiZone = _zones.FirstOrDefault(z => z != null && z.OwnerEnemy == ai);
+                aiZone?.ReCenter(aiModel.transform.position);
+            }
+
             Invoke(nameof(NextTurn), 0.5f);
         }
 
@@ -971,7 +1279,12 @@ namespace ForeverEngine.Demo.Battle
                 Log.Add($"{critStr}{attacker.Name} hits {target.Name}{advStr} for {dmgResult.AfterResistance} {dmgType} damage! (d20={atkResult.NaturalRoll}, total={atkResult.Total} vs AC {target.AC}){resistStr}");
 
                 // Visual + audio feedback
-                if (_renderer3D != null)
+                if (_seamlessMode && _models.TryGetValue(target, out var targetModel))
+                {
+                    BattleEffectsHelper.ShowDamage(targetModel, dmgResult.AfterResistance, atkResult.Critical);
+                    BattleEffectsHelper.ShowHitFlash(targetModel);
+                }
+                else if (_renderer3D != null)
                 {
                     _renderer3D.ShowDamage(target, dmgResult.AfterResistance, atkResult.Critical);
                     _renderer3D.ShowHitFlash(target);
@@ -1081,6 +1394,8 @@ namespace ForeverEngine.Demo.Battle
                 BattleOver = true; PlayerWon = false;
                 Log.Add("You have fallen...");
                 Demo.AI.DirectorEvents.Send("player died");
+                if (_seamlessMode)
+                    GameManager.Instance?.OnBattleComplete(false, _encounterData);
             }
             else if (Combatants.All(c => c.IsPlayer || !c.IsAlive))
             {
@@ -1089,28 +1404,36 @@ namespace ForeverEngine.Demo.Battle
                 Audio.SoundManager.Instance?.PlayVictory();
                 Demo.AI.DirectorEvents.Send(
                     $"victory: gold={_encounterData.GoldReward} xp={_encounterData.XPReward}");
-                var gm = GameManager.Instance;
-                if (gm != null)
-                {
-                    gm.LastBattleWon = true;
-                    gm.LastBattleGoldEarned = _encounterData.GoldReward;
-                    gm.LastBattleXPEarned = _encounterData.XPReward;
 
-                    // Generate loot drops (use XP reward as CR proxy)
-                    var loot = LootGenerator.GenerateLoot(_encounterData.XPReward, _encounterData.GoldReward);
-                    UI.LootScreen.GoldEarned = _encounterData.GoldReward;
-                    UI.LootScreen.XPEarned = _encounterData.XPReward;
-                    UI.LootScreen.ItemsFound = loot;
-                    UI.LootScreen.Show = true;
-                    // Persist damage taken back to CharacterSheet and PlayerData
-                    if (gm.Character != null)
+                if (_seamlessMode)
+                {
+                    GameManager.Instance?.OnBattleComplete(true, _encounterData);
+                }
+                else
+                {
+                    var gm = GameManager.Instance;
+                    if (gm != null)
                     {
-                        gm.Character.HP = player.HP;
-                        gm.SyncPlayerFromCharacter();
-                    }
-                    else
-                    {
-                        gm.Player.HP = player.HP;
+                        gm.LastBattleWon = true;
+                        gm.LastBattleGoldEarned = _encounterData.GoldReward;
+                        gm.LastBattleXPEarned = _encounterData.XPReward;
+
+                        // Generate loot drops (use XP reward as CR proxy)
+                        var loot = LootGenerator.GenerateLoot(_encounterData.XPReward, _encounterData.GoldReward);
+                        UI.LootScreen.GoldEarned = _encounterData.GoldReward;
+                        UI.LootScreen.XPEarned = _encounterData.XPReward;
+                        UI.LootScreen.ItemsFound = loot;
+                        UI.LootScreen.Show = true;
+                        // Persist damage taken back to CharacterSheet and PlayerData
+                        if (gm.Character != null)
+                        {
+                            gm.Character.HP = player.HP;
+                            gm.SyncPlayerFromCharacter();
+                        }
+                        else
+                        {
+                            gm.Player.HP = player.HP;
+                        }
                     }
                 }
             }
