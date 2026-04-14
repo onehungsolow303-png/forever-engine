@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 using ForeverEngine.MonoBehaviour.Camera;
 
 namespace ForeverEngine.Demo.Dungeon
@@ -113,19 +112,19 @@ namespace ForeverEngine.Demo.Dungeon
 
         /// <summary>
         /// Called by EncounterZone when the player walks into a combat trigger.
-        /// Saves current dungeon state then loads the BattleMap scene.
+        /// Starts a seamless in-world battle via GameManager.StartSeamlessBattle.
         /// </summary>
         public void EnterBattle(string encounterId, int zoneIndex, bool isBoss)
         {
             var gm = GameManager.Instance;
             if (gm == null) return;
 
-            // Persist current player state into DungeonState
-            SaveDungeonState(zoneIndex);
+            Vector3 battlePos = _playerTransform != null ? _playerTransform.position : Vector3.zero;
+            if (_daBuilder != null && _daBuilder.Rooms != null && zoneIndex >= 0 && zoneIndex < _daBuilder.Rooms.Length)
+                battlePos = _daBuilder.Rooms[zoneIndex].WorldBounds.center;
 
-            Debug.Log($"[DungeonExplorer] Entering battle: {encounterId} (zone {zoneIndex}, boss={isBoss})");
-            gm.PendingEncounterId = encounterId;
-            SceneManager.LoadScene("BattleMap");
+            Debug.Log($"[DungeonExplorer] Starting seamless battle: {encounterId} (zone {zoneIndex}, boss={isBoss})");
+            gm.StartSeamlessBattle(battlePos, encounterId);
         }
 
         /// <summary>
@@ -267,6 +266,8 @@ namespace ForeverEngine.Demo.Dungeon
 
         private void HandleMovement()
         {
+            if (GameManager.Instance?.IsInCombat == true) return;
+
             float inputX = 0f, inputZ = 0f;
             if (Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.UpArrow))    inputZ += 1f;
             if (Input.GetKey(KeyCode.S) || Input.GetKey(KeyCode.DownArrow))  inputZ -= 1f;

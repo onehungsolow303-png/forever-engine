@@ -24,7 +24,6 @@ namespace ForeverEngine.Demo.Dungeon
             if (_triggered || !other.CompareTag("Player")) return;
             _triggered = true;
 
-            // Destroy ambient enemy NPCs in this room (combat system spawns its own)
             var allNPCs = FindObjectsByType<DungeonNPC>(FindObjectsSortMode.None);
             foreach (var npc in allNPCs)
             {
@@ -32,9 +31,9 @@ namespace ForeverEngine.Demo.Dungeon
                     Destroy(npc.gameObject);
             }
 
-            var explorer = FindFirstObjectByType<DungeonExplorer>();
-            if (explorer != null)
-                explorer.EnterBattle(EncounterId, ZoneIndex, IsBoss);
+            var gm = GameManager.Instance;
+            if (gm != null)
+                gm.StartSeamlessBattle(transform.position, EncounterId);
         }
     }
 }
