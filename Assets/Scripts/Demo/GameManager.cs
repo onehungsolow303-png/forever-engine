@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using ForeverEngine.MonoBehaviour.CharacterCreation;
@@ -23,6 +24,9 @@ namespace ForeverEngine.Demo
         public bool LastBattleWon { get; set; }
         public int LastBattleGoldEarned { get; set; }
         public int LastBattleXPEarned { get; set; }
+        public bool IsInCombat { get; private set; }
+        private Battle.BattleManager _activeBattleManager;
+        private readonly List<Battle.BattleZone> _activeZones = new();
 
         [Header("3D Transition")]
         [Tooltip("When true, loads the Overworld3D scene instead of the 2D Overworld scene.")]
@@ -167,6 +171,97 @@ namespace ForeverEngine.Demo
         {
             PendingEncounterId = encounterId;
             SceneManager.LoadScene("BattleMap");
+        }
+
+        public void StartSeamlessBattle(Vector3 position, string encounterId)
+        {
+            if (IsInCombat) return;
+
+            var encounterData = Encounters.EncounterData.Get(encounterId);
+            encounterData = Encounters.EncounterManager.Instance?.ScaleEncounter(encounterData) ?? encounterData;
+
+            _activeZones.Clear();
+            var rng = new System.Random(encounterId.GetHashCode());
+            float offset = 0f;
+            foreach (var enemyDef in encounterData.Enemies)
+            {
+                var zoneGO = new GameObject($"BattleZone_{enemyDef.Name}");
+                var zone = zoneGO.AddComponent<Battle.BattleZone>();
+                Vector3 enemyPos = position + new Vector3(offset, 0, offset * 0.5f);
+                var combatant = Battle.BattleCombatant.FromEnemy(enemyDef, 0, 0);
+                zone.Activate(combatant, enemyPos);
+
+                var (gx, gy) = zone.WorldToGrid(enemyPos);
+                combatant.X = gx;
+                combatant.Y = gy;
+
+                _activeZones.Add(zone);
+                offset += 2f;
+            }
+
+            if (_activeBattleManager == null)
+            {
+                var bmGO = new GameObject("BattleManager");
+                _activeBattleManager = bmGO.AddComponent<Battle.BattleManager>();
+            }
+
+            Battle.BattleCombatant playerCombatant;
+            if (Character != null)
+                playerCombatant = Battle.BattleCombatant.FromCharacterSheet(Character);
+            else
+                playerCombatant = Battle.BattleCombatant.FromPlayer(Player);
+
+            if (_activeZones.Count > 0)
+            {
+                playerCombatant.X = Battle.BattleZone.GridSize / 2;
+                playerCombatant.Y = Battle.BattleZone.GridSize / 2 - 2;
+            }
+
+            var enemies = new List<Battle.BattleCombatant>();
+            foreach (var zone in _activeZones)
+                enemies.Add(zone.OwnerEnemy);
+
+            _activeBattleManager.StartSeamlessBattle(_activeZones, enemies, playerCombatant, encounterData);
+
+            PendingEncounterId = encounterId;
+            IsInCombat = true;
+        }
+
+        public void OnBattleComplete(bool playerWon, Encounters.EncounterData encounterData)
+        {
+            if (playerWon && encounterData != null)
+            {
+                int goldPer = encounterData.GoldReward / Mathf.Max(1, encounterData.Enemies.Count);
+                int xpPer = encounterData.XPReward / Mathf.Max(1, encounterData.Enemies.Count);
+                foreach (var zone in _activeZones)
+                {
+                    if (zone != null && zone.OwnerEnemy != null && !zone.OwnerEnemy.IsAlive)
+                    {
+                        var lootGO = new GameObject("WorldLoot");
+                        lootGO.transform.position = zone.GridToWorld(zone.OwnerEnemy.X, zone.OwnerEnemy.Y) + Vector3.up * 0.5f;
+                        var loot = lootGO.AddComponent<Battle.WorldLoot>();
+                        loot.GoldAmount = goldPer;
+                        loot.XPAmount = xpPer;
+                    }
+                }
+            }
+
+            foreach (var zone in _activeZones)
+                if (zone != null) zone.Deactivate();
+            _activeZones.Clear();
+
+            if (_activeBattleManager != null)
+            {
+                Destroy(_activeBattleManager.gameObject);
+                _activeBattleManager = null;
+            }
+
+            LastBattleWon = playerWon;
+            IsInCombat = false;
+            PendingEncounterId = null;
+
+            if (!playerWon)
+                PlayerDied();
         }
 
         /// <summary>
