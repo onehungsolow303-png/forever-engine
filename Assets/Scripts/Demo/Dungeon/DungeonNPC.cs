@@ -158,11 +158,39 @@ namespace ForeverEngine.Demo.Dungeon
         // ── Role handlers ──────────────────────────────────────────────────────
 
         /// <summary>
-        /// Merchant interaction — full trade UI deferred; log stub for now.
+        /// Merchant interaction — sells health potions for 25 gold each.
         /// </summary>
         private void OnMerchantInteract()
         {
-            Debug.Log($"[DungeonNPC] Merchant '{NPCName}' (room {RoomIndex}) — trade UI not yet implemented.");
+            var gm = GameManager.Instance;
+            var inventory = gm?.Player?.Inventory;
+            if (inventory == null)
+            {
+                Debug.Log($"[DungeonNPC] Merchant '{NPCName}': No inventory available.");
+                return;
+            }
+
+            int gold = gm.Player.Gold;
+            // Simple shop: offer health potions for 25 gold each
+            int potionCost = 25;
+            if (gold >= potionCost)
+            {
+                gm.Player.Gold -= potionCost;
+                inventory.Add(new ForeverEngine.ECS.Data.ItemInstance
+                {
+                    ItemId     = ForeverEngine.Demo.ItemIds.HealthPotion,
+                    StackCount = 1,
+                    MaxStack   = 5
+                });
+                Debug.Log($"[DungeonNPC] Bought health potion from '{NPCName}' for {potionCost}g. Gold remaining: {gm.Player.Gold}");
+            }
+            else
+            {
+                Debug.Log($"[DungeonNPC] Not enough gold for health potion ({gold}/{potionCost}g).");
+            }
+
+            SetPromptVisible(false);
+            // Allow repeated purchases
         }
 
         /// <summary>
