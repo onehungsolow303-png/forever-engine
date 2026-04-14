@@ -6,6 +6,7 @@ using ForeverEngine.MonoBehaviour.CharacterCreation;
 using ForeverEngine.RPG.Character;
 using ForeverEngine.Bridges;
 using ForeverEngine.Demo.Dungeon;
+using ForeverEngine.Demo.UI;
 
 namespace ForeverEngine.Demo
 {
@@ -54,6 +55,8 @@ namespace ForeverEngine.Demo
             // GameStateServer exposes live engine state on 127.0.0.1:7803
             // for Director Hub's game_state_tool. Auto-starts on Awake.
             StateServer = gameObject.AddComponent<GameStateServer>();
+            // Inventory screen — Tab-toggled, persists across scenes with GameManager.
+            gameObject.AddComponent<InventoryScreen>();
         }
 
         private IEnumerator Start()

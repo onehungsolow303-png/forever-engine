@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
+using ForeverEngine.Demo.UI;
 using ForeverEngine.MonoBehaviour.Camera;
 
 namespace ForeverEngine.Demo.Dungeon
@@ -56,8 +57,8 @@ namespace ForeverEngine.Demo.Dungeon
         {
             if (!_initialized || _playerTransform == null) return;
 
-            // Tab toggles full minimap overlay
-            if (Input.GetKeyDown(KeyCode.Tab) && _minimap != null)
+            // Tab toggles full minimap overlay — but not when inventory is open
+            if (Input.GetKeyDown(KeyCode.Tab) && _minimap != null && !InventoryScreen.IsOpen)
                 _minimap.ToggleFullMap();
 
             // R triggers long rest (if not in combat)
