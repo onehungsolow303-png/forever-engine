@@ -1425,6 +1425,7 @@ namespace ForeverEngine.Demo.Battle
                 {
                     BattleEffectsHelper.ShowDamage(targetModel, dmgResult.AfterResistance, atkResult.Critical);
                     BattleEffectsHelper.ShowHitFlash(targetModel);
+                    BattleEffectsHelper.SpawnHitVFX(targetModel.transform.position);
                 }
                 else if (_renderer3D != null)
                 {
@@ -1443,7 +1444,11 @@ namespace ForeverEngine.Demo.Battle
                     cam?.Shake(atkResult.Critical ? 0.25f : 0.15f);
                 }
                 if (target.HP <= 0 && !target.IsPlayer)
+                {
                     Audio.SoundManager.Instance?.PlayDeath();
+                    if (_seamlessMode && _models.TryGetValue(target, out var deathModel))
+                        BattleEffectsHelper.SpawnDeathVFX(deathModel.transform.position);
+                }
 
                 if (attacker.IsPlayer)
                     Demo.AI.DirectorEvents.Send(
