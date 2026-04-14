@@ -10,7 +10,9 @@
     "Unity.InputSystem",
     "Unity.InferenceEngine",
     "DungeonArchitect.Core",
-    "DungeonArchitect.Builders"
+    "DungeonArchitect.Builders",
+    "Unity.RenderPipelines.Core.Runtime",
+    "Unity.RenderPipelines.Universal.Runtime"
   ],
   "includePlatforms": [],
   "excludePlatforms": [],

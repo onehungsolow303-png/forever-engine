@@ -10,6 +10,8 @@ namespace ForeverEngine.Demo.Dungeon
     ///
     /// Initialize via <see cref="Initialize"/> after dungeon build completes.
     /// Wire Tab input in DungeonExplorer by calling <see cref="ToggleFullMap"/>.
+    ///
+    /// Uses <see cref="UITheme"/> for consistent dark-fantasy styling.
     /// </summary>
     public class DungeonMinimap : UnityEngine.MonoBehaviour
     {
@@ -29,22 +31,16 @@ namespace ForeverEngine.Demo.Dungeon
         private const float EdgeThickness     = 1.2f;
         private const float OutlineThickness  = 2f;
 
-        // ── Colors ───────────────────────────────────────────────────────────
+        // ── Colors (themed) ──────────────────────────────────────────────────
 
-        private static readonly Color ColTier1         = new Color(0.2f,  0.6f,  0.3f,  0.7f);
-        private static readonly Color ColTier2         = new Color(0.7f,  0.65f, 0.2f,  0.7f);
-        private static readonly Color ColTier3         = new Color(0.7f,  0.25f, 0.2f,  0.7f);
-        private static readonly Color ColCorridor      = new Color(0.4f,  0.4f,  0.4f,  0.5f);
-        private static readonly Color ColBossOutline   = new Color(0.9f,  0.2f,  0.2f,  0.9f);
-        private static readonly Color ColEntranceOutline = new Color(0.2f, 0.8f, 0.3f,  0.9f);
-        private static readonly Color ColUnexplored    = new Color(0.3f,  0.3f,  0.3f,  0.4f);
-        private static readonly Color ColEdge          = new Color(0.5f,  0.5f,  0.5f,  0.4f);
-        private static readonly Color ColPlayer        = new Color(1f,    0.9f,  0f,    1f);
-        private static readonly Color ColFriendly      = new Color(0.3f,  0.6f,  1f,    0.9f);
-        private static readonly Color ColEnemy         = new Color(0.9f,  0.2f,  0.2f,  0.9f);
-        private static readonly Color ColBgCorner      = new Color(0f,    0f,    0f,    0.4f);
-        private static readonly Color ColBgFull        = new Color(0f,    0f,    0f,    0.75f);
-        private static readonly Color ColDimScreen     = new Color(0f,    0f,    0f,    0.6f);
+        // Room tiers — richer dark-fantasy palette, distinct per tier
+        private static readonly Color ColTier1         = new Color(0.18f, 0.55f, 0.35f, 0.75f);  // Deep emerald
+        private static readonly Color ColTier2         = new Color(0.72f, 0.58f, 0.18f, 0.75f);  // Aged gold
+        private static readonly Color ColTier3         = new Color(0.68f, 0.20f, 0.22f, 0.75f);  // Blood crimson
+        private static readonly Color ColCorridor      = new Color(0.30f, 0.28f, 0.32f, 0.55f);  // Dusty stone
+        private static readonly Color ColEntranceOutline = new Color(0.25f, 0.75f, 0.35f, 0.9f); // Verdant green
+        private static readonly Color ColUnexplored    = new Color(0.25f, 0.23f, 0.28f, 0.45f);  // Shadowed stone
+        private static readonly Color ColEdge          = new Color(0.45f, 0.42f, 0.48f, 0.4f);   // Faded stone
 
         // ── Runtime data ─────────────────────────────────────────────────────
 
@@ -57,24 +53,6 @@ namespace ForeverEngine.Demo.Dungeon
         // NPC cache
         private DungeonNPC[]  _npcCache;
         private int           _lastNpcRoom = -2;
-
-        // Reusable 1x1 white texture for DrawRect
-        private Texture2D _solidTex;
-
-        // ── Unity lifecycle ──────────────────────────────────────────────────
-
-        private void Awake()
-        {
-            _solidTex = new Texture2D(1, 1, TextureFormat.RGBA32, false);
-            _solidTex.SetPixel(0, 0, Color.white);
-            _solidTex.Apply();
-        }
-
-        private void OnDestroy()
-        {
-            if (_solidTex != null)
-                Destroy(_solidTex);
-        }
 
         // ── Public API ───────────────────────────────────────────────────────
 
@@ -136,34 +114,29 @@ namespace ForeverEngine.Demo.Dungeon
             float y = CornerPadding;
             var mapRect = new Rect(x, y, CornerSize, CornerSize);
 
-            DrawRect(mapRect, ColBgCorner);
+            UITheme.DrawPanel(mapRect);
             DrawMapContent(mapRect, fullMode: false);
         }
 
         private void DrawFullOverlay()
         {
             // Dim the entire screen
-            DrawRect(new Rect(0, 0, Screen.width, Screen.height), ColDimScreen);
+            UITheme.DrawRect(new Rect(0, 0, Screen.width, Screen.height),
+                new Color(0f, 0f, 0f, 0.6f));
 
             float mapSize = Mathf.Min(Screen.width, Screen.height) * FullMapFraction;
             float cx = (Screen.width  - mapSize) * 0.5f;
             float cy = (Screen.height - mapSize) * 0.5f;
             var mapRect = new Rect(cx, cy, mapSize, mapSize);
 
-            // Dark background for the map panel
-            DrawRect(mapRect, ColBgFull);
+            // Dark panel with gold border
+            UITheme.DrawPanel(mapRect);
 
             DrawMapContent(mapRect, fullMode: true);
 
-            // Label
-            var labelStyle = new GUIStyle(GUI.skin.label)
-            {
-                alignment = TextAnchor.UpperCenter,
-                fontSize  = 14,
-                fontStyle = FontStyle.Bold,
-            };
-            labelStyle.normal.textColor = new Color(0.9f, 0.9f, 0.9f, 1f);
-            GUI.Label(new Rect(cx, cy - 22f, mapSize, 20f), "DUNGEON MAP  (Tab to close)", labelStyle);
+            // Header label using themed gold header style
+            GUI.Label(new Rect(cx, cy - 22f, mapSize, 20f),
+                "DUNGEON MAP  (Tab to close)", UITheme.Header(UITheme.FontMedium));
         }
 
         private void DrawMapContent(Rect mapRect, bool fullMode)
@@ -196,14 +169,6 @@ namespace ForeverEngine.Demo.Dungeon
             }
 
             // ── 2. Rooms ─────────────────────────────────────────────────────
-            var labelStyle = new GUIStyle(GUI.skin.label)
-            {
-                alignment = TextAnchor.MiddleCenter,
-                fontSize  = 9,
-                fontStyle = FontStyle.Bold,
-            };
-            labelStyle.normal.textColor = Color.white;
-
             for (int i = 0; i < rooms.Length; i++)
             {
                 var room = rooms[i];
@@ -238,20 +203,24 @@ namespace ForeverEngine.Demo.Dungeon
                             _ => ColTier1,   // default non-corridor to Tier1 look
                         };
 
-                    DrawRect(roomRect, fillColor);
+                    UITheme.DrawRect(roomRect, fillColor);
 
                     // Outlines
                     if (room.IsBoss)
-                        DrawRectOutline(roomRect, ColBossOutline, OutlineThickness);
+                        UITheme.DrawBorder(roomRect,
+                            new Color(UITheme.EnemyRed.r, UITheme.EnemyRed.g, UITheme.EnemyRed.b, 0.95f),
+                            OutlineThickness);
                     else if (room.IsEntrance)
-                        DrawRectOutline(roomRect, ColEntranceOutline, OutlineThickness);
+                        UITheme.DrawBorder(roomRect, ColEntranceOutline, OutlineThickness);
 
                     // Labels in full mode
                     if (fullMode && !room.IsCorridor)
                     {
                         string lbl = room.IsBoss ? "BOSS" : (room.Tier > 0 ? $"T{room.Tier}" : "");
                         if (!string.IsNullOrEmpty(lbl))
-                            GUI.Label(roomRect, lbl, labelStyle);
+                            GUI.Label(roomRect, lbl,
+                                UITheme.Label(UITheme.FontTiny, Color.white,
+                                    TextAnchor.MiddleCenter, FontStyle.Bold));
                     }
                 }
                 else if (adjacentToVisited || room.IsBoss)
@@ -261,13 +230,17 @@ namespace ForeverEngine.Demo.Dungeon
                     var smallRect = new Rect(center.x - UnexploredSize * 0.5f,
                                             center.y - UnexploredSize * 0.5f,
                                             UnexploredSize, UnexploredSize);
-                    DrawRect(smallRect, ColUnexplored);
+                    UITheme.DrawRect(smallRect, ColUnexplored);
 
                     if (room.IsBoss)
-                        DrawRectOutline(smallRect, ColBossOutline, OutlineThickness);
+                        UITheme.DrawBorder(smallRect,
+                            new Color(UITheme.EnemyRed.r, UITheme.EnemyRed.g, UITheme.EnemyRed.b, 0.95f),
+                            OutlineThickness);
 
                     if (fullMode)
-                        GUI.Label(smallRect, "?", labelStyle);
+                        GUI.Label(smallRect, "?",
+                            UITheme.Label(UITheme.FontTiny, Color.white,
+                                TextAnchor.MiddleCenter, FontStyle.Bold));
                 }
             }
 
@@ -292,12 +265,12 @@ namespace ForeverEngine.Demo.Dungeon
 
                         Vector2 npcPos = WorldToMinimap(npc.transform.position, mapRect);
                         bool isEnemy = npc.Role == DungeonNPCRole.AmbientEnemy;
-                        Color npcColor = isEnemy ? ColEnemy : ColFriendly;
+                        Color npcColor = isEnemy ? UITheme.EnemyRed : UITheme.FriendlyBlue;
 
                         var dotRect = new Rect(npcPos.x - NPCDotRadius * 0.5f,
                                                npcPos.y - NPCDotRadius * 0.5f,
                                                NPCDotRadius, NPCDotRadius);
-                        DrawRect(dotRect, npcColor);
+                        UITheme.DrawRect(dotRect, npcColor);
                     }
                 }
             }
@@ -309,7 +282,7 @@ namespace ForeverEngine.Demo.Dungeon
                 var playerRect = new Rect(playerPos.x - PlayerDotRadius * 0.5f,
                                           playerPos.y - PlayerDotRadius * 0.5f,
                                           PlayerDotRadius, PlayerDotRadius);
-                DrawRect(playerRect, ColPlayer);
+                UITheme.DrawRect(playerRect, UITheme.XPGold);
             }
         }
 
@@ -361,26 +334,6 @@ namespace ForeverEngine.Demo.Dungeon
 
         // ── IMGUI drawing helpers ─────────────────────────────────────────────
 
-        private void DrawRect(Rect rect, Color color)
-        {
-            Color prev = GUI.color;
-            GUI.color = color;
-            GUI.DrawTexture(rect, _solidTex);
-            GUI.color = prev;
-        }
-
-        private void DrawRectOutline(Rect rect, Color color, float thickness)
-        {
-            // Top
-            DrawRect(new Rect(rect.x, rect.y, rect.width, thickness), color);
-            // Bottom
-            DrawRect(new Rect(rect.x, rect.yMax - thickness, rect.width, thickness), color);
-            // Left
-            DrawRect(new Rect(rect.x, rect.y, thickness, rect.height), color);
-            // Right
-            DrawRect(new Rect(rect.xMax - thickness, rect.y, thickness, rect.height), color);
-        }
-
         /// <summary>
         /// Draws a line from <paramref name="a"/> to <paramref name="b"/> by rotating
         /// the GUI matrix around point <paramref name="a"/>, drawing a rectangle of the
@@ -399,7 +352,7 @@ namespace ForeverEngine.Demo.Dungeon
             // Rotate around the start point
             GUIUtility.RotateAroundPivot(angle, pivot);
 
-            DrawRect(new Rect(a.x, a.y - thickness * 0.5f, length, thickness), color);
+            UITheme.DrawRect(new Rect(a.x, a.y - thickness * 0.5f, length, thickness), color);
 
             GUI.matrix = savedMatrix;
         }

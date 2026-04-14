@@ -42,21 +42,41 @@ namespace ForeverEngine
         [Header("AI")]
         public float AITurnDelay = 0.33f;  // Seconds before AI acts (visual feedback)
 
-        [Header("AI — Q-Learning")]
-        public float QLearningRate = 0.15f;
-        public float QDiscountFactor = 0.85f;
-        public float QExplorationRate = 0.25f;
+        [Header("AI — Q-Learning (State Space B)")]
+        [Tooltip("Lower = more stable with 1296-state table. 0.12 recommended for convergence.")]
+        public float QLearningRate = 0.12f;
+        [Tooltip("Higher = longer-horizon planning. 0.9 balances immediate + future reward.")]
+        public float QDiscountFactor = 0.9f;
+        [Tooltip("Lower = less random exploration. 0.15 once state space is well-covered.")]
+        public float QExplorationRate = 0.15f;
 
-        [Header("AI — Rewards")]
-        public float RewardAdvanceHit = 0.1f;
-        public float RewardAttackAdjacent = 0.3f;
-        public float RewardRetreatLowHP = 0.2f;
-        public float RewardHoldGuard = 0.1f;
-        public float PenaltyHoldChase = -0.05f;
-        public float RewardKill = 0.5f;
-        public float PenaltyDamageTaken = -0.1f;
-        public float RewardHit = 0.5f;
-        public float PenaltyMiss = -0.1f;
+        [Header("AI — Rewards (offensive)")]
+        [Tooltip("Advance then hit in same turn — small bonus for aggression")]
+        public float RewardAdvanceHit = 0.15f;
+        [Tooltip("Attack when already adjacent — bread-and-butter melee")]
+        public float RewardAttackAdjacent = 0.35f;
+        [Tooltip("Successful melee hit (from AttackResolver)")]
+        public float RewardHit = 0.4f;
+        [Tooltip("Melee miss penalty")]
+        public float PenaltyMiss = -0.15f;
+        [Tooltip("Successful ranged hit — slightly less than melee to prefer closing distance")]
+        public float RewardRangedHit = 0.35f;
+        [Tooltip("Ranged miss — slightly harsher to discourage sniping when out of range")]
+        public float PenaltyRangedMiss = -0.2f;
+        [Tooltip("Kill any combatant — strong positive signal")]
+        public float RewardKill = 0.6f;
+
+        [Header("AI — Rewards (defensive)")]
+        [Tooltip("Retreat when below 30% HP — survival instinct")]
+        public float RewardRetreatLowHP = 0.25f;
+        [Tooltip("Hold position when guarding — tactical patience")]
+        public float RewardHoldGuard = 0.15f;
+        [Tooltip("Hold when should be chasing — mild discouragement")]
+        public float PenaltyHoldChase = -0.08f;
+        [Tooltip("Taking damage — universal penalty")]
+        public float PenaltyDamageTaken = -0.12f;
+        [Tooltip("Move to protect a critically wounded ally")]
+        public float RewardProtectAlly = 0.3f;
 
         [Header("Encounters")]
         public int DayXPBudgetPerLevel = 40;

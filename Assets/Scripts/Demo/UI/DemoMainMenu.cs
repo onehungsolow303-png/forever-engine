@@ -32,11 +32,12 @@ namespace ForeverEngine.Demo.UI
             // (CharacterCreationUI.OnGUI draws its own full-screen overlay)
 
             // Title
-            var titleStyle = new GUIStyle(GUI.skin.label) { fontSize = 36, alignment = TextAnchor.MiddleCenter, fontStyle = FontStyle.Bold };
-            GUI.Label(new Rect(0, Screen.height * 0.2f, Screen.width, 50), "SHATTERED KINGDOM", titleStyle);
+            GUI.Label(new Rect(0, Screen.height * 0.2f, Screen.width, 50), "SHATTERED KINGDOM",
+                UITheme.Bold(UITheme.FontHuge, UITheme.TextHeader, TextAnchor.MiddleCenter));
 
-            var subStyle = new GUIStyle(GUI.skin.label) { fontSize = 14, alignment = TextAnchor.MiddleCenter };
-            GUI.Label(new Rect(0, Screen.height * 0.2f + 50, Screen.width, 30), "A Forever Engine Demo", subStyle);
+            // Subtitle
+            GUI.Label(new Rect(0, Screen.height * 0.2f + 50, Screen.width, 30), "A Forever Engine Demo",
+                UITheme.Label(UITheme.FontMedium, UITheme.TextSecondary, TextAnchor.MiddleCenter));
 
             if (_showCharSelect)
             {
@@ -49,7 +50,7 @@ namespace ForeverEngine.Demo.UI
             float x = Screen.width / 2 - btnW / 2;
             float y = Screen.height * 0.5f;
 
-            if (GUI.Button(new Rect(x, y, btnW, btnH), "New Game"))
+            if (GUI.Button(new Rect(x, y, btnW, btnH), "New Game", UITheme.Button()))
             {
                 // Ensure GameManager exists before opening character selection
                 if (GameManager.Instance == null)
@@ -60,7 +61,7 @@ namespace ForeverEngine.Demo.UI
                 _showCharSelect = true;
             }
 
-            if (SaveManager.HasSave && GUI.Button(new Rect(x, y + 50, btnW, btnH), "Continue"))
+            if (SaveManager.HasSave && GUI.Button(new Rect(x, y + 50, btnW, btnH), "Continue", UITheme.Button()))
             {
                 if (GameManager.Instance == null)
                 {
@@ -75,7 +76,7 @@ namespace ForeverEngine.Demo.UI
                 }
             }
 
-            if (GUI.Button(new Rect(x, y + 100, btnW, btnH), "Quit"))
+            if (GUI.Button(new Rect(x, y + 100, btnW, btnH), "Quit", UITheme.Button()))
             {
                 Application.Quit();
             }
@@ -86,10 +87,12 @@ namespace ForeverEngine.Demo.UI
             float panelW = 500, panelH = 340;
             float px = Screen.width / 2 - panelW / 2;
             float py = Screen.height * 0.3f;
-            GUI.Box(new Rect(px, py, panelW, panelH), "");
 
-            var headerStyle = new GUIStyle(GUI.skin.label) { fontSize = 20, alignment = TextAnchor.MiddleCenter, fontStyle = FontStyle.Bold };
-            GUI.Label(new Rect(px, py + 10, panelW, 30), "Choose Your Character", headerStyle);
+            UITheme.DrawPanel(new Rect(px, py, panelW, panelH));
+
+            // Header
+            GUI.Label(new Rect(px, py + 10, panelW, 30), "Choose Your Character",
+                UITheme.Header(UITheme.FontLarge));
 
             float btnW = 440, btnH = 50;
             float bx = px + (panelW - btnW) / 2;
@@ -98,14 +101,15 @@ namespace ForeverEngine.Demo.UI
             for (int i = 0; i < 4; i++)
             {
                 float yOff = by + i * (btnH + 10);
-                if (GUI.Button(new Rect(bx, yOff, btnW, btnH), $"{_charNames[i]}\n{_charDescs[i]}"))
+                if (GUI.Button(new Rect(bx, yOff, btnW, btnH),
+                        $"{_charNames[i]}\n{_charDescs[i]}", UITheme.Button()))
                 {
                     SelectPremadeCharacter(i);
                 }
             }
 
             // Back button
-            if (GUI.Button(new Rect(bx, by + 4 * (btnH + 10) + 10, 100, 30), "Back"))
+            if (GUI.Button(new Rect(bx, by + 4 * (btnH + 10) + 10, 100, 30), "Back", UITheme.Button()))
             {
                 _showCharSelect = false;
             }

@@ -38,6 +38,9 @@ namespace ForeverEngine.Demo.Battle
         public int TempHP;
         public string ModelId;
         public float ModelScale = 1f;
+        public bool HasRangedAttack;
+        public int AttackRange;
+        public int RangedAtkCount, RangedAtkSides, RangedAtkBonus;
 
         public void RollInitiative(ref uint seed)
         {
@@ -46,6 +49,10 @@ namespace ForeverEngine.Demo.Battle
 
         public int RollAttack(ref uint seed) => DiceRoller.Roll(1, 20, 0, ref seed) + DiceRoller.AbilityModifier(Strength);
         public int RollDamage(ref uint seed) => DiceRoller.Roll(AtkCount, AtkSides, AtkBonus, ref seed);
+        public int RollRangedDamage(ref uint seed) => DiceRoller.Roll(
+            RangedAtkCount > 0 ? RangedAtkCount : AtkCount,
+            RangedAtkSides > 0 ? RangedAtkSides : AtkSides,
+            RangedAtkBonus > 0 ? RangedAtkBonus : AtkBonus, ref seed);
 
         /// <summary>
         /// Apply raw HP damage (after resistance/tempHP already resolved by DamageResolver).
@@ -95,7 +102,7 @@ namespace ForeverEngine.Demo.Battle
         public static BattleCombatant FromEnemy(Encounters.EnemyDef def, int x, int y)
         {
             DiceRoller.Parse(def.AtkDice, out int c, out int s, out int b);
-            return new BattleCombatant
+            var result = new BattleCombatant
             {
                 Name = def.Name, X = x, Y = y, IsPlayer = false,
                 HP = def.HP, MaxHP = def.HP, AC = def.AC,
@@ -107,8 +114,19 @@ namespace ForeverEngine.Demo.Battle
                 Immunities = def.Immunities,
                 AttackDamageType = def.AttackDamageType,
                 ModelId = def.ModelId,
-                ModelScale = def.ModelScale
+                ModelScale = def.ModelScale,
+                HasRangedAttack = def.HasRangedAttack,
+                AttackRange = def.AttackRange,
             };
+
+            if (def.HasRangedAttack && !string.IsNullOrEmpty(def.RangedAtkDice))
+            {
+                DiceRoller.Parse(def.RangedAtkDice, out int rc, out int rs, out int rb);
+                result.RangedAtkCount = rc;
+                result.RangedAtkSides = rs;
+                result.RangedAtkBonus = rb;
+            }
+            return result;
         }
 
         /// <summary>

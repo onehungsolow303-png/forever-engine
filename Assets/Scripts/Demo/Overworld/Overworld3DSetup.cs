@@ -34,7 +34,14 @@ namespace ForeverEngine.Demo.Overworld
                 renderer3D = go.AddComponent<Overworld3DRenderer>();
             }
 
-            // Assign prefab map and initialize with generated tiles
+            // Load prefab map — try serialized field first, then Resources
+            if (_prefabMap == null)
+                _prefabMap = Resources.Load<OverworldPrefabMapper>("OverworldPrefabMap");
+            if (_prefabMap != null)
+                Debug.Log($"[Overworld3DSetup] Loaded prefab map with {_prefabMap.ForestScatter?.Length ?? 0} forest scatter prefabs");
+            else
+                Debug.LogWarning("[Overworld3DSetup] No OverworldPrefabMap found — run Forever Engine > Populate Overworld Prefabs");
+
             renderer3D.SetPrefabMap(_prefabMap);
             renderer3D.Initialize(om.Tiles);
 
@@ -52,6 +59,13 @@ namespace ForeverEngine.Demo.Overworld
 
             // Register the 3D renderer on OverworldManager so Update() uses it
             om.Set3DRenderer(renderer3D);
+
+            // Bootstrap atmosphere (post-processing, skybox, fog, lighting)
+            if (FindAnyObjectByType<AtmosphereSetup>() == null)
+            {
+                var atmosGO = new GameObject("Atmosphere");
+                atmosGO.AddComponent<AtmosphereSetup>();
+            }
 
             Debug.Log("[Overworld3DSetup] 3D overworld wired successfully.");
         }

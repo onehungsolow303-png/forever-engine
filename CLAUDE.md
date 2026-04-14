@@ -5,7 +5,7 @@ A Unity 6+ game runtime: hybrid DOTS/MonoBehaviour engine that hosts the playabl
 
 ## Architecture
 - **ECS (DOTS + Burst + Job System):** per-frame game logic — fog, combat, AI inference, learning, pathfinding, entities
-- **MonoBehaviour:** rendering (Tilemap/Sprite), camera, UI Toolkit, audio, input, bootstrap, HTTP bridges
+- **MonoBehaviour:** rendering (3D mesh scenes via asset packs + 2D Tilemap/Sprite legacy), camera, UI Toolkit, IMGUI HUDs, audio, input, bootstrap, HTTP bridges
 - **Bridges/:** out-of-process client code
   - `AssetClient.cs` — coroutine HTTP client to Asset Manager (port 7801)
   - `DirectorClient.cs` — coroutine HTTP client to Director Hub (port 7802) with retry + backoff
@@ -72,6 +72,23 @@ Key components added for 3D:
 - 7 purchased Unity Asset Store 3D environment packs (34 GB in Assets/, all gitignored for license protection)
 
 The existing 2D systems (DialoguePanel, BattleHUD, OverworldHUD, ECS game logic) are renderer-independent and do NOT need to change for 3D.
+
+### Systems Added 2026-04-13
+
+- **Combat AI State Space B** (`CombatBrain.cs`) — 1296 states (3×3×3×3×2×2×2×2), 7 actions including UseAbility (ranged) and ProtectAlly
+- **Seamless Battle Zones** (`BattleZone.cs`) — Per-enemy 8×8 grids replacing scene-based arenas
+- **Room Decoration** (`RoomDecorator.cs` + `RoomCatalog.cs`) — Post-build prop placement from asset packs
+- **Atmosphere System** (`AtmosphereSetup.cs`) — URP post-processing (bloom, tonemapping, color grading, vignette, fog)
+- **UI Theme** (`UITheme.cs`) — Shared dark-fantasy IMGUI styling across all HUD panels
+- **Overworld Prefab System** (`OverworldPrefabMapper.cs` + `OverworldPrefabPopulator.cs`) — Maps biome types to real asset pack prefabs
+- **61 GLB Models** in `Resources/Models/` — 39 monsters + 22 NPCs, all registered in `ModelRegistry.cs`
+
+### Editor Menu Items
+- **Forever Engine → Setup URP & Convert Materials** — converts all pack materials to URP
+- **Forever Engine → Populate Overworld Prefabs** — discovers and assigns pack prefabs to mapper
+- **Forever Engine → Populate Room Catalog** — discovers dungeon prop prefabs
+- **Forever Engine → Create Missing Assets** — creates GameConfig, RoomCatalog, DungeonNPCConfig SOs
+- **Forever Engine → Create Dungeon Exploration Scene** — generates the dungeon scene
 
 ## Boot sequence
 1. Demo scene loads → `GameManager.Awake()` constructs `AssetClient`, `DirectorClient`, `ServiceWatchdog`, `GameStateServer`

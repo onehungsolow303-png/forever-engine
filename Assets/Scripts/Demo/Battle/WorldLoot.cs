@@ -7,13 +7,10 @@ namespace ForeverEngine.Demo.Battle
     /// It displays a gold-colored pickup, bobs up and down, and auto-collects
     /// when the player comes within range.
     /// </summary>
-    public class WorldLoot : MonoBehaviour
+    public class WorldLoot : UnityEngine.MonoBehaviour
     {
-        [SerializeField]
-        private int GoldAmount = 10;
-
-        [SerializeField]
-        private int XPAmount = 25;
+        public int GoldAmount = 10;
+        public int XPAmount = 25;
 
         private float _spawnTime;
         private const float DESPAWN_TIME = 60f;

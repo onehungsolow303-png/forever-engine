@@ -18,6 +18,10 @@ namespace ForeverEngine.Demo.Encounters
         public DamageType Immunities;
         public string ModelId;
         public float ModelScale = 1f;
+        public bool HasRangedAttack;
+        [Tooltip("Range in grid cells for ranged attacks (0 = melee only)")]
+        public int AttackRange;
+        public string RangedAtkDice;
     }
 
     [System.Serializable]
@@ -345,6 +349,15 @@ namespace ForeverEngine.Demo.Encounters
                 <= 450 => new EnemyDef { Name = name, HP = 55, AC = 15, Str = 16, Dex = 10, Spd = 5, AtkDice = "2d8+3",  Behavior = behavior, CR = 3, AttackDamageType = atkDmgType },
                 _      => new EnemyDef { Name = name, HP = 80, AC = 16, Str = 18, Dex = 12, Spd = 5, AtkDice = "2d10+4", Behavior = behavior, CR = 5, AttackDamageType = atkDmgType },
             };
+            // Tag ranged attackers
+            string lower = name.ToLowerInvariant();
+            if (lower.Contains("archer") || lower.Contains("mage") || lower.Contains("cultist"))
+            {
+                def.HasRangedAttack = true;
+                def.AttackRange = 5;
+                def.RangedAtkDice = def.AtkDice; // same dice for ranged
+            }
+
             var (modelPath, modelScale) = ForeverEngine.Demo.Battle.ModelRegistry.Resolve(def.Name);
             if (modelPath != null)
             {

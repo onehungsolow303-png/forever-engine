@@ -2,7 +2,7 @@ using UnityEngine;
 
 namespace ForeverEngine.Demo.Battle
 {
-    public class DamagePopup : MonoBehaviour
+    public class DamagePopup : UnityEngine.MonoBehaviour
     {
         private float _timer;
         private TextMesh _tm;
@@ -25,7 +25,7 @@ namespace ForeverEngine.Demo.Battle
         }
     }
 
-    public class HitFlash : MonoBehaviour
+    public class HitFlash : UnityEngine.MonoBehaviour
     {
         private float _timer = -1f;
         private Renderer _mr;

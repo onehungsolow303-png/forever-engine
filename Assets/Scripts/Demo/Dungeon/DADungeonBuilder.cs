@@ -156,6 +156,14 @@ namespace ForeverEngine.Demo.Dungeon
             }
 
             Debug.Log($"[DADungeonBuilder] Built {Rooms.Length} rooms — entrance:{EntranceIndex}, boss:{BossIndex}");
+
+            // Decorate rooms with props from the RoomCatalog
+            var catalog = UnityEngine.Resources.Load<RoomCatalog>("RoomCatalog");
+            if (catalog != null && catalog.Props.Count > 0)
+            {
+                int seed = dungeon.GetInstanceID();
+                RoomDecorator.DecorateAll(Rooms, catalog, seed);
+            }
         }
 
         /// <summary>

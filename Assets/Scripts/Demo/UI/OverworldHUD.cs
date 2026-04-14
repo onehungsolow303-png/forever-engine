@@ -26,11 +26,11 @@ namespace ForeverEngine.Demo.UI
             {
                 string species = sheet.Species != null ? sheet.Species.Name : "";
                 string cls = RPGBridge.GetClassName(sheet);
-                charTitle = $"<b>{species} {cls}</b> Lv{sheet.TotalLevel}";
+                charTitle = $"{species} {cls} Lv{sheet.TotalLevel}";
             }
             else
             {
-                charTitle = $"<b>The Wanderer</b> (Lv.{p.Level})";
+                charTitle = $"The Wanderer (Lv.{p.Level})";
             }
 
             // Calculate spell slot display
@@ -49,17 +49,17 @@ namespace ForeverEngine.Demo.UI
             }
 
             int boxHeight = string.IsNullOrEmpty(spellSlotStr) ? 130 : 150;
-            GUI.Box(new Rect(10, 10, 240, boxHeight), "");
-            GUI.Label(new Rect(20, 15, 220, 20), charTitle);
-            DrawBar(new Rect(20, 40, 210, 16), p.HPPercent, Color.red, $"HP: {p.HP}/{p.MaxHP}");
-            DrawBar(new Rect(20, 60, 210, 16), p.HungerPercent, new Color(0.8f, 0.5f, 0.2f), $"Hunger: {p.Hunger:F0}/{p.MaxHunger}");
-            DrawBar(new Rect(20, 80, 210, 16), p.ThirstPercent, Color.cyan, $"Thirst: {p.Thirst:F0}/{p.MaxThirst}");
-            GUI.Label(new Rect(20, 100, 220, 20), $"Gold: {p.Gold}  |  AC: {p.AC}");
-            GUI.Label(new Rect(20, 118, 220, 20), $"Day {p.DayCount}  |  {(ow != null && ow.IsNight ? "Night" : "Day")}");
+            var statsRect = new Rect(10, 10, 240, boxHeight);
+            UITheme.DrawPanel(statsRect);
+            GUI.Label(new Rect(20, 15, 220, 20), charTitle, UITheme.Bold(UITheme.FontNormal, UITheme.TextHeader));
+            UITheme.DrawBar(new Rect(20, 40, 210, 16), p.HPPercent, UITheme.HPColor(p.HPPercent), $"HP: {p.HP}/{p.MaxHP}");
+            UITheme.DrawBar(new Rect(20, 60, 210, 16), p.HungerPercent, new Color(0.8f, 0.5f, 0.2f), $"Hunger: {p.Hunger:F0}/{p.MaxHunger}");
+            UITheme.DrawBar(new Rect(20, 80, 210, 16), p.ThirstPercent, UITheme.FriendlyBlue, $"Thirst: {p.Thirst:F0}/{p.MaxThirst}");
+            GUI.Label(new Rect(20, 100, 220, 20), $"Gold: {p.Gold}  |  AC: {p.AC}", UITheme.Label(UITheme.FontNormal, UITheme.TextAccent));
+            GUI.Label(new Rect(20, 118, 220, 20), $"Day {p.DayCount}  |  {(ow != null && ow.IsNight ? "Night" : "Day")}", UITheme.Label(UITheme.FontNormal, UITheme.TextAccent));
             if (!string.IsNullOrEmpty(spellSlotStr))
             {
-                var slotStyle = new GUIStyle(GUI.skin.label) { fontSize = 10, normal = { textColor = new Color(0.6f, 0.7f, 1f) } };
-                GUI.Label(new Rect(20, 136, 220, 18), $"Slots: {spellSlotStr}", slotStyle);
+                GUI.Label(new Rect(20, 136, 220, 18), $"Slots: {spellSlotStr}", UITheme.Label(UITheme.FontTiny, UITheme.ManaBlue));
             }
 
             // Top-right: Quest tracker
@@ -70,12 +70,13 @@ namespace ForeverEngine.Demo.UI
                 if (active.Count > 0)
                 {
                     var quest = active[0];
-                    GUI.Box(new Rect(Screen.width - 250, 10, 240, 60), "");
-                    GUI.Label(new Rect(Screen.width - 240, 15, 220, 20), $"<b>{quest.Definition.Title}</b>");
+                    var questRect = new Rect(Screen.width - 250, 10, 240, 60);
+                    UITheme.DrawPanel(questRect);
+                    GUI.Label(new Rect(Screen.width - 240, 15, 220, 20), quest.Definition.Title, UITheme.Bold(UITheme.FontNormal, UITheme.TextHeader));
                     foreach (var obj in quest.Definition.Objectives)
                     {
                         int prog = quest.GetObjectiveProgress(obj.Id);
-                        GUI.Label(new Rect(Screen.width - 240, 35, 220, 20), $"  {obj.Description}: {prog}/{obj.RequiredCount}");
+                        GUI.Label(new Rect(Screen.width - 240, 35, 220, 20), $"  {obj.Description}: {prog}/{obj.RequiredCount}", UITheme.Label(UITheme.FontSmall, UITheme.TextPrimary));
                     }
                 }
             }
@@ -84,7 +85,7 @@ namespace ForeverEngine.Demo.UI
             // panel will be reintroduced via DirectorClient in a follow-up.
 
             // Bottom: Controls
-            GUI.Label(new Rect(10, Screen.height - 30, 500, 20), "WASD/QE: Move | F: Forage | I: Inventory | Enter: Interact with location | Esc: Pause");
+            GUI.Label(new Rect(10, Screen.height - 30, 500, 20), "WASD/QE: Move | F: Forage | I: Inventory | Enter: Interact with location | Esc: Pause", UITheme.Label(UITheme.FontSmall, UITheme.TextSecondary));
 
             // Center: Location prompt
             if (ow != null)
@@ -93,25 +94,14 @@ namespace ForeverEngine.Demo.UI
                 {
                     if (loc.HexQ == p.HexQ && loc.HexR == p.HexR)
                     {
-                        GUI.Box(new Rect(Screen.width/2 - 120, Screen.height/2 - 40, 240, 50), "");
-                        GUI.Label(new Rect(Screen.width/2 - 110, Screen.height/2 - 35, 220, 20), $"<b>{loc.Name}</b>");
-                        GUI.Label(new Rect(Screen.width/2 - 110, Screen.height/2 - 15, 220, 20), "Press Enter to enter");
+                        var promptRect = new Rect(Screen.width / 2 - 120, Screen.height / 2 - 40, 240, 50);
+                        UITheme.DrawPanel(promptRect);
+                        GUI.Label(new Rect(Screen.width / 2 - 110, Screen.height / 2 - 35, 220, 20), loc.Name, UITheme.Header(UITheme.FontMedium));
+                        GUI.Label(new Rect(Screen.width / 2 - 110, Screen.height / 2 - 15, 220, 20), "Press Enter to enter", UITheme.Label(UITheme.FontSmall, UITheme.TextPrimary, TextAnchor.MiddleLeft));
                         break;
                     }
                 }
             }
-        }
-
-        private void DrawBar(Rect rect, float percent, Color color, string label)
-        {
-            GUI.Box(rect, "");
-            var fillRect = new Rect(rect.x + 1, rect.y + 1, (rect.width - 2) * Mathf.Clamp01(percent), rect.height - 2);
-            var oldColor = GUI.color;
-            GUI.color = color;
-            GUI.DrawTexture(fillRect, Texture2D.whiteTexture);
-            GUI.color = oldColor;
-            var style = new GUIStyle(GUI.skin.label) { fontSize = 10, alignment = TextAnchor.MiddleCenter };
-            GUI.Label(rect, label, style);
         }
     }
 }

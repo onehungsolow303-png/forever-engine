@@ -1023,6 +1023,14 @@ namespace ForeverEngine.Demo.Battle
             }
 
             int aliveAllies = Combatants.Count(c => !c.IsPlayer && c.IsAlive && c != ai);
+
+            // State Space B context
+            bool hasRanged = ai.HasRangedAttack && ai.AttackRange > 0;
+            bool allyHpCritical = Combatants.Any(c => !c.IsPlayer && c.IsAlive && c != ai
+                && c.MaxHP > 0 && (float)c.HP / c.MaxHP < 0.25f);
+            bool terrainAdvantage = ai.Behavior == "guard"
+                && System.Math.Abs(ai.X - player.X) + System.Math.Abs(ai.Y - player.Y) <= 2;
+
             CombatBrain.Action action;
             if (_neuralBrain != null && ForeverEngine.AI.Inference.InferenceEngine.Instance?.IsAvailable == true)
             {
@@ -1031,11 +1039,13 @@ namespace ForeverEngine.Demo.Battle
                 action = _neuralBrain.DecideAction();
                 // Keep Q-table updated even when using neural path
                 if (_neuralBrain.UsingNeural)
-                    brain.Decide(ai, player, aliveAllies, ai.Behavior ?? "chase");
+                    brain.Decide(ai, player, aliveAllies, ai.Behavior ?? "chase",
+                        hasRanged, allyHpCritical, terrainAdvantage);
             }
             else
             {
-                action = brain.Decide(ai, player, aliveAllies, ai.Behavior ?? "chase");
+                action = brain.Decide(ai, player, aliveAllies, ai.Behavior ?? "chase",
+                    hasRanged, allyHpCritical, terrainAdvantage);
             }
 
             switch (action)
@@ -1077,6 +1087,53 @@ namespace ForeverEngine.Demo.Battle
                     brain.AddReward(ai.Behavior == "guard"
                         ? (_gameConfig != null ? _gameConfig.RewardHoldGuard : 0.1f)
                         : (_gameConfig != null ? _gameConfig.PenaltyHoldChase : -0.05f));
+                    break;
+
+                case CombatBrain.Action.UseAbility:
+                    // Ranged attack from distance — requires HasRangedAttack and line of sight
+                    int rangeDist = System.Math.Abs(ai.X - player.X) + System.Math.Abs(ai.Y - player.Y);
+                    if (ai.HasRangedAttack && rangeDist <= ai.AttackRange && ai.HasAction)
+                    {
+                        ResolveRangedAttack(ai, player);
+                        ai.HasAction = false;
+                    }
+                    else if (ai.HasRangedAttack && rangeDist > ai.AttackRange)
+                    {
+                        // Move into range then try to shoot
+                        MoveToward(ai, player.X, player.Y);
+                        rangeDist = System.Math.Abs(ai.X - player.X) + System.Math.Abs(ai.Y - player.Y);
+                        if (rangeDist <= ai.AttackRange && ai.HasAction)
+                        {
+                            ResolveRangedAttack(ai, player);
+                            ai.HasAction = false;
+                        }
+                    }
+                    else
+                    {
+                        // Fallback: no ranged capability, just advance
+                        MoveToward(ai, player.X, player.Y);
+                    }
+                    break;
+
+                case CombatBrain.Action.ProtectAlly:
+                    // Move to stand between the weakest ally and the player
+                    var weakAlly = Combatants
+                        .Where(c => !c.IsPlayer && c.IsAlive && c != ai && c.MaxHP > 0)
+                        .OrderBy(c => (float)c.HP / c.MaxHP)
+                        .FirstOrDefault();
+                    if (weakAlly != null)
+                    {
+                        // Move to midpoint between ally and player
+                        int midX = (weakAlly.X + player.X) / 2;
+                        int midY = (weakAlly.Y + player.Y) / 2;
+                        MoveToward(ai, midX, midY);
+                        brain.AddReward(_gameConfig != null ? _gameConfig.RewardProtectAlly : 0.3f);
+                    }
+                    else
+                    {
+                        // No ally to protect, hold position
+                        brain.AddReward(_gameConfig != null ? _gameConfig.PenaltyHoldChase : -0.05f);
+                    }
                     break;
             }
 
@@ -1130,6 +1187,91 @@ namespace ForeverEngine.Demo.Battle
             if (Combatants.Any(c => c.IsAlive && c != ai && c.X == nx && c.Y == ny)) return false;
             ai.X = nx; ai.Y = ny; ai.MovementRemaining--;
             return true;
+        }
+
+        private void ResolveRangedAttack(BattleCombatant attacker, BattleCombatant target)
+        {
+            // Ranged attack uses DEX for attack roll
+            var atkAbilities = new AbilityScores(
+                attacker.Strength, attacker.Dexterity, 10, 10, 10, 10);
+            int profBonus = 2;
+
+            var atkCtx = new AttackContext
+            {
+                AttackerAbilities = atkAbilities,
+                AttackerProficiency = profBonus,
+                TargetAC = target.AC,
+                AttackerConditions = attacker.Conditions?.ActiveFlags ?? Condition.None,
+                TargetConditions = target.Conditions?.ActiveFlags ?? Condition.None,
+                IsRanged = true,
+                IsMelee = false,
+                CritRange = 20,
+            };
+            var atkResult = AttackResolver.Resolve(atkCtx, ref _rngSeed);
+
+            if (atkResult.Hit)
+            {
+                int atkCount = attacker.RangedAtkCount > 0 ? attacker.RangedAtkCount : attacker.AtkCount;
+                int atkSides = attacker.RangedAtkSides > 0 ? attacker.RangedAtkSides : attacker.AtkSides;
+                int atkBonus = attacker.RangedAtkBonus > 0 ? attacker.RangedAtkBonus : attacker.AtkBonus;
+
+                var baseDmg = new DiceExpression(atkCount, (DieType)atkSides, atkBonus);
+                int dexMod = atkAbilities.GetModifier(Ability.DEX);
+
+                var dmgCtx = new DamageContext
+                {
+                    BaseDamage = baseDmg,
+                    Type = attacker.AttackDamageType,
+                    Critical = atkResult.Critical,
+                    BonusDamage = dexMod,
+                    Resistances = target.Resistances,
+                    Vulnerabilities = target.Vulnerabilities,
+                    Immunities = target.Immunities,
+                    TargetTempHP = target.TempHP,
+                    TargetHP = target.HP,
+                };
+                var dmgResult = DamageResolver.Apply(dmgCtx, ref _rngSeed);
+
+                if (dmgResult.AbsorbedByTempHP > 0)
+                    target.TempHP -= dmgResult.AbsorbedByTempHP;
+
+                int hpDamage = dmgResult.HPDamage;
+                if (hpDamage < 1 && dmgResult.AfterResistance > 0) hpDamage = 1;
+
+                target.TakeDamage(hpDamage);
+                string critStr = atkResult.Critical ? " CRITICAL!" : "";
+                Log.Add($"{attacker.Name} shoots {target.Name} for {hpDamage} damage!{critStr}");
+
+                _renderer?.ShowDamageNumber(new Vector3(target.X, target.Y, 0), hpDamage, atkResult.Critical);
+                Audio.SoundManager.Instance?.PlayHit();
+
+                if (!attacker.IsPlayer)
+                    Demo.AI.DirectorEvents.Send(
+                        $"ranged hit {target.Name} for {hpDamage}",
+                        targetId: target.Name);
+
+                // Q-learning rewards
+                if (!attacker.IsPlayer && _brains.TryGetValue(attacker, out var atkBrain))
+                    atkBrain.AddReward(_gameConfig != null ? _gameConfig.RewardRangedHit : 0.35f);
+                if (!target.IsPlayer && _brains.TryGetValue(target, out var tgtBrain))
+                    tgtBrain.AddReward(_gameConfig != null ? _gameConfig.PenaltyDamageTaken : -0.12f);
+
+                if (!target.IsAlive)
+                {
+                    Log.Add($"{target.Name} is defeated!");
+                    Demo.AI.DirectorEvents.Send($"killed {target.Name}", targetId: target.Name);
+                }
+                CheckBattleEnd();
+            }
+            else
+            {
+                Log.Add($"{attacker.Name} shoots at {target.Name} and misses!");
+                _renderer?.ShowMiss(new Vector3(target.X, target.Y, 0));
+                Audio.SoundManager.Instance?.PlayMiss();
+
+                if (!attacker.IsPlayer && _brains.TryGetValue(attacker, out var missBrain))
+                    missBrain.AddReward(_gameConfig != null ? _gameConfig.PenaltyRangedMiss : -0.2f);
+            }
         }
 
         private void FallbackAI(BattleCombatant ai, BattleCombatant player)
