@@ -83,6 +83,12 @@ namespace ForeverEngine.Demo
             public string[] ExploredHexes;
             public string[] DiscoveredLocations;
             public int CurrentSeed;
+            public int SaveVersion = 1;
+            public string ModelId;
+            public float MaxHunger, MaxThirst;
+            public int[] InvItemIds;
+            public int[] InvStackCounts;
+            public int[] InvMaxStacks;
 
             public void FromPlayer(PlayerData p)
             {
@@ -102,6 +108,27 @@ namespace ForeverEngine.Demo
                 ExploredHexes = hexes.ToArray();
                 var locs = new List<string>(p.DiscoveredLocations);
                 DiscoveredLocations = locs.ToArray();
+
+                ModelId = p.ModelId;
+                MaxHunger = p.MaxHunger;
+                MaxThirst = p.MaxThirst;
+
+                // Serialize inventory items as parallel arrays (JsonUtility can't handle struct arrays directly)
+                var items = new System.Collections.Generic.List<ForeverEngine.ECS.Data.ItemInstance>();
+                for (int i = 0; i < p.Inventory.Count; i++)
+                {
+                    var item = p.Inventory.GetSlot(i);
+                    if (!item.IsEmpty) items.Add(item);
+                }
+                InvItemIds = new int[items.Count];
+                InvStackCounts = new int[items.Count];
+                InvMaxStacks = new int[items.Count];
+                for (int i = 0; i < items.Count; i++)
+                {
+                    InvItemIds[i] = items[i].ItemId;
+                    InvStackCounts[i] = items[i].StackCount;
+                    InvMaxStacks[i] = items[i].MaxStack;
+                }
             }
 
             public PlayerData ToPlayer()
@@ -128,6 +155,25 @@ namespace ForeverEngine.Demo
                 p.DiscoveredLocations = new HashSet<string>();
                 if (DiscoveredLocations != null)
                     foreach (var l in DiscoveredLocations) p.DiscoveredLocations.Add(l);
+
+                if (!string.IsNullOrEmpty(ModelId)) p.ModelId = ModelId;
+                if (MaxHunger > 0) p.MaxHunger = MaxHunger;
+                if (MaxThirst > 0) p.MaxThirst = MaxThirst;
+
+                // Restore inventory from parallel arrays
+                if (InvItemIds != null && InvItemIds.Length > 0)
+                {
+                    p.Inventory = new ForeverEngine.ECS.Data.Inventory(20);
+                    for (int i = 0; i < InvItemIds.Length; i++)
+                    {
+                        p.Inventory.Add(new ForeverEngine.ECS.Data.ItemInstance
+                        {
+                            ItemId = InvItemIds[i],
+                            StackCount = InvStackCounts[i],
+                            MaxStack = InvMaxStacks[i]
+                        });
+                    }
+                }
 
                 return p;
             }
