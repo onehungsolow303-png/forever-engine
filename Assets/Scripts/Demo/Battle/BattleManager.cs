@@ -34,10 +34,11 @@ namespace ForeverEngine.Demo.Battle
         private GameConfig _gameConfig;
 
         // Seamless in-world combat state
-        private BattleArena _arena;
+        private BattleZoneManager _zoneManager;
         private Dictionary<BattleCombatant, GameObject> _models = new();
         private bool _seamlessMode;
         private int _lastJoinCheckRound;
+        private bool _disengaged;
 
         // Spell casting UI state
         private bool _spellMenuOpen;
@@ -46,22 +47,22 @@ namespace ForeverEngine.Demo.Battle
         private void Awake() => Instance = this;
 
         /// <summary>
-        /// Convert grid coordinates to world position via the shared BattleArena.
+        /// Convert grid coordinates to world position via the shared BattleZoneManager.
         /// All combatants share this single coordinate system.
         /// </summary>
         private Vector3 GridToWorld(int x, int y) =>
-            _arena != null ? _arena.GridToWorld(x, y) : new Vector3(x + 0.5f, 0f, y + 0.5f);
+            _zoneManager != null ? _zoneManager.GridToWorld(x, y) : new Vector3(x + 0.5f, 0f, y + 0.5f);
 
         /// <summary>
         /// Entry point for seamless in-world combat. Called by GameManager.StartSeamlessBattle.
         /// Arena and enemy combatants are already created; this method wires brains, models,
         /// initiative, and kicks off the first turn.
         /// </summary>
-        public void StartSeamlessBattle(BattleArena arena, List<BattleCombatant> enemies,
+        public void StartSeamlessBattle(BattleZoneManager zoneManager, List<BattleCombatant> enemies,
             BattleCombatant player, Encounters.EncounterData encounterData)
         {
             _gameConfig = Resources.Load<GameConfig>("GameConfig");
-            _arena = arena;
+            _zoneManager = zoneManager;
             _encounterData = encounterData;
             _seamlessMode = true;
             _rngSeed = (uint)(System.DateTime.UtcNow.Ticks + (encounterData.Id ?? "").GetHashCode());
@@ -72,8 +73,8 @@ namespace ForeverEngine.Demo.Battle
             foreach (var enemy in enemies)
                 Combatants.Add(enemy);
 
-            // Use the arena's grid as the primary grid
-            Grid = _arena.Grid;
+            // Use the zone manager's grid as the primary grid
+            Grid = _zoneManager.Grid;
 
             // Spawn 3D models for each enemy
             foreach (var enemy in enemies)
@@ -218,11 +219,18 @@ namespace ForeverEngine.Demo.Battle
                 // Spell selection (1-9) when menu is open
                 else if (_spellMenuOpen)
                     HandleSpellInput();
-                // Quick heal: H consumes one health potion from inventory.
-                // Costs an action so it can't be combined with an attack
-                // on the same turn — using a potion in 5e takes an action.
+                // Quick heal: H consumes one health potion
                 else if (Input.GetKeyDown(KeyCode.H))
                     UseHealthPotion();
+                // Dodge action
+                else if (Input.GetKeyDown(KeyCode.G))
+                    PlayerDodge();
+                // Disengage action
+                else if (Input.GetKeyDown(KeyCode.R))
+                    PlayerDisengage();
+                // Dash action
+                else if (Input.GetKeyDown(KeyCode.T))
+                    PlayerDash();
                 else if (Input.GetKeyDown(KeyCode.Space)) PlayerEndTurn();
             }
 
@@ -248,6 +256,10 @@ namespace ForeverEngine.Demo.Battle
         /// </summary>
         private void UpdateSeamlessVisuals()
         {
+            // Update zone centers to follow NPC positions
+            _zoneManager?.UpdateZones(c => GridToWorld(c.X, c.Y));
+            if (_zoneManager != null) Grid = _zoneManager.Grid;
+
             float dt = Time.deltaTime;
             foreach (var combatant in Combatants)
             {
@@ -322,13 +334,13 @@ namespace ForeverEngine.Demo.Battle
         /// </summary>
         private void CheckPlayerEscape()
         {
-            if (!_seamlessMode || _arena == null) return;
+            if (!_seamlessMode || _zoneManager == null) return;
 
             var player = Combatants.FirstOrDefault(c => c.IsPlayer);
             if (player == null) return;
 
             Vector3 playerWorld = GridToWorld(player.X, player.Y);
-            if (_arena.ContainsWorldPos(playerWorld)) return;
+            if (_zoneManager.ContainsWorldPos(playerWorld)) return;
 
             // Player is outside the arena — nearest alive enemy rolls perception
             var nearest = Combatants
@@ -344,7 +356,7 @@ namespace ForeverEngine.Demo.Battle
             if (roll >= dc)
             {
                 // Enemy spots the player — pull back to nearest valid cell
-                var (cx, cy) = _arena.WorldToGrid(playerWorld);
+                var (cx, cy) = _zoneManager.WorldToGrid(playerWorld);
                 player.X = cx;
                 player.Y = cy;
                 Log.Add($"{enemyName} spots you trying to escape! (d20={roll} vs DC {dc})");
@@ -366,12 +378,12 @@ namespace ForeverEngine.Demo.Battle
         /// </summary>
         private void CheckDynamicEnemyJoin()
         {
-            if (!_seamlessMode || _arena == null) return;
+            if (!_seamlessMode || _zoneManager == null) return;
             var player = Combatants.FirstOrDefault(c => c.IsPlayer);
             if (player == null || !_models.TryGetValue(player, out var playerGO) || playerGO == null) return;
 
             Vector3 playerPos = playerGO.transform.position;
-            float joinRange = _arena.GridSize * BattleArena.CellSize;
+            float joinRange = _zoneManager.TotalZoneRadius();
 
             var npcs = Object.FindObjectsByType<DungeonNPC>(FindObjectsSortMode.None);
             foreach (var npc in npcs)
@@ -395,7 +407,7 @@ namespace ForeverEngine.Demo.Battle
                 if (modelPath != null) { combatant.ModelId = modelPath; combatant.ModelScale = modelScale; }
 
                 combatant.SpawnWorldPos = npc.transform.position;
-                var (gx, gy) = _arena.WorldToGrid(npc.transform.position);
+                var (gx, gy) = _zoneManager.WorldToGrid(npc.transform.position);
                 combatant.X = gx;
                 combatant.Y = gy;
 
@@ -405,10 +417,9 @@ namespace ForeverEngine.Demo.Battle
 
                 SpawnModelForCombatant(combatant);
 
-                // Recalculate arena to accommodate the new combatant
-                int playerSpeed = player.Speed > 0 ? player.Speed : 6;
-                _arena.Recalculate(Combatants.FindAll(c => c.IsAlive), playerSpeed);
-                Grid = _arena.Grid;
+                // Add zone for the new combatant
+                _zoneManager.AddZone(combatant, playerGO.transform.position);
+                Grid = _zoneManager.Grid;
 
                 // Remove the DungeonNPC from the scene
                 Object.Destroy(npc.gameObject);
@@ -648,6 +659,7 @@ namespace ForeverEngine.Demo.Battle
             if (!CurrentTurn.IsAlive) { NextTurn(); return; }
 
             CurrentTurn.StartTurn();
+            _disengaged = false;
 
             // Handle death save mode: player at 0 HP rolls a death save instead of acting
             if (CurrentTurn.IsPlayer && CurrentTurn.HP <= 0 && CurrentTurn.DeathSaves != null && CurrentTurn.DeathSaves.IsActive)
@@ -755,6 +767,25 @@ namespace ForeverEngine.Demo.Battle
             }
 
             if (CurrentTurn.MovementRemaining <= 0) return;
+
+            // Enemy opportunity attacks when player leaves their reach (unless Disengaged)
+            if (!_disengaged)
+            {
+                foreach (var enemy in Combatants.Where(c => !c.IsPlayer && c.IsAlive && c.HasReaction && IsAdjacent(CurrentTurn, c)))
+                {
+                    // Check if the new position takes us OUT of adjacency
+                    int newDist = System.Math.Abs(nx - enemy.X) + System.Math.Abs(ny - enemy.Y);
+                    if (newDist > 1)
+                    {
+                        Log.Add($"{enemy.Name} strikes {CurrentTurn.Name} as they move away! (Attack of Opportunity)");
+                        ResolveAttack(enemy, CurrentTurn);
+                        enemy.HasReaction = false;
+                        if (CurrentTurn.HP <= 0) { CheckBattleEnd(); return; }
+                        break; // Only one AoO per move step
+                    }
+                }
+            }
+
             CurrentTurn.X = nx; CurrentTurn.Y = ny;
             CurrentTurn.MovementRemaining--;
             CheckPlayerEscape();
@@ -801,6 +832,43 @@ namespace ForeverEngine.Demo.Battle
             {
                 Log.Add("No adjacent enemy to attack! Move closer first.");
             }
+        }
+
+        /// <summary>
+        /// Dodge action (D&D 5e): until your next turn, attacks against you have
+        /// disadvantage and you have advantage on DEX saving throws.
+        /// Costs your action for the turn.
+        /// </summary>
+        public void PlayerDodge()
+        {
+            if (CurrentTurn == null || !CurrentTurn.IsPlayer || !CurrentTurn.HasAction) return;
+            CurrentTurn.HasAction = false;
+            CurrentTurn.Conditions?.Apply(RPG.Enums.Condition.Dodging, 1, "Dodge");
+            Log.Add($"{CurrentTurn.Name} takes the Dodge action \u2014 attacks against you have disadvantage.");
+        }
+
+        /// <summary>
+        /// Disengage action (D&D 5e): your movement doesn't provoke opportunity
+        /// attacks for the rest of the turn. Costs your action.
+        /// </summary>
+        public void PlayerDisengage()
+        {
+            if (CurrentTurn == null || !CurrentTurn.IsPlayer || !CurrentTurn.HasAction) return;
+            CurrentTurn.HasAction = false;
+            _disengaged = true;
+            Log.Add($"{CurrentTurn.Name} takes the Disengage action \u2014 movement won't provoke opportunity attacks.");
+        }
+
+        /// <summary>
+        /// Dash action (D&D 5e): gain extra movement equal to your speed.
+        /// Costs your action.
+        /// </summary>
+        public void PlayerDash()
+        {
+            if (CurrentTurn == null || !CurrentTurn.IsPlayer || !CurrentTurn.HasAction) return;
+            CurrentTurn.HasAction = false;
+            CurrentTurn.MovementRemaining += CurrentTurn.Speed;
+            Log.Add($"{CurrentTurn.Name} takes the Dash action \u2014 movement doubled to {CurrentTurn.MovementRemaining}.");
         }
 
         public void PlayerEndTurn() { if (CurrentTurn != null && CurrentTurn.IsPlayer) NextTurn(); }
@@ -1192,8 +1260,8 @@ namespace ForeverEngine.Demo.Battle
 
         private bool TryMove(BattleCombatant ai, int nx, int ny)
         {
-            int gridW = _arena != null ? _arena.GridSize : Grid.Width;
-            int gridH = _arena != null ? _arena.GridSize : Grid.Height;
+            int gridW = _zoneManager != null ? _zoneManager.GridWidth : Grid.Width;
+            int gridH = _zoneManager != null ? _zoneManager.GridHeight : Grid.Height;
             if (nx < 0 || ny < 0 || nx >= gridW || ny >= gridH) return false;
             if (!Grid.IsWalkable(nx, ny)) return false;
             if (Combatants.Any(c => c.IsAlive && c != ai && c.X == nx && c.Y == ny)) return false;
@@ -1508,13 +1576,13 @@ namespace ForeverEngine.Demo.Battle
                             killerBrain.AddReward(_gameConfig != null ? _gameConfig.RewardKill : 0.5f);
                         target.Animator?.PlayDeath();
 
-                        // Shrink the arena now that an enemy has died
-                        if (_seamlessMode && _arena != null)
+                        // Remove dead NPC's zone and rebuild unified grid
+                        if (_seamlessMode && _zoneManager != null)
                         {
                             var player2 = Combatants.FirstOrDefault(c => c.IsPlayer);
-                            int pSpeed = player2 != null && player2.Speed > 0 ? player2.Speed : 6;
-                            _arena.Recalculate(Combatants.FindAll(c => c.IsAlive), pSpeed);
-                            Grid = _arena.Grid;
+                            Vector3 playerPos = player2 != null ? GridToWorld(player2.X, player2.Y) : Vector3.zero;
+                            _zoneManager.RemoveZone(target, playerPos);
+                            Grid = _zoneManager.Grid;
                         }
                     }
                 }
@@ -1555,9 +1623,11 @@ namespace ForeverEngine.Demo.Battle
         {
             if (mover.IsPlayer || player == null || !player.IsAlive) return false;
             if (!IsAdjacent(mover, player)) return false; // Not adjacent — no AoO
+            if (!player.HasReaction) return false; // Already used reaction this round
 
             Log.Add($"{player.Name} strikes {mover.Name} as they disengage! (Attack of Opportunity)");
             ResolveAttack(player, mover);
+            player.HasReaction = false;
             return mover.HP <= 0;
         }
 
