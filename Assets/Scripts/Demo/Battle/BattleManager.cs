@@ -36,6 +36,7 @@ namespace ForeverEngine.Demo.Battle
         // Seamless in-world combat state
         private List<BattleZone> _zones = new();
         private BattleZone _playerZone; // Fixed reference — doesn't shift when zones are removed
+        private Vector3 _battleOrigin;  // Single shared origin for ALL grid-to-world calculations
         private Dictionary<BattleCombatant, GameObject> _models = new();
         private bool _seamlessMode;
         private int _lastJoinCheckRound;
@@ -47,6 +48,18 @@ namespace ForeverEngine.Demo.Battle
         private void Awake() => Instance = this;
 
         /// <summary>
+        /// Convert grid coordinates to world position using the fixed battle origin.
+        /// All combatants share this single coordinate system — no zone-dependent mapping.
+        /// </summary>
+        private Vector3 GridToWorld(int x, int y)
+        {
+            return _battleOrigin + new Vector3(
+                x * BattleZone.CellSize + BattleZone.CellSize * 0.5f,
+                0f,
+                y * BattleZone.CellSize + BattleZone.CellSize * 0.5f);
+        }
+
+        /// <summary>
         /// Entry point for seamless in-world combat. Called by GameManager.StartSeamlessBattle.
         /// Zones and enemy combatants are already created; this method wires brains, models,
         /// initiative, and kicks off the first turn.
@@ -56,7 +69,8 @@ namespace ForeverEngine.Demo.Battle
         {
             _gameConfig = Resources.Load<GameConfig>("GameConfig");
             _zones = zones;
-            _playerZone = zones.Count > 0 ? zones[0] : null; // Lock player's coordinate system
+            _playerZone = zones.Count > 0 ? zones[0] : null;
+            _battleOrigin = _playerZone != null ? _playerZone.Origin : Vector3.zero;
             _encounterData = encounterData;
             _seamlessMode = true;
             _rngSeed = (uint)(System.DateTime.UtcNow.Ticks + (encounterData.Id ?? "").GetHashCode());
@@ -151,7 +165,7 @@ namespace ForeverEngine.Demo.Battle
             }
 
             model.name = $"Model_{combatant.Name}";
-            model.transform.position = zone.GridToWorld(combatant.X, combatant.Y);
+            model.transform.position = GridToWorld(combatant.X, combatant.Y);
             _models[combatant] = model;
 
             // Attach procedural animator
@@ -232,18 +246,8 @@ namespace ForeverEngine.Demo.Battle
             {
                 if (!_models.TryGetValue(combatant, out var model) || model == null) continue;
 
-                // Find the zone this combatant belongs to
-                // Player always uses _playerZone (locked at battle start) to prevent teleporting
-                // when other zones are removed. Enemies use their own zone.
-                BattleZone zone = null;
-                if (combatant.IsPlayer)
-                    zone = _playerZone;
-                else
-                    zone = _zones.FirstOrDefault(z => z != null && z.OwnerEnemy == combatant);
-                if (zone == null) zone = _playerZone ?? (_zones.Count > 0 ? _zones[0] : null);
-                if (zone == null) continue;
-
-                Vector3 targetPos = zone.GridToWorld(combatant.X, combatant.Y);
+                // All combatants share _battleOrigin for positioning (no zone-dependent mapping)
+                Vector3 targetPos = GridToWorld(combatant.X, combatant.Y);
 
                 if (!combatant.IsAlive && !combatant.IsPlayer)
                 {
@@ -271,40 +275,19 @@ namespace ForeverEngine.Demo.Battle
                     if (combatant.Animator == null)
                         model.transform.position = lerpedPos;
 
-                    // Face toward nearest opponent
-                    Vector3 faceTarget = Vector3.zero;
-                    bool hasFaceTarget = false;
-                    if (combatant.IsPlayer)
+                    // Enemies auto-face the player (player uses Q/E manual rotation only)
+                    if (!combatant.IsPlayer)
                     {
-                        // Player faces nearest alive enemy
-                        float closestDist = float.MaxValue;
-                        foreach (var other in Combatants)
+                        var playerC = Combatants.FirstOrDefault(c => c.IsPlayer);
+                        if (playerC != null && _models.TryGetValue(playerC, out var playerModel))
                         {
-                            if (other.IsPlayer || other.HP <= 0) continue;
-                            if (!_models.TryGetValue(other, out var otherModel)) continue;
-                            float d = Vector3.Distance(model.transform.position, otherModel.transform.position);
-                            if (d < closestDist) { closestDist = d; faceTarget = otherModel.transform.position; hasFaceTarget = true; }
-                        }
-                    }
-                    else
-                    {
-                        // Enemies face the player
-                        var player = Combatants.FirstOrDefault(c => c.IsPlayer);
-                        if (player != null && _models.TryGetValue(player, out var playerModel))
-                        {
-                            faceTarget = playerModel.transform.position;
-                            hasFaceTarget = true;
-                        }
-                    }
-
-                    if (hasFaceTarget)
-                    {
-                        Vector3 lookDir = faceTarget - model.transform.position;
-                        lookDir.y = 0f;
-                        if (lookDir.sqrMagnitude > 0.01f)
-                        {
-                            Quaternion targetRot = Quaternion.LookRotation(lookDir);
-                            model.transform.rotation = Quaternion.Slerp(model.transform.rotation, targetRot, dt * 6f);
+                            Vector3 lookDir = playerModel.transform.position - model.transform.position;
+                            lookDir.y = 0f;
+                            if (lookDir.sqrMagnitude > 0.01f)
+                            {
+                                Quaternion targetRot = Quaternion.LookRotation(lookDir);
+                                model.transform.rotation = Quaternion.Slerp(model.transform.rotation, targetRot, dt * 6f);
+                            }
                         }
                     }
 
@@ -340,7 +323,7 @@ namespace ForeverEngine.Demo.Battle
             // Use the locked player zone to convert grid → world (not _zones[0] which shifts)
             var pZone = _playerZone ?? (_zones.Count > 0 ? _zones[0] : null);
             if (pZone == null) return;
-            Vector3 playerWorld = pZone.GridToWorld(player.X, player.Y);
+            Vector3 playerWorld = GridToWorld(player.X, player.Y);
 
             for (int i = _zones.Count - 1; i >= 0; i--)
             {
@@ -1128,6 +1111,7 @@ namespace ForeverEngine.Demo.Battle
                     break;
 
                 case CombatBrain.Action.Retreat:
+                    if (TryAttackOfOpportunity(ai, player)) break; // AoO killed the enemy
                     MoveAway(ai, player.X, player.Y);
                     if (ai.HP < ai.MaxHP * 0.3f)
                         brain.AddReward(_gameConfig != null ? _gameConfig.RewardRetreatLowHP : 0.2f);
@@ -1136,6 +1120,7 @@ namespace ForeverEngine.Demo.Battle
                     break;
 
                 case CombatBrain.Action.Flank:
+                    if (TryAttackOfOpportunity(ai, player)) break; // AoO if leaving melee range
                     MoveFlank(ai, player.X, player.Y);
                     break;
 
@@ -1607,6 +1592,21 @@ namespace ForeverEngine.Demo.Battle
 
         private bool IsAdjacent(BattleCombatant a, BattleCombatant b) =>
             System.Math.Abs(a.X - b.X) + System.Math.Abs(a.Y - b.Y) <= 1;
+
+        /// <summary>
+        /// Attack of opportunity: when an enemy moves away from an adjacent player,
+        /// the player gets one free melee attack (D&D 5e reaction).
+        /// Call BEFORE moving the enemy. Returns true if the AoO killed the enemy.
+        /// </summary>
+        private bool TryAttackOfOpportunity(BattleCombatant mover, BattleCombatant player)
+        {
+            if (mover.IsPlayer || player == null || !player.IsAlive) return false;
+            if (!IsAdjacent(mover, player)) return false; // Not adjacent — no AoO
+
+            Log.Add($"{player.Name} strikes {mover.Name} as they disengage! (Attack of Opportunity)");
+            ResolveAttack(player, mover);
+            return mover.HP <= 0;
+        }
 
         private void CheckBattleEnd()
         {
