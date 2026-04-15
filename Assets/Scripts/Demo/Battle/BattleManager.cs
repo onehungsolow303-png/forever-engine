@@ -253,6 +253,43 @@ namespace ForeverEngine.Demo.Battle
                     if (combatant.Animator == null)
                         model.transform.position = lerpedPos;
 
+                    // Face toward nearest opponent
+                    Vector3 faceTarget = Vector3.zero;
+                    bool hasFaceTarget = false;
+                    if (combatant.IsPlayer)
+                    {
+                        // Player faces nearest alive enemy
+                        float closestDist = float.MaxValue;
+                        foreach (var other in Combatants)
+                        {
+                            if (other.IsPlayer || other.HP <= 0) continue;
+                            if (!_models.TryGetValue(other, out var otherModel)) continue;
+                            float d = Vector3.Distance(model.transform.position, otherModel.transform.position);
+                            if (d < closestDist) { closestDist = d; faceTarget = otherModel.transform.position; hasFaceTarget = true; }
+                        }
+                    }
+                    else
+                    {
+                        // Enemies face the player
+                        var player = Combatants.FirstOrDefault(c => c.IsPlayer);
+                        if (player != null && _models.TryGetValue(player, out var playerModel))
+                        {
+                            faceTarget = playerModel.transform.position;
+                            hasFaceTarget = true;
+                        }
+                    }
+
+                    if (hasFaceTarget)
+                    {
+                        Vector3 lookDir = faceTarget - model.transform.position;
+                        lookDir.y = 0f;
+                        if (lookDir.sqrMagnitude > 0.01f)
+                        {
+                            Quaternion targetRot = Quaternion.LookRotation(lookDir);
+                            model.transform.rotation = Quaternion.Slerp(model.transform.rotation, targetRot, dt * 6f);
+                        }
+                    }
+
                     // Current turn combatant: pulsate scale
                     if (combatant == CurrentTurn)
                     {

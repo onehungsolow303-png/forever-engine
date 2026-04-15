@@ -42,7 +42,9 @@ namespace ForeverEngine.Demo.Battle
         public void Activate(BattleCombatant owner, Vector3 position)
         {
             OwnerEnemy = owner;
-            Origin = SnapToGrid(position);
+            // Center the zone on the enemy (origin is SW corner, so offset by half grid)
+            float halfGrid = GridSize * CellSize * 0.5f;
+            Origin = SnapToGrid(position - new Vector3(halfGrid, 0f, halfGrid));
 
             // Use enemy's grid position as the seed so each enemy gets consistent
             // random layout before the geometry scan overwrites it.
