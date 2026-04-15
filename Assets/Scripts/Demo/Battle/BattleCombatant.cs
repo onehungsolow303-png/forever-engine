@@ -20,6 +20,8 @@ namespace ForeverEngine.Demo.Battle
         public bool IsAlive => HP > 0 || (IsPlayer && DeathSaves != null && DeathSaves.IsActive);
         public int MovementRemaining;
         public bool HasAction;
+        public bool HasBonusAction;
+        public bool HasReaction;
         public int InitiativeRoll;
 
         // === RPG Integration fields ===
@@ -39,8 +41,8 @@ namespace ForeverEngine.Demo.Battle
         public string ModelId;
         public float ModelScale = 1f;
         public ModelAnimator Animator;
-        /// <summary>World-space position at the moment this combatant entered the arena.
-        /// Set by the battle initialiser before calling BattleArena.Initialize / Recalculate.</summary>
+        /// <summary>World-space position at the moment this combatant entered the battle.
+        /// Set by the battle initialiser before calling BattleZoneManager.Initialize.</summary>
         public UnityEngine.Vector3 SpawnWorldPos;
         public bool HasRangedAttack;
         public int AttackRange;
@@ -82,6 +84,8 @@ namespace ForeverEngine.Demo.Battle
         {
             MovementRemaining = Speed;
             HasAction = true;
+            HasBonusAction = true;
+            HasReaction = true;
             // Tick condition durations at start of this combatant's turn
             if (Conditions != null)
                 Conditions.TickDurations();
