@@ -74,39 +74,31 @@ namespace ForeverEngine.Demo.Battle
         private void HandleClick()
         {
             if (!Input.GetMouseButtonDown(0)) return;
-            if (_hoveredCell.x < 0) return;
+            var bm = _battle;
+            if (bm.CurrentTurn == null || !bm.CurrentTurn.IsPlayer || bm.BattleOver) return;
 
-            var current = _battle.CurrentTurn;
-            if (current == null || !current.IsPlayer) return;
-
-            // Click on enemy = attack
-            if (HoveredEnemy != null && current.HasAction)
+            if (HoveredEnemy != null)
             {
-                int dist = Mathf.Abs(current.X - HoveredEnemy.X) + Mathf.Abs(current.Y - HoveredEnemy.Y);
-                if (dist <= 1)
-                {
-                    _battle.PlayerAttack(HoveredEnemy);
-                    return;
-                }
+                bm.SelectTarget(HoveredEnemy);
+                bm.AttackSelectedTarget();
+                return;
             }
 
-            // Click on walkable tile = move
-            if (_battle.Grid.IsWalkable(_hoveredCell.x, _hoveredCell.y))
+            if (bm.Grid != null && _hoveredCell.x >= 0 && _hoveredCell.y >= 0
+                && bm.Grid.IsWalkable(_hoveredCell.x, _hoveredCell.y))
             {
-                int dist = Mathf.Abs(current.X - _hoveredCell.x) + Mathf.Abs(current.Y - _hoveredCell.y);
+                var current = bm.CurrentTurn;
+                int dist = System.Math.Abs(current.X - _hoveredCell.x) + System.Math.Abs(current.Y - _hoveredCell.y);
                 if (dist <= current.MovementRemaining)
                 {
                     bool occupied = false;
-                    foreach (var c in _battle.Combatants)
+                    foreach (var c in bm.Combatants)
                     {
                         if (c.IsAlive && c.X == _hoveredCell.x && c.Y == _hoveredCell.y)
                         { occupied = true; break; }
                     }
                     if (!occupied)
-                    {
-                        _battle.PlayerMoveTo(_hoveredCell.x, _hoveredCell.y);
-                        _lastPathCell = (-1, -1); // Force path refresh
-                    }
+                        bm.PlayerMoveTo(_hoveredCell.x, _hoveredCell.y);
                 }
             }
         }

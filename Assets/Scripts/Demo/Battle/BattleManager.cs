@@ -44,6 +44,10 @@ namespace ForeverEngine.Demo.Battle
         private bool _spellMenuOpen;
         private List<SpellData> _availableSpells = new();
 
+        // Target selection state
+        private BattleCombatant _selectedTarget;
+        public BattleCombatant SelectedTarget => _selectedTarget;
+
         private void Awake() => Instance = this;
 
         /// <summary>
@@ -212,7 +216,12 @@ namespace ForeverEngine.Demo.Battle
                     CameraRelativeMove(1, 0);
                 // Attack nearest adjacent enemy with 1 or F
                 else if (!_spellMenuOpen && (Input.GetKeyDown(KeyCode.Alpha1) || Input.GetKeyDown(KeyCode.F)))
-                    AttackNearestEnemy();
+                {
+                    if (_selectedTarget != null && _selectedTarget.IsAlive)
+                        AttackSelectedTarget();
+                    else
+                        AttackNearestEnemy();
+                }
                 // Toggle spell menu with V
                 else if (Input.GetKeyDown(KeyCode.V))
                     ToggleSpellMenu();
@@ -872,6 +881,73 @@ namespace ForeverEngine.Demo.Battle
         }
 
         public void PlayerEndTurn() { if (CurrentTurn != null && CurrentTurn.IsPlayer) NextTurn(); }
+
+        /// <summary>Select an enemy as the current target. Called by BattleInputController on click.</summary>
+        public void SelectTarget(BattleCombatant target)
+        {
+            if (target == null || !target.IsAlive || target.IsPlayer) return;
+            _selectedTarget = target;
+        }
+
+        public void ClearTarget() { _selectedTarget = null; }
+
+        /// <summary>Attack the selected target if in weapon range. Handles both melee and ranged.</summary>
+        public void AttackSelectedTarget()
+        {
+            if (CurrentTurn == null || !CurrentTurn.IsPlayer || !CurrentTurn.HasAction) return;
+            if (_selectedTarget == null || !_selectedTarget.IsAlive) return;
+
+            int dist = System.Math.Abs(CurrentTurn.X - _selectedTarget.X) + System.Math.Abs(CurrentTurn.Y - _selectedTarget.Y);
+
+            if (dist <= 1)
+            {
+                ResolveAttack(CurrentTurn, _selectedTarget);
+                CurrentTurn.HasAction = false;
+                CurrentTurn.Animator?.PlayAttack();
+                CheckBattleEnd();
+            }
+            else if (CurrentTurn.HasRangedAttack && dist <= CurrentTurn.AttackRange)
+            {
+                ResolveRangedAttack(CurrentTurn, _selectedTarget);
+                CurrentTurn.HasAction = false;
+                CurrentTurn.Animator?.PlayAttack();
+                CheckBattleEnd();
+            }
+            else
+            {
+                int range = CurrentTurn.HasRangedAttack ? CurrentTurn.AttackRange : 1;
+                Log.Add($"Target out of range ({dist} cells, need {range}).");
+            }
+        }
+
+        /// <summary>Get the weapon range for the current player.</summary>
+        public int GetPlayerWeaponRange()
+        {
+            if (CurrentTurn == null) return 1;
+            if (CurrentTurn.HasRangedAttack) return CurrentTurn.AttackRange;
+            return 1;
+        }
+
+        /// <summary>Compute approximate hit chance against a target (for tooltip).</summary>
+        public int GetHitChance(BattleCombatant target)
+        {
+            if (CurrentTurn == null || target == null) return 0;
+            int atkMod = ForeverEngine.ECS.Utility.DiceRoller.AbilityModifier(CurrentTurn.Strength);
+            int profBonus = CurrentTurn.Sheet?.ProficiencyBonus ?? 2;
+            int totalBonus = atkMod + profBonus;
+            int needed = target.AC - totalBonus;
+            int chance = Mathf.Clamp((21 - needed) * 5, 5, 95);
+            return chance;
+        }
+
+        /// <summary>Get damage range string for tooltip.</summary>
+        public string GetDamageRange()
+        {
+            if (CurrentTurn == null) return "";
+            int min = CurrentTurn.AtkCount + CurrentTurn.AtkBonus;
+            int max = CurrentTurn.AtkCount * CurrentTurn.AtkSides + CurrentTurn.AtkBonus;
+            return $"{min}-{max}";
+        }
 
         // Heal amount per potion. Modest so combat still requires positioning
         // and attacks — potions are an emergency tool, not a free reset.
