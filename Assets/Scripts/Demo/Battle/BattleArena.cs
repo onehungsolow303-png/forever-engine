@@ -83,12 +83,13 @@ namespace ForeverEngine.Demo.Battle
             RebuildGrid();
             ScanGeometry();
 
-            // Clamp grid-coordinate positions so combatants can't be outside the zone.
+            // Only clamp combatants that ended up outside the new bounds (don't reset positions)
             foreach (var c in aliveCombatants)
             {
-                var (gx, gy) = WorldToGrid(c.SpawnWorldPos);
-                c.X = gx;
-                c.Y = gy;
+                if (c.X < 1) c.X = 1;
+                else if (c.X >= GridSize - 1) c.X = GridSize - 2;
+                if (c.Y < 1) c.Y = 1;
+                else if (c.Y >= GridSize - 1) c.Y = GridSize - 2;
             }
 
             UpdateBoundaryPositions();

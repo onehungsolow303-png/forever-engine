@@ -383,6 +383,15 @@ namespace ForeverEngine.Demo
             _activeArena?.Deactivate();
             _activeArena = null;
 
+            // Clean up ModelAnimator from the player model (added during combat)
+            // so it doesn't interfere with overworld movement
+            var renderer3D = FindAnyObjectByType<Overworld.Overworld3DRenderer>();
+            if (renderer3D != null && renderer3D.PlayerTransform != null)
+            {
+                var combatAnim = renderer3D.PlayerTransform.GetComponent<Battle.ModelAnimator>();
+                if (combatAnim != null) Destroy(combatAnim);
+            }
+
             if (_activeBattleManager != null)
             {
                 Destroy(_activeBattleManager.gameObject);
