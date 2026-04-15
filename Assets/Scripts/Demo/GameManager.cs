@@ -29,7 +29,7 @@ namespace ForeverEngine.Demo
         public int LastBattleXPEarned { get; set; }
         public bool IsInCombat { get; private set; }
         private Battle.BattleManager _activeBattleManager;
-        private readonly List<Battle.BattleZone> _activeZones = new();
+        private Battle.BattleArena _activeArena;
 
         [Header("3D Transition")]
         [Tooltip("When true, loads the Overworld3D scene instead of the 2D Overworld scene.")]
@@ -263,24 +263,49 @@ namespace ForeverEngine.Demo
             var encounterData = Encounters.EncounterData.Get(encounterId);
             encounterData = Encounters.EncounterManager.Instance?.ScaleEncounter(encounterData) ?? encounterData;
 
-            _activeZones.Clear();
-            var rng = new System.Random(encounterId.GetHashCode());
-            float offset = 0f;
-            foreach (var enemyDef in encounterData.Enemies)
+            // Build player combatant
+            Battle.BattleCombatant playerCombatant;
+            if (Character != null)
+                playerCombatant = Battle.BattleCombatant.FromCharacterSheet(Character);
+            else
+                playerCombatant = Battle.BattleCombatant.FromPlayer(Player);
+            int playerSpeed = playerCombatant.Speed > 0 ? playerCombatant.Speed : 6;
+
+            // Place enemies in a circle around the player position
+            var enemies = new List<Battle.BattleCombatant>();
+            int count = encounterData.Enemies.Count;
+            float radius = 3f + count; // Scale circle with enemy count
+            for (int i = 0; i < count; i++)
             {
-                var zoneGO = new GameObject($"BattleZone_{enemyDef.Name}");
-                var zone = zoneGO.AddComponent<Battle.BattleZone>();
-                Vector3 enemyPos = position + new Vector3(offset, 0, offset * 0.5f);
-                var combatant = Battle.BattleCombatant.FromEnemy(enemyDef, 0, 0);
-                zone.Activate(combatant, enemyPos);
+                float angle = (2f * Mathf.PI * i) / Mathf.Max(1, count);
+                Vector3 enemyPos = position + new Vector3(
+                    Mathf.Cos(angle) * radius,
+                    0f,
+                    Mathf.Sin(angle) * radius);
 
-                // Place enemy at center of their zone
-                combatant.X = Battle.BattleZone.GridSize / 2;
-                combatant.Y = Battle.BattleZone.GridSize / 2;
-
-                _activeZones.Add(zone);
-                offset += 2f;
+                var combatant = Battle.BattleCombatant.FromEnemy(encounterData.Enemies[i], 0, 0);
+                combatant.SpawnWorldPos = enemyPos;
+                enemies.Add(combatant);
             }
+
+            // Create single BattleArena
+            var arenaGO = new GameObject("BattleArena");
+            _activeArena = arenaGO.AddComponent<Battle.BattleArena>();
+            _activeArena.Initialize(position, enemies, playerSpeed);
+
+            // Place enemies on the arena grid
+            foreach (var enemy in enemies)
+            {
+                var (gx, gy) = _activeArena.WorldToGrid(enemy.SpawnWorldPos);
+                enemy.X = gx;
+                enemy.Y = gy;
+            }
+
+            // Place player at center of the arena grid
+            var (px, py) = _activeArena.WorldToGrid(position);
+            playerCombatant.X = px;
+            playerCombatant.Y = py;
+            playerCombatant.SpawnWorldPos = position;
 
             if (_activeBattleManager == null)
             {
@@ -288,23 +313,7 @@ namespace ForeverEngine.Demo
                 _activeBattleManager = bmGO.AddComponent<Battle.BattleManager>();
             }
 
-            Battle.BattleCombatant playerCombatant;
-            if (Character != null)
-                playerCombatant = Battle.BattleCombatant.FromCharacterSheet(Character);
-            else
-                playerCombatant = Battle.BattleCombatant.FromPlayer(Player);
-
-            if (_activeZones.Count > 0)
-            {
-                playerCombatant.X = Battle.BattleZone.GridSize / 2;
-                playerCombatant.Y = Battle.BattleZone.GridSize / 2 - 2;
-            }
-
-            var enemies = new List<Battle.BattleCombatant>();
-            foreach (var zone in _activeZones)
-                enemies.Add(zone.OwnerEnemy);
-
-            _activeBattleManager.StartSeamlessBattle(_activeZones, enemies, playerCombatant, encounterData);
+            _activeBattleManager.StartSeamlessBattle(_activeArena, enemies, playerCombatant, encounterData);
 
             PendingEncounterId = encounterId;
             IsInCombat = true;
@@ -316,15 +325,18 @@ namespace ForeverEngine.Demo
             {
                 int goldPer = encounterData.GoldReward / Mathf.Max(1, encounterData.Enemies.Count);
                 int xpPer = encounterData.XPReward / Mathf.Max(1, encounterData.Enemies.Count);
-                foreach (var zone in _activeZones)
+                if (_activeArena != null && _activeBattleManager != null)
                 {
-                    if (zone != null && zone.OwnerEnemy != null && !zone.OwnerEnemy.IsAlive)
+                    foreach (var c in _activeBattleManager.Combatants)
                     {
-                        var lootGO = new GameObject("WorldLoot");
-                        lootGO.transform.position = zone.GridToWorld(zone.OwnerEnemy.X, zone.OwnerEnemy.Y) + Vector3.up * 0.5f;
-                        var loot = lootGO.AddComponent<Battle.WorldLoot>();
-                        loot.GoldAmount = goldPer;
-                        loot.XPAmount = xpPer;
+                        if (c != null && !c.IsPlayer && !c.IsAlive)
+                        {
+                            var lootGO = new GameObject("WorldLoot");
+                            lootGO.transform.position = _activeArena.GridToWorld(c.X, c.Y) + Vector3.up * 0.5f;
+                            var loot = lootGO.AddComponent<Battle.WorldLoot>();
+                            loot.GoldAmount = goldPer;
+                            loot.XPAmount = xpPer;
+                        }
                     }
                 }
 
@@ -368,9 +380,8 @@ namespace ForeverEngine.Demo
                 }
             }
 
-            foreach (var zone in _activeZones)
-                if (zone != null) zone.Deactivate();
-            _activeZones.Clear();
+            _activeArena?.Deactivate();
+            _activeArena = null;
 
             if (_activeBattleManager != null)
             {
