@@ -245,7 +245,9 @@ namespace ForeverEngine.Demo.Battle
                 else
                 {
                     // Alive: lerp base position toward grid target; ModelAnimator handles idle bob
-                    Vector3 lerpedPos = Vector3.Lerp(model.transform.position, targetPos, dt * 8f);
+                    // Use BasePosition (not transform.position) to avoid feeding bob offset back into the lerp
+                    Vector3 currentBase = combatant.Animator != null ? combatant.Animator.BasePosition : model.transform.position;
+                    Vector3 lerpedPos = Vector3.Lerp(currentBase, targetPos, dt * 8f);
                     combatant.Animator?.SetBasePosition(lerpedPos);
                     // If no animator, move directly
                     if (combatant.Animator == null)

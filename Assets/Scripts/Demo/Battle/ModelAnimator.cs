@@ -30,6 +30,8 @@ namespace ForeverEngine.Demo.Battle
         private AnimState _state = AnimState.Idle;
 
         private Vector3 _basePosition;
+        /// <summary>Read the logical base position (without bob offset) for lerp calculations.</summary>
+        public Vector3 BasePosition => _basePosition;
         private Quaternion _baseRotation;
         private bool _baseSet;
         private bool _deathComplete;

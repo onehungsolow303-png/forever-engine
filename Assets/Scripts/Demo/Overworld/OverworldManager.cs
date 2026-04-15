@@ -274,7 +274,9 @@ namespace ForeverEngine.Demo.Overworld
             if (Random.Range(0f, 1f) < chance)
             {
                 EncountersSinceRest++;
-                var playerPos = Player?.transform?.position ?? Vector3.zero;
+                // Use the actual 3D player model position (not OverworldPlayer GO which sits at origin)
+                var renderer3D = FindAnyObjectByType<Overworld3DRenderer>();
+                var playerPos = renderer3D?.PlayerTransform?.position ?? Player?.transform?.position ?? Vector3.zero;
                 GameManager.Instance.StartSeamlessBattle(playerPos, $"random_{tile.Type}_{(IsNight ? "night" : "day")}");
             }
         }
