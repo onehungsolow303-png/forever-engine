@@ -34,9 +34,7 @@ namespace ForeverEngine.Demo.Battle
         private GameConfig _gameConfig;
 
         // Seamless in-world combat state
-        private List<BattleZone> _zones = new();
-        private BattleZone _playerZone; // Fixed reference — doesn't shift when zones are removed
-        private Vector3 _battleOrigin;  // Single shared origin for ALL grid-to-world calculations
+        private BattleArena _arena;
         private Dictionary<BattleCombatant, GameObject> _models = new();
         private bool _seamlessMode;
         private int _lastJoinCheckRound;
@@ -48,29 +46,21 @@ namespace ForeverEngine.Demo.Battle
         private void Awake() => Instance = this;
 
         /// <summary>
-        /// Convert grid coordinates to world position using the fixed battle origin.
-        /// All combatants share this single coordinate system — no zone-dependent mapping.
+        /// Convert grid coordinates to world position via the shared BattleArena.
+        /// All combatants share this single coordinate system.
         /// </summary>
-        private Vector3 GridToWorld(int x, int y)
-        {
-            return _battleOrigin + new Vector3(
-                x * BattleZone.CellSize + BattleZone.CellSize * 0.5f,
-                0f,
-                y * BattleZone.CellSize + BattleZone.CellSize * 0.5f);
-        }
+        private Vector3 GridToWorld(int x, int y) => _arena.GridToWorld(x, y);
 
         /// <summary>
         /// Entry point for seamless in-world combat. Called by GameManager.StartSeamlessBattle.
-        /// Zones and enemy combatants are already created; this method wires brains, models,
+        /// Arena and enemy combatants are already created; this method wires brains, models,
         /// initiative, and kicks off the first turn.
         /// </summary>
-        public void StartSeamlessBattle(List<BattleZone> zones, List<BattleCombatant> enemies,
+        public void StartSeamlessBattle(BattleArena arena, List<BattleCombatant> enemies,
             BattleCombatant player, Encounters.EncounterData encounterData)
         {
             _gameConfig = Resources.Load<GameConfig>("GameConfig");
-            _zones = zones;
-            _playerZone = zones.Count > 0 ? zones[0] : null;
-            _battleOrigin = _playerZone != null ? _playerZone.Origin : Vector3.zero;
+            _arena = arena;
             _encounterData = encounterData;
             _seamlessMode = true;
             _rngSeed = (uint)(System.DateTime.UtcNow.Ticks + (encounterData.Id ?? "").GetHashCode());
@@ -81,13 +71,12 @@ namespace ForeverEngine.Demo.Battle
             foreach (var enemy in enemies)
                 Combatants.Add(enemy);
 
-            // Spawn 3D models for each enemy in its zone
+            // Use the arena's grid as the primary grid
+            Grid = _arena.Grid;
+
+            // Spawn 3D models for each enemy
             foreach (var enemy in enemies)
-            {
-                var zone = _zones.FirstOrDefault(z => z.OwnerEnemy == enemy);
-                if (zone != null)
-                    SpawnModelForCombatant(enemy, zone);
-            }
+                SpawnModelForCombatant(enemy);
 
             // Wire the player model: try overworld renderer first, then tag, then spawn fresh
             GameObject playerGO = null;
@@ -111,7 +100,7 @@ namespace ForeverEngine.Demo.Battle
             else
             {
                 // Fallback: spawn a fresh model for the player
-                SpawnModelForCombatant(player, _playerZone);
+                SpawnModelForCombatant(player);
             }
 
             // Roll initiative, player-first in round 1
@@ -125,7 +114,7 @@ namespace ForeverEngine.Demo.Battle
                 Combatants.Insert(0, p);
             }
 
-            // Set up AI brains
+            // Set up AI brains (optional Q-learning alongside deterministic AIBehavior)
             float[] savedTable = null;
             foreach (var c in Combatants)
             {
@@ -142,19 +131,16 @@ namespace ForeverEngine.Demo.Battle
                 _neuralBrain = go.AddComponent<CombatIntelligence>();
             }
 
-            // Use the player zone's grid as the primary grid (stable reference)
-            Grid = _playerZone?.Grid ?? (_zones.Count > 0 ? _zones[0].Grid : new BattleGrid(BattleZone.GridSize, BattleZone.GridSize, 0));
-
             StartTurn();
             Log.Add($"Battle begins! {enemies.Count} enemies.");
             Demo.AI.DirectorEvents.Send($"seamless combat started: {encounterData.Id}");
         }
 
         /// <summary>
-        /// Spawn a 3D model for a combatant in the given zone. Uses ModelRegistry
+        /// Spawn a 3D model for a combatant in the arena. Uses ModelRegistry
         /// to resolve the prefab path; falls back to a red capsule primitive.
         /// </summary>
-        private void SpawnModelForCombatant(BattleCombatant combatant, BattleZone zone)
+        private void SpawnModelForCombatant(BattleCombatant combatant)
         {
             GameObject model = null;
 
@@ -266,7 +252,7 @@ namespace ForeverEngine.Demo.Battle
             {
                 if (!_models.TryGetValue(combatant, out var model) || model == null) continue;
 
-                // All combatants share _battleOrigin for positioning (no zone-dependent mapping)
+                // All combatants share the arena for positioning (single coordinate system)
                 Vector3 targetPos = GridToWorld(combatant.X, combatant.Y);
 
                 if (!combatant.IsAlive && !combatant.IsPlayer)
@@ -330,55 +316,42 @@ namespace ForeverEngine.Demo.Battle
         }
 
         /// <summary>
-        /// After the player moves, check whether they've left any active zone.
-        /// Each zone's enemy rolls a D20 perception check to spot the escape.
+        /// After the player moves, check whether they've left the arena boundary.
+        /// Enemies roll a D20 perception check to spot the escape.
         /// </summary>
         private void CheckPlayerEscape()
         {
-            if (!_seamlessMode || _zones.Count == 0) return;
+            if (!_seamlessMode || _arena == null) return;
 
             var player = Combatants.FirstOrDefault(c => c.IsPlayer);
             if (player == null) return;
 
-            // Use the locked player zone to convert grid → world (not _zones[0] which shifts)
-            var pZone = _playerZone ?? (_zones.Count > 0 ? _zones[0] : null);
-            if (pZone == null) return;
             Vector3 playerWorld = GridToWorld(player.X, player.Y);
+            if (_arena.ContainsWorldPos(playerWorld)) return;
 
-            for (int i = _zones.Count - 1; i >= 0; i--)
+            // Player is outside the arena — nearest alive enemy rolls perception
+            var nearest = Combatants
+                .Where(c => !c.IsPlayer && c.IsAlive)
+                .OrderBy(c => System.Math.Abs(c.X - player.X) + System.Math.Abs(c.Y - player.Y))
+                .FirstOrDefault();
+
+            int playerDex = player.Dexterity;
+            int dc = 10 + (playerDex - 10) / 2;
+            int roll = Random.Range(1, 21);
+            string enemyName = nearest?.Name ?? "Enemy";
+
+            if (roll >= dc)
             {
-                var zone = _zones[i];
-                if (zone == null) continue;
-                if (zone.ContainsWorldPos(playerWorld)) continue;
-
-                // Player is outside this zone — enemy rolls perception
-                int playerDex = player.Dexterity;
-                int dc = 10 + (playerDex - 10) / 2;
-                int roll = Random.Range(1, 21);
-
-                if (roll >= dc)
-                {
-                    // Enemy spots the player — pull back to nearest valid cell
-                    var (cx, cy) = zone.WorldToGrid(playerWorld);
-                    player.X = cx;
-                    player.Y = cy;
-                    Log.Add($"{zone.OwnerEnemy?.Name ?? "Enemy"} spots you trying to escape! (d20={roll} vs DC {dc})");
-                }
-                else
-                {
-                    // Escape successful — deactivate zone, remove enemy
-                    string enemyName = zone.OwnerEnemy?.Name ?? "Enemy";
-                    if (zone.OwnerEnemy != null)
-                        Combatants.Remove(zone.OwnerEnemy);
-                    zone.Deactivate();
-                    _zones.RemoveAt(i);
-                    Log.Add($"You slip away from {enemyName}! (d20={roll} vs DC {dc})");
-                }
+                // Enemy spots the player — pull back to nearest valid cell
+                var (cx, cy) = _arena.WorldToGrid(playerWorld);
+                player.X = cx;
+                player.Y = cy;
+                Log.Add($"{enemyName} spots you trying to escape! (d20={roll} vs DC {dc})");
             }
-
-            // If no zones remain, combat is over
-            if (_zones.Count == 0)
+            else
             {
+                // Escape successful — combat ends
+                Log.Add($"You slip away from {enemyName}! (d20={roll} vs DC {dc})");
                 BattleOver = true;
                 PlayerWon = true;
                 GameManager.Instance?.OnBattleComplete(true, _encounterData);
@@ -387,17 +360,17 @@ namespace ForeverEngine.Demo.Battle
 
         /// <summary>
         /// Called once per round. Scans scene for AmbientEnemy DungeonNPCs near the player.
-        /// If one is close enough, creates a new zone and pulls the NPC into combat.
+        /// If one is close enough, pulls the NPC into the arena and recalculates.
         /// One join per round max.
         /// </summary>
         private void CheckDynamicEnemyJoin()
         {
-            if (!_seamlessMode) return;
+            if (!_seamlessMode || _arena == null) return;
             var player = Combatants.FirstOrDefault(c => c.IsPlayer);
             if (player == null || !_models.TryGetValue(player, out var playerGO) || playerGO == null) return;
 
             Vector3 playerPos = playerGO.transform.position;
-            float joinRange = BattleZone.GridSize * BattleZone.CellSize;
+            float joinRange = _arena.GridSize * BattleArena.CellSize;
 
             var npcs = Object.FindObjectsByType<DungeonNPC>(FindObjectsSortMode.None);
             foreach (var npc in npcs)
@@ -405,10 +378,6 @@ namespace ForeverEngine.Demo.Battle
                 if (npc.Role != DungeonNPCRole.AmbientEnemy) continue;
                 float dist = Vector3.Distance(npc.transform.position, playerPos);
                 if (dist > joinRange) continue;
-
-                // Create a new zone for this ambient enemy
-                var zoneGO = new GameObject($"BattleZone_{npc.NPCName}");
-                var zone = zoneGO.AddComponent<BattleZone>();
 
                 // Create a basic combatant for the ambient enemy: 15HP, AC12, 1d8+1
                 var combatant = new BattleCombatant
@@ -424,17 +393,21 @@ namespace ForeverEngine.Demo.Battle
                 var (modelPath, modelScale) = ModelRegistry.Resolve(npc.NPCName);
                 if (modelPath != null) { combatant.ModelId = modelPath; combatant.ModelScale = modelScale; }
 
-                zone.Activate(combatant, npc.transform.position);
-                var (gx, gy) = zone.WorldToGrid(npc.transform.position);
+                combatant.SpawnWorldPos = npc.transform.position;
+                var (gx, gy) = _arena.WorldToGrid(npc.transform.position);
                 combatant.X = gx;
                 combatant.Y = gy;
 
-                _zones.Add(zone);
                 Combatants.Add(combatant);
                 combatant.RollInitiative(ref _rngSeed);
                 _brains[combatant] = new CombatBrain(null, seed: (int)_rngSeed + combatant.X * 100 + combatant.Y);
 
-                SpawnModelForCombatant(combatant, zone);
+                SpawnModelForCombatant(combatant);
+
+                // Recalculate arena to accommodate the new combatant
+                int playerSpeed = player.Speed > 0 ? player.Speed : 6;
+                _arena.Recalculate(Combatants.FindAll(c => c.IsAlive), playerSpeed);
+                Grid = _arena.Grid;
 
                 // Remove the DungeonNPC from the scene
                 Object.Destroy(npc.gameObject);
@@ -1085,86 +1058,59 @@ namespace ForeverEngine.Demo.Battle
             var player = Combatants.FirstOrDefault(c => c.IsPlayer && c.IsAlive);
             if (player == null) { NextTurn(); return; }
 
-            if (!_brains.TryGetValue(ai, out var brain))
-            {
-                FallbackAI(ai, player);
-                Invoke(nameof(NextTurn), 0.5f);
-                return;
-            }
-
             int aliveAllies = Combatants.Count(c => !c.IsPlayer && c.IsAlive && c != ai);
 
-            // State Space B context
-            bool hasRanged = ai.HasRangedAttack && ai.AttackRange > 0;
-            bool allyHpCritical = Combatants.Any(c => !c.IsPlayer && c.IsAlive && c != ai
-                && c.MaxHP > 0 && (float)c.HP / c.MaxHP < 0.25f);
-            bool terrainAdvantage = ai.Behavior == "guard"
-                && System.Math.Abs(ai.X - player.X) + System.Math.Abs(ai.Y - player.Y) <= 2;
+            // Deterministic AIBehavior decision
+            string behavior = AIBehavior.ResolveBehavior(ai);
+            var action = AIBehavior.Decide(ai, player, aliveAllies, behavior);
 
-            CombatBrain.Action action;
-            if (_neuralBrain != null && ForeverEngine.AI.Inference.InferenceEngine.Instance?.IsAvailable == true)
-            {
-                _neuralBrain.Configure(ai, brain);
-                _neuralBrain.SetBattleContext(player, aliveAllies, ai.Behavior ?? "chase");
-                action = _neuralBrain.DecideAction();
-                // Keep Q-table updated even when using neural path
-                if (_neuralBrain.UsingNeural)
-                    brain.Decide(ai, player, aliveAllies, ai.Behavior ?? "chase",
-                        hasRanged, allyHpCritical, terrainAdvantage);
-            }
-            else
-            {
-                action = brain.Decide(ai, player, aliveAllies, ai.Behavior ?? "chase",
-                    hasRanged, allyHpCritical, terrainAdvantage);
-            }
+            // Keep Q-learning brain updated in the background (optional)
+            _brains.TryGetValue(ai, out var brain);
 
             switch (action)
             {
-                case CombatBrain.Action.Advance:
+                case AIBehavior.Action.Advance:
                     MoveToward(ai, player.X, player.Y);
                     if (IsAdjacent(ai, player) && ai.HasAction)
                     {
                         ResolveAttack(ai, player);
                         ai.HasAction = false;
-                        brain.AddReward(_gameConfig != null ? _gameConfig.RewardAdvanceHit : 0.1f);
                     }
                     break;
 
-                case CombatBrain.Action.Retreat:
+                case AIBehavior.Action.Retreat:
                     if (TryAttackOfOpportunity(ai, player)) break; // AoO killed the enemy
                     MoveAway(ai, player.X, player.Y);
-                    if (ai.HP < ai.MaxHP * 0.3f)
-                        brain.AddReward(_gameConfig != null ? _gameConfig.RewardRetreatLowHP : 0.2f);
-                    else
-                        brain.AddReward(-0.2f); // Penalize cowardly retreat at high HP
                     break;
 
-                case CombatBrain.Action.Flank:
+                case AIBehavior.Action.Flank:
                     if (TryAttackOfOpportunity(ai, player)) break; // AoO if leaving melee range
                     MoveFlank(ai, player.X, player.Y);
                     break;
 
-                case CombatBrain.Action.Attack:
+                case AIBehavior.Action.Attack:
                     if (IsAdjacent(ai, player) && ai.HasAction)
                     {
                         ResolveAttack(ai, player);
                         ai.HasAction = false;
-                        brain.AddReward(_gameConfig != null ? _gameConfig.RewardAttackAdjacent : 0.3f);
                     }
                     else
                     {
                         MoveToward(ai, player.X, player.Y);
+                        if (IsAdjacent(ai, player) && ai.HasAction)
+                        {
+                            ResolveAttack(ai, player);
+                            ai.HasAction = false;
+                        }
                     }
                     break;
 
-                case CombatBrain.Action.Hold:
-                    brain.AddReward(ai.Behavior == "guard"
-                        ? (_gameConfig != null ? _gameConfig.RewardHoldGuard : 0.1f)
-                        : (_gameConfig != null ? _gameConfig.PenaltyHoldChase : -0.05f));
+                case AIBehavior.Action.Hold:
+                    // Intentionally do nothing — guard behavior
                     break;
 
-                case CombatBrain.Action.UseAbility:
-                    // Ranged attack from distance — requires HasRangedAttack and line of sight
+                case AIBehavior.Action.RangedAttack:
+                {
                     int rangeDist = System.Math.Abs(ai.X - player.X) + System.Math.Abs(ai.Y - player.Y);
                     if (ai.HasRangedAttack && rangeDist <= ai.AttackRange && ai.HasAction)
                     {
@@ -1188,8 +1134,10 @@ namespace ForeverEngine.Demo.Battle
                         MoveToward(ai, player.X, player.Y);
                     }
                     break;
+                }
 
-                case CombatBrain.Action.ProtectAlly:
+                case AIBehavior.Action.ProtectAlly:
+                {
                     // Move to stand between the weakest ally and the player
                     var weakAlly = Combatants
                         .Where(c => !c.IsPlayer && c.IsAlive && c != ai && c.MaxHP > 0)
@@ -1197,25 +1145,12 @@ namespace ForeverEngine.Demo.Battle
                         .FirstOrDefault();
                     if (weakAlly != null)
                     {
-                        // Move to midpoint between ally and player
                         int midX = (weakAlly.X + player.X) / 2;
                         int midY = (weakAlly.Y + player.Y) / 2;
                         MoveToward(ai, midX, midY);
-                        brain.AddReward(_gameConfig != null ? _gameConfig.RewardProtectAlly : 0.3f);
-                    }
-                    else
-                    {
-                        // No ally to protect, hold position
-                        brain.AddReward(_gameConfig != null ? _gameConfig.PenaltyHoldChase : -0.05f);
                     }
                     break;
-            }
-
-            // Re-center the AI's zone around its current position
-            if (_seamlessMode && _models.TryGetValue(ai, out var aiModel) && aiModel != null)
-            {
-                var aiZone = _zones.FirstOrDefault(z => z != null && z.OwnerEnemy == ai);
-                aiZone?.ReCenter(aiModel.transform.position);
+                }
             }
 
             Invoke(nameof(NextTurn), 0.5f);
@@ -1256,7 +1191,9 @@ namespace ForeverEngine.Demo.Battle
 
         private bool TryMove(BattleCombatant ai, int nx, int ny)
         {
-            if (nx < 0 || ny < 0 || nx >= Grid.Width || ny >= Grid.Height) return false;
+            int gridW = _arena != null ? _arena.GridSize : Grid.Width;
+            int gridH = _arena != null ? _arena.GridSize : Grid.Height;
+            if (nx < 0 || ny < 0 || nx >= gridW || ny >= gridH) return false;
             if (!Grid.IsWalkable(nx, ny)) return false;
             if (Combatants.Any(c => c.IsAlive && c != ai && c.X == nx && c.Y == ny)) return false;
             ai.X = nx; ai.Y = ny; ai.MovementRemaining--;
@@ -1570,18 +1507,13 @@ namespace ForeverEngine.Demo.Battle
                             killerBrain.AddReward(_gameConfig != null ? _gameConfig.RewardKill : 0.5f);
                         target.Animator?.PlayDeath();
 
-                        // Deactivate the dead enemy's battle zone (but NOT the player's zone)
-                        if (_seamlessMode)
+                        // Shrink the arena now that an enemy has died
+                        if (_seamlessMode && _arena != null)
                         {
-                            for (int zi = _zones.Count - 1; zi >= 0; zi--)
-                            {
-                                if (_zones[zi] != null && _zones[zi].OwnerEnemy == target
-                                    && _zones[zi] != _playerZone) // Keep player's coordinate system alive
-                                {
-                                    _zones[zi].Deactivate();
-                                    _zones.RemoveAt(zi);
-                                }
-                            }
+                            var player2 = Combatants.FirstOrDefault(c => c.IsPlayer);
+                            int pSpeed = player2 != null && player2.Speed > 0 ? player2.Speed : 6;
+                            _arena.Recalculate(Combatants.FindAll(c => c.IsAlive), pSpeed);
+                            Grid = _arena.Grid;
                         }
                     }
                 }

@@ -14,7 +14,7 @@ namespace ForeverEngine.Demo.Battle
     /// Lifecycle: Initialize → (optional Recalculate when enemies die) → Deactivate.
     /// Deactivate destroys the GameObject; callers must null their reference.
     /// </summary>
-    public class BattleArena : MonoBehaviour
+    public class BattleArena : UnityEngine.MonoBehaviour
     {
         // ── Constants ─────────────────────────────────────────────────────────
         public const float CellSize = 1f;
