@@ -35,6 +35,7 @@ namespace ForeverEngine.Demo.Battle
 
         // Seamless in-world combat state
         private List<BattleZone> _zones = new();
+        private BattleZone _playerZone; // Fixed reference — doesn't shift when zones are removed
         private Dictionary<BattleCombatant, GameObject> _models = new();
         private bool _seamlessMode;
         private int _lastJoinCheckRound;
@@ -55,6 +56,7 @@ namespace ForeverEngine.Demo.Battle
         {
             _gameConfig = Resources.Load<GameConfig>("GameConfig");
             _zones = zones;
+            _playerZone = zones.Count > 0 ? zones[0] : null; // Lock player's coordinate system
             _encounterData = encounterData;
             _seamlessMode = true;
             _rngSeed = (uint)(System.DateTime.UtcNow.Ticks + (encounterData.Id ?? "").GetHashCode());
@@ -231,12 +233,14 @@ namespace ForeverEngine.Demo.Battle
                 if (!_models.TryGetValue(combatant, out var model) || model == null) continue;
 
                 // Find the zone this combatant belongs to
+                // Player always uses _playerZone (locked at battle start) to prevent teleporting
+                // when other zones are removed. Enemies use their own zone.
                 BattleZone zone = null;
-                if (combatant.IsPlayer && _zones.Count > 0)
-                    zone = _zones[0];
+                if (combatant.IsPlayer)
+                    zone = _playerZone;
                 else
                     zone = _zones.FirstOrDefault(z => z != null && z.OwnerEnemy == combatant);
-                if (zone == null && _zones.Count > 0) zone = _zones[0];
+                if (zone == null) zone = _playerZone ?? (_zones.Count > 0 ? _zones[0] : null);
                 if (zone == null) continue;
 
                 Vector3 targetPos = zone.GridToWorld(combatant.X, combatant.Y);
