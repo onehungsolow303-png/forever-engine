@@ -2,7 +2,7 @@
 //
 // These POCOs enforce SHAPE only. Constraints declared in the JSON
 // schemas (schema_version const, numeric ranges, enums, minLength, etc.)
-// are NOT enforced by these classes. Per spec ง7, every cross-module
+// are NOT enforced by these classes. Per spec ยง7, every cross-module
 // payload must be validated against the corresponding schema in
 // C:/Dev/.shared/schemas/ at the boundary (use a JSON Schema validator
 // such as NJsonSchema or Json.NET Schema before consuming the payload).
@@ -25,6 +25,8 @@ namespace ForeverEngine.Bridges
         [JsonProperty("target_stats")] public Dictionary<string, object> TargetStats;
         [JsonProperty("scene_context")] public Dictionary<string, object> SceneContext;
         [JsonProperty("recent_history")] public List<string> RecentHistory;
+        [JsonProperty("request_type")] public string RequestType;
+        [JsonProperty("party")] public List<Dictionary<string, object>> Party;
     }
 
     // from decision.schema.json
@@ -40,6 +42,7 @@ namespace ForeverEngine.Bridges
         [JsonProperty("fx_requests")] public List<Dictionary<string, object>> FxRequests;
         [JsonProperty("repetition_penalty")] public int? RepetitionPenalty;
         [JsonProperty("deterministic_fallback")] public bool? DeterministicFallback;
+        [JsonProperty("encounter_template")] public Dictionary<string, object> EncounterTemplate;
     }
 
     // from selection.schema.json
