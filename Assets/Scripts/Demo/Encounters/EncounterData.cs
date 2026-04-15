@@ -367,6 +367,49 @@ namespace ForeverEngine.Demo.Encounters
             return def;
         }
 
+        /// <summary>
+        /// Build an EncounterData from a Director Hub encounter_template.
+        /// Maps template slots to EnemyDefs using the standard CR-stats table.
+        /// </summary>
+        public static EncounterData FromDirectorTemplate(
+            Dictionary<string, object> template, string biome = "forest")
+        {
+            var data = new EncounterData
+            {
+                Id = template.ContainsKey("template_id") ? template["template_id"].ToString() : "director_encounter",
+                Biome = biome,
+                GoldReward = template.ContainsKey("gold_reward") ? System.Convert.ToInt32(template["gold_reward"]) : 20,
+                XPReward = template.ContainsKey("xp_reward") ? System.Convert.ToInt32(template["xp_reward"]) : 100,
+                Enemies = new List<EnemyDef>(),
+            };
+
+            if (template.ContainsKey("slots") && template["slots"] is System.Collections.IList slots)
+            {
+                foreach (var slotObj in slots)
+                {
+                    if (slotObj is Dictionary<string, object> slot)
+                    {
+                        string name = slot.ContainsKey("name") ? slot["name"].ToString() : "Enemy";
+                        string behavior = slot.ContainsKey("behavior") ? slot["behavior"].ToString() : "chase";
+                        int xp = slot.ContainsKey("xp") ? System.Convert.ToInt32(slot["xp"]) : 50;
+
+                        DamageType atkDmgType = DamageType.Slashing;
+                        if (slot.ContainsKey("damage_type"))
+                        {
+                            string dmgType = slot["damage_type"].ToString();
+                            if (System.Enum.TryParse<DamageType>(dmgType, true, out var parsed))
+                                atkDmgType = parsed;
+                        }
+
+                        var enemy = MakeCREnemyDef(name, xp, behavior, biome, atkDmgType);
+                        data.Enemies.Add(enemy);
+                    }
+                }
+            }
+
+            return data;
+        }
+
         private static EncounterData DefaultEncounter()
         {
             var enc = new EncounterData { Id = "default", GoldReward = 5, XPReward = 10 };

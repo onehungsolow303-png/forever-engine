@@ -30,6 +30,7 @@ namespace ForeverEngine.Demo
         public bool IsInCombat { get; private set; }
         private Battle.BattleManager _activeBattleManager;
         private Battle.BattleZoneManager _activeZoneManager;
+        private Dictionary<string, object> _lastDecisionEncounterTemplate;
 
         [Header("3D Transition")]
         [Tooltip("When true, loads the Overworld3D scene instead of the 2D Overworld scene.")]
@@ -250,6 +251,12 @@ namespace ForeverEngine.Demo
                 Debug.LogWarning($"[GameManager] StartQuest failed for id='{questId}'");
         }
 
+        /// <summary>Store an encounter template from Director Hub for the next battle.</summary>
+        public void SetEncounterTemplate(Dictionary<string, object> template)
+        {
+            _lastDecisionEncounterTemplate = template;
+        }
+
         public void EnterBattle(string encounterId)
         {
             PendingEncounterId = encounterId;
@@ -260,8 +267,19 @@ namespace ForeverEngine.Demo
         {
             if (IsInCombat) return;
 
-            var encounterData = Encounters.EncounterData.Get(encounterId);
-            encounterData = Encounters.EncounterManager.Instance?.ScaleEncounter(encounterData) ?? encounterData;
+            Encounters.EncounterData encounterData;
+            if (_lastDecisionEncounterTemplate != null)
+            {
+                string biome = _lastDecisionEncounterTemplate.ContainsKey("biome")
+                    ? _lastDecisionEncounterTemplate["biome"].ToString() : "forest";
+                encounterData = Encounters.EncounterData.FromDirectorTemplate(_lastDecisionEncounterTemplate, biome);
+                _lastDecisionEncounterTemplate = null;
+            }
+            else
+            {
+                encounterData = Encounters.EncounterData.Get(encounterId);
+                encounterData = Encounters.EncounterManager.Instance?.ScaleEncounter(encounterData) ?? encounterData;
+            }
 
             // Build player combatant
             Battle.BattleCombatant playerCombatant;
