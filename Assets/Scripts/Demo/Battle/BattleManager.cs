@@ -108,8 +108,8 @@ namespace ForeverEngine.Demo.Battle
                 _neuralBrain = go.AddComponent<CombatIntelligence>();
             }
 
-            // Use the first zone's grid as the primary grid
-            Grid = _zones.Count > 0 ? _zones[0].Grid : new BattleGrid(BattleZone.GridSize, BattleZone.GridSize, 0);
+            // Use the player zone's grid as the primary grid (stable reference)
+            Grid = _playerZone?.Grid ?? (_zones.Count > 0 ? _zones[0].Grid : new BattleGrid(BattleZone.GridSize, BattleZone.GridSize, 0));
 
             StartTurn();
             Log.Add($"Battle begins! {enemies.Count} enemies.");
@@ -337,8 +337,10 @@ namespace ForeverEngine.Demo.Battle
             var player = Combatants.FirstOrDefault(c => c.IsPlayer);
             if (player == null) return;
 
-            // Use the first zone to convert player grid → world position
-            Vector3 playerWorld = _zones[0].GridToWorld(player.X, player.Y);
+            // Use the locked player zone to convert grid → world (not _zones[0] which shifts)
+            var pZone = _playerZone ?? (_zones.Count > 0 ? _zones[0] : null);
+            if (pZone == null) return;
+            Vector3 playerWorld = pZone.GridToWorld(player.X, player.Y);
 
             for (int i = _zones.Count - 1; i >= 0; i--)
             {
@@ -1129,6 +1131,8 @@ namespace ForeverEngine.Demo.Battle
                     MoveAway(ai, player.X, player.Y);
                     if (ai.HP < ai.MaxHP * 0.3f)
                         brain.AddReward(_gameConfig != null ? _gameConfig.RewardRetreatLowHP : 0.2f);
+                    else
+                        brain.AddReward(-0.2f); // Penalize cowardly retreat at high HP
                     break;
 
                 case CombatBrain.Action.Flank:
@@ -1561,12 +1565,13 @@ namespace ForeverEngine.Demo.Battle
                             killerBrain.AddReward(_gameConfig != null ? _gameConfig.RewardKill : 0.5f);
                         target.Animator?.PlayDeath();
 
-                        // Deactivate the dead enemy's battle zone
+                        // Deactivate the dead enemy's battle zone (but NOT the player's zone)
                         if (_seamlessMode)
                         {
                             for (int zi = _zones.Count - 1; zi >= 0; zi--)
                             {
-                                if (_zones[zi] != null && _zones[zi].OwnerEnemy == target)
+                                if (_zones[zi] != null && _zones[zi].OwnerEnemy == target
+                                    && _zones[zi] != _playerZone) // Keep player's coordinate system alive
                                 {
                                     _zones[zi].Deactivate();
                                     _zones.RemoveAt(zi);
