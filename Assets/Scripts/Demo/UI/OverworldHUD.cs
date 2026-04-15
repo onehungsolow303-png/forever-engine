@@ -6,6 +6,9 @@ namespace ForeverEngine.Demo.UI
     {
         private void OnGUI()
         {
+            // Suppress HUD while the pause menu is open so it doesn't draw underneath.
+            if (PauseMenu.Instance != null && PauseMenu.Instance.IsOpen) return;
+
             var gm = GameManager.Instance;
             if (gm == null || gm.Player == null) return;
             var p = gm.Player;
@@ -85,7 +88,7 @@ namespace ForeverEngine.Demo.UI
             // panel will be reintroduced via DirectorClient in a follow-up.
 
             // Bottom: Controls
-            GUI.Label(new Rect(10, Screen.height - 30, 500, 20), "WASD/QE: Move | F: Forage | I: Inventory | Enter: Interact with location | Esc: Pause", UITheme.Label(UITheme.FontSmall, UITheme.TextSecondary));
+            GUI.Label(new Rect(10, Screen.height - 30, 600, 20), "WASD/QE: Move | F: Forage | I: Inventory | Enter: Interact | Esc: Pause | F5: Save | F9: Load", UITheme.Label(UITheme.FontSmall, UITheme.TextSecondary));
 
             // Center: Location prompt
             if (ow != null)

@@ -29,7 +29,7 @@ namespace ForeverEngine.Demo
         public int LastBattleXPEarned { get; set; }
         public bool IsInCombat { get; private set; }
         private Battle.BattleManager _activeBattleManager;
-        private Battle.BattleArena _activeArena;
+        private Battle.BattleZoneManager _activeZoneManager;
 
         [Header("3D Transition")]
         [Tooltip("When true, loads the Overworld3D scene instead of the 2D Overworld scene.")]
@@ -59,12 +59,12 @@ namespace ForeverEngine.Demo
             StateServer = gameObject.AddComponent<GameStateServer>();
             // Inventory screen — Tab-toggled, persists across scenes with GameManager.
             gameObject.AddComponent<InventoryScreen>();
-            // Spell panel — shows prepared spells with hotkeys when spell menu is open.
-            gameObject.AddComponent<SpellPanel>();
-            // Level-up screen — shown when XP threshold is reached after loot collection.
+// Level-up screen — shown when XP threshold is reached after loot collection.
             gameObject.AddComponent<LevelUpScreen>();
             // Victory screen — shown on defeat of the castle_boss (The Rot King).
             gameObject.AddComponent<VictoryScreen>();
+            // Pause menu — Escape-toggled, with save/load/quit. F5/F9 quicksave/quickload.
+            gameObject.AddComponent<PauseMenu>();
         }
 
         private IEnumerator Start()
@@ -288,21 +288,21 @@ namespace ForeverEngine.Demo
                 enemies.Add(combatant);
             }
 
-            // Create single BattleArena
-            var arenaGO = new GameObject("BattleArena");
-            _activeArena = arenaGO.AddComponent<Battle.BattleArena>();
-            _activeArena.Initialize(position, enemies, playerSpeed);
+            // Create per-NPC BattleZoneManager
+            var zmGO = new GameObject("BattleZoneManager");
+            _activeZoneManager = zmGO.AddComponent<Battle.BattleZoneManager>();
+            _activeZoneManager.Initialize(enemies, position);
 
-            // Place enemies on the arena grid
+            // Place enemies on the unified grid
             foreach (var enemy in enemies)
             {
-                var (gx, gy) = _activeArena.WorldToGrid(enemy.SpawnWorldPos);
+                var (gx, gy) = _activeZoneManager.WorldToGrid(enemy.SpawnWorldPos);
                 enemy.X = gx;
                 enemy.Y = gy;
             }
 
-            // Place player at center of the arena grid
-            var (px, py) = _activeArena.WorldToGrid(position);
+            // Place player at their world position on the unified grid
+            var (px, py) = _activeZoneManager.WorldToGrid(position);
             playerCombatant.X = px;
             playerCombatant.Y = py;
             playerCombatant.SpawnWorldPos = position;
@@ -313,7 +313,7 @@ namespace ForeverEngine.Demo
                 _activeBattleManager = bmGO.AddComponent<Battle.BattleManager>();
             }
 
-            _activeBattleManager.StartSeamlessBattle(_activeArena, enemies, playerCombatant, encounterData);
+            _activeBattleManager.StartSeamlessBattle(_activeZoneManager, enemies, playerCombatant, encounterData);
 
             PendingEncounterId = encounterId;
             IsInCombat = true;
@@ -325,14 +325,14 @@ namespace ForeverEngine.Demo
             {
                 int goldPer = encounterData.GoldReward / Mathf.Max(1, encounterData.Enemies.Count);
                 int xpPer = encounterData.XPReward / Mathf.Max(1, encounterData.Enemies.Count);
-                if (_activeArena != null && _activeBattleManager != null)
+                if (_activeZoneManager != null && _activeBattleManager != null)
                 {
                     foreach (var c in _activeBattleManager.Combatants)
                     {
                         if (c != null && !c.IsPlayer && !c.IsAlive)
                         {
                             var lootGO = new GameObject("WorldLoot");
-                            lootGO.transform.position = _activeArena.GridToWorld(c.X, c.Y) + Vector3.up * 0.5f;
+                            lootGO.transform.position = _activeZoneManager.GridToWorld(c.X, c.Y) + Vector3.up * 0.5f;
                             var loot = lootGO.AddComponent<Battle.WorldLoot>();
                             loot.GoldAmount = goldPer;
                             loot.XPAmount = xpPer;
@@ -380,8 +380,8 @@ namespace ForeverEngine.Demo
                 }
             }
 
-            _activeArena?.Deactivate();
-            _activeArena = null;
+            _activeZoneManager?.Deactivate();
+            _activeZoneManager = null;
 
             // Clean up ModelAnimator from the player model (added during combat)
             // so it doesn't interfere with overworld movement
@@ -448,6 +448,17 @@ namespace ForeverEngine.Demo
             var loc = LocationData.Get(Player.LastSafeLocation);
             if (loc != null) { Player.HexQ = loc.HexQ; Player.HexR = loc.HexR; }
             ReturnToOverworld();
+        }
+
+        /// <summary>Load a saved PlayerData and return to the overworld.</summary>
+        public void LoadFromSave(PlayerData player)
+        {
+            Player = player;
+            if (Character != null)
+            {
+                Character.HP = player.HP;
+            }
+            SceneManager.LoadScene(Use3DOverworld ? "Overworld3D" : "Overworld");
         }
 
         public void GameComplete()

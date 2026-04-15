@@ -146,6 +146,10 @@ namespace ForeverEngine.RPG.Combat
             // Target invisible: disadvantage for attacker
             if ((targetConditions & Condition.Invisible) != 0)
                 disadvantageReasons.Add("Target is Invisible");
+
+            // Target is Dodging: attacks against them have disadvantage (D&D 5e Dodge action)
+            if ((targetConditions & Condition.Dodging) != 0)
+                disadvantageReasons.Add("Target is Dodging");
         }
 
         /// <summary>

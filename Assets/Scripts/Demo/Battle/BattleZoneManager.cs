@@ -221,7 +221,7 @@ namespace ForeverEngine.Demo.Battle
             }
         }
 
-        // ── Boundary visuals (circles per NPC) ───────────────────────────
+        // ── Boundary visuals (unified outline + faint per-NPC circles) ───
 
         private void ClearBoundaryVisuals()
         {
@@ -233,24 +233,53 @@ namespace ForeverEngine.Demo.Battle
         private void RebuildBoundaryVisuals()
         {
             ClearBoundaryVisuals();
+            if (Zones.Count == 0) return;
 
+            // Unified bounding outline around entire walkable area
+            float size = GridWidth * CellSize;
+            float sizeZ = GridHeight * CellSize;
+            var go = new GameObject("ZoneBoundary_Unified");
+            go.transform.SetParent(transform, worldPositionStays: false);
+
+            var lr = go.AddComponent<LineRenderer>();
+            lr.positionCount = 5;
+            lr.loop = false;
+            lr.useWorldSpace = true;
+            var mat = new Material(Shader.Find("Sprites/Default"));
+            mat.color = ZoneColor;
+            lr.material = mat;
+            lr.startWidth = 0.08f;
+            lr.endWidth = 0.08f;
+            lr.startColor = ZoneColor;
+            lr.endColor = ZoneColor;
+
+            float ox = Origin.x, oz = Origin.z;
+            lr.SetPosition(0, new Vector3(ox, BoundaryY, oz));
+            lr.SetPosition(1, new Vector3(ox + size, BoundaryY, oz));
+            lr.SetPosition(2, new Vector3(ox + size, BoundaryY, oz + sizeZ));
+            lr.SetPosition(3, new Vector3(ox, BoundaryY, oz + sizeZ));
+            lr.SetPosition(4, new Vector3(ox, BoundaryY, oz));
+            _zoneRenderers.Add(lr);
+
+            // Per-NPC faint zone circles (low opacity, shows individual influence)
+            Color faintColor = new Color(ZoneColor.r, ZoneColor.g, ZoneColor.b, 0.15f);
             foreach (var zone in Zones)
             {
-                var go = new GameObject($"ZoneBoundary_{zone.Owner.Name}");
-                go.transform.SetParent(transform, worldPositionStays: false);
+                var circleGO = new GameObject($"ZoneCircle_{zone.Owner.Name}");
+                circleGO.transform.SetParent(transform, worldPositionStays: false);
 
-                var lr = go.AddComponent<LineRenderer>();
-                lr.positionCount = CircleSegments + 1;
-                lr.loop = false;
-                lr.useWorldSpace = true;
+                var clr = circleGO.AddComponent<LineRenderer>();
+                clr.positionCount = CircleSegments + 1;
+                clr.loop = false;
+                clr.useWorldSpace = true;
 
-                var mat = new Material(Shader.Find("Sprites/Default"));
-                mat.color = ZoneColor;
-                lr.material = mat;
-                lr.startWidth = 0.06f;
-                lr.endWidth = 0.06f;
-                lr.startColor = ZoneColor;
-                lr.endColor = ZoneColor;
+                var cmat = new Material(Shader.Find("Sprites/Default"));
+                cmat.color = faintColor;
+                clr.material = cmat;
+                clr.startWidth = 0.04f;
+                clr.endWidth = 0.04f;
+                clr.startColor = faintColor;
+                clr.endColor = faintColor;
 
                 float r = zone.Radius * CellSize;
                 for (int i = 0; i <= CircleSegments; i++)
@@ -258,10 +287,10 @@ namespace ForeverEngine.Demo.Battle
                     float angle = (2f * Mathf.PI * i) / CircleSegments;
                     float px = zone.Center.x + Mathf.Cos(angle) * r;
                     float pz = zone.Center.z + Mathf.Sin(angle) * r;
-                    lr.SetPosition(i, new Vector3(px, BoundaryY, pz));
+                    clr.SetPosition(i, new Vector3(px, BoundaryY, pz));
                 }
 
-                _zoneRenderers.Add(lr);
+                _zoneRenderers.Add(clr);
             }
         }
     }

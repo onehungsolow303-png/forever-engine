@@ -18,6 +18,7 @@ namespace ForeverEngine.RPG.Enums
         Restrained    = 1 << 11,
         Stunned       = 1 << 12,
         Unconscious   = 1 << 13,
+        Dodging       = 1 << 14,
 
         // Derived composites (not stored, used for queries)
         CantAct               = Incapacitated | Stunned | Paralyzed | Petrified | Unconscious,

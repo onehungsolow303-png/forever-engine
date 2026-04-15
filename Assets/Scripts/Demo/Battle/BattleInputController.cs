@@ -35,19 +35,23 @@ namespace ForeverEngine.Demo.Battle
             }
             else
             {
-                _renderer.ClearPathPreview();
+                _renderer?.ClearPathPreview();
                 _lastPathCell = (-1, -1);
             }
         }
 
         private void UpdateHover()
         {
+            if (_cam == null) { _hoveredCell = (-1, -1); HoveredEnemy = null; return; }
+
             Ray ray = _cam.ScreenPointToRay(Input.mousePosition);
             float t = -ray.origin.y / ray.direction.y;
             if (t < 0f) { _hoveredCell = (-1, -1); HoveredEnemy = null; return; }
 
             Vector3 hitPoint = ray.origin + ray.direction * t;
-            _hoveredCell = _renderer.WorldToGrid(hitPoint);
+            _hoveredCell = _renderer != null
+                ? _renderer.WorldToGrid(hitPoint)
+                : _battle.WorldToGrid(hitPoint);
 
             HoveredEnemy = null;
             foreach (var c in _battle.Combatants)
@@ -67,7 +71,7 @@ namespace ForeverEngine.Demo.Battle
                 return;
 
             _lastPathCell = _hoveredCell;
-            _renderer.ShowPathPreview(_battle.Grid, _battle.CurrentTurn,
+            _renderer?.ShowPathPreview(_battle.Grid, _battle.CurrentTurn,
                 _hoveredCell.x, _hoveredCell.y, _battle.Combatants);
         }
 

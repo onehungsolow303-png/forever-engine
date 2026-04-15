@@ -58,6 +58,15 @@ namespace ForeverEngine.Demo.Battle
             _zoneManager != null ? _zoneManager.GridToWorld(x, y) : new Vector3(x + 0.5f, 0f, y + 0.5f);
 
         /// <summary>
+        /// Convert world position to grid coordinates. Used by BattleInputController in seamless mode.
+        /// </summary>
+        public (int x, int y) WorldToGrid(Vector3 pos)
+        {
+            if (_zoneManager != null) return _zoneManager.WorldToGrid(pos);
+            return (Mathf.FloorToInt(pos.x), Mathf.FloorToInt(pos.z));
+        }
+
+        /// <summary>
         /// Entry point for seamless in-world combat. Called by GameManager.StartSeamlessBattle.
         /// Arena and enemy combatants are already created; this method wires brains, models,
         /// initiative, and kicks off the first turn.
@@ -136,6 +145,11 @@ namespace ForeverEngine.Demo.Battle
                 go.transform.SetParent(transform);
                 _neuralBrain = go.AddComponent<CombatIntelligence>();
             }
+
+            // Create input controller for mouse-based targeting
+            var inputGO = new GameObject("BattleInput");
+            var inputCtrl = inputGO.AddComponent<BattleInputController>();
+            inputCtrl.Initialize(null, this, Camera.main);
 
             StartTurn();
             Log.Add($"Battle begins! {enemies.Count} enemies.");
@@ -1787,6 +1801,10 @@ namespace ForeverEngine.Demo.Battle
                     float[] table = brainList[0].SaveQTable();
                     QTableStore.Save(table, QTableStore.LoadedEpisodes + 1);
                 }
+
+                // Clean up input controller
+                var battleInput = FindAnyObjectByType<BattleInputController>();
+                if (battleInput != null) Destroy(battleInput.gameObject);
             }
         }
 
