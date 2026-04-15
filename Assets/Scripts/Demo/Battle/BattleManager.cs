@@ -189,8 +189,8 @@ namespace ForeverEngine.Demo.Battle
                 // Attack nearest adjacent enemy with 1 or F
                 else if (!_spellMenuOpen && (Input.GetKeyDown(KeyCode.Alpha1) || Input.GetKeyDown(KeyCode.F)))
                     AttackNearestEnemy();
-                // Toggle spell menu with Q
-                else if (Input.GetKeyDown(KeyCode.Q))
+                // Toggle spell menu with V
+                else if (Input.GetKeyDown(KeyCode.V))
                     ToggleSpellMenu();
                 // Spell selection (1-9) when menu is open
                 else if (_spellMenuOpen)
@@ -201,6 +201,20 @@ namespace ForeverEngine.Demo.Battle
                 else if (Input.GetKeyDown(KeyCode.H))
                     UseHealthPotion();
                 else if (Input.GetKeyDown(KeyCode.Space)) PlayerEndTurn();
+            }
+
+            // Q/E rotation for player model (works anytime, not just during turn)
+            if (_seamlessMode)
+            {
+                var player = Combatants.FirstOrDefault(c => c.IsPlayer);
+                if (player != null && _models.TryGetValue(player, out var pModel) && pModel != null)
+                {
+                    float rotSpeed = 120f; // degrees per second
+                    if (Input.GetKey(KeyCode.Q))
+                        pModel.transform.Rotate(0f, -rotSpeed * Time.deltaTime, 0f);
+                    if (Input.GetKey(KeyCode.E))
+                        pModel.transform.Rotate(0f, rotSpeed * Time.deltaTime, 0f);
+                }
             }
         }
 
@@ -1542,6 +1556,19 @@ namespace ForeverEngine.Demo.Battle
                         if (!attacker.IsPlayer && _brains.TryGetValue(attacker, out var killerBrain))
                             killerBrain.AddReward(_gameConfig != null ? _gameConfig.RewardKill : 0.5f);
                         target.Animator?.PlayDeath();
+
+                        // Deactivate the dead enemy's battle zone
+                        if (_seamlessMode)
+                        {
+                            for (int zi = _zones.Count - 1; zi >= 0; zi--)
+                            {
+                                if (_zones[zi] != null && _zones[zi].OwnerEnemy == target)
+                                {
+                                    _zones[zi].Deactivate();
+                                    _zones.RemoveAt(zi);
+                                }
+                            }
+                        }
                     }
                 }
 

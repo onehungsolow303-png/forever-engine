@@ -112,6 +112,16 @@ namespace ForeverEngine.Demo.Overworld
                     _renderer.UpdateVisuals(pq, pr, Fog, IsNight);
             }
 
+            // Q/E rotation for player model in overworld
+            if (_renderer3D != null && _renderer3D.PlayerTransform != null)
+            {
+                float rotSpeed = 120f;
+                if (Input.GetKey(KeyCode.Q))
+                    _renderer3D.PlayerTransform.Rotate(0f, -rotSpeed * Time.deltaTime, 0f);
+                if (Input.GetKey(KeyCode.E))
+                    _renderer3D.PlayerTransform.Rotate(0f, rotSpeed * Time.deltaTime, 0f);
+            }
+
             // Suppress overworld input while a modal dialogue panel is open.
             // Without this, typing into the dialogue panel's TextField also
             // moved the player on the hex grid (W/A/S/D leak), and pressing

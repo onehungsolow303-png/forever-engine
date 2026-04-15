@@ -274,9 +274,9 @@ namespace ForeverEngine.Demo
                 var combatant = Battle.BattleCombatant.FromEnemy(enemyDef, 0, 0);
                 zone.Activate(combatant, enemyPos);
 
-                var (gx, gy) = zone.WorldToGrid(enemyPos);
-                combatant.X = gx;
-                combatant.Y = gy;
+                // Place enemy at center of their zone
+                combatant.X = Battle.BattleZone.GridSize / 2;
+                combatant.Y = Battle.BattleZone.GridSize / 2;
 
                 _activeZones.Add(zone);
                 offset += 2f;
