@@ -39,6 +39,9 @@ namespace ForeverEngine.Demo.Battle
         public string ModelId;
         public float ModelScale = 1f;
         public ModelAnimator Animator;
+        /// <summary>World-space position at the moment this combatant entered the arena.
+        /// Set by the battle initialiser before calling BattleArena.Initialize / Recalculate.</summary>
+        public UnityEngine.Vector3 SpawnWorldPos;
         public bool HasRangedAttack;
         public int AttackRange;
         public int RangedAtkCount, RangedAtkSides, RangedAtkBonus;
