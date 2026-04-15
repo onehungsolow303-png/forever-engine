@@ -172,7 +172,7 @@ namespace ForeverEngine.Demo.UI
                 UITheme.DrawRect(new Rect(btnX, by, BtnW, BtnH), btnBg);
 
                 if (enabled)
-                    UITheme.DrawBorder(new Rect(btnX, by, BtnW, BtnH), UITheme.PanelBorder);
+                    UITheme.DrawBorder(new Rect(btnX, by, BtnW, BtnH), UITheme.PanelBorder, 1f);
 
                 Color textCol = enabled ? UITheme.TextPrimary : UITheme.DisabledGray;
                 GUI.Label(new Rect(btnX, by + 4, BtnW, 18), label,

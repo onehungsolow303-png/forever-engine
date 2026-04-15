@@ -917,14 +917,14 @@ namespace ForeverEngine.Demo.Battle
             {
                 ResolveAttack(CurrentTurn, _selectedTarget);
                 CurrentTurn.HasAction = false;
-                CurrentTurn.Animator?.PlayAttack();
+                CurrentTurn.Animator?.PlayAttack(GridToWorld(_selectedTarget.X, _selectedTarget.Y));
                 CheckBattleEnd();
             }
             else if (CurrentTurn.HasRangedAttack && dist <= CurrentTurn.AttackRange)
             {
                 ResolveRangedAttack(CurrentTurn, _selectedTarget);
                 CurrentTurn.HasAction = false;
-                CurrentTurn.Animator?.PlayAttack();
+                CurrentTurn.Animator?.PlayAttack(GridToWorld(_selectedTarget.X, _selectedTarget.Y));
                 CheckBattleEnd();
             }
             else
