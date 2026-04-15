@@ -49,7 +49,8 @@ namespace ForeverEngine.Demo.Battle
         /// Convert grid coordinates to world position via the shared BattleArena.
         /// All combatants share this single coordinate system.
         /// </summary>
-        private Vector3 GridToWorld(int x, int y) => _arena.GridToWorld(x, y);
+        private Vector3 GridToWorld(int x, int y) =>
+            _arena != null ? _arena.GridToWorld(x, y) : new Vector3(x + 0.5f, 0f, y + 0.5f);
 
         /// <summary>
         /// Entry point for seamless in-world combat. Called by GameManager.StartSeamlessBattle.
