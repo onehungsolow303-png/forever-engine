@@ -8,7 +8,7 @@ namespace ForeverEngine.Demo.Battle
     /// A cell is in-combat if it falls within ANY NPC's zone radius.
     /// Zones are dynamic: they follow their NPC and disappear on NPC death.
     /// </summary>
-    public class BattleZoneManager : MonoBehaviour
+    public class BattleZoneManager : UnityEngine.MonoBehaviour
     {
         public const float CellSize = 1f;
 
