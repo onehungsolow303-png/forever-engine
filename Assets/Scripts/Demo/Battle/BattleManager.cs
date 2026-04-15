@@ -89,10 +89,30 @@ namespace ForeverEngine.Demo.Battle
                     SpawnModelForCombatant(enemy, zone);
             }
 
-            // Wire the player model from the scene
-            var playerGO = GameObject.FindWithTag("Player");
+            // Wire the player model: try overworld renderer first, then tag, then spawn fresh
+            GameObject playerGO = null;
+            var renderer3D = Object.FindAnyObjectByType<Overworld.Overworld3DRenderer>();
+            if (renderer3D != null && renderer3D.PlayerTransform != null)
+                playerGO = renderer3D.PlayerTransform.gameObject;
+            if (playerGO == null)
+                playerGO = GameObject.FindWithTag("Player");
             if (playerGO != null)
+            {
                 _models[player] = playerGO;
+                // Position at grid coords and attach animator if missing
+                playerGO.transform.position = GridToWorld(player.X, player.Y);
+                if (playerGO.GetComponent<ModelAnimator>() == null)
+                {
+                    var anim = playerGO.AddComponent<ModelAnimator>();
+                    anim.SetBasePosition(playerGO.transform.position);
+                    player.Animator = anim;
+                }
+            }
+            else
+            {
+                // Fallback: spawn a fresh model for the player
+                SpawnModelForCombatant(player, _playerZone);
+            }
 
             // Roll initiative, player-first in round 1
             foreach (var c in Combatants) c.RollInitiative(ref _rngSeed);
