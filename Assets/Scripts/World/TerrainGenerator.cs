@@ -33,7 +33,11 @@ namespace ForeverEngine.Procedural
 
             int chunkSize = ChunkCoord.ChunkSize;
             int hmRes = ChunkData.HeightmapRes;
-            float step = (float)chunkSize / hmRes;
+            // Step so heightmap[0] is at chunk's left edge AND heightmap[hmRes-1] is at right edge.
+            // Previous formula (chunkSize / hmRes) left a `step`-sized gap at boundaries, meaning
+            // adjacent chunks sampled noise at different world positions → visible seams.
+            // With (hmRes - 1), both chunks sample identical noise at their shared edge.
+            float step = (float)chunkSize / (hmRes - 1);
 
             _seedX = worldSeed * 1.7f;
             _seedZ = worldSeed * 3.1f;

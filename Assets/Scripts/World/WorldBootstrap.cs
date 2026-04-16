@@ -16,14 +16,73 @@ namespace ForeverEngine.Procedural
 
         private void Start()
         {
+            // Keep running when focus is lost — without this, tasklist might show the process
+            // but the game's main loop is suspended, making screenshots and testing unreliable.
+            Application.runInBackground = true;
+
             // Use seed from GameManager if available
             var gm = Demo.GameManager.Instance;
             if (gm != null && gm.CurrentSeed != 0)
                 WorldSeed = gm.CurrentSeed;
 
-            // VSync + frame rate
-            QualitySettings.vSyncCount = 1; // Sync to monitor refresh — eliminates tearing
-            Application.targetFrameRate = -1; // Let VSync control
+            // Dev autopilot: --skip-menu triggers periodic in-game screenshots written to disk.
+            // These land next to the log and are viewable regardless of focus/Windows state.
+            foreach (var arg in System.Environment.GetCommandLineArgs())
+            {
+                if (arg == "--skip-menu" || arg == "-skip-menu")
+                {
+                    StartCoroutine(AutoScreenshotLoop());
+                    break;
+                }
+            }
+
+            // Find the native desktop resolution + highest matching refresh rate.
+            // Screen.currentResolution returns the game WINDOW's size (may be 720p default),
+            // not the display's native resolution. Display.main.systemWidth/Height is authoritative.
+            int nativeW = Display.main.systemWidth;
+            int nativeH = Display.main.systemHeight;
+            RefreshRate bestRefresh = new RefreshRate { numerator = 60, denominator = 1 };
+            double bestHz = 0;
+            foreach (var r in Screen.resolutions)
+            {
+                if (r.width == nativeW && r.height == nativeH && r.refreshRateRatio.value > bestHz)
+                {
+                    bestHz = r.refreshRateRatio.value;
+                    bestRefresh = r.refreshRateRatio;
+                }
+            }
+            if (bestHz <= 0) bestHz = 60;
+
+            // Use borderless fullscreen (FullScreenWindow), not ExclusiveFullScreen.
+            // ExclusiveFullScreen does get real vsync but crashes on alt-tab / screenshot
+            // because the D3D context is destroyed on focus loss. FullScreenWindow keeps the
+            // context alive through focus changes. Tearing is prevented instead by the software
+            // targetFrameRate cap below (175fps = native refresh), so no frame outruns the display.
+            Screen.SetResolution(nativeW, nativeH, FullScreenMode.FullScreenWindow, bestRefresh);
+
+            // Frame rate strategy for borderless fullscreen on Win11:
+            // - Disable Unity's D3D vsync (it's broken — spams "vsync is broken" in log).
+            // - Let DWM compositor handle sync (it's already vsynced to monitor).
+            // - Cap frame rate a few Hz BELOW refresh so no frame finishes mid-vblank.
+            //   On fast mouse movement, an uncapped / at-cap frame rate can produce a frame
+            //   that straddles vblank → partial-frame tear. Cap at (refresh - 3) keeps every
+            //   frame fully inside its vblank window.
+            QualitySettings.vSyncCount = 0;
+            Application.targetFrameRate = System.Math.Max(60, (int)System.Math.Round(bestHz) - 3);
+
+            // Raise physics tick rate to reduce render-vs-physics mismatch.
+            // Default fixedDeltaTime=0.02 (50Hz) — at 175Hz render, that's 3-4 frames between
+            // physics updates, causing visible micro-jitter even with Rigidbody interpolation
+            // (because transform rotation is written in Update while velocity reads forward in
+            // FixedUpdate → direction lag on strafe). Running physics at render rate eliminates
+            // the mismatch. Capped at 120Hz to bound CPU cost.
+            float physicsHz = Mathf.Min((float)bestHz, 120f);
+            Time.fixedDeltaTime = 1f / physicsHz;
+            Time.maximumDeltaTime = 0.1f; // safety clamp
+
+            Debug.Log($"[WorldBootstrap] Display: native={nativeW}x{nativeH} @ {bestHz:F2}Hz, " +
+                      $"currentMode={Screen.fullScreenMode}, vsync={QualitySettings.vSyncCount}, " +
+                      $"targetFPS={Application.targetFrameRate}");
 
             // Ensure directional light exists (scene might not have one)
             EnsureLighting();
@@ -82,6 +141,7 @@ namespace ForeverEngine.Procedural
                 rb.mass = 70f;
                 rb.linearDamping = 5f; // Prevents sliding when no input
                 rb.collisionDetectionMode = CollisionDetectionMode.Continuous;
+                rb.interpolation = RigidbodyInterpolation.Interpolate; // Smooths physics-tick position between render frames — kills Rigidbody stutter
 
                 // High-friction physics material so player doesn't slide on terrain
                 var physMat = new PhysicsMaterial("PlayerFriction");
@@ -129,6 +189,23 @@ namespace ForeverEngine.Procedural
             }
 
             Debug.Log($"[WorldBootstrap] World initialized. Seed={WorldSeed}, spawn={spawnPos}, terrainH={terrainHeight:F1}m, biome={spawnData.Biome}");
+        }
+
+        private System.Collections.IEnumerator AutoScreenshotLoop()
+        {
+            // Wait for first frame to ensure terrain + player + camera exist
+            yield return new WaitForSeconds(3f);
+            int n = 0;
+            while (true)
+            {
+                string path = System.IO.Path.Combine(Application.persistentDataPath,
+                    $"autoshot_{n:D3}.png");
+                ScreenCapture.CaptureScreenshot(path);
+                Debug.Log($"[AutoShot] {path}");
+                n++;
+                yield return new WaitForSeconds(2f);
+                if (n > 20) yield break; // stop after 20 shots
+            }
         }
 
         private void EnsureLighting()
@@ -262,7 +339,7 @@ namespace ForeverEngine.Procedural
         public float MinPitch = -20f;
         public float MaxPitch = 60f;
         public float MouseSensitivity = 2f;
-        public float SmoothSpeed = 8f;
+        public float SmoothSpeed = 25f; // Tight follow — lower values create a trailing jitter at high refresh rates
         public float ScrollZoomSpeed = 3f;
         public float MinDistance = 3f;
         public float MaxDistance = 30f;
@@ -295,8 +372,9 @@ namespace ForeverEngine.Procedural
             Vector3 offset = rotation * new Vector3(0f, 0f, -Distance);
             Vector3 targetPos = Target.position + Vector3.up * HeightOffset + offset;
 
-            // Smooth follow
-            transform.position = Vector3.Lerp(transform.position, targetPos, SmoothSpeed * Time.deltaTime);
+            // Smooth follow — frame-rate independent exponential smoothing
+            float t = 1f - Mathf.Exp(-SmoothSpeed * Time.deltaTime);
+            transform.position = Vector3.Lerp(transform.position, targetPos, t);
             transform.LookAt(Target.position + Vector3.up * 1.5f);
         }
     }

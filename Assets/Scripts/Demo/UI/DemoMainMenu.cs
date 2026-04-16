@@ -11,6 +11,31 @@ namespace ForeverEngine.Demo.UI
         {
             // Attach CharacterCreationUI to the same GameObject
             _charCreation = gameObject.AddComponent<CharacterCreationUI>();
+
+            // Dev-only: --skip-menu command-line arg bypasses MainMenu and spawns a default
+            // character straight into the World scene. Used for automated playtest iteration.
+            foreach (var arg in System.Environment.GetCommandLineArgs())
+            {
+                if (arg == "--skip-menu" || arg == "-skip-menu")
+                {
+                    StartCoroutine(AutoStart());
+                    return;
+                }
+            }
+        }
+
+        private System.Collections.IEnumerator AutoStart()
+        {
+            // One-frame delay so GameManager.Awake runs first (it's created by this scene's GameManager GO if not present).
+            yield return null;
+            if (GameManager.Instance == null)
+            {
+                var go = new GameObject("GameManager");
+                go.AddComponent<GameManager>();
+                yield return null;
+            }
+            Debug.Log("[DemoMainMenu] --skip-menu → auto-starting Human Warrior");
+            GameManager.Instance.StartGameWithSheet(RPGBridge.CreateHumanWarrior());
         }
 
         // Premade character descriptions for tooltip

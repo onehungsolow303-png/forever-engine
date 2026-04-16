@@ -22,7 +22,11 @@ namespace ForeverEngine.AI.SelfHealing
             if (frameTime > _targetFrameTimeMs)
             {
                 _overBudgetFrames++;
-                if (_overBudgetFrames >= _consecutiveThreshold) ReduceQuality();
+                if (_overBudgetFrames >= _consecutiveThreshold)
+                {
+                    ReduceQuality();
+                    _overBudgetFrames = 0; // reset so we re-evaluate over the next window, not spam every frame
+                }
             }
             else
             {
@@ -33,8 +37,11 @@ namespace ForeverEngine.AI.SelfHealing
 
         private void ReduceQuality()
         {
+            float prev = _qualityLevel;
             _qualityLevel = Mathf.Max(0.1f, _qualityLevel - 0.1f);
-            Debug.Log($"[PerfReg] Reducing quality to {_qualityLevel:F1}");
+            // Only log when the value actually changed — avoids spam once we bottom out at 0.1
+            if (!Mathf.Approximately(prev, _qualityLevel))
+                Debug.Log($"[PerfReg] Reducing quality to {_qualityLevel:F1}");
         }
 
         private void IncreaseQuality()
