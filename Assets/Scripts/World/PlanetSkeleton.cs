@@ -100,6 +100,30 @@ namespace ForeverEngine.Procedural
             }
             for (int i = 0; i < _moisture.Length; i++)
                 _moisture[i] = Mathf.Clamp01(_moisture[i] + bonus[i]);
+
+            // Guarantee starting region is land (not ocean).
+            // Force a 5×5 skeleton cell region around center to be above sea level.
+            int cx = Width / 2;
+            int cz = Height / 2;
+            for (int dz = -2; dz <= 2; dz++)
+            {
+                for (int dx = -2; dx <= 2; dx++)
+                {
+                    int sx = cx + dx;
+                    int sz = cz + dz;
+                    if (sx >= 0 && sx < Width && sz >= 0 && sz < Height)
+                    {
+                        int idx = sz * Width + sx;
+                        // Push to grassland elevation (0.5) with cool temperature
+                        if (_elevation[idx] < 0.45f)
+                            _elevation[idx] = 0.45f + (_elevation[idx] * 0.2f);
+                        // Northern latitude feel — cool temperature
+                        _temperature[idx] = Mathf.Clamp(_temperature[idx], 0.3f, 0.55f);
+                        // Moderate moisture for grassland/forest
+                        _moisture[idx] = Mathf.Clamp(_moisture[idx], 0.35f, 0.65f);
+                    }
+                }
+            }
         }
 
         /// <summary>
