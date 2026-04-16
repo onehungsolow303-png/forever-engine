@@ -176,8 +176,20 @@ namespace ForeverEngine.Procedural
         {
             if (_rb == null) return;
 
-            float h = Input.GetAxisRaw("Horizontal");
-            float v = Input.GetAxisRaw("Vertical");
+            // Only read WASD keys directly — avoids phantom joystick/gamepad input
+            float h = 0f, v = 0f;
+            if (Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.LeftArrow)) h -= 1f;
+            if (Input.GetKey(KeyCode.D) || Input.GetKey(KeyCode.RightArrow)) h += 1f;
+            if (Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.UpArrow)) v += 1f;
+            if (Input.GetKey(KeyCode.S) || Input.GetKey(KeyCode.DownArrow)) v -= 1f;
+
+            if (Mathf.Abs(h) < 0.01f && Mathf.Abs(v) < 0.01f)
+            {
+                // No input — kill horizontal velocity to prevent sliding
+                var vel = _rb.linearVelocity;
+                _rb.linearVelocity = new Vector3(0f, vel.y, 0f);
+                return;
+            }
 
             Vector3 move = (transform.forward * v + transform.right * h).normalized;
             float speed = MoveSpeed;

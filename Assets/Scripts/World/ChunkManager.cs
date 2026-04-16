@@ -96,6 +96,39 @@ namespace ForeverEngine.Procedural
 
             foreach (var coord in toUnload)
                 UnloadChunk(coord);
+
+            // Phase 3: Stitch terrain neighbors to eliminate seams
+            StitchTerrainNeighbors();
+        }
+
+        /// <summary>
+        /// Connect adjacent terrain chunks via Terrain.SetNeighbors so Unity
+        /// stitches their edges together seamlessly (no visible seam lines).
+        /// </summary>
+        private void StitchTerrainNeighbors()
+        {
+            foreach (var kvp in _loaded)
+            {
+                if (kvp.Value.Terrain == null) continue;
+                var coord = kvp.Key;
+
+                Terrain left = null, top = null, right = null, bottom = null;
+                var leftCoord = new ChunkCoord(coord.X - 1, coord.Z);
+                var rightCoord = new ChunkCoord(coord.X + 1, coord.Z);
+                var topCoord = new ChunkCoord(coord.X, coord.Z + 1);
+                var bottomCoord = new ChunkCoord(coord.X, coord.Z - 1);
+
+                if (_loaded.TryGetValue(leftCoord, out var lc)) left = lc.Terrain;
+                if (_loaded.TryGetValue(rightCoord, out var rc)) right = rc.Terrain;
+                if (_loaded.TryGetValue(topCoord, out var tc)) top = tc.Terrain;
+                if (_loaded.TryGetValue(bottomCoord, out var bc)) bottom = bc.Terrain;
+
+                kvp.Value.Terrain.SetNeighbors(left, top, right, bottom);
+            }
+
+            // Flush all terrains after stitching
+            foreach (var kvp in _loaded)
+                kvp.Value.Terrain?.Flush();
         }
 
         private IEnumerator LoadOrGenerateChunk(ChunkCoord coord, bool createTerrain)
