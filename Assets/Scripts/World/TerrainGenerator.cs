@@ -74,26 +74,6 @@ namespace ForeverEngine.Procedural
             }
             terrainData.SetHeights(0, 0, heights);
 
-            // Create a biome-colored texture for the terrain layer
-            var biomeColor = BiomeTable.BaseColor(chunkData.Biome);
-            var colorTex = new Texture2D(4, 4, TextureFormat.RGBA32, false);
-            var pixels = new Color[16];
-            for (int i = 0; i < 16; i++) pixels[i] = biomeColor;
-            colorTex.SetPixels(pixels);
-            colorTex.Apply();
-
-            var layer = new TerrainLayer();
-            layer.diffuseTexture = colorTex;
-            layer.tileSize = new Vector2(size, size); // stretch across entire chunk
-            terrainData.terrainLayers = new[] { layer };
-
-            // Paint the entire terrain with this layer
-            float[,,] alphamap = new float[terrainData.alphamapWidth, terrainData.alphamapHeight, 1];
-            for (int y = 0; y < terrainData.alphamapHeight; y++)
-                for (int x = 0; x < terrainData.alphamapWidth; x++)
-                    alphamap[y, x, 0] = 1f;
-            terrainData.SetAlphamaps(0, 0, alphamap);
-
             // Create terrain GameObject (includes TerrainCollider automatically)
             var go = Terrain.CreateTerrainGameObject(terrainData);
             go.name = $"Chunk_{coord.X}_{coord.Z}";
@@ -101,7 +81,17 @@ namespace ForeverEngine.Procedural
 
             var terrain = go.GetComponent<Terrain>();
 
-            // Ensure collider is ready — Terrain.CreateTerrainGameObject adds one automatically.
+            // Apply biome color via a simple material — avoids URP Terrain Lit shader
+            // issues in builds. Uses standard URP Lit or fallback Standard shader.
+            var biomeColor = BiomeTable.BaseColor(chunkData.Biome);
+            var mat = new Material(Shader.Find("Universal Render Pipeline/Lit")
+                ?? Shader.Find("Standard"));
+            if (mat.HasProperty("_BaseColor"))
+                mat.SetColor("_BaseColor", biomeColor);
+            else
+                mat.color = biomeColor;
+            terrain.materialTemplate = mat;
+
             // Flush to ensure terrain data (including collider) is immediately available.
             terrain.Flush();
 
