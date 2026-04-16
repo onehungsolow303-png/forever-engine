@@ -101,13 +101,8 @@ namespace ForeverEngine.Procedural
 
             var terrain = go.GetComponent<Terrain>();
 
-            // Ensure TerrainCollider is present and has data
-            var collider = go.GetComponent<TerrainCollider>();
-            if (collider == null)
-                collider = go.AddComponent<TerrainCollider>();
-            collider.terrainData = terrainData;
-
-            // Flush to ensure collider is ready immediately
+            // Ensure collider is ready — Terrain.CreateTerrainGameObject adds one automatically.
+            // Flush to ensure terrain data (including collider) is immediately available.
             terrain.Flush();
 
             return terrain;
