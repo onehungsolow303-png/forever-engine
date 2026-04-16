@@ -1,7 +1,7 @@
 // Assets/Scripts/World/SimplexNoise.cs
 using UnityEngine;
 
-namespace ForeverEngine.World
+namespace ForeverEngine.Procedural
 {
     /// <summary>
     /// Deterministic 2D Simplex noise. Seed-independent (use coordinate offsets for different seeds).

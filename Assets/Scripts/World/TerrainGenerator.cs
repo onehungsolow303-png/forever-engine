@@ -1,7 +1,7 @@
 // Assets/Scripts/World/TerrainGenerator.cs
 using UnityEngine;
 
-namespace ForeverEngine.World
+namespace ForeverEngine.Procedural
 {
     /// <summary>
     /// Builds a Unity Terrain from a ChunkData's heightmap.

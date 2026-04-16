@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace ForeverEngine.World
+namespace ForeverEngine.Procedural
 {
     /// <summary>
     /// Bootstrap for the new procedural World scene. Creates the planet skeleton,

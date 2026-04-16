@@ -1,7 +1,7 @@
 // Assets/Scripts/World/PlanetSkeleton.cs
 using UnityEngine;
 
-namespace ForeverEngine.World
+namespace ForeverEngine.Procedural
 {
     /// <summary>
     /// Planet-wide low-resolution grid storing elevation, temperature, and moisture.

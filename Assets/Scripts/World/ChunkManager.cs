@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace ForeverEngine.World
+namespace ForeverEngine.Procedural
 {
     /// <summary>
     /// Streams chunks around the player. Loads within LoadRadius, generates ahead

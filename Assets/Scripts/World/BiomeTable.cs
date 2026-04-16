@@ -1,5 +1,5 @@
 // Assets/Scripts/World/BiomeTable.cs
-namespace ForeverEngine.World
+namespace ForeverEngine.Procedural
 {
     /// <summary>
     /// Biome types following the Whittaker model (temperature × moisture).

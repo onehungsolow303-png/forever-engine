@@ -2,7 +2,7 @@
 using System.IO;
 using UnityEngine;
 
-namespace ForeverEngine.World
+namespace ForeverEngine.Procedural
 {
     /// <summary>
     /// Save/load ChunkData to/from disk as JSON files.

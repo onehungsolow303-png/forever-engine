@@ -2,7 +2,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace ForeverEngine.World
+namespace ForeverEngine.Procedural
 {
     /// <summary>
     /// All data for a single 256×256 chunk. Serializable to disk.

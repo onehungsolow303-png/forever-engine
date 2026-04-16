@@ -1,7 +1,7 @@
 // Assets/Scripts/World/ChunkCoord.cs
 using System;
 
-namespace ForeverEngine.World
+namespace ForeverEngine.Procedural
 {
     /// <summary>
     /// Immutable chunk coordinate. Chunks are 256×256 meters.

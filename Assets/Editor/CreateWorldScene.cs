@@ -13,7 +13,7 @@ namespace ForeverEngine.Editor
             var scene = EditorSceneManager.NewScene(NewSceneSetup.DefaultGameObjects, NewSceneMode.Single);
             // Add WorldBootstrap to root
             var bootstrapGO = new GameObject("WorldBootstrap");
-            bootstrapGO.AddComponent<World.WorldBootstrap>();
+            bootstrapGO.AddComponent<Procedural.WorldBootstrap>();
 
             EditorSceneManager.SaveScene(scene, "Assets/Scenes/World.unity");
             Debug.Log("[CreateWorldScene] World.unity created");
