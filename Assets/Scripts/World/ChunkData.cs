@@ -15,8 +15,8 @@ namespace ForeverEngine.Procedural
         public BiomeType Biome;
         public float BaseElevation;
 
-        /// <summary>Heightmap resolution (samples per axis). 128 = 2m per sample.</summary>
-        public const int HeightmapRes = 128;
+        /// <summary>Heightmap resolution (samples per axis). 64 = 4m per sample.</summary>
+        public const int HeightmapRes = 64;
 
         /// <summary>128×128 heightmap values (terrain elevation, 2m per sample).</summary>
         public float[] Heightmap;

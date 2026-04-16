@@ -90,10 +90,9 @@ namespace ForeverEngine.Procedural
             var coord = new ChunkCoord(chunkData.ChunkX, chunkData.ChunkZ);
             int size = ChunkCoord.ChunkSize;
 
-            // TerrainData — use 129 resolution (power-of-2 + 1) for performance.
-            // 129 = 1 sample per 2 meters. Still smooth enough, 4x less computation than 257.
+            // TerrainData — 65 resolution (power-of-2 + 1). 4m per sample. Fast.
             var terrainData = new TerrainData();
-            int res = 129;
+            int res = 65;
             terrainData.heightmapResolution = res;
             terrainData.size = new Vector3(size, MaxHeight, size);
 

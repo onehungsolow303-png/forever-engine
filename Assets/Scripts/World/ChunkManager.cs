@@ -14,9 +14,9 @@ namespace ForeverEngine.Procedural
         public static ChunkManager Instance { get; private set; }
 
         [Header("Streaming Radii (in chunks)")]
-        public int LoadRadius = 3;
-        public int GenerateAheadRadius = 4;
-        public int UnloadRadius = 6;
+        public int LoadRadius = 2;
+        public int GenerateAheadRadius = 3;
+        public int UnloadRadius = 5;
 
         [Header("World")]
         public int WorldSeed = 42;
@@ -91,7 +91,9 @@ namespace ForeverEngine.Procedural
                 _generating.Add(coord);
                 yield return StartCoroutine(LoadOrGenerateChunk(coord, dist <= LoadRadius));
                 _generating.Remove(coord);
-                // One chunk per frame when creating terrain to prevent stutter
+                // Skip extra frames between chunks to keep framerate smooth
+                yield return null;
+                yield return null;
             }
 
             // Phase 2: Unload distant chunks
@@ -154,31 +156,16 @@ namespace ForeverEngine.Procedural
 
         private IEnumerator LoadOrGenerateChunk(ChunkCoord coord, bool createTerrain)
         {
-            ChunkData data = null;
-            bool needsGeneration = !ChunkPersistence.Exists(WorldSeed, coord);
+            ChunkData data;
 
-            if (!needsGeneration)
+            if (ChunkPersistence.Exists(WorldSeed, coord))
             {
                 data = ChunkPersistence.Load(WorldSeed, coord);
             }
             else
             {
-                // Heavy noise computation on background thread
                 data = new ChunkData(coord.X, coord.Z);
-                var skeleton = Skeleton;
-                var seed = WorldSeed;
-                var chunkData = data;
-                bool done = false;
-
-                System.Threading.Tasks.Task.Run(() =>
-                {
-                    TerrainGenerator.GenerateHeightmap(chunkData, skeleton, seed);
-                    done = true;
-                });
-
-                // Wait for background thread to finish
-                while (!done) yield return null;
-
+                TerrainGenerator.GenerateHeightmap(data, Skeleton, WorldSeed);
                 ChunkPersistence.Save(WorldSeed, coord, data);
             }
 
