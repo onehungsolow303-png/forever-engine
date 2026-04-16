@@ -90,20 +90,26 @@ namespace ForeverEngine.Procedural
             // Now initialize chunk manager with player for streaming
             chunkManager.Initialize(player.transform);
 
-            // Setup camera
+            // Setup camera — ensure one exists and follows the player
             var cam = UnityEngine.Camera.main;
-            if (cam != null)
+            if (cam == null)
             {
-                // Try to find existing PerspectiveCameraController
-                var camController = cam.GetComponent<ForeverEngine.MonoBehaviour.Camera.PerspectiveCameraController>();
-                if (camController == null)
-                    camController = cam.gameObject.AddComponent<ForeverEngine.MonoBehaviour.Camera.PerspectiveCameraController>();
-                camController.FollowTarget = player.transform;
-
-                // Position camera behind player initially
-                cam.transform.position = spawnPos + new Vector3(0f, 10f, -15f);
-                cam.transform.LookAt(spawnPos);
+                var camGO = new GameObject("MainCamera");
+                camGO.tag = "MainCamera";
+                cam = camGO.AddComponent<UnityEngine.Camera>();
+                camGO.AddComponent<AudioListener>();
             }
+
+            // Position camera behind and above player
+            cam.transform.position = spawnPos + new Vector3(0f, 12f, -18f);
+            cam.transform.LookAt(player.transform.position + Vector3.up * 1.5f);
+
+            // Attach follow controller
+            var camController = cam.GetComponent<ForeverEngine.MonoBehaviour.Camera.PerspectiveCameraController>();
+            if (camController == null)
+                camController = cam.gameObject.AddComponent<ForeverEngine.MonoBehaviour.Camera.PerspectiveCameraController>();
+            camController.FollowTarget = player.transform;
+            Debug.Log($"[WorldBootstrap] Camera following {player.name}, controller={camController != null}");
 
             // Atmosphere (post-processing)
             var atmosGO = new GameObject("Atmosphere");

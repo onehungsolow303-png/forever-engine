@@ -25,9 +25,12 @@ namespace ForeverEngine.Procedural
             int size = ChunkCoord.ChunkSize;
 
             // Seed offsets are world-seed-only (NOT per-chunk) so noise is continuous
-            // across chunk boundaries. World-space coords provide the per-position variation.
-            float seedX = worldSeed * 1.7f;
-            float seedZ = worldSeed * 3.1f;
+            // across chunk boundaries. Stored as statics for ComputeHeightAtWorldPos.
+            _seedX = worldSeed * 1.7f;
+            _seedZ = worldSeed * 3.1f;
+            _activeSkeleton = skeleton;
+            float seedX = _seedX;
+            float seedZ = _seedZ;
 
             for (int z = 0; z < size; z++)
             {
@@ -86,21 +89,34 @@ namespace ForeverEngine.Procedural
             var coord = new ChunkCoord(chunkData.ChunkX, chunkData.ChunkZ);
             int size = ChunkCoord.ChunkSize;
 
-            // TerrainData
+            // TerrainData — resolution must be power-of-2 + 1 (257 for 256m chunks)
             var terrainData = new TerrainData();
-            // heightmapResolution must be power-of-2 + 1. 257 is valid (256+1).
-            terrainData.heightmapResolution = size + 1;
+            int res = size + 1; // 257
+            terrainData.heightmapResolution = res;
             terrainData.size = new Vector3(size, MaxHeight, size);
 
-            // Convert flat heightmap to Unity's 2D format
-            float[,] heights = new float[size + 1, size + 1];
-            for (int z = 0; z <= size; z++)
+            // Build 257×257 heightmap where edge samples (x=256, z=256) are computed
+            // at the neighbor chunk's world position — ensures seamless stitching.
+            float[,] heights = new float[res, res];
+            for (int z = 0; z < res; z++)
             {
-                for (int x = 0; x <= size; x++)
+                for (int x = 0; x < res; x++)
                 {
-                    int sx = Mathf.Min(x, size - 1);
-                    int sz = Mathf.Min(z, size - 1);
-                    heights[z, x] = chunkData.Heightmap[sz * size + sx];
+                    // Use the stored heightmap for interior points (0..255)
+                    if (x < size && z < size)
+                    {
+                        heights[z, x] = chunkData.Heightmap[z * size + x];
+                    }
+                    else
+                    {
+                        // Edge/corner samples: compute at exact world position
+                        // so they match the neighbor chunk's [0] values
+                        heights[z, x] = ComputeHeightAtWorldPos(
+                            coord.X * size + x,
+                            coord.Z * size + z,
+                            chunkData.Biome,
+                            chunkData.BaseElevation);
+                    }
                 }
             }
             terrainData.SetHeights(0, 0, heights);
@@ -146,6 +162,48 @@ namespace ForeverEngine.Procedural
         {
             if (terrain == null) return;
             Object.Destroy(terrain.gameObject);
+        }
+
+        // Shared seed offsets — must match GenerateHeightmap exactly
+        private static float _seedX, _seedZ;
+        private static PlanetSkeleton _activeSkeleton;
+
+        /// <summary>
+        /// Compute height at an exact world position. Used for edge samples
+        /// so chunk boundaries match perfectly. Uses the same noise + skeleton
+        /// sampling as GenerateHeightmap.
+        /// </summary>
+        private static float ComputeHeightAtWorldPos(int worldX, int worldZ, BiomeType biome, float baseFallback)
+        {
+            float nx = worldX * 0.01f;
+            float nz = worldZ * 0.01f;
+
+            // Sample skeleton at this world position (bilinear interpolation)
+            float baseHeight = baseFallback;
+            if (_activeSkeleton != null)
+            {
+                float skX = (float)worldX / ChunkCoord.ChunkSize + _activeSkeleton.Width / 2f;
+                float skZ = (float)worldZ / ChunkCoord.ChunkSize + _activeSkeleton.Height / 2f;
+                skX = ((skX % _activeSkeleton.Width) + _activeSkeleton.Width) % _activeSkeleton.Width;
+                skZ = ((skZ % _activeSkeleton.Height) + _activeSkeleton.Height) % _activeSkeleton.Height;
+
+                int sx0 = Mathf.FloorToInt(skX);
+                int sz0 = Mathf.FloorToInt(skZ);
+                int sx1 = (sx0 + 1) % _activeSkeleton.Width;
+                int sz1 = (sz0 + 1) % _activeSkeleton.Height;
+                float fx = skX - sx0;
+                float fz = skZ - sz0;
+
+                baseHeight = Mathf.Lerp(
+                    Mathf.Lerp(_activeSkeleton.GetElevation(sx0, sz0), _activeSkeleton.GetElevation(sx1, sz0), fx),
+                    Mathf.Lerp(_activeSkeleton.GetElevation(sx0, sz1), _activeSkeleton.GetElevation(sx1, sz1), fx),
+                    fz);
+            }
+
+            float amplitude = GetBiomeAmplitude(biome);
+            int octaves = GetBiomeOctaves(biome);
+            float noise = SimplexNoise.OctaveNoise(nx, nz, octaves, 0.5f, 2f, _seedX, _seedZ);
+            return Mathf.Clamp01(baseHeight + (noise - 0.5f) * amplitude);
         }
 
         private static float GetBiomeAmplitude(BiomeType biome) => biome switch
