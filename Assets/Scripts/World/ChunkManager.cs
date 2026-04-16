@@ -154,33 +154,46 @@ namespace ForeverEngine.Procedural
 
         private IEnumerator LoadOrGenerateChunk(ChunkCoord coord, bool createTerrain)
         {
-            ChunkData data;
+            ChunkData data = null;
+            bool needsGeneration = !ChunkPersistence.Exists(WorldSeed, coord);
 
-            // Try loading from disk first
-            if (ChunkPersistence.Exists(WorldSeed, coord))
+            if (!needsGeneration)
             {
                 data = ChunkPersistence.Load(WorldSeed, coord);
             }
             else
             {
-                // Generate new chunk
+                // Heavy noise computation on background thread
                 data = new ChunkData(coord.X, coord.Z);
-                TerrainGenerator.GenerateHeightmap(data, Skeleton, WorldSeed);
+                var skeleton = Skeleton;
+                var seed = WorldSeed;
+                var chunkData = data;
+                bool done = false;
+
+                System.Threading.Tasks.Task.Run(() =>
+                {
+                    TerrainGenerator.GenerateHeightmap(chunkData, skeleton, seed);
+                    done = true;
+                });
+
+                // Wait for background thread to finish
+                while (!done) yield return null;
+
                 ChunkPersistence.Save(WorldSeed, coord, data);
             }
 
             if (createTerrain)
             {
-                // Frame 1: Create terrain mesh
+                // Main thread: create terrain mesh (requires Unity API)
                 var terrain = TerrainGenerator.CreateTerrain(data);
                 _loaded[coord] = new LoadedChunk { Data = data, Terrain = terrain, Props = null };
                 yield return null;
 
-                // Frame 2: Stitch this terrain to neighbors
+                // Stitch to neighbors
                 StitchSingleTerrain(coord, terrain);
                 yield return null;
 
-                // Frame 3: Place decoration
+                // Decoration
                 var props = SurfaceDecorator.Decorate(data, terrain);
                 _loaded[coord] = new LoadedChunk { Data = data, Terrain = terrain, Props = props };
                 yield return null;

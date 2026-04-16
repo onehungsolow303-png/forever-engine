@@ -54,9 +54,9 @@ namespace ForeverEngine.Procedural
                 }
             }
 
-            // Add grass detail to terrain if biome supports it
-            if (rules.Exists(r => r.PropType == PropType.Grass))
-                PaintGrass(chunkData, terrain, rng);
+            // Grass painting disabled for performance — re-enable when GPU instancing is set up
+            // if (rules.Exists(r => r.PropType == PropType.Grass))
+            //     PaintGrass(chunkData, terrain, rng);
 
             return parent;
         }
@@ -85,10 +85,8 @@ namespace ForeverEngine.Procedural
         {
             BiomeType.Grassland => new List<PlacementRule>
             {
-                new() { PropType = PropType.Tree, Count = 5, MinSpacing = 40f, BaseScale = 3f },
-                new() { PropType = PropType.Rock, Count = 6, MinSpacing = 30f, BaseScale = 1.2f },
-                new() { PropType = PropType.Bush, Count = 8, MinSpacing = 25f, BaseScale = 0.8f },
-                new() { PropType = PropType.Grass, Count = 0, MinSpacing = 0f, BaseScale = 0f },
+                new() { PropType = PropType.Tree, Count = 3, MinSpacing = 50f, BaseScale = 3f },
+                new() { PropType = PropType.Rock, Count = 3, MinSpacing = 40f, BaseScale = 1.2f },
             },
             BiomeType.TemperateForest => new List<PlacementRule>
             {
