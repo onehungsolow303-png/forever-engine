@@ -45,9 +45,13 @@ namespace ForeverEngine.Procedural
         public void Initialize(Transform playerTransform)
         {
             _playerTransform = playerTransform;
-            Skeleton = new PlanetSkeleton(WorldSeed);
+            if (Skeleton == null)
+            {
+                Skeleton = new PlanetSkeleton(WorldSeed);
+                Debug.Log($"[ChunkManager] Skeleton generated: seed {WorldSeed}, {Skeleton.Width}x{Skeleton.Height}");
+            }
             _lastPlayerChunk = new ChunkCoord(int.MinValue, 0); // Force initial load
-            Debug.Log($"[ChunkManager] Initialized with seed {WorldSeed}, skeleton {Skeleton.Width}x{Skeleton.Height}");
+            Debug.Log($"[ChunkManager] Initialized with player={playerTransform?.name ?? "null"}");
         }
 
         private void Update()
