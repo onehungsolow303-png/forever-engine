@@ -319,7 +319,7 @@ namespace ForeverEngine.RPG.Character
         }
 
         /// <summary>
-        /// Create a lightweight stats snapshot for ECS bridge / CombatBrain compatibility.
+        /// Create a lightweight stats snapshot for ECS bridge compatibility.
         /// </summary>
         public StatsSnapshot ToStatsSnapshot()
         {

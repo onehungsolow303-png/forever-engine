@@ -29,8 +29,6 @@ namespace ForeverEngine.Demo.Battle
         private Encounters.EncounterData _encounterData;
         private BattleRenderer _renderer;
         private BattleRenderer3D _renderer3D;
-        private Dictionary<BattleCombatant, CombatBrain> _brains = new();
-        private CombatIntelligence _neuralBrain;
         private GameConfig _gameConfig;
 
         // Seamless in-world combat state
@@ -127,23 +125,6 @@ namespace ForeverEngine.Demo.Battle
                 var p = Combatants[playerIdx];
                 Combatants.RemoveAt(playerIdx);
                 Combatants.Insert(0, p);
-            }
-
-            // Set up AI brains (optional Q-learning alongside deterministic AIBehavior)
-            float[] savedTable = null;
-            foreach (var c in Combatants)
-            {
-                if (!c.IsPlayer && c.IsAlive)
-                    _brains[c] = new CombatBrain(savedTable, seed: (int)_rngSeed + c.X * 100 + c.Y);
-            }
-
-            // Create neural intelligence only if InferenceEngine has a loaded model
-            var inferEngine = ForeverEngine.AI.Inference.InferenceEngine.Instance;
-            if (inferEngine != null && inferEngine.IsAvailable)
-            {
-                var go = new GameObject("CombatIntelligence");
-                go.transform.SetParent(transform);
-                _neuralBrain = go.AddComponent<CombatIntelligence>();
             }
 
             // Create input controller for mouse-based targeting
@@ -436,7 +417,6 @@ namespace ForeverEngine.Demo.Battle
 
                 Combatants.Add(combatant);
                 combatant.RollInitiative(ref _rngSeed);
-                _brains[combatant] = new CombatBrain(null, seed: (int)_rngSeed + combatant.X * 100 + combatant.Y);
 
                 SpawnModelForCombatant(combatant);
 
@@ -511,24 +491,8 @@ namespace ForeverEngine.Demo.Battle
                 Combatants.Insert(0, p);
             }
 
-            // Notify Director Hub that combat has started. Q-table persistence
-            // is still pending the long-term memory wiring (spec §14 follow-up #3).
+            // Notify Director Hub that combat has started.
             Demo.AI.DirectorEvents.Send($"combat started: {encId}");
-            float[] savedTable = null;
-            foreach (var c in Combatants)
-            {
-                if (!c.IsPlayer && c.IsAlive)
-                    _brains[c] = new CombatBrain(savedTable, seed: (int)_rngSeed + c.X * 100 + c.Y);
-            }
-
-            // Create neural intelligence only if InferenceEngine has a loaded model
-            var inferEngine = ForeverEngine.AI.Inference.InferenceEngine.Instance;
-            if (inferEngine != null && inferEngine.IsAvailable)
-            {
-                var go = new GameObject("CombatIntelligence");
-                go.transform.SetParent(transform);
-                _neuralBrain = go.AddComponent<CombatIntelligence>();
-            }
 
             // Create visual renderer — 3D if a template is available, else 2D fallback
             var template = FindBattleTemplate(_encounterData);
@@ -1171,10 +1135,6 @@ namespace ForeverEngine.Demo.Battle
                     Log.Add($"{target.Name} is defeated!");
                     Demo.AI.DirectorEvents.Send($"defeated {target.Name}", targetId: target.Name);
                 }
-
-                // Q-learning penalty for target
-                if (!target.IsPlayer && _brains.TryGetValue(target, out var tgtBrain))
-                    tgtBrain.AddReward(-0.3f);
             }
 
             // Apply healing
@@ -1222,9 +1182,6 @@ namespace ForeverEngine.Demo.Battle
             // Deterministic AIBehavior decision
             string behavior = AIBehavior.ResolveBehavior(ai);
             var action = AIBehavior.Decide(ai, player, aliveAllies, behavior);
-
-            // Keep Q-learning brain updated in the background (optional)
-            _brains.TryGetValue(ai, out var brain);
 
             switch (action)
             {
@@ -1423,12 +1380,6 @@ namespace ForeverEngine.Demo.Battle
                         $"ranged hit {target.Name} for {hpDamage}",
                         targetId: target.Name);
 
-                // Q-learning rewards
-                if (!attacker.IsPlayer && _brains.TryGetValue(attacker, out var atkBrain))
-                    atkBrain.AddReward(_gameConfig != null ? _gameConfig.RewardRangedHit : 0.35f);
-                if (!target.IsPlayer && _brains.TryGetValue(target, out var tgtBrain))
-                    tgtBrain.AddReward(_gameConfig != null ? _gameConfig.PenaltyDamageTaken : -0.12f);
-
                 if (!target.IsAlive)
                 {
                     Log.Add($"{target.Name} is defeated!");
@@ -1442,9 +1393,6 @@ namespace ForeverEngine.Demo.Battle
                 Log.Add($"{attacker.Name} shoots at {target.Name} and misses!");
                 _renderer?.ShowMiss(new Vector3(target.X, target.Y, 0));
                 Audio.SoundManager.Instance?.PlayMiss();
-
-                if (!attacker.IsPlayer && _brains.TryGetValue(attacker, out var missBrain))
-                    missBrain.AddReward(_gameConfig != null ? _gameConfig.PenaltyRangedMiss : -0.2f);
             }
         }
 
@@ -1662,8 +1610,6 @@ namespace ForeverEngine.Demo.Battle
                     {
                         Log.Add($"{target.Name} is defeated!");
                         Demo.AI.DirectorEvents.Send($"killed {target.Name}", targetId: target.Name);
-                        if (!attacker.IsPlayer && _brains.TryGetValue(attacker, out var killerBrain))
-                            killerBrain.AddReward(_gameConfig != null ? _gameConfig.RewardKill : 0.5f);
                         target.Animator?.PlayDeath();
 
                         // Remove dead NPC's zone and rebuild unified grid
@@ -1676,14 +1622,6 @@ namespace ForeverEngine.Demo.Battle
                         }
                     }
                 }
-
-                // Q-learning: penalize target enemy for taking damage
-                if (!target.IsPlayer && _brains.TryGetValue(target, out var tgtBrain))
-                    tgtBrain.AddReward(_gameConfig != null ? _gameConfig.PenaltyDamageTaken : -0.1f);
-
-                // All enemies rewarded for downing player (preserved)
-                if (target.HP <= 0 && target.IsPlayer)
-                    foreach (var b in _brains.Values) b.AddReward(1.0f);
             }
             else
             {
@@ -1693,12 +1631,6 @@ namespace ForeverEngine.Demo.Battle
                 if (attacker.IsPlayer)
                     Demo.AI.DirectorEvents.Send($"missed {target.Name}", targetId: target.Name);
             }
-
-            // Q-learning: reward/penalize enemy attacker for hit/miss
-            if (!attacker.IsPlayer && _brains.TryGetValue(attacker, out var atkBrain))
-                atkBrain.AddReward(atkResult.Hit
-                    ? (_gameConfig != null ? _gameConfig.RewardHit : 0.5f)
-                    : (_gameConfig != null ? _gameConfig.PenaltyMiss : -0.1f));
         }
 
         private bool IsAdjacent(BattleCombatant a, BattleCombatant b) =>
@@ -1791,17 +1723,6 @@ namespace ForeverEngine.Demo.Battle
 
             if (BattleOver)
             {
-                float endReward = PlayerWon ? -0.5f : 0.5f;
-                foreach (var b in _brains.Values) b.OnEpisodeEnd(endReward);
-
-                // Persist the first brain's Q-table so training carries over to the next session.
-                var brainList = new List<CombatBrain>(_brains.Values);
-                if (brainList.Count > 0)
-                {
-                    float[] table = brainList[0].SaveQTable();
-                    QTableStore.Save(table, QTableStore.LoadedEpisodes + 1);
-                }
-
                 // Clean up input controller
                 var battleInput = FindAnyObjectByType<BattleInputController>();
                 if (battleInput != null) Destroy(battleInput.gameObject);

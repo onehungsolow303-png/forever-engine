@@ -42,41 +42,13 @@ namespace ForeverEngine
         [Header("AI")]
         public float AITurnDelay = 0.33f;  // Seconds before AI acts (visual feedback)
 
-        [Header("AI — Q-Learning (State Space B)")]
-        [Tooltip("Lower = more stable with 1296-state table. 0.12 recommended for convergence.")]
-        public float QLearningRate = 0.12f;
-        [Tooltip("Higher = longer-horizon planning. 0.9 balances immediate + future reward.")]
-        public float QDiscountFactor = 0.9f;
-        [Tooltip("Lower = less random exploration. 0.15 once state space is well-covered.")]
-        public float QExplorationRate = 0.15f;
-
-        [Header("AI — Rewards (offensive)")]
-        [Tooltip("Advance then hit in same turn — small bonus for aggression")]
-        public float RewardAdvanceHit = 0.15f;
-        [Tooltip("Attack when already adjacent — bread-and-butter melee")]
-        public float RewardAttackAdjacent = 0.35f;
-        [Tooltip("Successful melee hit (from AttackResolver)")]
-        public float RewardHit = 0.4f;
-        [Tooltip("Melee miss penalty")]
-        public float PenaltyMiss = -0.15f;
-        [Tooltip("Successful ranged hit — slightly less than melee to prefer closing distance")]
-        public float RewardRangedHit = 0.35f;
-        [Tooltip("Ranged miss — slightly harsher to discourage sniping when out of range")]
-        public float PenaltyRangedMiss = -0.2f;
-        [Tooltip("Kill any combatant — strong positive signal")]
-        public float RewardKill = 0.6f;
-
-        [Header("AI — Rewards (defensive)")]
-        [Tooltip("Retreat when below 30% HP — survival instinct")]
-        public float RewardRetreatLowHP = 0.25f;
-        [Tooltip("Hold position when guarding — tactical patience")]
-        public float RewardHoldGuard = 0.15f;
-        [Tooltip("Hold when should be chasing — mild discouragement")]
-        public float PenaltyHoldChase = -0.08f;
-        [Tooltip("Taking damage — universal penalty")]
-        public float PenaltyDamageTaken = -0.12f;
-        [Tooltip("Move to protect a critically wounded ally")]
-        public float RewardProtectAlly = 0.3f;
+        // Q-learning was removed from the engine — combat AI now runs fully through
+        // the deterministic AIBehavior decision tree (AIBehavior.cs), with tactical
+        // planning delegated to Director Hub via DirectorEvents. Previous Q-learning
+        // hyperparameters and reward weights lived here; they've been removed because
+        // nothing reads them anymore. The SO asset file may still have the legacy
+        // fields serialized — Unity will log "field not found" warnings on first load
+        // and clean them out on next save.
 
         [Header("Encounters")]
         public int DayXPBudgetPerLevel = 40;
