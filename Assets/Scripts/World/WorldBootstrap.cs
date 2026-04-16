@@ -100,16 +100,14 @@ namespace ForeverEngine.Procedural
                 camGO.AddComponent<AudioListener>();
             }
 
-            // Position camera behind and above player
-            cam.transform.position = spawnPos + new Vector3(0f, 12f, -18f);
-            cam.transform.LookAt(player.transform.position + Vector3.up * 1.5f);
+            // Disable orbit camera if present — we use FPS camera instead
+            var orbitCam = cam.GetComponent<ForeverEngine.MonoBehaviour.Camera.PerspectiveCameraController>();
+            if (orbitCam != null) orbitCam.enabled = false;
 
-            // Attach follow controller
-            var camController = cam.GetComponent<ForeverEngine.MonoBehaviour.Camera.PerspectiveCameraController>();
-            if (camController == null)
-                camController = cam.gameObject.AddComponent<ForeverEngine.MonoBehaviour.Camera.PerspectiveCameraController>();
-            camController.FollowTarget = player.transform;
-            Debug.Log($"[WorldBootstrap] Camera following {player.name}, controller={camController != null}");
+            // Attach FPS camera controller
+            var fpsCam = cam.gameObject.AddComponent<FPSCameraController>();
+            fpsCam.Target = player.transform;
+            Debug.Log($"[WorldBootstrap] FPS camera following {player.name}");
 
             // Atmosphere (post-processing)
             var atmosGO = new GameObject("Atmosphere");
@@ -152,29 +150,58 @@ namespace ForeverEngine.Procedural
     }
 
     /// <summary>
-    /// Minimal WASD + mouse-look player controller for the procedural world.
+    /// Standard FPS player controller: WASD move, mouse look, Space jump, Shift sprint.
+    /// Mouse cursor locked to center. Esc to unlock.
     /// </summary>
     public class SimplePlayerController : UnityEngine.MonoBehaviour
     {
         public float MoveSpeed = 8f;
         public float SprintMultiplier = 2f;
-        public float RotateSpeed = 120f;
+        public float JumpForce = 6f;
+        public float MouseSensitivity = 2f;
 
         private Rigidbody _rb;
+        private bool _grounded;
+        private float _yaw;
 
-        private void Start() => _rb = GetComponent<Rigidbody>();
+        private void Start()
+        {
+            _rb = GetComponent<Rigidbody>();
+            _yaw = transform.eulerAngles.y;
+            Cursor.lockState = CursorLockMode.Locked;
+            Cursor.visible = false;
+        }
 
         private void Update()
         {
-            if (Input.GetKey(KeyCode.Q))
-                transform.Rotate(0f, -RotateSpeed * Time.deltaTime, 0f);
-            if (Input.GetKey(KeyCode.E))
-                transform.Rotate(0f, RotateSpeed * Time.deltaTime, 0f);
-
-            if (Input.GetMouseButton(1))
+            // Esc toggles cursor lock
+            if (Input.GetKeyDown(KeyCode.Escape))
             {
-                float mx = Input.GetAxis("Mouse X") * RotateSpeed * Time.deltaTime;
-                transform.Rotate(0f, mx * 2f, 0f);
+                if (Cursor.lockState == CursorLockMode.Locked)
+                {
+                    Cursor.lockState = CursorLockMode.None;
+                    Cursor.visible = true;
+                }
+                else
+                {
+                    Cursor.lockState = CursorLockMode.Locked;
+                    Cursor.visible = false;
+                }
+            }
+
+            // Mouse look — only horizontal on player (vertical on camera)
+            if (Cursor.lockState == CursorLockMode.Locked)
+            {
+                float mouseX = Input.GetAxis("Mouse X") * MouseSensitivity;
+                _yaw += mouseX;
+                transform.rotation = Quaternion.Euler(0f, _yaw, 0f);
+            }
+
+            // Jump
+            if (_grounded && Input.GetKeyDown(KeyCode.Space))
+            {
+                _rb.AddForce(Vector3.up * JumpForce, ForceMode.Impulse);
+                _grounded = false;
             }
         }
 
@@ -182,7 +209,6 @@ namespace ForeverEngine.Procedural
         {
             if (_rb == null) return;
 
-            // Only read WASD keys directly — avoids phantom joystick/gamepad input
             float h = 0f, v = 0f;
             if (Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.LeftArrow)) h -= 1f;
             if (Input.GetKey(KeyCode.D) || Input.GetKey(KeyCode.RightArrow)) h += 1f;
@@ -191,7 +217,6 @@ namespace ForeverEngine.Procedural
 
             if (Mathf.Abs(h) < 0.01f && Mathf.Abs(v) < 0.01f)
             {
-                // No input — kill horizontal velocity to prevent sliding
                 var vel = _rb.linearVelocity;
                 _rb.linearVelocity = new Vector3(0f, vel.y, 0f);
                 return;
@@ -201,7 +226,72 @@ namespace ForeverEngine.Procedural
             float speed = MoveSpeed;
             if (Input.GetKey(KeyCode.LeftShift)) speed *= SprintMultiplier;
 
-            _rb.MovePosition(_rb.position + move * speed * Time.fixedDeltaTime);
+            Vector3 targetVel = move * speed;
+            targetVel.y = _rb.linearVelocity.y; // preserve gravity
+            _rb.linearVelocity = targetVel;
+        }
+
+        private void OnCollisionStay(Collision col)
+        {
+            // Ground check — if any contact normal points mostly up, we're grounded
+            foreach (var contact in col.contacts)
+            {
+                if (contact.normal.y > 0.5f)
+                { _grounded = true; return; }
+            }
+        }
+
+        private void OnCollisionExit(Collision col) => _grounded = false;
+    }
+
+    /// <summary>
+    /// FPS-style third-person camera: follows player from behind,
+    /// mouse Y tilts up/down, smooth follow with height offset.
+    /// </summary>
+    public class FPSCameraController : UnityEngine.MonoBehaviour
+    {
+        public Transform Target;
+        public float Distance = 12f;
+        public float HeightOffset = 5f;
+        public float MinPitch = -20f;
+        public float MaxPitch = 60f;
+        public float MouseSensitivity = 2f;
+        public float SmoothSpeed = 8f;
+        public float ScrollZoomSpeed = 3f;
+        public float MinDistance = 3f;
+        public float MaxDistance = 30f;
+
+        private float _pitch = 25f;
+
+        private void LateUpdate()
+        {
+            if (Target == null) return;
+
+            // Vertical mouse look (pitch)
+            if (Cursor.lockState == CursorLockMode.Locked)
+            {
+                float mouseY = Input.GetAxis("Mouse Y") * MouseSensitivity;
+                _pitch -= mouseY;
+                _pitch = Mathf.Clamp(_pitch, MinPitch, MaxPitch);
+            }
+
+            // Scroll zoom
+            float scroll = Input.GetAxis("Mouse ScrollWheel");
+            if (Mathf.Abs(scroll) > 0.01f)
+            {
+                Distance -= scroll * ScrollZoomSpeed;
+                Distance = Mathf.Clamp(Distance, MinDistance, MaxDistance);
+            }
+
+            // Camera position: behind and above player
+            float yaw = Target.eulerAngles.y;
+            Quaternion rotation = Quaternion.Euler(_pitch, yaw, 0f);
+            Vector3 offset = rotation * new Vector3(0f, 0f, -Distance);
+            Vector3 targetPos = Target.position + Vector3.up * HeightOffset + offset;
+
+            // Smooth follow
+            transform.position = Vector3.Lerp(transform.position, targetPos, SmoothSpeed * Time.deltaTime);
+            transform.LookAt(Target.position + Vector3.up * 1.5f);
         }
     }
 }
