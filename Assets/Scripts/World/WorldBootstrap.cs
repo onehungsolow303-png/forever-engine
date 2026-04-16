@@ -21,6 +21,10 @@ namespace ForeverEngine.Procedural
             if (gm != null && gm.CurrentSeed != 0)
                 WorldSeed = gm.CurrentSeed;
 
+            // VSync + frame rate
+            QualitySettings.vSyncCount = 1; // Sync to monitor refresh — eliminates tearing
+            Application.targetFrameRate = -1; // Let VSync control
+
             // Ensure directional light exists (scene might not have one)
             EnsureLighting();
 

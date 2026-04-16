@@ -70,21 +70,28 @@ namespace ForeverEngine.Procedural
 
         private IEnumerator UpdateChunks(ChunkCoord center)
         {
-            // Phase 1: Generate + Load chunks within radius
+            // Phase 1: Generate + Load chunks — closest first, max 1 terrain per frame
+            var needed = new List<(ChunkCoord coord, int dist)>();
             for (int dz = -GenerateAheadRadius; dz <= GenerateAheadRadius; dz++)
             {
                 for (int dx = -GenerateAheadRadius; dx <= GenerateAheadRadius; dx++)
                 {
                     var coord = new ChunkCoord(center.X + dx, center.Z + dz);
                     int dist = center.ChebyshevTo(coord);
-
                     if (dist <= GenerateAheadRadius && !_loaded.ContainsKey(coord) && !_generating.Contains(coord))
-                    {
-                        _generating.Add(coord);
-                        yield return StartCoroutine(LoadOrGenerateChunk(coord, dist <= LoadRadius));
-                        _generating.Remove(coord);
-                    }
+                        needed.Add((coord, dist));
                 }
+            }
+
+            // Sort by distance — load closest chunks first
+            needed.Sort((a, b) => a.dist.CompareTo(b.dist));
+
+            foreach (var (coord, dist) in needed)
+            {
+                _generating.Add(coord);
+                yield return StartCoroutine(LoadOrGenerateChunk(coord, dist <= LoadRadius));
+                _generating.Remove(coord);
+                // One chunk per frame when creating terrain to prevent stutter
             }
 
             // Phase 2: Unload distant chunks
