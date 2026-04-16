@@ -14,9 +14,9 @@ namespace ForeverEngine.Procedural
         public static ChunkManager Instance { get; private set; }
 
         [Header("Streaming Radii (in chunks)")]
-        public int LoadRadius = 5;
-        public int GenerateAheadRadius = 6;
-        public int UnloadRadius = 8;
+        public int LoadRadius = 3;
+        public int GenerateAheadRadius = 4;
+        public int UnloadRadius = 6;
 
         [Header("World")]
         public int WorldSeed = 42;
@@ -152,16 +152,18 @@ namespace ForeverEngine.Procedural
             if (createTerrain)
             {
                 var terrain = TerrainGenerator.CreateTerrain(data);
+                _loaded[coord] = new LoadedChunk { Data = data, Terrain = terrain, Props = null };
+                yield return null; // Let terrain render one frame before decorating
+
                 var props = SurfaceDecorator.Decorate(data, terrain);
                 _loaded[coord] = new LoadedChunk { Data = data, Terrain = terrain, Props = props };
+                yield return null; // Breathe after decoration
             }
             else
             {
-                // Generate-ahead: data on disk but no terrain mesh yet
                 _loaded[coord] = new LoadedChunk { Data = data, Terrain = null, Props = null };
+                yield return null;
             }
-
-            yield return null; // Spread across frames
         }
 
         private void UnloadChunk(ChunkCoord coord)

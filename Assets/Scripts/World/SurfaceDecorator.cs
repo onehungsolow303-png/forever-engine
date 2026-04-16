@@ -85,62 +85,62 @@ namespace ForeverEngine.Procedural
         {
             BiomeType.Grassland => new List<PlacementRule>
             {
-                new() { PropType = PropType.Tree, Count = 8, MinSpacing = 30f, BaseScale = 3f },
-                new() { PropType = PropType.Rock, Count = 12, MinSpacing = 20f, BaseScale = 1.2f },
-                new() { PropType = PropType.Bush, Count = 20, MinSpacing = 15f, BaseScale = 0.8f },
+                new() { PropType = PropType.Tree, Count = 5, MinSpacing = 40f, BaseScale = 3f },
+                new() { PropType = PropType.Rock, Count = 6, MinSpacing = 30f, BaseScale = 1.2f },
+                new() { PropType = PropType.Bush, Count = 8, MinSpacing = 25f, BaseScale = 0.8f },
                 new() { PropType = PropType.Grass, Count = 0, MinSpacing = 0f, BaseScale = 0f },
             },
             BiomeType.TemperateForest => new List<PlacementRule>
             {
-                new() { PropType = PropType.Tree, Count = 40, MinSpacing = 12f, BaseScale = 4f },
-                new() { PropType = PropType.Rock, Count = 10, MinSpacing = 25f, BaseScale = 1.5f },
-                new() { PropType = PropType.Bush, Count = 25, MinSpacing = 10f, BaseScale = 0.7f },
+                new() { PropType = PropType.Tree, Count = 20, MinSpacing = 18f, BaseScale = 4f },
+                new() { PropType = PropType.Rock, Count = 5, MinSpacing = 35f, BaseScale = 1.5f },
+                new() { PropType = PropType.Bush, Count = 10, MinSpacing = 20f, BaseScale = 0.7f },
                 new() { PropType = PropType.Grass, Count = 0, MinSpacing = 0f, BaseScale = 0f },
             },
             BiomeType.BorealForest => new List<PlacementRule>
             {
-                new() { PropType = PropType.ConiferTree, Count = 50, MinSpacing = 10f, BaseScale = 3.5f },
-                new() { PropType = PropType.Rock, Count = 15, MinSpacing = 20f, BaseScale = 1.8f },
-                new() { PropType = PropType.Bush, Count = 10, MinSpacing = 18f, BaseScale = 0.6f },
+                new() { PropType = PropType.ConiferTree, Count = 25, MinSpacing = 16f, BaseScale = 3.5f },
+                new() { PropType = PropType.Rock, Count = 8, MinSpacing = 25f, BaseScale = 1.8f },
+                new() { PropType = PropType.Bush, Count = 5, MinSpacing = 25f, BaseScale = 0.6f },
                 new() { PropType = PropType.Grass, Count = 0, MinSpacing = 0f, BaseScale = 0f },
             },
             BiomeType.Taiga => new List<PlacementRule>
             {
-                new() { PropType = PropType.ConiferTree, Count = 30, MinSpacing = 14f, BaseScale = 3f },
-                new() { PropType = PropType.Rock, Count = 20, MinSpacing = 18f, BaseScale = 2f },
+                new() { PropType = PropType.ConiferTree, Count = 15, MinSpacing = 20f, BaseScale = 3f },
+                new() { PropType = PropType.Rock, Count = 10, MinSpacing = 25f, BaseScale = 2f },
             },
             BiomeType.Mountain => new List<PlacementRule>
             {
-                new() { PropType = PropType.Rock, Count = 40, MinSpacing = 12f, BaseScale = 2.5f },
-                new() { PropType = PropType.ConiferTree, Count = 8, MinSpacing = 30f, BaseScale = 2.5f },
+                new() { PropType = PropType.Rock, Count = 20, MinSpacing = 18f, BaseScale = 2.5f },
+                new() { PropType = PropType.ConiferTree, Count = 4, MinSpacing = 40f, BaseScale = 2.5f },
             },
             BiomeType.Desert => new List<PlacementRule>
             {
-                new() { PropType = PropType.Cactus, Count = 6, MinSpacing = 35f, BaseScale = 1.5f },
-                new() { PropType = PropType.Rock, Count = 10, MinSpacing = 30f, BaseScale = 2f },
-                new() { PropType = PropType.DeadTree, Count = 4, MinSpacing = 40f, BaseScale = 2f },
+                new() { PropType = PropType.Cactus, Count = 4, MinSpacing = 45f, BaseScale = 1.5f },
+                new() { PropType = PropType.Rock, Count = 5, MinSpacing = 40f, BaseScale = 2f },
+                new() { PropType = PropType.DeadTree, Count = 2, MinSpacing = 50f, BaseScale = 2f },
             },
             BiomeType.AridSteppe => new List<PlacementRule>
             {
-                new() { PropType = PropType.Rock, Count = 15, MinSpacing = 25f, BaseScale = 1.5f },
-                new() { PropType = PropType.Bush, Count = 10, MinSpacing = 20f, BaseScale = 0.5f },
-                new() { PropType = PropType.DeadTree, Count = 3, MinSpacing = 40f, BaseScale = 2f },
+                new() { PropType = PropType.Rock, Count = 8, MinSpacing = 30f, BaseScale = 1.5f },
+                new() { PropType = PropType.Bush, Count = 5, MinSpacing = 30f, BaseScale = 0.5f },
+                new() { PropType = PropType.DeadTree, Count = 2, MinSpacing = 50f, BaseScale = 2f },
             },
             BiomeType.Tundra => new List<PlacementRule>
             {
-                new() { PropType = PropType.Rock, Count = 25, MinSpacing = 15f, BaseScale = 1.5f },
+                new() { PropType = PropType.Rock, Count = 12, MinSpacing = 22f, BaseScale = 1.5f },
             },
             BiomeType.Savanna => new List<PlacementRule>
             {
-                new() { PropType = PropType.Tree, Count = 6, MinSpacing = 40f, BaseScale = 4.5f },
-                new() { PropType = PropType.Bush, Count = 15, MinSpacing = 18f, BaseScale = 0.6f },
-                new() { PropType = PropType.Rock, Count = 8, MinSpacing = 30f, BaseScale = 1f },
+                new() { PropType = PropType.Tree, Count = 4, MinSpacing = 50f, BaseScale = 4.5f },
+                new() { PropType = PropType.Bush, Count = 8, MinSpacing = 25f, BaseScale = 0.6f },
+                new() { PropType = PropType.Rock, Count = 4, MinSpacing = 40f, BaseScale = 1f },
                 new() { PropType = PropType.Grass, Count = 0, MinSpacing = 0f, BaseScale = 0f },
             },
             BiomeType.TropicalRainforest => new List<PlacementRule>
             {
-                new() { PropType = PropType.Tree, Count = 60, MinSpacing = 8f, BaseScale = 5f },
-                new() { PropType = PropType.Bush, Count = 40, MinSpacing = 6f, BaseScale = 0.8f },
+                new() { PropType = PropType.Tree, Count = 30, MinSpacing = 12f, BaseScale = 5f },
+                new() { PropType = PropType.Bush, Count = 15, MinSpacing = 12f, BaseScale = 0.8f },
                 new() { PropType = PropType.Grass, Count = 0, MinSpacing = 0f, BaseScale = 0f },
             },
             _ => new List<PlacementRule>(),
