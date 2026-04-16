@@ -1,4 +1,3 @@
-// Assets/Scripts/World/TerrainGenerator.cs
 using UnityEngine;
 
 namespace ForeverEngine.Procedural
@@ -27,7 +26,6 @@ namespace ForeverEngine.Procedural
             float seedX = worldSeed * 1.7f + coord.X * 100f;
             float seedZ = worldSeed * 3.1f + coord.Z * 100f;
 
-            // Biome-specific noise parameters
             float amplitude = GetBiomeAmplitude(sample.Biome);
             int octaves = GetBiomeOctaves(sample.Biome);
             float baseHeight = sample.Elevation;
@@ -36,14 +34,12 @@ namespace ForeverEngine.Procedural
             {
                 for (int x = 0; x < size; x++)
                 {
-                    // World-space position for noise sampling
-                    float wx = (coord.X * size + x) * 0.01f; // Scale down for noise
+                    float wx = (coord.X * size + x) * 0.01f;
                     float wz = (coord.Z * size + z) * 0.01f;
 
                     float noise = SimplexNoise.OctaveNoise(
                         wx, wz, octaves, 0.5f, 2f, seedX, seedZ);
 
-                    // Center noise around base elevation
                     float height = baseHeight + (noise - 0.5f) * amplitude;
                     chunkData.Heightmap[z * size + x] = Mathf.Clamp01(height);
                 }
@@ -52,19 +48,20 @@ namespace ForeverEngine.Procedural
 
         /// <summary>
         /// Create a Unity Terrain GameObject from chunk heightmap data.
-        /// Returns the Terrain component.
+        /// Includes collider, biome-colored texture, and proper positioning.
         /// </summary>
         public static Terrain CreateTerrain(ChunkData chunkData)
         {
             var coord = new ChunkCoord(chunkData.ChunkX, chunkData.ChunkZ);
             int size = ChunkCoord.ChunkSize;
 
-            // Create TerrainData
+            // TerrainData
             var terrainData = new TerrainData();
-            terrainData.heightmapResolution = size + 1; // Unity requires power of 2 + 1
+            // heightmapResolution must be power-of-2 + 1. 257 is valid (256+1).
+            terrainData.heightmapResolution = size + 1;
             terrainData.size = new Vector3(size, MaxHeight, size);
 
-            // Convert flat heightmap to 2D array (Unity format)
+            // Convert flat heightmap to Unity's 2D format
             float[,] heights = new float[size + 1, size + 1];
             for (int z = 0; z <= size; z++)
             {
@@ -77,23 +74,55 @@ namespace ForeverEngine.Procedural
             }
             terrainData.SetHeights(0, 0, heights);
 
-            // Apply biome terrain layer (color)
+            // Create a biome-colored texture for the terrain layer
+            var biomeColor = BiomeTable.BaseColor(chunkData.Biome);
+            var colorTex = new Texture2D(4, 4, TextureFormat.RGBA32, false);
+            var pixels = new Color[16];
+            for (int i = 0; i < 16; i++) pixels[i] = biomeColor;
+            colorTex.SetPixels(pixels);
+            colorTex.Apply();
+
             var layer = new TerrainLayer();
-            // Use a simple white texture tinted by biome color
-            layer.diffuseTexture = Texture2D.whiteTexture;
-            layer.tileSize = new Vector2(4f, 4f);
+            layer.diffuseTexture = colorTex;
+            layer.tileSize = new Vector2(size, size); // stretch across entire chunk
             terrainData.terrainLayers = new[] { layer };
 
-            // Create GameObject
+            // Paint the entire terrain with this layer
+            float[,,] alphamap = new float[terrainData.alphamapWidth, terrainData.alphamapHeight, 1];
+            for (int y = 0; y < terrainData.alphamapHeight; y++)
+                for (int x = 0; x < terrainData.alphamapWidth; x++)
+                    alphamap[y, x, 0] = 1f;
+            terrainData.SetAlphamaps(0, 0, alphamap);
+
+            // Create terrain GameObject (includes TerrainCollider automatically)
             var go = Terrain.CreateTerrainGameObject(terrainData);
             go.name = $"Chunk_{coord.X}_{coord.Z}";
             go.transform.position = coord.WorldOrigin;
 
-            // Tint by biome
             var terrain = go.GetComponent<Terrain>();
-            terrain.materialTemplate = CreateBiomeMaterial(chunkData.Biome);
+
+            // Ensure TerrainCollider is present and has data
+            var collider = go.GetComponent<TerrainCollider>();
+            if (collider == null)
+                collider = go.AddComponent<TerrainCollider>();
+            collider.terrainData = terrainData;
+
+            // Flush to ensure collider is ready immediately
+            terrain.Flush();
 
             return terrain;
+        }
+
+        /// <summary>
+        /// Get the terrain surface height at a world position.
+        /// Returns 0 if no terrain exists at that position.
+        /// </summary>
+        public static float GetHeightAt(ChunkData chunkData, float localX, float localZ)
+        {
+            int size = ChunkCoord.ChunkSize;
+            int ix = Mathf.Clamp(Mathf.FloorToInt(localX), 0, size - 1);
+            int iz = Mathf.Clamp(Mathf.FloorToInt(localZ), 0, size - 1);
+            return chunkData.Heightmap[iz * size + ix] * MaxHeight;
         }
 
         /// <summary>Destroy a chunk's terrain GameObject.</summary>
@@ -101,16 +130,6 @@ namespace ForeverEngine.Procedural
         {
             if (terrain == null) return;
             Object.Destroy(terrain.gameObject);
-        }
-
-        private static Material CreateBiomeMaterial(BiomeType biome)
-        {
-            var shader = Shader.Find("Universal Render Pipeline/Terrain/Lit")
-                ?? Shader.Find("Nature/Terrain/Standard");
-            var mat = new Material(shader);
-            // The terrain will be tinted by the biome base color
-            // Full texture painting is Plan B (Terrain & Decoration)
-            return mat;
         }
 
         private static float GetBiomeAmplitude(BiomeType biome) => biome switch

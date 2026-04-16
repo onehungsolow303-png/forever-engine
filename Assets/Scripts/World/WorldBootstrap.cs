@@ -33,18 +33,19 @@ namespace ForeverEngine.Procedural
             var spawnChunk = new ChunkCoord(0, 0);
             chunkManager.Initialize(null); // Initialize skeleton without player yet
 
-            // Force-generate the spawn chunk synchronously
+            // Force-generate the spawn chunk AND create terrain BEFORE spawning player
             var spawnData = new ChunkData(spawnChunk.X, spawnChunk.Z);
             TerrainGenerator.GenerateHeightmap(spawnData, chunkManager.Skeleton, WorldSeed);
             ChunkPersistence.Save(WorldSeed, spawnChunk, spawnData);
 
-            // Sample terrain height at center of spawn chunk
-            int centerIdx = (ChunkCoord.ChunkSize / 2) * ChunkCoord.ChunkSize + (ChunkCoord.ChunkSize / 2);
-            float terrainHeight = spawnData.Heightmap[centerIdx] * TerrainGenerator.MaxHeight;
+            // Create the terrain mesh so the collider exists before player spawns
+            var spawnTerrain = TerrainGenerator.CreateTerrain(spawnData);
+            Debug.Log($"[WorldBootstrap] Spawn terrain created: biome={spawnData.Biome}, elevation={spawnData.BaseElevation:F2}");
 
-            // Spawn player ABOVE the terrain
+            // Use Unity's Terrain.SampleHeight for accurate surface position
             var spawnPos = spawnChunk.WorldCenter;
-            spawnPos.y = terrainHeight + 5f; // 5m above terrain surface
+            float terrainHeight = spawnTerrain.SampleHeight(spawnPos);
+            spawnPos.y = terrainHeight + spawnTerrain.transform.position.y + 3f; // 3m above surface
 
             GameObject player;
             if (PlayerPrefab != null)
