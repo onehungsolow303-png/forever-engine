@@ -61,6 +61,54 @@ namespace ForeverEngine.Procedural
             return parent;
         }
 
+        /// <summary>
+        /// Decorate a mesh-based terrain chunk (no Unity Terrain required).
+        /// Samples height from the stored heightmap directly.
+        /// </summary>
+        public static GameObject DecorateMesh(ChunkData chunkData, GameObject terrainGO)
+        {
+            var coord = new ChunkCoord(chunkData.ChunkX, chunkData.ChunkZ);
+            var parent = new GameObject($"Props_{coord.X}_{coord.Z}");
+            parent.transform.position = coord.WorldOrigin;
+
+            int seed = chunkData.ChunkX * 73856093 ^ chunkData.ChunkZ * 19349663;
+            var rng = new System.Random(seed);
+            var rules = GetBiomeRules(chunkData.Biome);
+            int hmRes = ChunkData.HeightmapRes;
+
+            foreach (var rule in rules)
+            {
+                if (rule.PropType == PropType.Grass) continue; // Skip grass for mesh terrain
+
+                var positions = PoissonDisk(ChunkCoord.ChunkSize, rule.MinSpacing, rule.Count, rng);
+                foreach (var pos in positions)
+                {
+                    float worldX = coord.WorldOrigin.x + pos.x;
+                    float worldZ = coord.WorldOrigin.z + pos.y;
+
+                    // Sample height from heightmap
+                    float hmX = pos.x / ChunkCoord.ChunkSize * (hmRes - 1);
+                    float hmZ = pos.y / ChunkCoord.ChunkSize * (hmRes - 1);
+                    int ix = Mathf.Clamp(Mathf.RoundToInt(hmX), 0, hmRes - 1);
+                    int iz = Mathf.Clamp(Mathf.RoundToInt(hmZ), 0, hmRes - 1);
+                    float height = chunkData.Heightmap[iz * hmRes + ix] * TerrainGenerator.MaxHeight;
+
+                    var prop = CreateProp(rule.PropType, rng);
+                    if (prop == null) continue;
+
+                    float scale = rule.BaseScale * (0.8f + (float)rng.NextDouble() * 0.4f);
+                    float rotation = (float)rng.NextDouble() * 360f;
+
+                    prop.transform.position = new Vector3(worldX, height, worldZ);
+                    prop.transform.localScale = Vector3.one * scale;
+                    prop.transform.rotation = Quaternion.Euler(0f, rotation, 0f);
+                    prop.transform.SetParent(parent.transform, worldPositionStays: true);
+                }
+            }
+
+            return parent;
+        }
+
         /// <summary>Remove all decoration from a chunk.</summary>
         public static void RemoveDecoration(GameObject propsParent)
         {

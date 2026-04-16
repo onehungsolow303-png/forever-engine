@@ -3,14 +3,23 @@ using UnityEngine;
 namespace ForeverEngine.Procedural
 {
     /// <summary>
-    /// Builds a Unity Terrain from a ChunkData's heightmap.
-    /// Samples the PlanetSkeleton for base elevation, adds Simplex noise octaves,
-    /// applies biome-specific modifiers (mountains=jagged, plains=smooth).
+    /// Builds mesh-based terrain from ChunkData heightmaps.
+    /// Uses simple mesh planes instead of Unity Terrain for fast streaming.
+    /// Each chunk = one mesh with displaced vertices + MeshCollider.
     /// </summary>
     public static class TerrainGenerator
     {
-        /// <summary>Max terrain height in Unity units (meters).</summary>
         public const float MaxHeight = 200f;
+
+        /// <summary>Mesh resolution per axis. 33×33 = 1,089 vertices. Fast to create.</summary>
+        private const int MeshRes = 33;
+
+        // Cached biome materials — shared across all chunks of same biome
+        private static readonly Material[] _biomeMaterials = new Material[System.Enum.GetValues(typeof(BiomeType)).Length];
+
+        // Shared seed state for edge computation
+        private static float _seedX, _seedZ;
+        private static PlanetSkeleton _activeSkeleton;
 
         /// <summary>
         /// Generate heightmap data for a chunk. Writes into chunkData.Heightmap.
@@ -24,31 +33,27 @@ namespace ForeverEngine.Procedural
 
             int chunkSize = ChunkCoord.ChunkSize;
             int hmRes = ChunkData.HeightmapRes;
-            float step = (float)chunkSize / hmRes; // 2m per sample at 128 res
+            float step = (float)chunkSize / hmRes;
 
-            // Seed offsets are world-seed-only (NOT per-chunk) so noise is continuous.
             _seedX = worldSeed * 1.7f;
             _seedZ = worldSeed * 3.1f;
             _activeSkeleton = skeleton;
-            float seedX = _seedX;
-            float seedZ = _seedZ;
+
+            float amplitude = GetBiomeAmplitude(sample.Biome);
+            int octaves = GetBiomeOctaves(sample.Biome);
 
             for (int z = 0; z < hmRes; z++)
             {
                 for (int x = 0; x < hmRes; x++)
                 {
-                    // World-space position — continuous across all chunks
                     float worldX = coord.X * chunkSize + x * step;
                     float worldZ = coord.Z * chunkSize + z * step;
 
-                    // Sample skeleton at this exact world position (not just chunk center)
-                    // This blends base elevation smoothly across chunk boundaries
-                    float skeletonX = (float)(worldX / chunkSize + skeleton.Width / 2) % skeleton.Width;
-                    float skeletonZ = (float)(worldZ / chunkSize + skeleton.Height / 2) % skeleton.Height;
+                    float skeletonX = (worldX / chunkSize + skeleton.Width / 2f) % skeleton.Width;
+                    float skeletonZ = (worldZ / chunkSize + skeleton.Height / 2f) % skeleton.Height;
                     if (skeletonX < 0) skeletonX += skeleton.Width;
                     if (skeletonZ < 0) skeletonZ += skeleton.Height;
 
-                    // Bilinear interpolation of skeleton elevation
                     int sx0 = Mathf.FloorToInt(skeletonX);
                     int sz0 = Mathf.FloorToInt(skeletonZ);
                     int sx1 = (sx0 + 1) % skeleton.Width;
@@ -56,135 +61,167 @@ namespace ForeverEngine.Procedural
                     float fx = skeletonX - sx0;
                     float fz = skeletonZ - sz0;
 
-                    float e00 = skeleton.GetElevation(sx0, sz0);
-                    float e10 = skeleton.GetElevation(sx1, sz0);
-                    float e01 = skeleton.GetElevation(sx0, sz1);
-                    float e11 = skeleton.GetElevation(sx1, sz1);
                     float baseHeight = Mathf.Lerp(
-                        Mathf.Lerp(e00, e10, fx),
-                        Mathf.Lerp(e01, e11, fx),
+                        Mathf.Lerp(skeleton.GetElevation(sx0, sz0), skeleton.GetElevation(sx1, sz0), fx),
+                        Mathf.Lerp(skeleton.GetElevation(sx0, sz1), skeleton.GetElevation(sx1, sz1), fx),
                         fz);
 
-                    // Local detail noise — uses world coords so it's seamless
                     float nx = worldX * 0.01f;
                     float nz = worldZ * 0.01f;
+                    float noise = SimplexNoise.OctaveNoise(nx, nz, octaves, 0.5f, 2f, _seedX, _seedZ);
 
-                    float amplitude = GetBiomeAmplitude(sample.Biome);
-                    int octaves = GetBiomeOctaves(sample.Biome);
-
-                    float noise = SimplexNoise.OctaveNoise(
-                        nx, nz, octaves, 0.5f, 2f, seedX, seedZ);
-
-                    float height = baseHeight + (noise - 0.5f) * amplitude;
-                    chunkData.Heightmap[z * hmRes + x] = Mathf.Clamp01(height);
+                    chunkData.Heightmap[z * hmRes + x] = Mathf.Clamp01(baseHeight + (noise - 0.5f) * amplitude);
                 }
             }
         }
 
         /// <summary>
-        /// Create a Unity Terrain GameObject from chunk heightmap data.
-        /// Includes collider, biome-colored texture, and proper positioning.
+        /// Create a mesh-based terrain GameObject from chunk heightmap data.
+        /// Returns the MeshRenderer's GameObject (NOT a Terrain component).
         /// </summary>
-        public static Terrain CreateTerrain(ChunkData chunkData)
+        public static GameObject CreateTerrain(ChunkData chunkData)
         {
             var coord = new ChunkCoord(chunkData.ChunkX, chunkData.ChunkZ);
-            int size = ChunkCoord.ChunkSize;
+            int chunkSize = ChunkCoord.ChunkSize;
+            int hmRes = ChunkData.HeightmapRes;
 
-            // TerrainData — 65 resolution (power-of-2 + 1). 4m per sample. Fast.
-            var terrainData = new TerrainData();
-            int res = 65;
-            terrainData.heightmapResolution = res;
-            terrainData.size = new Vector3(size, MaxHeight, size);
+            // Build mesh
+            var mesh = new Mesh();
+            mesh.name = $"Terrain_{coord.X}_{coord.Z}";
 
-            // Build terrain heightmap from stored 128×128 data.
-            // Terrain res (129) closely matches stored res (128) — direct 1:1 mapping
-            // with edge sample computed at world position for seamless stitching.
-            int hmRes = ChunkData.HeightmapRes; // 128
-            float[,] heights = new float[res, res];
-            for (int z = 0; z < res; z++)
+            int vertCount = (MeshRes + 1) * (MeshRes + 1);
+            var vertices = new Vector3[vertCount];
+            var uvs = new Vector2[vertCount];
+            float cellSize = (float)chunkSize / MeshRes;
+
+            for (int z = 0; z <= MeshRes; z++)
             {
-                for (int x = 0; x < res; x++)
+                for (int x = 0; x <= MeshRes; x++)
                 {
-                    if (x == res - 1 || z == res - 1)
-                    {
-                        // Edge: compute at world position for seamless stitching
-                        float wx = (float)x / (res - 1) * size;
-                        float wz = (float)z / (res - 1) * size;
-                        heights[z, x] = ComputeHeightAtWorldPos(
-                            coord.X * size + Mathf.RoundToInt(wx),
-                            coord.Z * size + Mathf.RoundToInt(wz),
-                            chunkData.Biome,
-                            chunkData.BaseElevation);
-                    }
-                    else
-                    {
-                        // Interior: direct copy (129-1 = 128 = hmRes)
-                        int sx = Mathf.Min(x, hmRes - 1);
-                        int sz = Mathf.Min(z, hmRes - 1);
-                        heights[z, x] = chunkData.Heightmap[sz * hmRes + sx];
-                    }
+                    int idx = z * (MeshRes + 1) + x;
+
+                    float localX = x * cellSize;
+                    float localZ = z * cellSize;
+
+                    // Sample height from stored heightmap (bilinear interpolation)
+                    float hmX = (float)x / MeshRes * (hmRes - 1);
+                    float hmZ = (float)z / MeshRes * (hmRes - 1);
+                    float height = SampleHeightmap(chunkData.Heightmap, hmRes, hmX, hmZ) * MaxHeight;
+
+                    vertices[idx] = new Vector3(localX, height, localZ);
+                    uvs[idx] = new Vector2((float)x / MeshRes, (float)z / MeshRes);
                 }
             }
-            terrainData.SetHeights(0, 0, heights);
 
-            // Create terrain GameObject (includes TerrainCollider automatically)
-            var go = Terrain.CreateTerrainGameObject(terrainData);
-            go.name = $"Chunk_{coord.X}_{coord.Z}";
+            // Build triangles
+            int triCount = MeshRes * MeshRes * 6;
+            var triangles = new int[triCount];
+            int tri = 0;
+            for (int z = 0; z < MeshRes; z++)
+            {
+                for (int x = 0; x < MeshRes; x++)
+                {
+                    int bl = z * (MeshRes + 1) + x;
+                    int br = bl + 1;
+                    int tl = (z + 1) * (MeshRes + 1) + x;
+                    int tr = tl + 1;
+
+                    triangles[tri++] = bl;
+                    triangles[tri++] = tl;
+                    triangles[tri++] = br;
+                    triangles[tri++] = br;
+                    triangles[tri++] = tl;
+                    triangles[tri++] = tr;
+                }
+            }
+
+            mesh.vertices = vertices;
+            mesh.uv = uvs;
+            mesh.triangles = triangles;
+            mesh.RecalculateNormals();
+            mesh.RecalculateBounds();
+
+            // Create GameObject
+            var go = new GameObject($"Chunk_{coord.X}_{coord.Z}");
             go.transform.position = coord.WorldOrigin;
 
-            var terrain = go.GetComponent<Terrain>();
+            var filter = go.AddComponent<MeshFilter>();
+            filter.sharedMesh = mesh;
 
-            // Apply biome color via a simple material — avoids URP Terrain Lit shader
-            // issues in builds. Uses standard URP Lit or fallback Standard shader.
-            var biomeColor = BiomeTable.BaseColor(chunkData.Biome);
-            var mat = new Material(Shader.Find("Universal Render Pipeline/Lit")
-                ?? Shader.Find("Standard"));
-            if (mat.HasProperty("_BaseColor"))
-                mat.SetColor("_BaseColor", biomeColor);
-            else
-                mat.color = biomeColor;
-            terrain.materialTemplate = mat;
+            var renderer = go.AddComponent<MeshRenderer>();
+            renderer.sharedMaterial = GetBiomeMaterial(chunkData.Biome);
+            renderer.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.On;
+            renderer.receiveShadows = true;
 
-            // Flush to ensure terrain data (including collider) is immediately available.
-            terrain.Flush();
+            // MeshCollider for physics (player walking)
+            var collider = go.AddComponent<MeshCollider>();
+            collider.sharedMesh = mesh;
 
-            return terrain;
+            return go;
         }
 
-        /// <summary>
-        /// Get the terrain surface height at a world position.
-        /// Returns 0 if no terrain exists at that position.
-        /// </summary>
-        public static float GetHeightAt(ChunkData chunkData, float localX, float localZ)
+        /// <summary>Destroy a chunk's terrain.</summary>
+        public static void DestroyTerrain(GameObject terrainGO)
         {
-            int size = ChunkCoord.ChunkSize;
-            int ix = Mathf.Clamp(Mathf.FloorToInt(localX), 0, size - 1);
-            int iz = Mathf.Clamp(Mathf.FloorToInt(localZ), 0, size - 1);
-            return chunkData.Heightmap[iz * size + ix] * MaxHeight;
+            if (terrainGO == null) return;
+            Object.Destroy(terrainGO);
         }
 
-        /// <summary>Destroy a chunk's terrain GameObject.</summary>
+        /// <summary>Overload for backwards compatibility with Terrain parameter.</summary>
         public static void DestroyTerrain(Terrain terrain)
         {
-            if (terrain == null) return;
-            Object.Destroy(terrain.gameObject);
+            if (terrain != null) Object.Destroy(terrain.gameObject);
         }
 
-        // Shared seed offsets — must match GenerateHeightmap exactly
-        private static float _seedX, _seedZ;
-        private static PlanetSkeleton _activeSkeleton;
+        /// <summary>Get or create a cached material for a biome.</summary>
+        private static Material GetBiomeMaterial(BiomeType biome)
+        {
+            int idx = (int)biome;
+            if (idx < 0 || idx >= _biomeMaterials.Length) idx = 0;
 
-        /// <summary>
-        /// Compute height at an exact world position. Used for edge samples
-        /// so chunk boundaries match perfectly. Uses the same noise + skeleton
-        /// sampling as GenerateHeightmap.
-        /// </summary>
-        private static float ComputeHeightAtWorldPos(int worldX, int worldZ, BiomeType biome, float baseFallback)
+            if (_biomeMaterials[idx] == null)
+            {
+                var color = BiomeTable.BaseColor(biome);
+                var shader = Shader.Find("Universal Render Pipeline/Lit")
+                    ?? Shader.Find("Standard");
+                var mat = new Material(shader);
+                if (mat.HasProperty("_BaseColor"))
+                    mat.SetColor("_BaseColor", color);
+                else
+                    mat.color = color;
+                _biomeMaterials[idx] = mat;
+            }
+
+            return _biomeMaterials[idx];
+        }
+
+        /// <summary>Bilinear sample from a flat heightmap array.</summary>
+        private static float SampleHeightmap(float[] heightmap, int res, float x, float z)
+        {
+            int x0 = Mathf.FloorToInt(x);
+            int z0 = Mathf.FloorToInt(z);
+            int x1 = Mathf.Min(x0 + 1, res - 1);
+            int z1 = Mathf.Min(z0 + 1, res - 1);
+            x0 = Mathf.Clamp(x0, 0, res - 1);
+            z0 = Mathf.Clamp(z0, 0, res - 1);
+
+            float fx = x - Mathf.FloorToInt(x);
+            float fz = z - Mathf.FloorToInt(z);
+
+            float h00 = heightmap[z0 * res + x0];
+            float h10 = heightmap[z0 * res + x1];
+            float h01 = heightmap[z1 * res + x0];
+            float h11 = heightmap[z1 * res + x1];
+
+            return Mathf.Lerp(Mathf.Lerp(h00, h10, fx), Mathf.Lerp(h01, h11, fx), fz);
+        }
+
+        /// <summary>Compute height at world position (for edge stitching and spawn).</summary>
+        public static float ComputeHeightAtWorldPos(int worldX, int worldZ, BiomeType biome, float baseFallback)
         {
             float nx = worldX * 0.01f;
             float nz = worldZ * 0.01f;
 
-            // Sample skeleton at this world position (bilinear interpolation)
             float baseHeight = baseFallback;
             if (_activeSkeleton != null)
             {
@@ -228,9 +265,8 @@ namespace ForeverEngine.Procedural
 
         private static int GetBiomeOctaves(BiomeType biome) => biome switch
         {
-            BiomeType.Mountain => 6,
-            BiomeType.Desert => 4,
-            _ => 4,
+            BiomeType.Mountain => 5,
+            _ => 3,
         };
     }
 }
