@@ -95,6 +95,8 @@ namespace ForeverEngine.Demo.Battle
             ["Pegasus"]            = new(1.2f, "NPCs/Pegasus"),
             ["Dragonborn_Fighter"]  = new(1.1f, "NPCs/Dragon born male fighter"),
             ["Dragonborn_Sorcerer"] = new(1.1f, "NPCs/Dragon born male sorcerer"),
+            ["Drago_Fighter"]       = new(1.1f, "NPCs/Drago male fighter"),
+            ["Drago_Sorcerer"]      = new(1.1f, "NPCs/Drago male sorcerer"),
             ["Default_Player"]     = new(1.0f, "NPCs/Human male fighter"),
         };
 
