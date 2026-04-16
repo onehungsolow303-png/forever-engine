@@ -23,22 +23,53 @@ namespace ForeverEngine.Procedural
             chunkData.BaseElevation = sample.Elevation;
 
             int size = ChunkCoord.ChunkSize;
-            float seedX = worldSeed * 1.7f + coord.X * 100f;
-            float seedZ = worldSeed * 3.1f + coord.Z * 100f;
 
-            float amplitude = GetBiomeAmplitude(sample.Biome);
-            int octaves = GetBiomeOctaves(sample.Biome);
-            float baseHeight = sample.Elevation;
+            // Seed offsets are world-seed-only (NOT per-chunk) so noise is continuous
+            // across chunk boundaries. World-space coords provide the per-position variation.
+            float seedX = worldSeed * 1.7f;
+            float seedZ = worldSeed * 3.1f;
 
             for (int z = 0; z < size; z++)
             {
                 for (int x = 0; x < size; x++)
                 {
-                    float wx = (coord.X * size + x) * 0.01f;
-                    float wz = (coord.Z * size + z) * 0.01f;
+                    // World-space position — continuous across all chunks
+                    float worldX = coord.X * size + x;
+                    float worldZ = coord.Z * size + z;
+
+                    // Sample skeleton at this exact world position (not just chunk center)
+                    // This blends base elevation smoothly across chunk boundaries
+                    float skeletonX = (float)(worldX / size + skeleton.Width / 2) % skeleton.Width;
+                    float skeletonZ = (float)(worldZ / size + skeleton.Height / 2) % skeleton.Height;
+                    if (skeletonX < 0) skeletonX += skeleton.Width;
+                    if (skeletonZ < 0) skeletonZ += skeleton.Height;
+
+                    // Bilinear interpolation of skeleton elevation
+                    int sx0 = Mathf.FloorToInt(skeletonX);
+                    int sz0 = Mathf.FloorToInt(skeletonZ);
+                    int sx1 = (sx0 + 1) % skeleton.Width;
+                    int sz1 = (sz0 + 1) % skeleton.Height;
+                    float fx = skeletonX - sx0;
+                    float fz = skeletonZ - sz0;
+
+                    float e00 = skeleton.GetElevation(sx0, sz0);
+                    float e10 = skeleton.GetElevation(sx1, sz0);
+                    float e01 = skeleton.GetElevation(sx0, sz1);
+                    float e11 = skeleton.GetElevation(sx1, sz1);
+                    float baseHeight = Mathf.Lerp(
+                        Mathf.Lerp(e00, e10, fx),
+                        Mathf.Lerp(e01, e11, fx),
+                        fz);
+
+                    // Local detail noise — uses world coords so it's seamless
+                    float nx = worldX * 0.01f;
+                    float nz = worldZ * 0.01f;
+
+                    float amplitude = GetBiomeAmplitude(sample.Biome);
+                    int octaves = GetBiomeOctaves(sample.Biome);
 
                     float noise = SimplexNoise.OctaveNoise(
-                        wx, wz, octaves, 0.5f, 2f, seedX, seedZ);
+                        nx, nz, octaves, 0.5f, 2f, seedX, seedZ);
 
                     float height = baseHeight + (noise - 0.5f) * amplitude;
                     chunkData.Heightmap[z * size + x] = Mathf.Clamp01(height);

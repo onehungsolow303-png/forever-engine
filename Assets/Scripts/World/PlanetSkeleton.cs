@@ -125,6 +125,14 @@ namespace ForeverEngine.Procedural
             };
         }
 
+        /// <summary>Direct elevation access by skeleton grid coords (for bilinear interpolation).</summary>
+        public float GetElevation(int sx, int sz)
+        {
+            sx = ((sx % Width) + Width) % Width;
+            sz = ((sz % Height) + Height) % Height;
+            return _elevation[sz * Width + sx];
+        }
+
         public struct SkeletonSample
         {
             public float Elevation;

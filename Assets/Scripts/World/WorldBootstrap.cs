@@ -70,11 +70,19 @@ namespace ForeverEngine.Procedural
                     renderer.material = mat;
                 }
 
-                // Physics
+                // Physics — high drag prevents sliding on slopes
                 var rb = player.AddComponent<Rigidbody>();
                 rb.constraints = RigidbodyConstraints.FreezeRotation;
                 rb.mass = 70f;
+                rb.linearDamping = 5f; // Prevents sliding when no input
                 rb.collisionDetectionMode = CollisionDetectionMode.Continuous;
+
+                // High-friction physics material so player doesn't slide on terrain
+                var physMat = new PhysicsMaterial("PlayerFriction");
+                physMat.staticFriction = 1f;
+                physMat.dynamicFriction = 1f;
+                physMat.frictionCombine = PhysicsMaterialCombine.Maximum;
+                player.GetComponent<Collider>().material = physMat;
 
                 player.AddComponent<SimplePlayerController>();
             }
