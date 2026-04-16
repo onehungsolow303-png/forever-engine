@@ -36,6 +36,10 @@ namespace ForeverEngine.Demo
         [Tooltip("When true, loads the Overworld3D scene instead of the 2D Overworld scene.")]
         public bool Use3DOverworld = true;
 
+        [Header("Procedural World")]
+        [Tooltip("When true, loads the procedural World scene instead of Overworld3D.")]
+        public bool UseProceduralWorld = true;
+
         // Phase 3 pivot: HTTP bridges to Asset Manager (port 7801) and
         // Director Hub (port 7802). The C# brain (AIDirector, AIGameMaster,
         // MemoryManager) was archived to _archive/forever-engine-pre-pivot/
@@ -91,7 +95,7 @@ namespace ForeverEngine.Demo
             Player = new PlayerData { HexQ = 2, HexR = 2 };
             Player.DiscoveredLocations.Add("camp");
             StartCoroutine(StartDirectorSession());
-            SceneManager.LoadScene(Use3DOverworld ? "Overworld3D" : "Overworld");
+            SceneManager.LoadScene(UseProceduralWorld ? "World" : Use3DOverworld ? "Overworld3D" : "Overworld");
         }
 
         /// <summary>
@@ -105,7 +109,7 @@ namespace ForeverEngine.Demo
             Player        = PlayerData.FromCharacterData(characterData);
             Player.DiscoveredLocations.Add("camp");
             StartCoroutine(StartDirectorSession());
-            SceneManager.LoadScene(Use3DOverworld ? "Overworld3D" : "Overworld");
+            SceneManager.LoadScene(UseProceduralWorld ? "World" : Use3DOverworld ? "Overworld3D" : "Overworld");
         }
 
         /// <summary>
@@ -120,7 +124,7 @@ namespace ForeverEngine.Demo
             Player.DiscoveredLocations.Add("camp");
             SyncPlayerFromCharacter();
             StartCoroutine(StartDirectorSession());
-            SceneManager.LoadScene(Use3DOverworld ? "Overworld3D" : "Overworld");
+            SceneManager.LoadScene(UseProceduralWorld ? "World" : Use3DOverworld ? "Overworld3D" : "Overworld");
         }
 
         /// <summary>
@@ -450,7 +454,7 @@ namespace ForeverEngine.Demo
             PendingEncounterId = null;
             PendingLocationId = null;
             PendingDungeonState = null;
-            SceneManager.LoadScene(Use3DOverworld ? "Overworld3D" : "Overworld");
+            SceneManager.LoadScene(UseProceduralWorld ? "World" : Use3DOverworld ? "Overworld3D" : "Overworld");
         }
 
         public void PlayerDied()
@@ -476,7 +480,7 @@ namespace ForeverEngine.Demo
             {
                 Character.HP = player.HP;
             }
-            SceneManager.LoadScene(Use3DOverworld ? "Overworld3D" : "Overworld");
+            SceneManager.LoadScene(UseProceduralWorld ? "World" : Use3DOverworld ? "Overworld3D" : "Overworld");
         }
 
         public void GameComplete()
