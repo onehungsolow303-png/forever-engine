@@ -32,6 +32,7 @@ namespace ForeverEngine.Procedural
         {
             public ChunkData Data;
             public Terrain Terrain;
+            public GameObject Props;
         }
 
         private void Awake()
@@ -151,12 +152,13 @@ namespace ForeverEngine.Procedural
             if (createTerrain)
             {
                 var terrain = TerrainGenerator.CreateTerrain(data);
-                _loaded[coord] = new LoadedChunk { Data = data, Terrain = terrain };
+                var props = SurfaceDecorator.Decorate(data, terrain);
+                _loaded[coord] = new LoadedChunk { Data = data, Terrain = terrain, Props = props };
             }
             else
             {
                 // Generate-ahead: data on disk but no terrain mesh yet
-                _loaded[coord] = new LoadedChunk { Data = data, Terrain = null };
+                _loaded[coord] = new LoadedChunk { Data = data, Terrain = null, Props = null };
             }
 
             yield return null; // Spread across frames
@@ -166,6 +168,8 @@ namespace ForeverEngine.Procedural
         {
             if (!_loaded.TryGetValue(coord, out var chunk)) return;
 
+            if (chunk.Props != null)
+                SurfaceDecorator.RemoveDecoration(chunk.Props);
             if (chunk.Terrain != null)
                 TerrainGenerator.DestroyTerrain(chunk.Terrain);
 
