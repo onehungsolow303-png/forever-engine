@@ -109,6 +109,19 @@ namespace ForeverEngine.Procedural
             StitchTerrainNeighbors();
         }
 
+        /// <summary>Stitch a single terrain to its loaded neighbors.</summary>
+        private void StitchSingleTerrain(ChunkCoord coord, Terrain terrain)
+        {
+            if (terrain == null) return;
+            Terrain left = null, top = null, right = null, bottom = null;
+            if (_loaded.TryGetValue(new ChunkCoord(coord.X - 1, coord.Z), out var lc)) left = lc.Terrain;
+            if (_loaded.TryGetValue(new ChunkCoord(coord.X + 1, coord.Z), out var rc)) right = rc.Terrain;
+            if (_loaded.TryGetValue(new ChunkCoord(coord.X, coord.Z + 1), out var tc)) top = tc.Terrain;
+            if (_loaded.TryGetValue(new ChunkCoord(coord.X, coord.Z - 1), out var bc)) bottom = bc.Terrain;
+            terrain.SetNeighbors(left, top, right, bottom);
+            terrain.Flush();
+        }
+
         /// <summary>
         /// Connect adjacent terrain chunks via Terrain.SetNeighbors so Unity
         /// stitches their edges together seamlessly (no visible seam lines).
@@ -158,13 +171,19 @@ namespace ForeverEngine.Procedural
 
             if (createTerrain)
             {
+                // Frame 1: Create terrain mesh
                 var terrain = TerrainGenerator.CreateTerrain(data);
                 _loaded[coord] = new LoadedChunk { Data = data, Terrain = terrain, Props = null };
-                yield return null; // Let terrain render one frame before decorating
+                yield return null;
 
+                // Frame 2: Stitch this terrain to neighbors
+                StitchSingleTerrain(coord, terrain);
+                yield return null;
+
+                // Frame 3: Place decoration
                 var props = SurfaceDecorator.Decorate(data, terrain);
                 _loaded[coord] = new LoadedChunk { Data = data, Terrain = terrain, Props = props };
-                yield return null; // Breathe after decoration
+                yield return null;
             }
             else
             {

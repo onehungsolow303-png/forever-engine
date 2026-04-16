@@ -15,7 +15,10 @@ namespace ForeverEngine.Procedural
         public BiomeType Biome;
         public float BaseElevation;
 
-        /// <summary>256×256 heightmap values (terrain elevation at each meter).</summary>
+        /// <summary>Heightmap resolution (samples per axis). 128 = 2m per sample.</summary>
+        public const int HeightmapRes = 128;
+
+        /// <summary>128×128 heightmap values (terrain elevation, 2m per sample).</summary>
         public float[] Heightmap;
 
         /// <summary>Whether Director Hub has populated content for this chunk.</summary>
@@ -40,7 +43,7 @@ namespace ForeverEngine.Procedural
         {
             ChunkX = chunkX;
             ChunkZ = chunkZ;
-            Heightmap = new float[ChunkCoord.ChunkSize * ChunkCoord.ChunkSize];
+            Heightmap = new float[HeightmapRes * HeightmapRes];
         }
     }
 
