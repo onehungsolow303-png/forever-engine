@@ -62,6 +62,23 @@ namespace ForeverEngine.Demo.Overworld
             MovesTaken++;
         }
 
+        /// <summary>
+        /// Server-authoritative position set. Updates hex data and visual
+        /// position without applying survival drains (server handles those).
+        /// </summary>
+        public void SetHexFromServer(int q, int r)
+        {
+            _data.HexQ = q;
+            _data.HexR = r;
+            _data.ExploredHexes.Add(_data.HexKey);
+
+            // Update visual position via 3D hex converter
+            transform.position = Overworld3DRenderer.HexToWorld3D(q, r, 0, 4f, 0f);
+
+            MovesTaken++;
+            _onMoved?.Invoke(q, r);
+        }
+
         public void Forage()
         {
             if (!_tiles.TryGetValue((_data.HexQ, _data.HexR), out var tile)) return;

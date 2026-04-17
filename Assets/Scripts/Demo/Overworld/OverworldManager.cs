@@ -1,6 +1,8 @@
 using UnityEngine;
 using System.Collections.Generic;
 using ForeverEngine.Genres.Strategy;
+using ForeverEngine.Network;
+using ForeverEngine.Core.Messages;
 
 namespace ForeverEngine.Demo.Overworld
 {
@@ -93,6 +95,10 @@ namespace ForeverEngine.Demo.Overworld
             if (_renderer != null)
                 _renderer.UpdateVisuals(gm.Player.HexQ, gm.Player.HexR, Fog, IsNight);
 
+            // Register for server-authoritative position updates
+            if (NetworkClient.Instance != null)
+                NetworkClient.Instance.RegisterHandler<PlayerUpdate>(OnServerPlayerUpdate);
+
             Debug.Log($"[Overworld] Initialized at ({gm.Player.HexQ},{gm.Player.HexR}), {Tiles.Count} tiles");
         }
 
@@ -133,16 +139,16 @@ namespace ForeverEngine.Demo.Overworld
 
             if (GameManager.Instance?.IsInCombat == true) return;
 
-            // Free movement: WASD relative to camera direction
+            // Send movement input to server — server validates and responds with PlayerUpdate
             float inputX = 0f, inputZ = 0f;
             if (Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.UpArrow))    inputZ += 1f;
             if (Input.GetKey(KeyCode.S) || Input.GetKey(KeyCode.DownArrow))  inputZ -= 1f;
             if (Input.GetKey(KeyCode.D) || Input.GetKey(KeyCode.RightArrow)) inputX += 1f;
             if (Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.LeftArrow))  inputX -= 1f;
 
-            Transform playerT = _renderer3D != null ? _renderer3D.PlayerTransform : null;
-            if (playerT != null && (inputX != 0f || inputZ != 0f))
+            if (inputX != 0f || inputZ != 0f)
             {
+                // Transform WASD to camera-relative direction for the server
                 var cam = Camera.main;
                 if (cam != null)
                 {
@@ -152,32 +158,40 @@ namespace ForeverEngine.Demo.Overworld
                     camRight.y = 0f; camRight.Normalize();
 
                     Vector3 moveDir = (camFwd * inputZ + camRight * inputX).normalized;
-                    playerT.position += moveDir * _moveSpeed * Time.deltaTime;
-                    playerT.rotation = Quaternion.LookRotation(moveDir);
-                }
-            }
 
-            // Track which hex the player is on from world position
-            if (playerT != null)
-            {
-                float hexSize = 4f;
-                var (newQ, newR) = WorldToHex(playerT.position, hexSize);
-                if (newQ != Player.Q || newR != Player.R)
-                {
-                    // Check if new hex is passable
-                    if (Tiles.TryGetValue((newQ, newR), out var tile) && tile.Type != TileType.Water)
+                    var client = NetworkClient.Instance;
+                    if (client != null && client.State == ConnectionState.Connected)
                     {
-                        Player.SetHex(newQ, newR, Fog);
-                        OnPlayerMoved(newQ, newR);
+                        client.Send(new MoveInput { Dx = moveDir.x, Dy = moveDir.z });
                     }
                     else
                     {
-                        // Push back to valid hex boundary
-                        Vector3 validPos = Overworld3DRenderer.HexToWorld3D(Player.Q, Player.R, 0, hexSize, 0f);
-                        playerT.position = new Vector3(
-                            Mathf.Lerp(playerT.position.x, validPos.x, 0.5f),
-                            playerT.position.y,
-                            Mathf.Lerp(playerT.position.z, validPos.z, 0.5f));
+                        // Offline fallback: apply movement locally (Phase 2 cleanup)
+                        Transform playerT = _renderer3D != null ? _renderer3D.PlayerTransform : null;
+                        if (playerT != null)
+                        {
+                            playerT.position += moveDir * _moveSpeed * Time.deltaTime;
+                            playerT.rotation = Quaternion.LookRotation(moveDir);
+
+                            float hexSize = 4f;
+                            var (newQ, newR) = WorldToHex(playerT.position, hexSize);
+                            if (newQ != Player.Q || newR != Player.R)
+                            {
+                                if (Tiles.TryGetValue((newQ, newR), out var tile) && tile.Type != TileType.Water)
+                                {
+                                    Player.SetHex(newQ, newR, Fog);
+                                    OnPlayerMoved(newQ, newR);
+                                }
+                                else
+                                {
+                                    Vector3 validPos = Overworld3DRenderer.HexToWorld3D(Player.Q, Player.R, 0, hexSize, 0f);
+                                    playerT.position = new Vector3(
+                                        Mathf.Lerp(playerT.position.x, validPos.x, 0.5f),
+                                        playerT.position.y,
+                                        Mathf.Lerp(playerT.position.z, validPos.z, 0.5f));
+                                }
+                            }
+                        }
                     }
                 }
             }
@@ -238,56 +252,51 @@ namespace ForeverEngine.Demo.Overworld
             Debug.Log("[Overworld] No location at current position.");
         }
 
+        /// <summary>
+        /// Visual-only callback for local hex changes. Server handles game logic
+        /// (encounters, location discovery, survival drain).
+        /// </summary>
         private void OnPlayerMoved(int q, int r)
         {
             // Keep PlayerData in sync with the player's actual hex position so
-            // that StartSeamlessBattle (and save/load) always see the current
-            // location rather than the stale starting-camp coordinates.
+            // that save/load always sees the current location.
             var gmp = GameManager.Instance?.Player;
             if (gmp != null) { gmp.HexQ = q; gmp.HexR = r; }
 
-            // Check for location
-            foreach (var loc in LocationData.GetAll())
+            if (Fog != null) Fog.Reveal(q, r);
+        }
+
+        /// <summary>
+        /// Server-authoritative position update. Moves the player visual to the
+        /// server-validated hex position.
+        /// </summary>
+        private void OnServerPlayerUpdate(PlayerUpdate update)
+        {
+            var cache = ServerStateCache.Instance;
+            if (cache == null || Player == null) return;
+
+            // Apply snapshot to cache
+            cache.ApplyPlayerUpdate(update);
+
+            var local = cache.GetLocalPlayer();
+            if (local == null) return;
+
+            int serverQ = (int)local.X;  // X maps to HexQ
+            int serverR = (int)local.Y;  // Y maps to HexR
+
+            if (Player.Q != serverQ || Player.R != serverR)
             {
-                if (loc.HexQ == q && loc.HexR == r)
+                Player.SetHexFromServer(serverQ, serverR);
+                OnPlayerMoved(serverQ, serverR);
+
+                // Update the 3D player model transform to match server position
+                Transform playerT = _renderer3D != null ? _renderer3D.PlayerTransform : null;
+                if (playerT != null)
                 {
-                    GameManager.Instance.Player.DiscoveredLocations.Add(loc.Id);
-                    if (loc.IsSafe) GameManager.Instance.Player.LastSafeLocation = loc.Id;
-                    Demo.AI.DirectorEvents.Send($"discovered location: {loc.Id}");
-                    Debug.Log($"[Overworld] Arrived at {loc.Name}");
-                    return;
+                    float hexSize = 4f;
+                    Vector3 worldPos = Overworld3DRenderer.HexToWorld3D(serverQ, serverR, 0, hexSize, 0f);
+                    playerT.position = worldPos;
                 }
-            }
-
-            // Random encounter check
-            if (!Tiles.TryGetValue((q, r), out var tile)) return;
-
-            // No encounters near safe locations (2 hex radius)
-            foreach (var safeLoc in LocationData.GetAll())
-            {
-                if (safeLoc.IsSafe && Mathf.Abs(q - safeLoc.HexQ) + Mathf.Abs(r - safeLoc.HexR) <= 2)
-                    return;
-            }
-
-            // No encounters in first 10 moves (tutorial grace period)
-            if (Player.MovesTaken <= 10) return;
-
-            float chance = tile.Type switch
-            {
-                TileType.Plains => 0.02f,
-                TileType.Forest => 0.04f,
-                TileType.Road => 0.06f, // Ruins
-                _ => 0f
-            };
-            if (IsNight) chance += 0.04f;
-
-            if (Random.Range(0f, 1f) < chance)
-            {
-                EncountersSinceRest++;
-                // Use the actual 3D player model position (not OverworldPlayer GO which sits at origin)
-                var renderer3D = FindAnyObjectByType<Overworld3DRenderer>();
-                var playerPos = renderer3D?.PlayerTransform?.position ?? Player?.transform?.position ?? Vector3.zero;
-                GameManager.Instance.StartSeamlessBattle(playerPos, $"random_{tile.Type}_{(IsNight ? "night" : "day")}");
             }
         }
     }
