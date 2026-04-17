@@ -1,4 +1,5 @@
 using UnityEngine;
+using ForeverEngine.Network;
 
 namespace ForeverEngine.Demo.UI
 {
@@ -9,9 +10,10 @@ namespace ForeverEngine.Demo.UI
             // Suppress HUD while the pause menu is open so it doesn't draw underneath.
             if (PauseMenu.Instance != null && PauseMenu.Instance.IsOpen) return;
 
+            var cache = ServerStateCache.Instance;
+            if (cache == null) return;
+
             var gm = GameManager.Instance;
-            if (gm == null || gm.Player == null) return;
-            var p = gm.Player;
             var ow = Overworld.OverworldManager.Instance;
 
             // Suppress the entire IMGUI overworld HUD while a modal dialogue
@@ -23,7 +25,7 @@ namespace ForeverEngine.Demo.UI
                 return;
 
             // Top-left: Stats
-            var sheet = gm.Character;
+            var sheet = gm?.Character;
             string charTitle;
             if (sheet != null)
             {
@@ -33,7 +35,7 @@ namespace ForeverEngine.Demo.UI
             }
             else
             {
-                charTitle = $"The Wanderer (Lv.{p.Level})";
+                charTitle = $"The Wanderer (Lv.{cache.Level})";
             }
 
             // Calculate spell slot display
@@ -55,32 +57,31 @@ namespace ForeverEngine.Demo.UI
             var statsRect = new Rect(10, 10, 240, boxHeight);
             UITheme.DrawPanel(statsRect);
             GUI.Label(new Rect(20, 15, 220, 20), charTitle, UITheme.Bold(UITheme.FontNormal, UITheme.TextHeader));
-            UITheme.DrawBar(new Rect(20, 40, 210, 16), p.HPPercent, UITheme.HPColor(p.HPPercent), $"HP: {p.HP}/{p.MaxHP}");
-            UITheme.DrawBar(new Rect(20, 60, 210, 16), p.HungerPercent, new Color(0.8f, 0.5f, 0.2f), $"Hunger: {p.Hunger:F0}/{p.MaxHunger}");
-            UITheme.DrawBar(new Rect(20, 80, 210, 16), p.ThirstPercent, UITheme.FriendlyBlue, $"Thirst: {p.Thirst:F0}/{p.MaxThirst}");
-            GUI.Label(new Rect(20, 100, 220, 20), $"Gold: {p.Gold}  |  AC: {p.AC}", UITheme.Label(UITheme.FontNormal, UITheme.TextAccent));
-            GUI.Label(new Rect(20, 118, 220, 20), $"Day {p.DayCount}  |  {(ow != null && ow.IsNight ? "Night" : "Day")}", UITheme.Label(UITheme.FontNormal, UITheme.TextAccent));
+            UITheme.DrawBar(new Rect(20, 40, 210, 16), cache.HPPercent, UITheme.HPColor(cache.HPPercent), $"HP: {cache.HP}/{cache.MaxHP}");
+            UITheme.DrawBar(new Rect(20, 60, 210, 16), cache.HungerPercent, new Color(0.8f, 0.5f, 0.2f), $"Hunger: {cache.Hunger:F0}/100");
+            UITheme.DrawBar(new Rect(20, 80, 210, 16), cache.ThirstPercent, UITheme.FriendlyBlue, $"Thirst: {cache.Thirst:F0}/100");
+            GUI.Label(new Rect(20, 100, 220, 20), $"Gold: {cache.Gold}  |  AC: {cache.AC}", UITheme.Label(UITheme.FontNormal, UITheme.TextAccent));
+
+            // DayCount and day/night: not in ServerStateCache, fall back to local GameManager/OverworldManager
+            int dayCount = gm?.Player?.DayCount ?? 0;
+            GUI.Label(new Rect(20, 118, 220, 20), $"Day {dayCount}  |  {(ow != null && ow.IsNight ? "Night" : "Day")}", UITheme.Label(UITheme.FontNormal, UITheme.TextAccent));
             if (!string.IsNullOrEmpty(spellSlotStr))
             {
                 GUI.Label(new Rect(20, 136, 220, 18), $"Slots: {spellSlotStr}", UITheme.Label(UITheme.FontTiny, UITheme.ManaBlue));
             }
 
-            // Top-right: Quest tracker
-            var qs = ForeverEngine.ECS.Systems.QuestSystem.Instance;
-            if (qs != null)
+            // Top-right: Quest tracker (from ServerStateCache.ActiveQuests)
+            var quests = cache.ActiveQuests;
+            if (quests != null && quests.Length > 0)
             {
-                var active = qs.GetActiveQuests();
-                if (active.Count > 0)
+                var q = quests[0];
+                var questRect = new Rect(Screen.width - 250, 10, 240, 60);
+                UITheme.DrawPanel(questRect);
+                GUI.Label(new Rect(Screen.width - 240, 15, 220, 20), q.Title, UITheme.Bold(UITheme.FontNormal, UITheme.TextHeader));
+                if (q.Objectives != null && q.Objectives.Length > 0)
                 {
-                    var quest = active[0];
-                    var questRect = new Rect(Screen.width - 250, 10, 240, 60);
-                    UITheme.DrawPanel(questRect);
-                    GUI.Label(new Rect(Screen.width - 240, 15, 220, 20), quest.Definition.Title, UITheme.Bold(UITheme.FontNormal, UITheme.TextHeader));
-                    foreach (var obj in quest.Definition.Objectives)
-                    {
-                        int prog = quest.GetObjectiveProgress(obj.Id);
-                        GUI.Label(new Rect(Screen.width - 240, 35, 220, 20), $"  {obj.Description}: {prog}/{obj.RequiredCount}", UITheme.Label(UITheme.FontSmall, UITheme.TextPrimary));
-                    }
+                    var obj = q.Objectives[0];
+                    GUI.Label(new Rect(Screen.width - 240, 35, 220, 20), $"  {obj.Description}: {obj.CurrentCount}/{obj.RequiredCount}", UITheme.Label(UITheme.FontSmall, UITheme.TextPrimary));
                 }
             }
 
@@ -90,9 +91,10 @@ namespace ForeverEngine.Demo.UI
             // Bottom: Controls
             GUI.Label(new Rect(10, Screen.height - 30, 600, 20), "WASD/QE: Move | F: Forage | I: Inventory | Enter: Interact | Esc: Pause | F5: Save | F9: Load", UITheme.Label(UITheme.FontSmall, UITheme.TextSecondary));
 
-            // Center: Location prompt
-            if (ow != null)
+            // Center: Location prompt (uses local player position — not yet in ServerStateCache)
+            if (ow != null && gm?.Player != null)
             {
+                var p = gm.Player;
                 foreach (var loc in LocationData.GetAll())
                 {
                     if (loc.HexQ == p.HexQ && loc.HexR == p.HexR)
