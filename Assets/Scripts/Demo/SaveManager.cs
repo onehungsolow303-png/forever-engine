@@ -14,6 +14,24 @@ namespace ForeverEngine.Demo
 
         public static bool HasSave => File.Exists(SavePath);
 
+        /// <summary>
+        /// Load the raw save JSON as a dictionary for sending to Director Hub boot.
+        /// Returns null if no save exists or on parse failure.
+        /// </summary>
+        public static object LoadRaw()
+        {
+            if (!File.Exists(SavePath)) return null;
+            try
+            {
+                string json = File.ReadAllText(SavePath);
+                return Newtonsoft.Json.JsonConvert.DeserializeObject<Dictionary<string, object>>(json);
+            }
+            catch (System.Exception)
+            {
+                return null;
+            }
+        }
+
         public static void Save()
         {
             var gm = GameManager.Instance;

@@ -72,6 +72,13 @@ namespace ForeverEngine.Demo
             gameObject.AddComponent<PauseMenu>();
         }
 
+        /// <summary>
+        /// The boot response from Director Hub's deep scan, available after
+        /// BootDirector() completes. Contains memory brief, crash recovery
+        /// info, and prior session context.
+        /// </summary>
+        public DirectorClient.BootResponseDto BootResponse { get; private set; }
+
         private IEnumerator Start()
         {
             // Boot-time service health check. If either Python service is
@@ -87,6 +94,47 @@ namespace ForeverEngine.Demo
                     $"DirectorHub={Watchdog.DirectorHubOk}. " +
                     $"Game will run in deterministic-fallback mode.");
             }
+
+            // Deep scan: crash recovery + memory reconstruction.
+            // Must complete before StartDirectorSession so the Director Hub
+            // has full context from prior sessions when it opens a new one.
+            if (Watchdog.DirectorHubOk)
+            {
+                yield return BootDirector();
+            }
+        }
+
+        /// <summary>
+        /// Call POST /session/boot on Director Hub to perform crash recovery
+        /// and load the full memory brief before the game session starts.
+        /// </summary>
+        private IEnumerator BootDirector()
+        {
+            if (Director == null) yield break;
+
+            var req = new DirectorClient.BootRequestDto
+            {
+                PlayerId = "player_1",
+                SaveData = SaveManager.HasSave ? SaveManager.LoadRaw() : null,
+            };
+
+            yield return Director.Boot(
+                req,
+                resp =>
+                {
+                    BootResponse = resp;
+                    Debug.Log($"[GameManager] Director boot complete: " +
+                              $"scan={resp.ScanElapsedMs}ms, " +
+                              $"crashed={resp.CrashedSessions?.Length ?? 0} sessions recovered");
+                    if (resp.MemoryBrief?.PlayerSummary != null)
+                    {
+                        Debug.Log($"[GameManager] Player summary: {resp.MemoryBrief.PlayerSummary}");
+                    }
+                },
+                err =>
+                {
+                    Debug.LogWarning($"[GameManager] Director boot failed: {err}. Continuing without memory context.");
+                });
         }
 
         public void NewGame(int seed = 42)

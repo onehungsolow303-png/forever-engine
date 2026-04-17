@@ -22,6 +22,11 @@ namespace ForeverEngine.Bridges
             BaseUrl = baseUrl.TrimEnd('/');
         }
 
+        public IEnumerator Boot(BootRequestDto request, Action<BootResponseDto> onSuccess, Action<string> onError)
+        {
+            yield return Post<BootRequestDto, BootResponseDto>("/session/boot", request, onSuccess, onError);
+        }
+
         public IEnumerator StartSession(SessionStartRequestDto request, Action<SessionStartResponseDto> onSuccess, Action<string> onError)
         {
             yield return Post<SessionStartRequestDto, SessionStartResponseDto>("/session/start", request, onSuccess, onError);
@@ -150,6 +155,41 @@ namespace ForeverEngine.Bridges
             [JsonProperty("stat")] public string Stat;
             [JsonProperty("delta")] public int Delta;
             [JsonProperty("status_effect")] public string StatusEffect;
+        }
+
+        [Serializable]
+        public class BootRequestDto
+        {
+            [JsonProperty("player_id")] public string PlayerId = "player_1";
+            [JsonProperty("save_data")] public object SaveData;
+        }
+
+        [Serializable]
+        public class BootResponseDto
+        {
+            [JsonProperty("ok")] public bool Ok;
+            [JsonProperty("scan_elapsed_ms")] public int ScanElapsedMs;
+            [JsonProperty("crashed_sessions")] public CrashedSessionDto[] CrashedSessions;
+            [JsonProperty("memory_brief")] public MemoryBriefDto MemoryBrief;
+        }
+
+        [Serializable]
+        public class CrashedSessionDto
+        {
+            [JsonProperty("session_id")] public string SessionId;
+            [JsonProperty("event_count")] public int EventCount;
+            [JsonProperty("last_event_type")] public string LastEventType;
+            [JsonProperty("recovery_summary")] public string RecoverySummary;
+        }
+
+        [Serializable]
+        public class MemoryBriefDto
+        {
+            [JsonProperty("dev_context")] public string DevContext;
+            [JsonProperty("prior_sessions")] public object[] PriorSessions;
+            [JsonProperty("semantic_facts")] public object SemanticFacts;
+            [JsonProperty("long_term_lessons")] public object[] LongTermLessons;
+            [JsonProperty("player_summary")] public string PlayerSummary;
         }
     }
 }
