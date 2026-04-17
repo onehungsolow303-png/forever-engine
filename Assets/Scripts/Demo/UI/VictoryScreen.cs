@@ -1,11 +1,16 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using ForeverEngine.Network;
 
 namespace ForeverEngine.Demo.UI
 {
     /// <summary>
     /// Full-screen IMGUI overlay shown when the player defeats the final boss
     /// (the "castle_boss" encounter — "The Rot King").
+    ///
+    /// Stats are read from ServerStateCache for authoritative values (Level, Gold, HP/MaxHP).
+    /// Display-only world-exploration stats (DayCount, ExploredHexes, DiscoveredLocations)
+    /// are read from GameManager.Instance.Player since they are not in ServerStateCache.
     ///
     /// Usage:
     ///   VictoryScreen.Show()   — call from GameManager.OnServerBattleEnd when
@@ -35,6 +40,9 @@ namespace ForeverEngine.Demo.UI
         private void OnGUI()
         {
             if (!IsShowing) return;
+
+            var cache = ServerStateCache.Instance;
+            if (cache == null) return;
 
             float sw = Screen.width;
             float sh = Screen.height;
@@ -80,31 +88,18 @@ namespace ForeverEngine.Demo.UI
             cy += 12f;
 
             // ── Player stats summary ──────────────────────────────────────────
-            var gm = GameManager.Instance;
-            if (gm?.Player != null)
-            {
-                var p = gm.Player;
+            GUI.Label(new Rect(cx, cy, cw, 22f),
+                "HERO'S JOURNEY",
+                UITheme.Bold(UITheme.FontSmall, UITheme.TextAccent, TextAnchor.MiddleCenter));
+            cy += 24f;
 
-                GUI.Label(new Rect(cx, cy, cw, 22f),
-                    "HERO'S JOURNEY",
-                    UITheme.Bold(UITheme.FontSmall, UITheme.TextAccent, TextAnchor.MiddleCenter));
-                cy += 24f;
+            float col = cw / 3f;
 
-                float col = cw / 3f;
-                DrawStatCell(cx,           cy, col, "LEVEL",          p.Level.ToString());
-                DrawStatCell(cx + col,     cy, col, "GOLD",           $"{p.Gold}g");
-                DrawStatCell(cx + col * 2f, cy, col, "DAYS SURVIVED", p.DayCount.ToString());
-                cy += 52f;
-
-                DrawStatCell(cx,           cy, col, "HEXES EXPLORED",  p.ExploredHexes.Count.ToString());
-                DrawStatCell(cx + col,     cy, col, "LOCATIONS FOUND", p.DiscoveredLocations.Count.ToString());
-                DrawStatCell(cx + col * 2f, cy, col, "FINAL HP",      $"{p.HP}/{p.MaxHP}");
-                cy += 56f;
-            }
-            else
-            {
-                cy += 12f;
-            }
+            // Row 1: authoritative stats from ServerStateCache
+            DrawStatCell(cx,            cy, col, "LEVEL", cache.Level.ToString());
+            DrawStatCell(cx + col,      cy, col, "GOLD",  $"{cache.Gold}g");
+            DrawStatCell(cx + col * 2f, cy, col, "FINAL HP", $"{cache.HP}/{cache.MaxHP}");
+            cy += 56f;
 
             UITheme.DrawSeparator(cx, cy, cw);
             cy += 12f;
