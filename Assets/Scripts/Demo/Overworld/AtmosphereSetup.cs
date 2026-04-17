@@ -132,7 +132,7 @@ namespace ForeverEngine.Demo.Overworld
         private void SetupLighting()
         {
             // Upgrade directional light
-            var lights = FindObjectsByType<Light>(FindObjectsSortMode.None);
+            var lights = FindObjectsByType<Light>();
             foreach (var light in lights)
             {
                 if (light.type == LightType.Directional)

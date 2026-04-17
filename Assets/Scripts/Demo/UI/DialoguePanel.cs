@@ -200,7 +200,7 @@ namespace ForeverEngine.Demo.UI
                     if (evt.keyCode == KeyCode.Return && !evt.shiftKey)
                     {
                         evt.StopImmediatePropagation();
-                        evt.PreventDefault();
+                        evt.StopPropagation();
                         OnSendClicked();
                     }
                 }, TrickleDown.TrickleDown);

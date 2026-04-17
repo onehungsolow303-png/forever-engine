@@ -24,7 +24,7 @@ namespace ForeverEngine.Demo.Dungeon
             if (_triggered || !other.CompareTag("Player")) return;
             _triggered = true;
 
-            var allNPCs = FindObjectsByType<DungeonNPC>(FindObjectsSortMode.None);
+            var allNPCs = FindObjectsByType<DungeonNPC>();
             foreach (var npc in allNPCs)
             {
                 if (npc.Role == DungeonNPCRole.AmbientEnemy && npc.RoomIndex == ZoneIndex)

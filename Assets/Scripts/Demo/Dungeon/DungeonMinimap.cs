@@ -253,7 +253,7 @@ namespace ForeverEngine.Demo.Dungeon
                 // Refresh NPC cache when player changes room
                 if (currentRoom != _lastNpcRoom)
                 {
-                    _npcCache    = FindObjectsByType<DungeonNPC>(FindObjectsSortMode.None);
+                    _npcCache    = FindObjectsByType<DungeonNPC>();
                     _lastNpcRoom = currentRoom;
                 }
 

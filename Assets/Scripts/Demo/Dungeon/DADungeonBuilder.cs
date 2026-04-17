@@ -161,7 +161,7 @@ namespace ForeverEngine.Demo.Dungeon
             var catalog = UnityEngine.Resources.Load<RoomCatalog>("RoomCatalog");
             if (catalog != null && catalog.Props.Count > 0)
             {
-                int seed = dungeon.GetInstanceID();
+                int seed = dungeon.GetEntityId().GetHashCode();
                 RoomDecorator.DecorateAll(Rooms, catalog, seed);
             }
         }

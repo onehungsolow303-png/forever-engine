@@ -211,7 +211,7 @@ namespace ForeverEngine.Procedural
         private void EnsureLighting()
         {
             // Check if a directional light exists
-            var lights = FindObjectsByType<Light>(FindObjectsSortMode.None);
+            var lights = FindObjectsByType<Light>();
             bool hasDirectional = false;
             foreach (var light in lights)
             {

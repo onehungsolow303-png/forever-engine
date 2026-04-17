@@ -64,7 +64,7 @@ namespace ForeverEngine.Demo.Dungeon
             // R triggers long rest (if not in combat)
             if (Input.GetKeyDown(KeyCode.R) && GameManager.Instance?.IsInCombat != true)
             {
-                var restMgr = FindFirstObjectByType<ForeverEngine.MonoBehaviour.RPG.RestManager>();
+                var restMgr = FindAnyObjectByType<ForeverEngine.MonoBehaviour.RPG.RestManager>();
                 if (restMgr != null)
                 {
                     restMgr.RequestLongRest();
@@ -260,7 +260,7 @@ namespace ForeverEngine.Demo.Dungeon
 
         private void SetupCamera(DungeonState state)
         {
-            _camera = FindFirstObjectByType<PerspectiveCameraController>();
+            _camera = FindAnyObjectByType<PerspectiveCameraController>();
             if (_camera == null)
             {
                 // Create a camera with PerspectiveCameraController if none exists

@@ -389,7 +389,7 @@ namespace ForeverEngine.Demo.Battle
             Vector3 playerPos = playerGO.transform.position;
             float joinRange = _zoneManager.TotalZoneRadius();
 
-            var npcs = Object.FindObjectsByType<DungeonNPC>(FindObjectsSortMode.None);
+            var npcs = Object.FindObjectsByType<DungeonNPC>();
             foreach (var npc in npcs)
             {
                 if (npc.Role != DungeonNPCRole.AmbientEnemy) continue;
