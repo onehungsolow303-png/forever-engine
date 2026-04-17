@@ -1,4 +1,5 @@
 using ForeverEngine.Core.Messages;
+using ForeverEngine.Demo.Battle;
 using UnityEngine;
 using UnityEngine.UIElements;
 
@@ -73,6 +74,7 @@ namespace ForeverEngine.Network
             _client.RegisterHandler<QuestUpdateMessage>(OnQuestUpdate);
             _client.RegisterHandler<CharacterSheetDataMessage>(OnCharacterSheet);
             _client.RegisterHandler<NarrativeMessage>(OnNarrative);
+            _client.RegisterHandler<BattleStartMessage>(OnBattleStart);
 
             // Begin connecting
             _client.Connect(Host, Port);
@@ -181,6 +183,22 @@ namespace ForeverEngine.Network
                 string speaker = string.IsNullOrEmpty(msg.Speaker) ? "Narrator" : msg.Speaker;
                 Debug.Log($"[ConnectionManager] Narrative from '{speaker}': {msg.Text}");
             }
+        }
+
+        private void OnBattleStart(BattleStartMessage msg)
+        {
+            // Create BattleRenderer if not exists
+            if (BattleRenderer.Instance == null)
+            {
+                var go = new GameObject("BattleRenderer");
+                var br = go.AddComponent<BattleRenderer>();
+                br.RegisterHandlers();
+            }
+            // Forward the first message
+            BattleRenderer.Instance.HandleBattleStart(msg);
+
+            if (Demo.GameManager.Instance != null)
+                Demo.GameManager.Instance.OnServerBattleStart();
         }
 
         // ── Connection UI ──────────────────────────────────────────────────

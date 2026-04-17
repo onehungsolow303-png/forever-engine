@@ -137,6 +137,10 @@ namespace ForeverEngine.Demo.Battle
             foreach (var combatant in Combatants)
                 SpawnModel(combatant);
 
+            // Notify GameManager so IsInCombat flag is set
+            if (Demo.GameManager.Instance != null)
+                Demo.GameManager.Instance.OnServerBattleStart();
+
             Debug.Log($"[BattleRenderer] Battle started: {BattleId}, {Combatants.Length} combatants, {GridWidth}x{GridHeight} grid");
         }
 
@@ -217,6 +221,10 @@ namespace ForeverEngine.Demo.Battle
 
             string result = msg.Victory ? "VICTORY" : "DEFEAT";
             BattleLog.Add($"Battle ended: {result}! XP: {XpEarned}, Gold: {GoldEarned}");
+
+            // Notify GameManager so IsInCombat is cleared and death handling runs
+            if (Demo.GameManager.Instance != null)
+                Demo.GameManager.Instance.OnServerBattleEnd(msg.Victory);
 
             Debug.Log($"[BattleRenderer] Battle ended: {result}, XP={XpEarned}, Gold={GoldEarned}, Loot={LootItems.Length} items");
         }
