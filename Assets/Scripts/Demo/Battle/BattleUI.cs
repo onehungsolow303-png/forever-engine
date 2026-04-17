@@ -1,3 +1,6 @@
+using ForeverEngine.Core.Enums;
+using ForeverEngine.Core.Messages;
+using ForeverEngine.Network;
 using UnityEngine;
 using UnityEngine.UIElements;
 using System.Collections.Generic;
@@ -165,10 +168,10 @@ namespace ForeverEngine.Demo.Battle
                 bar.style.paddingTop = bar.style.paddingBottom = 6;
 
             _btnMove = MakeButton("Move [WASD]", () => { });
-            _btnAttack = MakeButton("Attack [F]", () => BattleManager.Instance?.AttackNearestEnemy());
-            _btnSpell = MakeButton("Spell [Q]", () => BattleManager.Instance?.ToggleSpellMenu());
-            _btnPotion = MakeButton("Potion [H]", () => BattleManager.Instance?.UseHealthPotion());
-            _btnEndTurn = MakeButton("End Turn [Space]", () => BattleManager.Instance?.PlayerEndTurn());
+            _btnAttack = MakeButton("Attack [F]", () => SendBattleAction(BattleActionType.MeleeAttack));
+            _btnSpell = MakeButton("Spell [Q]", () => SendBattleAction(BattleActionType.CastSpell));
+            _btnPotion = MakeButton("Potion [H]", () => SendBattleAction(BattleActionType.UseItem));
+            _btnEndTurn = MakeButton("End Turn [Space]", () => SendBattleAction(BattleActionType.EndTurn));
 
             bar.Add(_btnMove); bar.Add(_btnAttack); bar.Add(_btnSpell);
             bar.Add(_btnPotion); bar.Add(_btnEndTurn);
@@ -264,6 +267,17 @@ namespace ForeverEngine.Demo.Battle
         public void HideTooltip()
         {
             _tooltip.style.display = DisplayStyle.None;
+        }
+
+        private static void SendBattleAction(BattleActionType actionType)
+        {
+            var br = BattleRenderer.Instance;
+            if (br == null || !br.IsPlayerTurn) return;
+            NetworkClient.Instance?.Send(new BattleActionMessage
+            {
+                BattleId = br.BattleId,
+                ActionType = actionType
+            });
         }
     }
 }

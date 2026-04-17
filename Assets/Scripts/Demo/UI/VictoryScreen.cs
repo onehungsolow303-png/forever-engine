@@ -8,7 +8,7 @@ namespace ForeverEngine.Demo.UI
     /// (the "castle_boss" encounter — "The Rot King").
     ///
     /// Usage:
-    ///   VictoryScreen.Show()   — call from GameManager.OnBattleComplete when
+    ///   VictoryScreen.Show()   — call from GameManager.OnServerBattleEnd when
     ///                            the defeated encounter ID is "castle_boss".
     ///   VictoryScreen.IsShowing — read-only guard flag polled by other systems.
     /// </summary>

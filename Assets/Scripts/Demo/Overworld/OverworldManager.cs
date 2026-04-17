@@ -80,14 +80,12 @@ namespace ForeverEngine.Demo.Overworld
             // path will be replaced by Director Hub /dialogue calls in a
             // follow-up.
 
-            // Handle returning from battle
+            // Handle returning from battle — server handles rewards (gold/XP/loot),
+            // client just resets the flag and does a full heal after victory.
             if (gm.LastBattleWon)
             {
-                gm.Player.Gold += gm.LastBattleGoldEarned;
-                // Full heal after victory
                 gm.Player.HP = gm.Player.MaxHP;
                 gm.LastBattleWon = false;
-                // Save/Load removed: server is now authoritative for state persistence.
             }
 
             // Initial visual update (3D renderer may not be set yet; Overworld3DSetup

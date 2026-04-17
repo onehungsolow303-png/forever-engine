@@ -32,8 +32,8 @@ namespace ForeverEngine.Demo.UI
         public void Open()
         {
             // Don't pause during BattleHUD's battle-over screen
-            var bm = Battle.BattleManager.Instance;
-            if (bm != null && bm.BattleOver) return;
+            var br = Battle.BattleRenderer.Instance;
+            if (br != null && br.BattleOver) return;
 
             IsOpen = true;
             _savedTimeScale = Time.timeScale;

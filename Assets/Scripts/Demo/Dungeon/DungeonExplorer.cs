@@ -131,19 +131,15 @@ namespace ForeverEngine.Demo.Dungeon
 
         /// <summary>
         /// Called by EncounterZone when the player walks into a combat trigger.
-        /// Starts a seamless in-world battle via GameManager.StartSeamlessBattle.
+        /// Server initiates battles; we just record the pending encounter ID.
         /// </summary>
         public void EnterBattle(string encounterId, int zoneIndex, bool isBoss)
         {
             var gm = GameManager.Instance;
             if (gm == null) return;
 
-            Vector3 battlePos = _playerTransform != null ? _playerTransform.position : Vector3.zero;
-            if (_daBuilder != null && _daBuilder.Rooms != null && zoneIndex >= 0 && zoneIndex < _daBuilder.Rooms.Length)
-                battlePos = _daBuilder.Rooms[zoneIndex].WorldBounds.center;
-
-            Debug.Log($"[DungeonExplorer] Starting seamless battle: {encounterId} (zone {zoneIndex}, boss={isBoss})");
-            gm.StartSeamlessBattle(battlePos, encounterId);
+            Debug.Log($"[DungeonExplorer] Encounter triggered: {encounterId} (zone {zoneIndex}, boss={isBoss})");
+            gm.PendingEncounterId = encounterId;
         }
 
         /// <summary>

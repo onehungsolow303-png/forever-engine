@@ -42,9 +42,8 @@ namespace ForeverEngine
         [Header("AI")]
         public float AITurnDelay = 0.33f;  // Seconds before AI acts (visual feedback)
 
-        // Q-learning was removed from the engine — combat AI now runs fully through
-        // the deterministic AIBehavior decision tree (AIBehavior.cs), with tactical
-        // planning delegated to Director Hub via DirectorEvents. Previous Q-learning
+        // Q-learning was removed from the engine — combat AI now runs on the server,
+        // with tactical planning delegated to Director Hub. Previous Q-learning
         // hyperparameters and reward weights lived here; they've been removed because
         // nothing reads them anymore. The SO asset file may still have the legacy
         // fields serialized — Unity will log "field not found" warnings on first load

@@ -31,9 +31,11 @@ namespace ForeverEngine.Demo.Dungeon
                     Destroy(npc.gameObject);
             }
 
+            // Server initiates battles based on player position/proximity.
+            // Notify server we entered the encounter zone so it can start combat.
             var gm = GameManager.Instance;
             if (gm != null)
-                gm.StartSeamlessBattle(transform.position, EncounterId);
+                gm.PendingEncounterId = EncounterId;
         }
     }
 }

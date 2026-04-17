@@ -15,8 +15,8 @@ namespace ForeverEngine.Demo
         public const int Food = 100;
         public const int Water = 101;
         public const int HealthPotion = 102;
-        // Restored on use during combat. Heals a fixed amount (see
-        // BattleManager.HEALTH_POTION_HEAL_AMOUNT).
+        // Restored on use during combat. Heals a fixed amount
+        // (server-authoritative; see BattleRenderer for display).
     }
 
     [System.Serializable]
