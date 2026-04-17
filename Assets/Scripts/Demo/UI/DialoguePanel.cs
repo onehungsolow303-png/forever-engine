@@ -1,15 +1,17 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UIElements;
-using ForeverEngine.Bridges;
+using ForeverEngine.Network;
+using ForeverEngine.Core.Messages;
 
 namespace ForeverEngine.Demo.UI
 {
     /// <summary>
     /// In-game dialogue overlay. Singleton MonoBehaviour wrapping a UIDocument
-    /// loaded from Assets/UI/DialoguePanel.uxml. Replaces the archived
-    /// 588-line DialogueOverlay with a minimal viable surface that routes
-    /// player text through Director Hub via DirectorEvents.SendDialogue.
+    /// loaded from Assets/UI/DialoguePanel.uxml. Routes player text through
+    /// the game server via DialogueInput messages; the server handles Director
+    /// Hub interaction and responds with NarrativeMessage. Stat effects are
+    /// applied server-side and arrive via StatUpdate to ServerStateCache.
     ///
     /// Spec: C:/Dev/.shared/docs/superpowers/specs/2026-04-06-dialogue-ui-restoration-design.md
     /// </summary>
@@ -144,6 +146,10 @@ namespace ForeverEngine.Demo.UI
                 _offlineBanner.style.display = offline ? DisplayStyle.Flex : DisplayStyle.None;
             }
 
+            // Register for server narrative responses
+            if (NetworkClient.Instance != null)
+                NetworkClient.Instance.RegisterHandler<NarrativeMessage>(OnServerNarrative);
+
             _root?.style.SetVisible(true);
             IsOpen = true;
             _input?.Focus();
@@ -151,6 +157,10 @@ namespace ForeverEngine.Demo.UI
 
         public void Close()
         {
+            // Unregister server narrative handler
+            if (NetworkClient.Instance != null)
+                NetworkClient.Instance.UnregisterHandler<NarrativeMessage>();
+
             _root?.style.SetVisible(false);
             IsOpen = false;
             // Release the mic + stop any in-flight TTS so we don't keep
@@ -256,60 +266,24 @@ namespace ForeverEngine.Demo.UI
             _input.value = "";
             _waitingForResponse = true;
 
-            // Snapshot the conversation history (last 12 turns) BEFORE
-            // appending the current input. The Director Hub LLM uses this
-            // to track mood escalation across the conversation — without
-            // it, every turn looks like the first joke and the NPC never
-            // gets fed up. The cap of 12 keeps token cost bounded.
-            const int historyTurnsToSend = 12;
-            int historyStart = System.Math.Max(0, _historyLines.Count - historyTurnsToSend);
-            int historyCount = _historyLines.Count - historyStart;
-            string[] recentHistory = new string[historyCount];
-            for (int i = 0; i < historyCount; i++)
-                recentHistory[i] = _historyLines[historyStart + i];
-
-            Demo.AI.DirectorEvents.SendDialogueDecision(
-                text,
-                _currentNpcId,
-                decision =>
+            // Send to server — server routes through Director Hub and
+            // responds with NarrativeMessage. Stat effects are applied
+            // server-side and arrive via StatUpdate.
+            var client = NetworkClient.Instance;
+            if (client != null && client.State == ConnectionState.Connected)
+            {
+                client.Send(new DialogueInput
                 {
-                    _waitingForResponse = false;
-                    string narrative = decision?.NarrativeText;
-                    if (string.IsNullOrEmpty(narrative))
-                    {
-                        AppendLine("(The conversation falters as you struggle to find the right words.)");
-                    }
-                    else
-                    {
-                        // Use the NPC's display name if we have a persona for this location;
-                        // otherwise fall back to the bare ID so older locations still render.
-                        string speaker = _currentNpcId;
-                        var npc = NPCData.GetForLocation(_currentLocationId);
-                        if (npc != null) speaker = npc.Name;
-                        AppendLine($"{speaker}: {narrative}");
-
-                        // Apply any stat_effects the LLM emitted. This is how
-                        // "I'd like to rest" actually heals the player at a
-                        // safe location: the LLM emits a full_rest status
-                        // and we apply it here. Without this hook the
-                        // narrative is pure flavor text — the engine never
-                        // changed game state.
-                        ApplyStatEffects(decision.StatEffects);
-
-                        // Auto-narrate the NPC's response via TTS. Skipped
-                        // when the user has muted via the speaker button.
-                        // VoiceOutput strips *action* descriptions internally
-                        // so only the spoken dialogue gets vocalized.
-                        // Pass the NPC's voice model so each character has
-                        // a distinct Piper voice (Garth gruff male, Thalia
-                        // warm female, Aldric British noble). Falls back to
-                        // the default narrator if the NPC has no mapping.
-                        if (VoiceOutput.Instance != null)
-                            VoiceOutput.Instance.Speak(narrative, npc?.VoiceModel);
-                    }
-                },
-                locationId: _currentLocationId,
-                recentHistory: recentHistory);
+                    Text = text,
+                    NpcId = _currentNpcId ?? ""
+                });
+            }
+            else
+            {
+                // Offline fallback: no server connection
+                _waitingForResponse = false;
+                AppendLine("(No server connection. The NPC stares blankly.)");
+            }
         }
 
         // ── Voice button handlers ─────────────────────────────────────────
@@ -402,131 +376,32 @@ namespace ForeverEngine.Demo.UI
         }
 
         /// <summary>
-        /// Iterate the LLM's stat_effects array and apply each one to the
-        /// player. Recognized:
-        ///   * status_effect == "full_rest" → Player.FullRest()
-        ///   * stat == "hp" with delta > 0   → Player.Heal(delta)
-        ///   * stat == "hp" with delta < 0   → Player.TakeDamage(-delta)
-        /// All other effects are logged and skipped (combat damage and
-        /// stat changes are resolved by the engine's rules layer, not
-        /// dialogue).
-        ///
-        /// Each applied effect appends a system line to the dialogue
-        /// history so the player sees what changed (e.g. "(You feel
-        /// fully rested. HP 20/20)") instead of having silent state
-        /// changes hidden behind narrative flavor text.
+        /// Handle server-routed NPC narrative response. Server applies stat
+        /// effects and sends StatUpdate separately; this handler only renders
+        /// the dialogue text and triggers TTS.
         /// </summary>
-        private void ApplyStatEffects(Bridges.DirectorClient.StatEffectDto[] effects)
+        private void OnServerNarrative(NarrativeMessage msg)
         {
-            if (effects == null || effects.Length == 0) return;
-            var gm = GameManager.Instance;
-            var player = gm?.Player;
-            if (player == null) return;
+            _waitingForResponse = false;
+            string speaker = string.IsNullOrEmpty(msg.Speaker) ? "NPC" : msg.Speaker;
 
-            // CharacterSheet is the source of truth when one exists
-            // (i.e. the player went through character creation). Combat
-            // builds BattleCombatants from the sheet, not from PlayerData,
-            // so any state mutation that only touches PlayerData stays
-            // invisible to combat. Mutate the sheet first, then call
-            // SyncPlayerFromCharacter so the backward-compat PlayerData
-            // mirrors the new state.
-            var sheet = gm.Character;
+            // Use the NPC's display name from NPCData when available
+            var npc = NPCData.GetForLocation(_currentLocationId);
+            if (npc != null && !string.IsNullOrEmpty(npc.Name))
+                speaker = npc.Name;
 
-            foreach (var effect in effects)
+            if (string.IsNullOrEmpty(msg.Text))
             {
-                if (effect == null) continue;
-                // Only apply effects targeting the player. Anything else is
-                // a hint to systems we don't currently route through dialogue
-                // (combat resolution, NPC stat changes, etc.).
-                if (!string.IsNullOrEmpty(effect.TargetId) && effect.TargetId != "player")
-                    continue;
+                AppendLine("(The conversation falters as you struggle to find the right words.)");
+            }
+            else
+            {
+                AppendLine($"{speaker}: {msg.Text}");
 
-                // Special status effects take precedence over raw stat deltas
-                // because they typically combine multiple changes (full_rest
-                // restores HP + hunger + thirst at once).
-                if (!string.IsNullOrEmpty(effect.StatusEffect))
-                {
-                    // Normalize the status string so cosmetic LLM drift like
-                    // "Well Rested" or "well-rested" still triggers the right
-                    // engine action. Haiku-class models routinely emit
-                    // "rested" / "well_rested" instead of the spec'd
-                    // "full_rest" — we accept all three so the player
-                    // actually gets fully restored either way.
-                    string status = effect.StatusEffect
-                        .ToLowerInvariant()
-                        .Replace('-', '_')
-                        .Replace(' ', '_');
-                    if (status == "full_rest" || status == "rest" || status == "long_rest"
-                        || status == "rested" || status == "well_rested")
-                    {
-                        if (sheet != null)
-                        {
-                            RPGBridge.ApplyLongRestToSheet(sheet);
-                            gm.SyncPlayerFromCharacter();
-                        }
-                        player.FullRest();
-                        AppendLine($"(You feel fully restored. HP {player.HP}/{player.MaxHP})");
-                        continue;
-                    }
-                    if (status == "inn_rest" || status == "inn_room")
-                    {
-                        // Inn room: 5 gold for a night, full rest. Hardcoded
-                        // here because the schema can't carry an inn-cost
-                        // field; if the player can't afford it the LLM
-                        // should have refused already, but we re-check so
-                        // the engine never silently goes negative.
-                        const int InnRoomCost = 5;
-                        if (player.Inventory == null || player.Gold < InnRoomCost)
-                        {
-                            AppendLine($"(You don't have {InnRoomCost} gold for a room.)");
-                            continue;
-                        }
-                        player.Gold -= InnRoomCost;
-                        if (sheet != null)
-                        {
-                            RPGBridge.ApplyLongRestToSheet(sheet);
-                            gm.SyncPlayerFromCharacter();
-                        }
-                        player.FullRest();
-                        AppendLine($"(You pay {InnRoomCost} gold for the room and rest the night. " +
-                                   $"HP {player.HP}/{player.MaxHP}, gold {player.Gold})");
-                        continue;
-                    }
-                }
-
-                if (string.Equals(effect.Stat, "hp", System.StringComparison.OrdinalIgnoreCase))
-                {
-                    if (effect.Delta > 0)
-                    {
-                        int before = player.HP;
-                        if (sheet != null)
-                        {
-                            RPGBridge.ApplyHpDeltaToSheet(sheet, effect.Delta);
-                            gm.SyncPlayerFromCharacter();
-                        }
-                        else
-                        {
-                            player.Heal(effect.Delta);
-                        }
-                        int gained = player.HP - before;
-                        if (gained > 0)
-                            AppendLine($"(You recover {gained} HP. HP {player.HP}/{player.MaxHP})");
-                    }
-                    else if (effect.Delta < 0)
-                    {
-                        int dmg = -effect.Delta;
-                        if (sheet != null)
-                        {
-                            RPGBridge.ApplyHpDeltaToSheet(sheet, effect.Delta);
-                            gm.SyncPlayerFromCharacter();
-                        }
-                        else
-                        {
-                            player.TakeDamage(dmg);
-                        }
-                        AppendLine($"(You take {dmg} damage. HP {player.HP}/{player.MaxHP})");
-                    }
-                }
+                // Auto-narrate the NPC's response via TTS. Skipped when
+                // the user has muted via the speaker button.
+                if (VoiceOutput.Instance != null)
+                    VoiceOutput.Instance.Speak(msg.Text, npc?.VoiceModel);
             }
         }
 
