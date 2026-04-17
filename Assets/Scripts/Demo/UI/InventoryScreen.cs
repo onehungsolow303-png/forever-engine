@@ -1,6 +1,8 @@
 using UnityEngine;
-using ForeverEngine.Demo;
-using ForeverEngine.ECS.Data;
+using ForeverEngine.Core.Enums;
+using ForeverEngine.Core.Messages;
+using ForeverEngine.Core.Messages.DTOs;
+using ForeverEngine.Network;
 
 namespace ForeverEngine.Demo.UI
 {
@@ -9,15 +11,21 @@ namespace ForeverEngine.Demo.UI
     /// Shows equipment slots, a scrollable item list, and context-sensitive action
     /// buttons (equip/use/drop) for the selected item.
     ///
-    /// Tab opens/closes. Escape closes. <see cref="IsOpen"/> is a static flag so
-    /// other systems (DungeonExplorer, DungeonMinimap) can guard against conflicts.
+    /// Reads from <see cref="ServerStateCache"/> and sends
+    /// <see cref="InventoryActionMessage"/> to the server instead of mutating
+    /// local state. The server resolves equip/use/drop logic and pushes back an
+    /// <see cref="InventoryUpdateMessage"/> + <see cref="StatUpdateMessage"/>.
+    ///
+    /// Tab opens/closes. Escape closes. <see cref="IsOpen"/> gates other panels.
     /// </summary>
     public class InventoryScreen : UnityEngine.MonoBehaviour
     {
         // ── Public interface ─────────────────────────────────────────────────
 
+        public static InventoryScreen Instance { get; private set; }
+
         /// <summary>True while the inventory panel is visible.</summary>
-        public static bool IsOpen { get; private set; }
+        public bool IsOpen { get; private set; }
 
         // ── Layout constants ─────────────────────────────────────────────────
 
@@ -31,9 +39,19 @@ namespace ForeverEngine.Demo.UI
         // ── State ────────────────────────────────────────────────────────────
 
         private Vector2 _scrollPos;
-        private int     _selectedIndex = -1;   // index into GetAllSlots()
+        private int     _selectedIndex = -1;   // index into cache.Inventory
 
         // ── Unity lifecycle ──────────────────────────────────────────────────
+
+        private void Awake()
+        {
+            Instance = this;
+        }
+
+        private void OnDestroy()
+        {
+            if (Instance == this) Instance = null;
+        }
 
         private void Update()
         {
@@ -56,9 +74,8 @@ namespace ForeverEngine.Demo.UI
         {
             if (!IsOpen) return;
 
-            var gm = GameManager.Instance;
-            if (gm == null || gm.Player == null) return;
-            var player = gm.Player;
+            var cache = ServerStateCache.Instance;
+            if (cache == null) return;
 
             // Center the panel
             float px = (Screen.width  - PanelW) * 0.5f;
@@ -82,7 +99,7 @@ namespace ForeverEngine.Demo.UI
             float contentH = PanelH - 42f - ActionPanelH - Pad;
 
             // ── Left column: Equipment + Stats ───────────────────────────────
-            DrawEquipmentColumn(px + Pad, contentY, EquipColW - Pad, contentH, player);
+            DrawEquipmentColumn(px + Pad, contentY, EquipColW - Pad, contentH, cache);
 
             // Vertical divider
             UITheme.DrawRect(new Rect(px + EquipColW, contentY, 1f, contentH),
@@ -91,12 +108,12 @@ namespace ForeverEngine.Demo.UI
             // ── Right column: Item list ──────────────────────────────────────
             float listX  = px + EquipColW + Pad;
             float listW  = PanelW - EquipColW - Pad * 2f;
-            DrawItemList(listX, contentY, listW, contentH, player);
+            DrawItemList(listX, contentY, listW, contentH, cache);
 
             // ── Bottom: Action panel ─────────────────────────────────────────
             float actionY = py + PanelH - ActionPanelH - Pad * 0.5f;
             UITheme.DrawSeparator(px + Pad, actionY - 4f, PanelW - Pad * 2f);
-            DrawActionPanel(px + Pad, actionY, PanelW - Pad * 2f, ActionPanelH, player);
+            DrawActionPanel(px + Pad, actionY, PanelW - Pad * 2f, ActionPanelH, cache);
 
             // Close hint
             GUI.Label(new Rect(px + PanelW - 120f, py + Pad, 110f, 20f),
@@ -105,7 +122,7 @@ namespace ForeverEngine.Demo.UI
 
         // ── Left column ──────────────────────────────────────────────────────
 
-        private static void DrawEquipmentColumn(float x, float y, float w, float h, PlayerData player)
+        private static void DrawEquipmentColumn(float x, float y, float w, float h, ServerStateCache cache)
         {
             GUI.Label(new Rect(x, y, w, 20f),
                 "EQUIPMENT", UITheme.Bold(UITheme.FontSmall, UITheme.TextAccent));
@@ -117,7 +134,7 @@ namespace ForeverEngine.Demo.UI
             GUI.Label(new Rect(x + 4f, ry, 50f, RowH),
                 "Weapon", UITheme.Label(UITheme.FontSmall, UITheme.TextSecondary));
             GUI.Label(new Rect(x + 55f, ry, w - 55f, RowH),
-                player.WeaponName, UITheme.Label(UITheme.FontSmall, UITheme.TextPrimary));
+                cache.EquippedWeapon, UITheme.Label(UITheme.FontSmall, UITheme.TextPrimary));
             ry += RowH + 3f;
 
             // Armor slot
@@ -125,7 +142,7 @@ namespace ForeverEngine.Demo.UI
             GUI.Label(new Rect(x + 4f, ry, 50f, RowH),
                 "Armor", UITheme.Label(UITheme.FontSmall, UITheme.TextSecondary));
             GUI.Label(new Rect(x + 55f, ry, w - 55f, RowH),
-                player.ArmorName, UITheme.Label(UITheme.FontSmall, UITheme.TextPrimary));
+                cache.EquippedArmor, UITheme.Label(UITheme.FontSmall, UITheme.TextPrimary));
             ry += RowH + 3f;
 
             // Separator
@@ -137,10 +154,9 @@ namespace ForeverEngine.Demo.UI
                 "STATS", UITheme.Bold(UITheme.FontSmall, UITheme.TextAccent));
             ry += 22f;
 
-            DrawStatRow(x, ry, w, "HP",   $"{player.HP} / {player.MaxHP}"); ry += RowH;
-            DrawStatRow(x, ry, w, "AC",   player.AC.ToString());            ry += RowH;
-            DrawStatRow(x, ry, w, "ATK",  player.AttackDice);               ry += RowH;
-            DrawStatRow(x, ry, w, "Gold", player.Gold.ToString());          ry += RowH;
+            DrawStatRow(x, ry, w, "HP",   $"{cache.HP} / {cache.MaxHP}"); ry += RowH;
+            DrawStatRow(x, ry, w, "AC",   cache.AC.ToString());            ry += RowH;
+            DrawStatRow(x, ry, w, "Gold", cache.Gold.ToString());
         }
 
         private static void DrawStatRow(float x, float y, float w, string label, string value)
@@ -153,42 +169,41 @@ namespace ForeverEngine.Demo.UI
 
         // ── Right column: item list ──────────────────────────────────────────
 
-        private void DrawItemList(float x, float y, float w, float h, PlayerData player)
+        private void DrawItemList(float x, float y, float w, float h, ServerStateCache cache)
         {
-            var inv   = player.Inventory;
-            var slots = inv?.GetAllSlots();
+            var items = cache.Inventory;
+            int count = items != null ? items.Length : 0;
 
             GUI.Label(new Rect(x, y, w, 20f),
-                $"ITEMS  ({(slots != null ? slots.Count : 0)}/{(inv != null ? inv.MaxSlots : 0)})",
+                $"ITEMS  ({count})",
                 UITheme.Bold(UITheme.FontSmall, UITheme.TextAccent));
 
             float listY = y + 22f;
             float listH = h - 22f;
 
-            if (slots == null || slots.Count == 0)
+            if (count == 0)
             {
                 GUI.Label(new Rect(x, listY + 10f, w, RowH),
                     "No items.", UITheme.Label(UITheme.FontSmall, UITheme.DisabledGray));
                 return;
             }
 
-            float innerH = slots.Count * (RowH + 2f);
+            float innerH = count * (RowH + 2f);
             _scrollPos = GUI.BeginScrollView(
                 new Rect(x, listY, w, listH),
                 _scrollPos,
                 new Rect(0, 0, w - 16f, innerH));
 
-            for (int i = 0; i < slots.Count; i++)
+            for (int i = 0; i < count; i++)
             {
-                var slot = slots[i];
-                if (slot.IsEmpty) continue;
+                var item = items[i];
 
                 float ry  = i * (RowH + 2f);
                 var rowRect = new Rect(0, ry, w - 16f, RowH);
 
                 bool selected = _selectedIndex == i;
 
-                // Row background — highlight selected
+                // Row background -- highlight selected
                 if (selected)
                     UITheme.DrawRect(rowRect, new Color(UITheme.TextAccent.r, UITheme.TextAccent.g, UITheme.TextAccent.b, 0.25f));
                 else if (i % 2 == 0)
@@ -201,16 +216,15 @@ namespace ForeverEngine.Demo.UI
                     Event.current.Use();
                 }
 
-                string name  = ItemRegistry.GetName(slot.ItemId);
-                Color  col   = selected ? UITheme.TextHeader : UITheme.TextPrimary;
+                Color col = selected ? UITheme.TextHeader : UITheme.TextPrimary;
                 GUI.Label(new Rect(4f, ry, w - 80f, RowH),
-                    name, UITheme.Label(UITheme.FontSmall, col));
+                    item.Name, UITheme.Label(UITheme.FontSmall, col));
 
-                if (slot.StackCount > 1)
+                if (item.StackCount > 1)
                     GUI.Label(new Rect(w - 76f, ry, 60f, RowH),
-                        $"x{slot.StackCount}", UITheme.Label(UITheme.FontSmall, UITheme.TextSecondary, TextAnchor.MiddleRight));
+                        $"x{item.StackCount}", UITheme.Label(UITheme.FontSmall, UITheme.TextSecondary, TextAnchor.MiddleRight));
 
-                if (slot.Equipped)
+                if (item.IsEquipped)
                     GUI.Label(new Rect(w - 52f, ry, 36f, RowH),
                         "[E]", UITheme.Bold(UITheme.FontSmall, UITheme.XPGold, TextAnchor.MiddleRight));
             }
@@ -220,12 +234,12 @@ namespace ForeverEngine.Demo.UI
 
         // ── Bottom: action panel ─────────────────────────────────────────────
 
-        private void DrawActionPanel(float x, float y, float w, float h, PlayerData player)
+        private void DrawActionPanel(float x, float y, float w, float h, ServerStateCache cache)
         {
-            var inv   = player.Inventory;
-            var slots = inv?.GetAllSlots();
+            var items = cache.Inventory;
+            int count = items != null ? items.Length : 0;
 
-            if (_selectedIndex < 0 || slots == null || _selectedIndex >= slots.Count)
+            if (_selectedIndex < 0 || _selectedIndex >= count)
             {
                 GUI.Label(new Rect(x, y + 4f, w, RowH),
                     "Select an item to see actions.",
@@ -233,21 +247,16 @@ namespace ForeverEngine.Demo.UI
                 return;
             }
 
-            var slot = slots[_selectedIndex];
-            if (slot.IsEmpty) return;
+            var item = items[_selectedIndex];
 
-            string itemName = ItemRegistry.GetName(slot.ItemId);
-            int    itemId   = slot.ItemId;
-
-            // Item name + description row
+            // Item name row
             GUI.Label(new Rect(x, y + 2f, w * 0.6f, 20f),
-                itemName, UITheme.Bold(UITheme.FontMedium, UITheme.TextHeader));
+                item.Name, UITheme.Bold(UITheme.FontMedium, UITheme.TextHeader));
 
-            // Context-sensitive detail line
-            string detail = GetItemDetail(itemId);
-            if (!string.IsNullOrEmpty(detail))
+            // Rarity detail line
+            if (!string.IsNullOrEmpty(item.Rarity))
                 GUI.Label(new Rect(x, y + 22f, w * 0.6f, 18f),
-                    detail, UITheme.Label(UITheme.FontSmall, UITheme.TextSecondary));
+                    item.Rarity, UITheme.Label(UITheme.FontSmall, UITheme.TextSecondary));
 
             // Action buttons on the right side
             float btnW = 80f;
@@ -259,109 +268,61 @@ namespace ForeverEngine.Demo.UI
             // Drop is always available
             if (GUI.Button(new Rect(btnX, btnY + btnGap * 2f, btnW, btnH), "Drop", UITheme.Button()))
             {
-                inv.Remove(itemId, 1);
-                // If stack is now gone, deselect
-                var updated = inv.GetAllSlots();
-                bool stillPresent = updated.Exists(s => s.ItemId == itemId && !s.IsEmpty);
-                if (!stillPresent) _selectedIndex = -1;
+                NetworkClient.Instance?.Send(new InventoryActionMessage
+                {
+                    Action = InvActionType.Drop,
+                    SlotIndex = item.SlotIndex
+                });
+                _selectedIndex = -1;
             }
 
-            // Context-specific primary action
-            if (IsWeapon(itemId))
+            // Equip / Unequip / Use
+            if (item.IsEquipped)
             {
-                if (GUI.Button(new Rect(btnX, btnY, btnW, btnH), "Equip", UITheme.Button()))
+                if (GUI.Button(new Rect(btnX, btnY, btnW, btnH), "Unequip", UITheme.Button()))
                 {
-                    var weapon = ItemRegistry.TryGetWeapon(itemId);
-                    if (weapon != null)
+                    NetworkClient.Instance?.Send(new InventoryActionMessage
                     {
-                        player.WeaponName = weapon.Name;
-                        player.AttackDice = weapon.GetDamage().ToString();
-                    }
-                    else
-                    {
-                        player.WeaponName = itemName;
-                    }
-                    inv.Remove(itemId, 1);
+                        Action = InvActionType.Unequip,
+                        SlotIndex = item.SlotIndex
+                    });
                     _selectedIndex = -1;
                 }
             }
-            else if (IsArmor(itemId))
+            else
             {
-                if (GUI.Button(new Rect(btnX, btnY, btnW, btnH), "Equip", UITheme.Button()))
+                // Primary action: Equip or Use depending on item type.
+                // The server knows whether an item is equippable or consumable;
+                // we send Equip for gear and Use for consumables.
+                string label = IsLikelyConsumable(item.Name) ? "Use" : "Equip";
+                var actionType = IsLikelyConsumable(item.Name) ? InvActionType.Use : InvActionType.Equip;
+
+                if (GUI.Button(new Rect(btnX, btnY, btnW, btnH), label, UITheme.Button()))
                 {
-                    var armor = ItemRegistry.TryGetArmor(itemId);
-                    if (armor != null)
+                    NetworkClient.Instance?.Send(new InventoryActionMessage
                     {
-                        player.ArmorName = armor.Name;
-                        player.AC        = armor.BaseAC;
-                    }
-                    else
-                    {
-                        player.ArmorName = itemName;
-                    }
-                    inv.Remove(itemId, 1);
+                        Action = actionType,
+                        SlotIndex = item.SlotIndex
+                    });
                     _selectedIndex = -1;
-                }
-            }
-            else if (itemId == ItemIds.Food)
-            {
-                if (GUI.Button(new Rect(btnX, btnY, btnW, btnH), "Eat", UITheme.Button()))
-                {
-                    player.Eat(25f);
-                    inv.Remove(itemId, 1);
-                    var updated = inv.GetAllSlots();
-                    if (!updated.Exists(s => s.ItemId == itemId && !s.IsEmpty)) _selectedIndex = -1;
-                }
-            }
-            else if (itemId == ItemIds.Water)
-            {
-                if (GUI.Button(new Rect(btnX, btnY, btnW, btnH), "Drink", UITheme.Button()))
-                {
-                    player.Drink(25f);
-                    inv.Remove(itemId, 1);
-                    var updated = inv.GetAllSlots();
-                    if (!updated.Exists(s => s.ItemId == itemId && !s.IsEmpty)) _selectedIndex = -1;
-                }
-            }
-            else if (itemId == ItemIds.HealthPotion)
-            {
-                if (GUI.Button(new Rect(btnX, btnY, btnW, btnH), "Use", UITheme.Button()))
-                {
-                    player.Heal(10);
-                    inv.Remove(itemId, 1);
-                    var updated = inv.GetAllSlots();
-                    if (!updated.Exists(s => s.ItemId == itemId && !s.IsEmpty)) _selectedIndex = -1;
                 }
             }
         }
 
         // ── Helpers ──────────────────────────────────────────────────────────
 
-        private static string GetItemDetail(int itemId)
+        /// <summary>
+        /// Heuristic to decide button label. The server is the authority on
+        /// what the item actually does; this just picks between "Use" and
+        /// "Equip" for the button text.
+        /// </summary>
+        private static bool IsLikelyConsumable(string name)
         {
-            if (itemId == ItemIds.Food)        return "Restores 25 Hunger.";
-            if (itemId == ItemIds.Water)       return "Restores 25 Thirst.";
-            if (itemId == ItemIds.HealthPotion) return "Restores 10 HP.";
-
-            var weapon = ItemRegistry.TryGetWeapon(itemId);
-            if (weapon != null) return $"Damage: {weapon.GetDamage()}";
-
-            var armor = ItemRegistry.TryGetArmor(itemId);
-            if (armor != null) return $"AC: {armor.BaseAC}";
-
-            return string.Empty;
-        }
-
-        private static bool IsWeapon(int itemId)
-        {
-            if (ItemRegistry.IsConsumable(itemId)) return false;
-            return ItemRegistry.TryGetWeapon(itemId) != null;
-        }
-
-        private static bool IsArmor(int itemId)
-        {
-            if (ItemRegistry.IsConsumable(itemId)) return false;
-            return ItemRegistry.TryGetArmor(itemId) != null;
+            if (string.IsNullOrEmpty(name)) return false;
+            string lower = name.ToLowerInvariant();
+            return lower.Contains("potion") || lower.Contains("food")
+                || lower.Contains("water") || lower.Contains("scroll")
+                || lower.Contains("elixir") || lower.Contains("ration");
         }
     }
 }
