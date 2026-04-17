@@ -401,22 +401,9 @@ namespace ForeverEngine.Demo.Battle
 
         private void SetupZoneManager(int gridWidth, int gridHeight)
         {
-            // Create a BattleZoneManager for coordinate conversions
             var zoneGO = new GameObject("BattleZoneManager_ServerDriven");
             _zoneManager = zoneGO.AddComponent<BattleZoneManager>();
-
-            // NOTE: InitializeFromServer(gridWidth, gridHeight, origin) is added
-            // by Task 4. Until then, we set properties directly via the fallback
-            // GridToWorld/WorldToGrid methods on this class.
-            // When Task 4 is complete, uncomment the line below and remove the
-            // manual property setup:
-            // _zoneManager.InitializeFromServer(gridWidth, gridHeight, _gridOrigin);
-
-            // For now the zone manager won't have a grid, so coordinate
-            // conversion falls through to our local fallback implementation.
-            // We null out _zoneManager to ensure the fallback path is used.
-            Destroy(zoneGO);
-            _zoneManager = null;
+            _zoneManager.InitializeFromServer(gridWidth, gridHeight, _gridOrigin);
 
             GridWidth = gridWidth;
             GridHeight = gridHeight;

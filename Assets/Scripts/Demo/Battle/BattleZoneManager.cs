@@ -137,6 +137,21 @@ namespace ForeverEngine.Demo.Battle
             return total;
         }
 
+        /// <summary>
+        /// Initialize from server-provided grid dimensions for server-driven battles.
+        /// All cells are marked walkable; the server is authoritative for movement validation.
+        /// </summary>
+        public void InitializeFromServer(int gridWidth, int gridHeight, Vector3 origin)
+        {
+            GridWidth = gridWidth;
+            GridHeight = gridHeight;
+            Origin = origin - new Vector3(gridWidth * CellSize / 2f, 0, gridHeight * CellSize / 2f);
+            Grid = new BattleGrid(gridWidth, gridHeight, 0);
+            // Mark all cells walkable — server validates movement
+            for (int i = 0; i < Grid.Walkable.Length; i++)
+                Grid.Walkable[i] = true;
+        }
+
         public void Deactivate()
         {
             ClearBoundaryVisuals();
