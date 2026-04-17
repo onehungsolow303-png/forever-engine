@@ -223,6 +223,8 @@ namespace ForeverEngine.Demo.Dungeon
                 ? $"dungeon_room_{RoomIndex}"
                 : null;
 
+            // Server handles quest parsing via QuestHandler now.
+            // Still send the dialogue event so the Director can respond.
             DirectorEvents.SendDialogue(
                 $"Hello {NPCName}, what quest do you have for me?",
                 npcId: NPCName,
@@ -231,7 +233,6 @@ namespace ForeverEngine.Demo.Dungeon
                     if (!string.IsNullOrEmpty(response))
                     {
                         Debug.Log($"[DungeonNPC] QuestGiver '{NPCName}': {response}");
-                        GameManager.Instance?.AcceptQuestFromResponse(response);
                     }
                 },
                 locationId: locationId);

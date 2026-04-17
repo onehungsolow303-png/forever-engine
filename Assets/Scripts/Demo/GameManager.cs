@@ -47,8 +47,15 @@ namespace ForeverEngine.Demo
         public AssetClient Assets { get; private set; }
         public DirectorClient Director { get; private set; }
         public ServiceWatchdog Watchdog { get; private set; }
-        public GameStateServer StateServer { get; private set; }
-        public string SessionId { get; private set; }
+        public string SessionId { get; set; }
+
+        /// <summary>
+        /// True when the multiplayer ConnectionManager has completed login.
+        /// Server handles Director Hub communication; GameManager no longer
+        /// boots or sessions the Director directly.
+        /// </summary>
+        public bool IsConnected => ForeverEngine.Network.ConnectionManager.Instance != null &&
+                                   ForeverEngine.Network.ConnectionManager.Instance.IsLoggedIn;
 
         private void Awake()
         {
@@ -59,12 +66,9 @@ namespace ForeverEngine.Demo
             Assets = new AssetClient();
             Director = new DirectorClient();
             Watchdog = gameObject.AddComponent<ServiceWatchdog>();
-            // GameStateServer exposes live engine state on 127.0.0.1:7803
-            // for Director Hub's game_state_tool. Auto-starts on Awake.
-            StateServer = gameObject.AddComponent<GameStateServer>();
             // Inventory screen — Tab-toggled, persists across scenes with GameManager.
             gameObject.AddComponent<InventoryScreen>();
-// Level-up screen — shown when XP threshold is reached after loot collection.
+            // Level-up screen — shown when XP threshold is reached after loot collection.
             gameObject.AddComponent<LevelUpScreen>();
             // Victory screen — shown on defeat of the castle_boss (The Rot King).
             gameObject.AddComponent<VictoryScreen>();
@@ -72,69 +76,18 @@ namespace ForeverEngine.Demo
             gameObject.AddComponent<PauseMenu>();
         }
 
-        /// <summary>
-        /// The boot response from Director Hub's deep scan, available after
-        /// BootDirector() completes. Contains memory brief, crash recovery
-        /// info, and prior session context.
-        /// </summary>
-        public DirectorClient.BootResponseDto BootResponse { get; private set; }
-
         private IEnumerator Start()
         {
-            // Boot-time service health check. If either Python service is
-            // down, log loudly but do not halt — the rest of the engine
-            // (per-frame AI, RPG rules, rendering) is still functional and
-            // the user can play in deterministic-fallback mode.
-            yield return Watchdog.CheckAll();
-            if (!Watchdog.AllOk)
-            {
-                Debug.LogError(
-                    $"[GameManager] Backend services not fully available. " +
-                    $"AssetManager={Watchdog.AssetManagerOk} " +
-                    $"DirectorHub={Watchdog.DirectorHubOk}. " +
-                    $"Game will run in deterministic-fallback mode.");
-            }
+            // Wait for multiplayer login. The server handles Director Hub
+            // boot and session management via DirectorBridge on the server side.
+            while (ForeverEngine.Network.ConnectionManager.Instance == null ||
+                   !ForeverEngine.Network.ConnectionManager.Instance.IsLoggedIn)
+                yield return null;
 
-            // Deep scan: crash recovery + memory reconstruction.
-            // Must complete before StartDirectorSession so the Director Hub
-            // has full context from prior sessions when it opens a new one.
-            if (Watchdog.DirectorHubOk)
-            {
-                yield return BootDirector();
-            }
-        }
+            Debug.Log("[GameManager] Connected and logged in.");
 
-        /// <summary>
-        /// Call POST /session/boot on Director Hub to perform crash recovery
-        /// and load the full memory brief before the game session starts.
-        /// </summary>
-        private IEnumerator BootDirector()
-        {
-            if (Director == null) yield break;
-
-            var req = new DirectorClient.BootRequestDto
-            {
-                PlayerId = "player_1",
-                SaveData = SaveManager.HasSave ? SaveManager.LoadRaw() : null,
-            };
-
-            yield return Director.Boot(
-                req,
-                resp =>
-                {
-                    BootResponse = resp;
-                    Debug.Log($"[GameManager] Director boot complete: " +
-                              $"scan={resp.ScanElapsedMs}ms, " +
-                              $"crashed={resp.CrashedSessions?.Length ?? 0} sessions recovered");
-                    if (resp.MemoryBrief?.PlayerSummary != null)
-                    {
-                        Debug.Log($"[GameManager] Player summary: {resp.MemoryBrief.PlayerSummary}");
-                    }
-                },
-                err =>
-                {
-                    Debug.LogWarning($"[GameManager] Director boot failed: {err}. Continuing without memory context.");
-                });
+            // SessionId can be sourced from the server's player identity.
+            SessionId = ForeverEngine.Network.ConnectionManager.Instance.PlayerId;
         }
 
         public void NewGame(int seed = 42)
@@ -142,7 +95,6 @@ namespace ForeverEngine.Demo
             CurrentSeed = seed;
             Player = new PlayerData { HexQ = 2, HexR = 2 };
             Player.DiscoveredLocations.Add("camp");
-            StartCoroutine(StartDirectorSession());
             SceneManager.LoadScene(UseProceduralWorld ? "World" : Use3DOverworld ? "Overworld3D" : "Overworld");
         }
 
@@ -156,7 +108,6 @@ namespace ForeverEngine.Demo
             CurrentSeed   = seed > 0 ? seed : Random.Range(1, 99999);
             Player        = PlayerData.FromCharacterData(characterData);
             Player.DiscoveredLocations.Add("camp");
-            StartCoroutine(StartDirectorSession());
             SceneManager.LoadScene(UseProceduralWorld ? "World" : Use3DOverworld ? "Overworld3D" : "Overworld");
         }
 
@@ -171,54 +122,7 @@ namespace ForeverEngine.Demo
             Player        = new PlayerData { HexQ = 2, HexR = 2 };
             Player.DiscoveredLocations.Add("camp");
             SyncPlayerFromCharacter();
-            StartCoroutine(StartDirectorSession());
             SceneManager.LoadScene(UseProceduralWorld ? "World" : Use3DOverworld ? "Overworld3D" : "Overworld");
-        }
-
-        /// <summary>
-        /// Open a Director Hub session via /session/start so subsequent
-        /// /interpret_action calls anchor to a real session_id instead of
-        /// the "no-session" fallback. The Director Hub uses session_id to
-        /// anchor its 4-tier memory (short / episodic / semantic / long)
-        /// for conversation continuity across player turns.
-        ///
-        /// Fault-tolerant: if the Director is unreachable or returns an
-        /// error, SessionId stays null and DirectorEvents falls back to
-        /// the literal "no-session" string (which Director Hub still
-        /// accepts for stateless requests).
-        /// </summary>
-        private IEnumerator StartDirectorSession()
-        {
-            if (Director == null || Player == null) yield break;
-
-            var req = new DirectorClient.SessionStartRequestDto
-            {
-                PlayerProfile = new
-                {
-                    name = "Hero",
-                    hp = Player.HP,
-                    max_hp = Player.MaxHP,
-                    level = Player.Level,
-                    weapon = Player.WeaponName,
-                    armor = Player.ArmorName,
-                },
-                MapMeta = new
-                {
-                    seed = CurrentSeed,
-                },
-            };
-
-            yield return Director.StartSession(
-                req,
-                resp =>
-                {
-                    SessionId = resp?.SessionId;
-                    Debug.Log($"[GameManager] Director session started: {SessionId}");
-                },
-                err =>
-                {
-                    Debug.LogWarning($"[GameManager] Director session start failed: {err}. Continuing with no-session fallback.");
-                });
         }
 
         /// <summary>
@@ -229,78 +133,6 @@ namespace ForeverEngine.Demo
         {
             if (Character == null || Player == null) return;
             RPGBridge.SyncPlayerFromCharacter(Character, Player);
-        }
-
-        /// <summary>
-        /// Parses a Director Hub response for embedded quest markers and registers
-        /// + starts the quest via QuestSystem. Markers:
-        ///   QUEST_TITLE: &lt;title&gt;
-        ///   QUEST_DESC: &lt;description&gt;
-        ///   QUEST_OBJ: &lt;description&gt;|&lt;count&gt;
-        ///   QUEST_REWARD_GOLD: &lt;amount&gt;
-        ///   QUEST_REWARD_XP: &lt;amount&gt;
-        /// If no QUEST_TITLE or QUEST_OBJ markers are found the response is
-        /// treated as normal dialogue and this method returns silently.
-        /// </summary>
-        public void AcceptQuestFromResponse(string response)
-        {
-            if (string.IsNullOrEmpty(response)) return;
-
-            string title = null, desc = null, objDesc = null;
-            int objCount = 1, gold = 0, xp = 0;
-
-            foreach (var line in response.Split('\n'))
-            {
-                var trimmed = line.Trim();
-                if (trimmed.StartsWith("QUEST_TITLE:"))
-                    title = trimmed.Substring(12).Trim();
-                else if (trimmed.StartsWith("QUEST_DESC:"))
-                    desc = trimmed.Substring(11).Trim();
-                else if (trimmed.StartsWith("QUEST_OBJ:"))
-                {
-                    var parts = trimmed.Substring(10).Trim().Split('|');
-                    objDesc = parts[0].Trim();
-                    if (parts.Length > 1) int.TryParse(parts[1].Trim(), out objCount);
-                }
-                else if (trimmed.StartsWith("QUEST_REWARD_GOLD:"))
-                    int.TryParse(trimmed.Substring(18).Trim(), out gold);
-                else if (trimmed.StartsWith("QUEST_REWARD_XP:"))
-                    int.TryParse(trimmed.Substring(16).Trim(), out xp);
-            }
-
-            // If the response contains no quest markers it is normal dialogue — ignore.
-            if (title == null || objDesc == null) return;
-
-            var qs = QuestSystem.Instance;
-            if (qs == null)
-            {
-                Debug.LogWarning("[GameManager] QuestSystem not available — quest not started.");
-                return;
-            }
-
-            // Build a deterministic ID from the title so re-offering the same
-            // quest by name doesn't create duplicate registrations.
-            string questId = "quest_" + title.ToLower().Replace(' ', '_');
-
-            var def = new QuestDefinition
-            {
-                Id          = questId,
-                Title       = title,
-                Description = desc ?? string.Empty,
-                Objectives  = new QuestObjective[]
-                {
-                    new QuestObjective { Id = "kill", Description = objDesc, RequiredCount = objCount }
-                },
-                GoldReward  = gold,
-                XPReward    = xp,
-            };
-
-            qs.RegisterQuest(def);
-            var instance = qs.StartQuest(questId);
-            if (instance != null)
-                Debug.Log($"[GameManager] Quest accepted: '{title}' — {objDesc} x{objCount} for {gold}g / {xp} XP");
-            else
-                Debug.LogWarning($"[GameManager] StartQuest failed for id='{questId}'");
         }
 
         /// <summary>Store an encounter template from Director Hub for the next battle.</summary>
@@ -428,12 +260,7 @@ namespace ForeverEngine.Demo
                         Player.Inventory.Add(new ForeverEngine.ECS.Data.ItemInstance { ItemId = itemName.GetHashCode(), StackCount = 1, MaxStack = 1 });
                 }
 
-                // Persist all battle rewards (gold, XP, loot) before returning
-                // to the overworld or dungeon, so a crash/quit cannot roll them back.
-                SaveManager.Save();
-
                 // Progress active quest objectives for this encounter's enemy kills.
-                // All active quests use the "kill" objective ID (set by AcceptQuestFromResponse).
                 var qs = QuestSystem.Instance;
                 if (qs != null)
                 {
