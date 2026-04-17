@@ -87,7 +87,7 @@ namespace ForeverEngine.Demo.Overworld
                 // Full heal after victory
                 gm.Player.HP = gm.Player.MaxHP;
                 gm.LastBattleWon = false;
-                SaveManager.Save();
+                // Save/Load removed: server is now authoritative for state persistence.
             }
 
             // Initial visual update (3D renderer may not be set yet; Overworld3DSetup

@@ -142,7 +142,7 @@ namespace ForeverEngine.Demo.Locations
                     Debug.Log($"[LocationInterior] Rested at {loc.Name}");
                 }
 
-                SaveManager.Save();
+                // Save/Load removed: server is now authoritative for state persistence.
             }
         }
     }

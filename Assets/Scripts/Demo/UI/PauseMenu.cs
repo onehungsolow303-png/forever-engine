@@ -26,24 +26,7 @@ namespace ForeverEngine.Demo.UI
                     Open();
             }
 
-            // Quicksave / Quickload (only when NOT paused and NOT in combat)
-            if (!IsOpen && GameManager.Instance != null && !GameManager.Instance.IsInCombat)
-            {
-                if (Input.GetKeyDown(KeyCode.F5))
-                {
-                    SaveManager.Save();
-                    Debug.Log("[PauseMenu] Quicksaved (F5).");
-                }
-                if (Input.GetKeyDown(KeyCode.F9) && SaveManager.HasSave)
-                {
-                    var player = SaveManager.Load();
-                    if (player != null)
-                    {
-                        GameManager.Instance.LoadFromSave(player);
-                        Debug.Log("[PauseMenu] Quickloaded (F9).");
-                    }
-                }
-            }
+            // Quicksave / Quickload removed: server is now authoritative for state persistence.
         }
 
         public void Open()
@@ -93,28 +76,8 @@ namespace ForeverEngine.Demo.UI
                 Resume();
             by += spacing;
 
-            // Save
-            bool canSave = GameManager.Instance != null && !GameManager.Instance.IsInCombat;
-            GUI.enabled = canSave;
-            if (GUI.Button(new Rect(bx, by, btnW, btnH), "Save Game", UITheme.Button()))
-            {
-                SaveManager.Save();
-                Resume();
-            }
-            GUI.enabled = true;
-            by += spacing;
-
-            // Load
-            GUI.enabled = SaveManager.HasSave;
-            if (GUI.Button(new Rect(bx, by, btnW, btnH), "Load Game", UITheme.Button()))
-            {
-                Resume(); // Unpause first
-                var player = SaveManager.Load();
-                if (player != null)
-                    GameManager.Instance.LoadFromSave(player);
-            }
-            GUI.enabled = true;
-            by += spacing;
+            // Save/Load removed: server is now authoritative for state persistence.
+            by += spacing * 2;
 
             // Quit to Menu
             if (GUI.Button(new Rect(bx, by, btnW, btnH), "Quit to Menu", UITheme.Button()))
