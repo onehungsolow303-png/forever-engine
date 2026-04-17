@@ -1,506 +1,549 @@
 using System.Collections.Generic;
-using System.IO;
+using ForeverEngine.Core.Enums;
+using ForeverEngine.Core.Messages;
+using ForeverEngine.Core.Messages.DTOs;
+using ForeverEngine.Network;
 using UnityEngine;
 
 namespace ForeverEngine.Demo.Battle
 {
+    /// <summary>
+    /// Display-only combat renderer driven by server messages.
+    /// Replaces the authoritative BattleManager with a thin visual layer
+    /// that spawns models, animates actions, and exposes read-only state
+    /// for BattleHUD and BattleInputController.
+    /// </summary>
     public class BattleRenderer : UnityEngine.MonoBehaviour
     {
-        private List<GameObject> _tileObjects = new();
-        private Dictionary<BattleCombatant, GameObject> _tokenObjects = new();
-        private Dictionary<BattleCombatant, float> _targetHpPercent = new();
-        private Dictionary<BattleCombatant, float> _displayHpPercent = new();
-        private List<DamageNumber> _damageNumbers = new();
-        private Mesh _squareMesh;
-        private Material _baseMaterial;
-        private Camera _cam;
-        // Cache textures by absolute path so multiple combatants of the
-        // same enemy kind share one Texture2D allocation. Cleared when
-        // BattleRenderer is destroyed (scene transition).
-        private static readonly Dictionary<string, Texture2D> _spriteCache = new();
+        public static BattleRenderer Instance { get; private set; }
 
-        private static readonly Color COLOR_FLOOR = new Color(0.25f, 0.22f, 0.2f);
-        private static readonly Color COLOR_WALL = new Color(0.1f, 0.1f, 0.12f);
-        private static readonly Color COLOR_OBSTACLE = new Color(0.18f, 0.16f, 0.15f);
-        private static readonly Color COLOR_PLAYER = new Color(0.2f, 0.6f, 1f);
-        private static readonly Color COLOR_ENEMY = new Color(0.9f, 0.2f, 0.2f);
-        private static readonly Color COLOR_HIGHLIGHT = new Color(0.4f, 0.5f, 0.3f);
+        // ── Public read-only state (consumed by BattleHUD / BattleInputController) ──
 
-        // Condition tint colors
-        private static readonly Color TINT_POISON = new Color(0.2f, 0.8f, 0.2f, 0.3f);
-        private static readonly Color TINT_STUN = new Color(1f, 1f, 0.2f, 0.3f);
-        private static readonly Color TINT_PARALYZED = new Color(0.4f, 0.7f, 1f, 0.3f);
-        private static readonly Color TINT_FRIGHTENED = new Color(0.5f, 0.2f, 0.6f, 0.3f);
+        public string BattleId { get; private set; } = "";
+        public BattleCombatantDto[] Combatants { get; private set; } = new BattleCombatantDto[0];
+        public string ActiveCombatantId { get; private set; } = "";
+        public int RoundNumber { get; private set; }
+        public bool IsPlayerTurn => ActiveCombatantId == _localPlayerId;
+        public bool IsActive { get; private set; }
+        public bool BattleOver { get; private set; }
+        public bool PlayerWon { get; private set; }
+        public int XpEarned { get; private set; }
+        public int GoldEarned { get; private set; }
+        public ItemDto[] LootItems { get; private set; } = new ItemDto[0];
+        public List<string> BattleLog { get; private set; } = new();
+        public int GridWidth { get; private set; }
+        public int GridHeight { get; private set; }
 
-        private const float TOKEN_RADIUS = 0.45f;
-        private const float HP_BAR_LERP_SPEED = 4f;
-        private const float DEATH_FADE_SPEED = 2f;
+        // Turn resource state from TurnStart
+        public int MovementRemaining { get; private set; }
+        public bool HasAction { get; private set; }
+        public bool HasBonusAction { get; private set; }
 
-        public void Initialize(BattleGrid grid, List<BattleCombatant> combatants, Camera cam)
+        // ── Private state ────────────────────────────────────────────────────
+
+        private readonly Dictionary<string, GameObject> _models = new();
+        private readonly Dictionary<string, ModelAnimator> _animators = new();
+        private BattleZoneManager _zoneManager;
+        private Vector3 _gridOrigin;
+        private string _localPlayerId = "";
+        private string[] _turnOrder = new string[0];
+
+        // ── MonoBehaviour lifecycle ──────────────────────────────────────────
+
+        private void Awake()
         {
-            _cam = cam;
-            CreateMeshAndMaterial();
-
-            // Render grid tiles
-            for (int y = 0; y < grid.Height; y++)
+            if (Instance != null && Instance != this)
             {
-                for (int x = 0; x < grid.Width; x++)
-                {
-                    var go = CreateTile($"Tile_{x}_{y}", new Vector3(x, y, 0),
-                        grid.IsWalkable(x, y) ? COLOR_FLOOR : (x == 0 || y == 0 || x == grid.Width - 1 || y == grid.Height - 1 ? COLOR_WALL : COLOR_OBSTACLE));
-                    _tileObjects.Add(go);
-                }
+                Destroy(gameObject);
+                return;
             }
-
-            // Render combatant tokens
-            foreach (var c in combatants)
-            {
-                var token = CreateToken(c.Name, c.IsPlayer ? COLOR_PLAYER : COLOR_ENEMY, TOKEN_RADIUS);
-                token.transform.position = new Vector3(c.X, c.Y, -1f);
-
-                // Name label
-                var labelGO = new GameObject($"Label_{c.Name}");
-                labelGO.transform.SetParent(token.transform);
-                labelGO.transform.localPosition = new Vector3(0, 0.65f, 0);
-                var tm = labelGO.AddComponent<TextMesh>();
-                tm.text = c.Name;
-                tm.characterSize = 0.14f;
-                tm.fontSize = 48;
-                tm.anchor = TextAnchor.MiddleCenter;
-                tm.color = c.IsPlayer ? COLOR_PLAYER : COLOR_ENEMY;
-
-                // HP bar background
-                var hpBgGO = CreateTile($"HPBg_{c.Name}", Vector3.zero, Color.black);
-                hpBgGO.transform.SetParent(token.transform);
-                hpBgGO.transform.localPosition = new Vector3(0, -0.55f, -0.1f);
-                hpBgGO.transform.localScale = new Vector3(0.8f, 0.1f, 1f);
-
-                // HP bar fill
-                var hpGO = CreateTile($"HP_{c.Name}", Vector3.zero, Color.green);
-                hpGO.transform.SetParent(token.transform);
-                hpGO.transform.localPosition = new Vector3(0, -0.55f, -0.2f);
-                hpGO.transform.localScale = new Vector3(0.8f, 0.1f, 1f);
-                hpGO.name = "HPFill";
-
-                // Condition tint overlay (hidden by default)
-                var tintGO = CreateToken($"Tint_{c.Name}", Color.clear, TOKEN_RADIUS + 0.05f);
-                tintGO.transform.SetParent(token.transform);
-                tintGO.transform.localPosition = new Vector3(0, 0, -0.05f);
-                tintGO.name = "ConditionTint";
-
-                _tokenObjects[c] = token;
-                _targetHpPercent[c] = 1f;
-                _displayHpPercent[c] = 1f;
-            }
-
-            // Center camera on grid
-            if (_cam != null)
-            {
-                _cam.transform.position = new Vector3(grid.Width / 2f, grid.Height / 2f, -10f);
-                _cam.orthographicSize = Mathf.Max(grid.Width, grid.Height) / 2f + 1f;
-            }
+            Instance = this;
         }
 
-        public void UpdateVisuals(List<BattleCombatant> combatants, BattleCombatant currentTurn)
+        private void OnDestroy()
         {
-            float dt = Time.deltaTime;
-
-            foreach (var c in combatants)
-            {
-                if (!_tokenObjects.TryGetValue(c, out var token)) continue;
-
-                // Death fade
-                if (!c.IsAlive)
-                {
-                    var tokenMR = token.GetComponent<MeshRenderer>();
-                    if (tokenMR != null)
-                    {
-                        Color col = tokenMR.material.color;
-                        col.a = Mathf.MoveTowards(col.a, 0f, dt * DEATH_FADE_SPEED);
-                        tokenMR.material.color = col;
-                        if (col.a <= 0.01f)
-                            token.SetActive(false);
-                    }
-                    continue;
-                }
-
-                // Smooth move to position
-                Vector3 targetPos = new Vector3(c.X, c.Y, -1f);
-                token.transform.position = Vector3.Lerp(token.transform.position, targetPos, dt * 15f);
-
-                // Animated HP bar
-                float actualHp = c.MaxHP > 0 ? (float)c.HP / c.MaxHP : 0;
-                _targetHpPercent[c] = actualHp;
-                _displayHpPercent[c] = Mathf.MoveTowards(_displayHpPercent[c], actualHp, dt * HP_BAR_LERP_SPEED);
-                float hpPercent = _displayHpPercent[c];
-
-                var hpFill = token.transform.Find("HPFill");
-                if (hpFill != null)
-                {
-                    hpFill.localScale = new Vector3(0.8f * hpPercent, 0.1f, 1f);
-                    hpFill.localPosition = new Vector3(-0.4f * (1f - hpPercent), -0.55f, -0.2f);
-                    var mr = hpFill.GetComponent<MeshRenderer>();
-                    if (mr != null)
-                        mr.material.color = hpPercent > 0.5f ? Color.green : hpPercent > 0.25f ? Color.yellow : Color.red;
-                }
-
-                // Active turn indicator — scale pulse
-                var tokenMesh = token.GetComponent<MeshRenderer>();
-                if (tokenMesh != null)
-                {
-                    Color baseColor = c.IsPlayer ? COLOR_PLAYER : COLOR_ENEMY;
-                    if (c == currentTurn)
-                    {
-                        float pulse = Mathf.PingPong(Time.time * 2f, 0.3f);
-                        tokenMesh.material.color = Color.Lerp(baseColor, Color.white, pulse);
-                        token.transform.localScale = Vector3.one * (1f + pulse * 0.15f);
-                    }
-                    else
-                    {
-                        tokenMesh.material.color = baseColor;
-                        token.transform.localScale = Vector3.one;
-                    }
-                }
-
-                // Condition tint overlay
-                var tint = token.transform.Find("ConditionTint");
-                if (tint != null && c.Conditions != null)
-                {
-                    var tintMR = tint.GetComponent<MeshRenderer>();
-                    if (tintMR != null)
-                    {
-                        Color tintColor = Color.clear;
-                        var active = c.Conditions.ActiveFlags;
-                        if ((active & RPG.Enums.Condition.Poisoned) != 0)
-                            tintColor = TINT_POISON;
-                        else if ((active & RPG.Enums.Condition.Stunned) != 0)
-                            tintColor = TINT_STUN;
-                        else if ((active & RPG.Enums.Condition.Paralyzed) != 0)
-                            tintColor = TINT_PARALYZED;
-                        else if ((active & RPG.Enums.Condition.Frightened) != 0)
-                            tintColor = TINT_FRIGHTENED;
-                        tintMR.material.color = tintColor;
-                    }
-                }
-            }
-
-            // Update damage numbers
-            UpdateDamageNumbers(dt);
+            if (Instance == this)
+                Instance = null;
         }
 
-        // ── Damage Numbers ────────────────────────────────────────────────
-
-        // Color tiers by damage magnitude. White for small, orange for medium,
-        // red for big, plus the existing yellow override for crits.
-        private static readonly Color DMG_SMALL = new Color(1f, 1f, 1f);
-        private static readonly Color DMG_MED = new Color(1f, 0.65f, 0.2f);
-        private static readonly Color DMG_BIG = new Color(1f, 0.25f, 0.15f);
-        private static readonly Color DMG_CRIT = new Color(1f, 0.95f, 0.2f);
-
-        public void ShowDamageNumber(Vector3 worldPos, int damage, bool isCrit)
-        {
-            var go = new GameObject("DmgNum");
-            go.transform.SetParent(transform);
-            go.transform.position = worldPos + new Vector3(0, 0.3f, -2f);
-
-            var tm = go.AddComponent<TextMesh>();
-            tm.text = isCrit ? $"CRIT {damage}!" : damage.ToString();
-            tm.fontSize = 48;
-            tm.anchor = TextAnchor.MiddleCenter;
-            tm.fontStyle = isCrit ? FontStyle.Bold : FontStyle.Normal;
-
-            // Color by tier
-            if (isCrit)        tm.color = DMG_CRIT;
-            else if (damage >= 12) tm.color = DMG_BIG;
-            else if (damage >= 6)  tm.color = DMG_MED;
-            else                   tm.color = DMG_SMALL;
-
-            // Base size scales with damage magnitude. Crits get a hard
-            // upscale on top so a 5-damage crit still feels punchy.
-            float magnitudeScale = 0.12f + Mathf.Clamp01(damage / 20f) * 0.08f;
-            float initialScale = isCrit ? magnitudeScale * 1.6f : magnitudeScale;
-            tm.characterSize = initialScale;
-
-            float lifetime = isCrit ? 1.4f : 1.0f;
-            _damageNumbers.Add(new DamageNumber
-            {
-                GO = go,
-                Timer = lifetime,
-                InitialTimer = lifetime,
-                StartY = worldPos.y + 0.3f,
-                InitialScale = initialScale,
-                RestScale = magnitudeScale,
-                IsCrit = isCrit,
-            });
-
-            // Camera shake on crits — bigger crits shake harder.
-            if (isCrit)
-                ShakeCamera(0.18f, 0.12f + Mathf.Clamp01(damage / 30f) * 0.10f);
-        }
-
-        public void ShowMiss(Vector3 worldPos)
-        {
-            var go = new GameObject("MissText");
-            go.transform.SetParent(transform);
-            go.transform.position = worldPos + new Vector3(0, 0.3f, -2f);
-
-            var tm = go.AddComponent<TextMesh>();
-            tm.text = "MISS";
-            tm.characterSize = 0.12f;
-            tm.fontSize = 48;
-            tm.anchor = TextAnchor.MiddleCenter;
-            tm.color = new Color(0.7f, 0.7f, 0.7f);
-
-            _damageNumbers.Add(new DamageNumber { GO = go, Timer = 0.8f, InitialTimer = 0.8f, StartY = worldPos.y + 0.3f });
-        }
-
-        private void UpdateDamageNumbers(float dt)
-        {
-            for (int i = _damageNumbers.Count - 1; i >= 0; i--)
-            {
-                var dn = _damageNumbers[i];
-                dn.Timer -= dt;
-                if (dn.Timer <= 0)
-                {
-                    Destroy(dn.GO);
-                    _damageNumbers.RemoveAt(i);
-                    continue;
-                }
-
-                // Eased float: fast at the start, slow at the end. Quadratic
-                // ease-out feels punchy at impact and gentle on the way out.
-                float linear = 1f - dn.Timer / dn.InitialTimer;
-                float eased = 1f - (1f - linear) * (1f - linear);
-                var pos = dn.GO.transform.position;
-                pos.y = dn.StartY + eased * 0.9f;
-                dn.GO.transform.position = pos;
-
-                var tm = dn.GO.GetComponent<TextMesh>();
-                if (tm != null)
-                {
-                    // Initial scale punch -> rest scale over the first 25% of
-                    // the lifetime, so the number lands big and shrinks to
-                    // its rest size. Crits get more dramatic punch.
-                    float scaleProgress = Mathf.Clamp01(linear / 0.25f);
-                    tm.characterSize = Mathf.Lerp(dn.InitialScale, dn.RestScale, scaleProgress);
-
-                    // Fade in the last 0.3s. Crits hold longer before fading.
-                    Color col = tm.color;
-                    col.a = Mathf.Clamp01(dn.Timer / 0.3f);
-                    tm.color = col;
-                }
-
-                _damageNumbers[i] = dn;
-            }
-
-            // Camera shake decay
-            if (_shakeTimer > 0f && _cam != null)
-            {
-                _shakeTimer -= dt;
-                if (_shakeTimer <= 0f)
-                {
-                    _cam.transform.position = _shakeOriginalPos;
-                }
-                else
-                {
-                    float progress = _shakeTimer / _shakeDuration;
-                    float magnitude = _shakeMagnitude * progress;
-                    Vector3 offset = new Vector3(
-                        (Random.value - 0.5f) * magnitude * 2f,
-                        (Random.value - 0.5f) * magnitude * 2f,
-                        0f);
-                    _cam.transform.position = _shakeOriginalPos + offset;
-                }
-            }
-        }
-
-        // ── Camera shake ──────────────────────────────────────────────────
-        private float _shakeTimer;
-        private float _shakeDuration;
-        private float _shakeMagnitude;
-        private Vector3 _shakeOriginalPos;
+        // ── Handler registration ─────────────────────────────────────────────
 
         /// <summary>
-        /// Trigger a brief camera shake. Idempotent: calling while a shake
-        /// is already active overwrites the parameters but reuses the same
-        /// stored origin so the shake doesn't drift the camera permanently.
+        /// Register for server battle messages on the NetworkClient dispatcher.
+        /// Call once after NetworkClient is connected (e.g. from ConnectionManager).
         /// </summary>
-        public void ShakeCamera(float duration, float magnitude)
+        public void RegisterHandlers()
         {
-            if (_cam == null) return;
-            if (_shakeTimer <= 0f)
+            var client = NetworkClient.Instance;
+            if (client == null)
             {
-                // Capture the resting camera position only when starting
-                // a fresh shake. Existing shakes keep their original.
-                _shakeOriginalPos = _cam.transform.position;
-            }
-            _shakeTimer = duration;
-            _shakeDuration = duration;
-            _shakeMagnitude = magnitude;
-        }
-
-        private struct DamageNumber
-        {
-            public GameObject GO;
-            public float InitialTimer;
-            public float Timer;
-            public float StartY;
-            public float InitialScale;
-            public float RestScale;
-            public bool IsCrit;
-        }
-
-        // ── Primitives ────────────────────────────────────────────────────
-
-        private GameObject CreateTile(string name, Vector3 position, Color color)
-        {
-            var go = new GameObject(name);
-            go.transform.SetParent(transform);
-            go.transform.position = position;
-            go.AddComponent<MeshFilter>().sharedMesh = _squareMesh;
-            var mr = go.AddComponent<MeshRenderer>();
-            mr.sharedMaterial = new Material(_baseMaterial);
-            mr.sharedMaterial.color = color;
-            return go;
-        }
-
-        private GameObject CreateToken(string name, Color color, float radius)
-        {
-            var go = new GameObject(name);
-            go.transform.SetParent(transform);
-
-            int segments = 24; // Smoother circles
-            var mesh = new Mesh();
-            var verts = new Vector3[segments + 1];
-            var tris = new int[segments * 3];
-            verts[0] = Vector3.zero;
-            for (int i = 0; i < segments; i++)
-            {
-                float angle = i * Mathf.PI * 2f / segments;
-                verts[i + 1] = new Vector3(Mathf.Cos(angle) * radius, Mathf.Sin(angle) * radius, 0);
-                tris[i * 3] = 0;
-                tris[i * 3 + 1] = i + 1;
-                tris[i * 3 + 2] = (i + 1) % segments + 1;
-            }
-            mesh.vertices = verts;
-            mesh.triangles = tris;
-            mesh.RecalculateNormals();
-
-            go.AddComponent<MeshFilter>().sharedMesh = mesh;
-            var mr = go.AddComponent<MeshRenderer>();
-            mr.sharedMaterial = new Material(_baseMaterial);
-            mr.sharedMaterial.color = color;
-
-            return go;
-        }
-
-        /// <summary>
-        /// Replace a combatant's token visual with a sprite loaded from disk.
-        /// The path comes from Asset Manager's /select response. Falls back
-        /// silently if the file is missing or unreadable — the procedural
-        /// circle token stays in place.
-        ///
-        /// Loads via System.IO so it works with paths outside the Unity
-        /// AssetDatabase (Asset Manager bakes to .shared/baked/ which is
-        /// not under Assets/).
-        /// </summary>
-        public void SwapTokenSprite(BattleCombatant combatant, string pngPath)
-        {
-            if (combatant == null || string.IsNullOrEmpty(pngPath)) return;
-            if (!_tokenObjects.TryGetValue(combatant, out var token) || token == null) return;
-            if (!File.Exists(pngPath))
-            {
-                Debug.LogWarning($"[BattleRenderer] sprite path does not exist on disk: {pngPath}");
+                Debug.LogWarning("[BattleRenderer] NetworkClient.Instance is null — cannot register handlers.");
                 return;
             }
 
-            Texture2D tex;
-            if (!_spriteCache.TryGetValue(pngPath, out tex) || tex == null)
+            client.RegisterHandler<BattleStartMessage>(HandleBattleStart);
+            client.RegisterHandler<BattleTurnStartMessage>(HandleBattleTurnStart);
+            client.RegisterHandler<BattleActionResultMessage>(HandleBattleActionResult);
+            client.RegisterHandler<BattleEndMessage>(HandleBattleEnd);
+        }
+
+        /// <summary>Unregister all battle message handlers from NetworkClient.</summary>
+        public void UnregisterHandlers()
+        {
+            var client = NetworkClient.Instance;
+            if (client == null) return;
+
+            client.UnregisterHandler<BattleStartMessage>();
+            client.UnregisterHandler<BattleTurnStartMessage>();
+            client.UnregisterHandler<BattleActionResultMessage>();
+            client.UnregisterHandler<BattleEndMessage>();
+        }
+
+        // ── Message handlers ─────────────────────────────────────────────────
+
+        /// <summary>
+        /// Handle battle start: store state, create zone manager, spawn models.
+        /// PUBLIC so ConnectionManager can forward the first message directly.
+        /// </summary>
+        public void HandleBattleStart(BattleStartMessage msg)
+        {
+            // Read local player ID from server state cache
+            if (ServerStateCache.Instance != null)
+                _localPlayerId = ServerStateCache.Instance.LocalPlayerId ?? "";
+
+            BattleId = msg.BattleId;
+            Combatants = msg.Combatants ?? new BattleCombatantDto[0];
+            GridWidth = msg.GridWidth;
+            GridHeight = msg.GridHeight;
+            _turnOrder = msg.TurnOrder ?? new string[0];
+            RoundNumber = 1;
+            ActiveCombatantId = "";
+            IsActive = true;
+            BattleOver = false;
+            PlayerWon = false;
+            XpEarned = 0;
+            GoldEarned = 0;
+            LootItems = new ItemDto[0];
+            BattleLog.Clear();
+            BattleLog.Add("Battle started!");
+
+            // Set up grid origin — center roughly on camera or at world origin
+            _gridOrigin = transform.position;
+
+            // Create BattleZoneManager for coordinate conversion
+            SetupZoneManager(msg.GridWidth, msg.GridHeight);
+
+            // Spawn 3D models for each combatant
+            foreach (var combatant in Combatants)
+                SpawnModel(combatant);
+
+            Debug.Log($"[BattleRenderer] Battle started: {BattleId}, {Combatants.Length} combatants, {GridWidth}x{GridHeight} grid");
+        }
+
+        private void HandleBattleTurnStart(BattleTurnStartMessage msg)
+        {
+            if (msg.BattleId != BattleId) return;
+
+            ActiveCombatantId = msg.ActiveCombatantId;
+            RoundNumber = msg.RoundNumber;
+            MovementRemaining = msg.MovementRemaining;
+            HasAction = msg.HasAction;
+            HasBonusAction = msg.HasBonusAction;
+
+            BattleLog.Add($"Round {RoundNumber}: {GetCombatantName(ActiveCombatantId)}'s turn");
+
+            // Visual highlight: pulse the active combatant's model
+            HighlightActiveCombatant();
+
+            Debug.Log($"[BattleRenderer] Turn start: {GetCombatantName(ActiveCombatantId)} (round {RoundNumber}, player turn: {IsPlayerTurn})");
+        }
+
+        private void HandleBattleActionResult(BattleActionResultMessage msg)
+        {
+            if (msg.BattleId != BattleId) return;
+
+            switch (msg.ActionType)
             {
-                try
+                case BattleActionType.Move:
+                    HandleMoveResult(msg);
+                    break;
+
+                case BattleActionType.MeleeAttack:
+                case BattleActionType.RangedAttack:
+                    HandleAttackResult(msg);
+                    break;
+
+                case BattleActionType.CastSpell:
+                    HandleSpellResult(msg);
+                    break;
+
+                case BattleActionType.Dodge:
+                case BattleActionType.Dash:
+                case BattleActionType.Disengage:
+                case BattleActionType.Help:
+                case BattleActionType.Hide:
+                case BattleActionType.EndTurn:
+                    HandleMiscActionResult(msg);
+                    break;
+
+                default:
+                    HandleMiscActionResult(msg);
+                    break;
+            }
+
+            // Update conditions on target if provided
+            if (!string.IsNullOrEmpty(msg.TargetId) && msg.Conditions != null && msg.Conditions.Length > 0)
+            {
+                var target = FindCombatant(msg.TargetId);
+                if (target != null)
+                    target.Conditions = msg.Conditions;
+            }
+
+            // Append narrative to log
+            if (!string.IsNullOrEmpty(msg.Narrative))
+                BattleLog.Add(msg.Narrative);
+        }
+
+        private void HandleBattleEnd(BattleEndMessage msg)
+        {
+            if (msg.BattleId != BattleId) return;
+
+            BattleOver = true;
+            PlayerWon = msg.Victory;
+            XpEarned = msg.XpEarned;
+            GoldEarned = msg.GoldEarned;
+            LootItems = msg.LootItems ?? new ItemDto[0];
+            IsActive = false;
+
+            string result = msg.Victory ? "VICTORY" : "DEFEAT";
+            BattleLog.Add($"Battle ended: {result}! XP: {XpEarned}, Gold: {GoldEarned}");
+
+            Debug.Log($"[BattleRenderer] Battle ended: {result}, XP={XpEarned}, Gold={GoldEarned}, Loot={LootItems.Length} items");
+        }
+
+        // ── Action result sub-handlers ───────────────────────────────────────
+
+        private void HandleMoveResult(BattleActionResultMessage msg)
+        {
+            var actor = FindCombatant(msg.ActorId);
+            if (actor == null) return;
+
+            // For move actions, update combatant position if target position is
+            // encoded. The server sends updated positions; we update the DTO and
+            // smoothly move the model. Position data comes from a follow-up
+            // state update or is encoded in TargetId as "x,y".
+            if (!string.IsNullOrEmpty(msg.TargetId) && msg.TargetId.Contains(","))
+            {
+                var parts = msg.TargetId.Split(',');
+                if (parts.Length >= 2 &&
+                    int.TryParse(parts[0].Trim(), out int newX) &&
+                    int.TryParse(parts[1].Trim(), out int newY))
                 {
-                    byte[] bytes = File.ReadAllBytes(pngPath);
-                    tex = new Texture2D(2, 2, TextureFormat.RGBA32, false);
-                    tex.filterMode = FilterMode.Point; // pixel art crispness
-                    if (!tex.LoadImage(bytes))
+                    actor.X = newX;
+                    actor.Y = newY;
+                }
+            }
+
+            // Move the model to the new grid position
+            if (_models.TryGetValue(msg.ActorId, out var model))
+            {
+                Vector3 targetPos = GridToWorld(actor.X, actor.Y);
+                // Smooth move handled in Update via lerp
+                if (_animators.TryGetValue(msg.ActorId, out var anim))
+                    anim.SetBasePosition(targetPos);
+                model.transform.position = targetPos;
+            }
+
+            BattleLog.Add($"{actor.Name} moves to ({actor.X}, {actor.Y})");
+        }
+
+        private void HandleAttackResult(BattleActionResultMessage msg)
+        {
+            var actor = FindCombatant(msg.ActorId);
+            bool hit = msg.Hit ?? false;
+            int damage = msg.Damage ?? 0;
+
+            string attackType = msg.ActionType == BattleActionType.MeleeAttack ? "melee" : "ranged";
+
+            if (!string.IsNullOrEmpty(msg.TargetId))
+            {
+                var target = FindCombatant(msg.TargetId);
+                if (target != null)
+                {
+                    if (hit)
                     {
-                        Debug.LogWarning($"[BattleRenderer] LoadImage rejected bytes from {pngPath}");
-                        return;
+                        target.Hp = Mathf.Max(0, target.Hp - damage);
+                        BattleLog.Add($"{actor?.Name ?? msg.ActorId} hits {target.Name} for {damage} {attackType} damage (HP: {target.Hp}/{target.MaxHp})");
                     }
-                    _spriteCache[pngPath] = tex;
-                }
-                catch (System.Exception e)
-                {
-                    Debug.LogWarning($"[BattleRenderer] failed to load sprite {pngPath}: {e.Message}");
-                    return;
-                }
-            }
+                    else
+                    {
+                        BattleLog.Add($"{actor?.Name ?? msg.ActorId} misses {target.Name} ({attackType})");
+                    }
 
-            // Replace the token's circle mesh with a textured quad. The
-            // existing material is reused so HP bar / condition tint /
-            // turn pulse logic still operates on the same MeshRenderer.
-            var meshFilter = token.GetComponent<MeshFilter>();
-            if (meshFilter != null)
-            {
-                meshFilter.sharedMesh = _GetOrCreateTexturedQuad();
-            }
-            var mr = token.GetComponent<MeshRenderer>();
-            if (mr != null)
-            {
-                mr.sharedMaterial.mainTexture = tex;
-                mr.sharedMaterial.color = Color.white; // remove the COLOR_ENEMY tint
-            }
+                    // Check for death
+                    bool died = target.Hp <= 0;
 
-            Debug.Log($"[BattleRenderer] swapped token sprite for {combatant.Name} -> {pngPath}");
+                    // Animate
+                    AnimateAttack(msg.ActorId, msg.TargetId, hit, damage);
+
+                    if (died)
+                        AnimateDeath(msg.TargetId);
+                }
+            }
+            else
+            {
+                BattleLog.Add($"{actor?.Name ?? msg.ActorId} attacks ({attackType})");
+            }
         }
 
-        // Lazily-built textured quad mesh shared by every sprite swap.
-        // Distinct from _squareMesh (used for tiles + HP bars) because
-        // _squareMesh has no UVs and would render the texture as a single
-        // pixel. The quad sits at 0.45 half-extent so it visually matches
-        // the original 0.45-radius circle token.
-        private static Mesh _texturedQuadMesh;
-        private static Mesh _GetOrCreateTexturedQuad()
+        private void HandleSpellResult(BattleActionResultMessage msg)
         {
-            if (_texturedQuadMesh != null) return _texturedQuadMesh;
-            const float s = 0.45f;
-            _texturedQuadMesh = new Mesh
-            {
-                vertices = new[]
-                {
-                    new Vector3(-s, -s, 0),
-                    new Vector3( s, -s, 0),
-                    new Vector3( s,  s, 0),
-                    new Vector3(-s,  s, 0),
-                },
-                triangles = new[] { 0, 2, 1, 0, 3, 2 },
-                uv = new[]
-                {
-                    new Vector2(0, 0),
-                    new Vector2(1, 0),
-                    new Vector2(1, 1),
-                    new Vector2(0, 1),
-                },
-            };
-            _texturedQuadMesh.RecalculateNormals();
-            return _texturedQuadMesh;
+            // Spells follow the same hit/damage pattern as attacks
+            HandleAttackResult(msg);
         }
 
-        private void CreateMeshAndMaterial()
+        private void HandleMiscActionResult(BattleActionResultMessage msg)
         {
-            // Unit square (0.9 size for gap between tiles)
-            _squareMesh = new Mesh();
-            float s = 0.45f;
-            _squareMesh.vertices = new[] { new Vector3(-s,-s,0), new Vector3(s,-s,0), new Vector3(s,s,0), new Vector3(-s,s,0) };
-            _squareMesh.triangles = new[] { 0,2,1, 0,3,2 };
-            _squareMesh.RecalculateNormals();
+            var actor = FindCombatant(msg.ActorId);
+            string actorName = actor?.Name ?? msg.ActorId;
+            string actionName = msg.ActionType.ToString();
+            BattleLog.Add($"{actorName} uses {actionName}");
+        }
 
-            // Create white pixel texture — Sprites/Default needs a texture to render in URP
-            var tex = new Texture2D(1, 1);
-            tex.SetPixel(0, 0, Color.white);
-            tex.Apply();
-            _baseMaterial = new Material(Shader.Find("Sprites/Default"));
-            _baseMaterial.mainTexture = tex;
+        // ── Public query methods ─────────────────────────────────────────────
+
+        /// <summary>Find a combatant DTO by ID.</summary>
+        public BattleCombatantDto FindCombatant(string id)
+        {
+            if (string.IsNullOrEmpty(id) || Combatants == null) return null;
+            foreach (var c in Combatants)
+                if (c.Id == id) return c;
+            return null;
+        }
+
+        /// <summary>Convert grid coordinates to world position.</summary>
+        public Vector3 GridToWorld(int x, int y)
+        {
+            if (_zoneManager != null)
+                return _zoneManager.GridToWorld(x, y);
+
+            // Fallback: simple offset from grid origin
+            return _gridOrigin + new Vector3(
+                x * BattleZoneManager.CellSize + BattleZoneManager.CellSize * 0.5f,
+                0f,
+                y * BattleZoneManager.CellSize + BattleZoneManager.CellSize * 0.5f);
+        }
+
+        /// <summary>Convert world position to grid coordinates.</summary>
+        public (int x, int y) WorldToGrid(Vector3 pos)
+        {
+            if (_zoneManager != null)
+                return _zoneManager.WorldToGrid(pos);
+
+            // Fallback
+            Vector3 local = pos - _gridOrigin;
+            int gx = Mathf.Clamp(Mathf.FloorToInt(local.x / BattleZoneManager.CellSize), 0, GridWidth - 1);
+            int gy = Mathf.Clamp(Mathf.FloorToInt(local.z / BattleZoneManager.CellSize), 0, GridHeight - 1);
+            return (gx, gy);
+        }
+
+        /// <summary>Check if a grid cell is a valid move target (in bounds, not occupied).</summary>
+        public bool IsValidMoveTarget(int x, int y)
+        {
+            if (x < 0 || x >= GridWidth || y < 0 || y >= GridHeight)
+                return false;
+
+            // Check no living combatant occupies the cell
+            return GetCombatantAt(x, y) == null;
+        }
+
+        /// <summary>Get the combatant at a grid position, or null.</summary>
+        public BattleCombatantDto GetCombatantAt(int x, int y)
+        {
+            if (Combatants == null) return null;
+            foreach (var c in Combatants)
+            {
+                if (c.X == x && c.Y == y && c.Hp > 0)
+                    return c;
+            }
+            return null;
+        }
+
+        /// <summary>Destroy all models, zone manager, and this component.</summary>
+        public void Cleanup()
+        {
+            UnregisterHandlers();
+
+            foreach (var kvp in _models)
+            {
+                if (kvp.Value != null)
+                    Destroy(kvp.Value);
+            }
+            _models.Clear();
+            _animators.Clear();
+
+            if (_zoneManager != null)
+            {
+                _zoneManager.Deactivate();
+                _zoneManager = null;
+            }
+
+            IsActive = false;
+            BattleId = "";
+            Combatants = new BattleCombatantDto[0];
+            BattleLog.Clear();
+
+            Debug.Log("[BattleRenderer] Cleaned up.");
+            Destroy(gameObject);
+        }
+
+        // ── Zone manager setup ───────────────────────────────────────────────
+
+        private void SetupZoneManager(int gridWidth, int gridHeight)
+        {
+            // Create a BattleZoneManager for coordinate conversions
+            var zoneGO = new GameObject("BattleZoneManager_ServerDriven");
+            _zoneManager = zoneGO.AddComponent<BattleZoneManager>();
+
+            // NOTE: InitializeFromServer(gridWidth, gridHeight, origin) is added
+            // by Task 4. Until then, we set properties directly via the fallback
+            // GridToWorld/WorldToGrid methods on this class.
+            // When Task 4 is complete, uncomment the line below and remove the
+            // manual property setup:
+            // _zoneManager.InitializeFromServer(gridWidth, gridHeight, _gridOrigin);
+
+            // For now the zone manager won't have a grid, so coordinate
+            // conversion falls through to our local fallback implementation.
+            // We null out _zoneManager to ensure the fallback path is used.
+            Destroy(zoneGO);
+            _zoneManager = null;
+
+            GridWidth = gridWidth;
+            GridHeight = gridHeight;
+        }
+
+        // ── Model management ─────────────────────────────────────────────────
+
+        /// <summary>
+        /// Spawn a 3D model for a combatant. Uses ModelRegistry to find a prefab
+        /// from the ModelId, falling back to a colored capsule primitive.
+        /// </summary>
+        private void SpawnModel(BattleCombatantDto combatant)
+        {
+            GameObject model = null;
+
+            // Try to load from ModelRegistry using the DTO's ModelId
+            if (!string.IsNullOrEmpty(combatant.ModelId))
+            {
+                var (path, scale) = ModelRegistry.Resolve(combatant.ModelId);
+                if (!string.IsNullOrEmpty(path))
+                {
+                    var prefab = Resources.Load<GameObject>($"Models/{path}");
+                    if (prefab != null)
+                    {
+                        model = Object.Instantiate(prefab);
+                        model.transform.localScale *= scale;
+                    }
+                }
+
+                // Also try direct path as a fallback
+                if (model == null)
+                {
+                    var prefab = Resources.Load<GameObject>($"Models/{combatant.ModelId}");
+                    if (prefab != null)
+                        model = Object.Instantiate(prefab);
+                }
+            }
+
+            // Fallback: colored capsule
+            if (model == null)
+            {
+                model = GameObject.CreatePrimitive(PrimitiveType.Capsule);
+                model.transform.localScale = new Vector3(0.4f, 0.6f, 0.4f);
+                var mr = model.GetComponent<Renderer>();
+                var mat = new Material(Shader.Find("Universal Render Pipeline/Lit")
+                    ?? Shader.Find("Standard"));
+                Color capsuleColor = combatant.IsPlayer
+                    ? new Color(0.2f, 0.6f, 1f)
+                    : new Color(0.9f, 0.2f, 0.2f);
+                if (mat.HasProperty("_BaseColor"))
+                    mat.SetColor("_BaseColor", capsuleColor);
+                else
+                    mat.color = capsuleColor;
+                mr.material = mat;
+                var col = model.GetComponent<Collider>();
+                if (col != null) Object.Destroy(col);
+            }
+
+            model.name = $"Model_{combatant.Name}";
+            Vector3 worldPos = GridToWorld(combatant.X, combatant.Y);
+            model.transform.position = worldPos;
+
+            _models[combatant.Id] = model;
+
+            // Attach procedural animator
+            var anim = model.AddComponent<ModelAnimator>();
+            anim.SetBasePosition(worldPos);
+            _animators[combatant.Id] = anim;
+        }
+
+        // ── Animation helpers ────────────────────────────────────────────────
+
+        /// <summary>
+        /// Animate an attack: PlayAttack on actor toward target, PlayHit on
+        /// target if the attack hit.
+        /// </summary>
+        private void AnimateAttack(string actorId, string targetId, bool hit, int damage)
+        {
+            Vector3 targetWorldPos = Vector3.zero;
+
+            // Get target position for attack direction
+            if (_models.TryGetValue(targetId, out var targetModel))
+                targetWorldPos = targetModel.transform.position;
+
+            // Actor attack animation
+            if (_animators.TryGetValue(actorId, out var actorAnim))
+            {
+                actorAnim.PlayAttack(targetWorldPos, () =>
+                {
+                    // After attack animation completes, play hit on target
+                    if (hit && _animators.TryGetValue(targetId, out var tgtAnim))
+                        tgtAnim.PlayHit();
+                });
+            }
+            else if (hit)
+            {
+                // No actor animator, but still play hit on target
+                if (_animators.TryGetValue(targetId, out var tgtAnim))
+                    tgtAnim.PlayHit();
+            }
+        }
+
+        /// <summary>Play death animation on a combatant's model.</summary>
+        private void AnimateDeath(string combatantId)
+        {
+            if (_animators.TryGetValue(combatantId, out var anim))
+                anim.PlayDeath();
+        }
+
+        // ── Visual helpers ───────────────────────────────────────────────────
+
+        private void HighlightActiveCombatant()
+        {
+            // Scale pulse is handled by the ModelAnimator idle bob.
+            // We could add an emissive highlight here in the future.
+            // For now, just ensure the active model is visible.
+            foreach (var kvp in _models)
+            {
+                if (kvp.Value == null) continue;
+                // Could add outline/glow shader here
+            }
+        }
+
+        private string GetCombatantName(string id)
+        {
+            var c = FindCombatant(id);
+            return c?.Name ?? id;
         }
     }
 }
