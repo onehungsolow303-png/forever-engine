@@ -66,6 +66,8 @@ namespace ForeverEngine.Demo
             gameObject.AddComponent<VictoryScreen>();
             // Pause menu — Escape-toggled, with save/load/quit. F5/F9 quicksave/quickload.
             gameObject.AddComponent<PauseMenu>();
+            // Spell panel — V-toggled, out-of-combat spell casting.
+            gameObject.AddComponent<SpellPanel>();
         }
 
         private IEnumerator Start()
