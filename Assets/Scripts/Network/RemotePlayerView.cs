@@ -1,55 +1,31 @@
+using ForeverEngine.Core.Network;
 using UnityEngine;
 
 namespace ForeverEngine.Network
 {
     /// <summary>
-    /// Renders one remote player. Interpolates between the last two
-    /// received poses across InterpSeconds for smooth motion.
+    /// Renders one remote player by sampling <see cref="ServerStateCache.PlayerSnapshots"/>
+    /// at <c>estimatedServerTime - InterpDelaySec</c>. Buffered playback survives
+    /// short packet drops gracefully — the buffer holds the last-known pose and
+    /// keeps interpolating smoothly when packets resume.
     /// </summary>
     public class RemotePlayerView : UnityEngine.MonoBehaviour
     {
-        private const float InterpSeconds = 0.1f;
-
-        private struct Pose
-        {
-            public Vector3 Pos;
-            public float Yaw;
-            public double ReceivedAt;
-        }
+        public const double InterpDelaySec = 0.1;
 
         public string PlayerId = "";
-        private Pose _prev;
-        private Pose _curr;
-        private bool _hasPrev;
-
-        /// <summary>Ingest a new pose. Called by RemotePlayerManager on each PlayerUpdate.</summary>
-        public void PushPose(Vector3 pos, float yaw, double receivedAt)
-        {
-            if (_hasPrev || _curr.ReceivedAt > 0)
-            {
-                _prev = _curr;
-                _hasPrev = true;
-            }
-            _curr = new Pose { Pos = pos, Yaw = yaw, ReceivedAt = receivedAt };
-        }
 
         private void Update()
         {
-            if (_curr.ReceivedAt <= 0) return;
-            if (!_hasPrev)
-            {
-                transform.position = _curr.Pos;
-                transform.rotation = Quaternion.Euler(0f, _curr.Yaw, 0f);
-                return;
-            }
-            double now = Time.timeAsDouble;
-            float t = Mathf.InverseLerp(
-                (float)_curr.ReceivedAt,
-                (float)(_curr.ReceivedAt + InterpSeconds),
-                (float)now);
-            t = Mathf.Clamp01(t);
-            transform.position = Vector3.Lerp(_prev.Pos, _curr.Pos, t);
-            transform.rotation = Quaternion.Euler(0f, Mathf.LerpAngle(_prev.Yaw, _curr.Yaw, t), 0f);
+            var cache = ServerStateCache.Instance;
+            if (cache == null || !cache.Clock.IsInitialized) return;
+            if (!cache.PlayerSnapshots.TryGetValue(PlayerId, out var buffer)) return;
+
+            double targetServerTime = cache.Clock.EstimateServerTimeSec(Time.timeAsDouble) - InterpDelaySec;
+            if (!buffer.Sample(targetServerTime, out var x, out var y, out var z, out var yaw)) return;
+
+            transform.position = new Vector3(x, y, z);
+            transform.rotation = Quaternion.Euler(0f, yaw, 0f);
         }
     }
 }

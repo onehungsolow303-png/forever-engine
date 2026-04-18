@@ -4,13 +4,16 @@ using UnityEngine;
 namespace ForeverEngine.Network
 {
     /// <summary>
-    /// Spawns/despawns RemotePlayerViews as remote poses arrive and go stale.
-    /// Polls ServerStateCache.RemotePlayerPoses each frame.
+    /// Spawns/despawns RemotePlayerViews in response to snapshot arrivals.
+    /// Ingest is driven by ConnectionManager.OnPlayerUpdate pushing into
+    /// ServerStateCache.PlayerSnapshots; this class just materializes one
+    /// capsule per remote id and removes it after StaleSeconds of silence.
     /// </summary>
     public class RemotePlayerManager : UnityEngine.MonoBehaviour
     {
         private const double StaleSeconds = 5.0;
         private readonly Dictionary<string, RemotePlayerView> _views = new Dictionary<string, RemotePlayerView>();
+        private readonly List<string> _staleScratch = new List<string>();
 
         private void Update()
         {
@@ -18,50 +21,48 @@ namespace ForeverEngine.Network
             if (cache == null) return;
 
             double now = Time.timeAsDouble;
+            string localId = cache.LocalPlayerId;
 
-            // Ingest fresh poses
-            foreach (var kvp in cache.RemotePlayerPoses)
+            foreach (var kvp in cache.PlayerLastArrivalClientTime)
             {
                 string id = kvp.Key;
-                var (pos, yaw, receivedAt) = kvp.Value;
-                if (!_views.TryGetValue(id, out var view))
+                if (id == localId) continue;
+                if (_views.ContainsKey(id)) continue;
+
+                var go = GameObject.CreatePrimitive(PrimitiveType.Capsule);
+                go.name = $"RemotePlayer_{id}";
+                var col = go.GetComponent<Collider>();
+                if (col != null) Destroy(col);
+                var r = go.GetComponent<Renderer>();
+                if (r != null)
                 {
-                    var go = GameObject.CreatePrimitive(PrimitiveType.Capsule);
-                    go.name = $"RemotePlayer_{id}";
-                    // Remove collider — remote players are visual-only
-                    var col = go.GetComponent<Collider>();
-                    if (col != null) Destroy(col);
-                    // Tint so local/remote are distinguishable
-                    var r = go.GetComponent<Renderer>();
-                    if (r != null)
-                    {
-                        var mat = new Material(Shader.Find("Universal Render Pipeline/Lit")
-                            ?? Shader.Find("Standard"));
-                        mat.color = new Color(0.9f, 0.4f, 0.3f);
-                        r.material = mat;
-                    }
-                    view = go.AddComponent<RemotePlayerView>();
-                    view.PlayerId = id;
-                    _views[id] = view;
+                    var mat = new Material(Shader.Find("Universal Render Pipeline/Lit")
+                        ?? Shader.Find("Standard"));
+                    mat.color = new Color(0.9f, 0.4f, 0.3f);
+                    r.material = mat;
                 }
-                view.PushPose(pos, yaw, receivedAt);
+                var view = go.AddComponent<RemotePlayerView>();
+                view.PlayerId = id;
+                _views[id] = view;
             }
 
-            // Despawn stale entries — both from the view-set and the cache dict.
-            var toRemove = new List<string>();
+            // Despawn stale views (and drop their cache entries).
+            _staleScratch.Clear();
             foreach (var kvp in _views)
             {
-                if (!cache.RemotePlayerPoses.TryGetValue(kvp.Key, out var p) ||
-                    now - p.receivedAt > StaleSeconds)
+                if (!cache.PlayerLastArrivalClientTime.TryGetValue(kvp.Key, out var last) ||
+                    now - last > StaleSeconds)
                 {
-                    toRemove.Add(kvp.Key);
+                    _staleScratch.Add(kvp.Key);
                 }
             }
-            foreach (var id in toRemove)
+            for (int i = 0; i < _staleScratch.Count; i++)
             {
+                var id = _staleScratch[i];
                 if (_views[id] != null) Destroy(_views[id].gameObject);
                 _views.Remove(id);
-                cache.RemotePlayerPoses.Remove(id);
+                cache.PlayerLastArrivalClientTime.Remove(id);
+                cache.PlayerSnapshots.Remove(id);
             }
         }
     }

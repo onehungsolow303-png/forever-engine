@@ -495,10 +495,13 @@ namespace ForeverEngine.Procedural
 
         private void OnCollisionStay(Collision col)
         {
-            // Ground check — if any contact normal points mostly up, we're grounded
-            foreach (var contact in col.contacts)
+            // Ground check — if any contact normal points mostly up, we're grounded.
+            // Note: `col.contacts` allocates a fresh array per call; GetContact(i)
+            // indexes the live buffer and is zero-alloc.
+            int n = col.contactCount;
+            for (int i = 0; i < n; i++)
             {
-                if (contact.normal.y > 0.5f)
+                if (col.GetContact(i).normal.y > 0.5f)
                 { _grounded = true; return; }
             }
         }

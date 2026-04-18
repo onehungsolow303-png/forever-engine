@@ -230,57 +230,66 @@ namespace ForeverEngine.Network
             _client.Send(new RequestCharacterSheetMessage());
         }
 
+        // Hard-desync threshold: above this horizontal delta between the
+        // client's predicted position and the authoritative server pose we
+        // teleport-and-settle. Normal localhost drift is sub-meter.
+        private const float HardDesyncMeters = 100f;
+
         private void OnPlayerUpdate(PlayerUpdate msg)
         {
             ServerStateCache.Instance.ApplyPlayerUpdate(msg);
 
-            // Spec 7 Phase 1: route each snapshot to local-pose or remote-cache.
             var cache = ServerStateCache.Instance;
             if (cache == null) return;
 
-            double now = UnityEngine.Time.timeAsDouble;
+            double clientNow = UnityEngine.Time.timeAsDouble;
             string localId = LocalPlayerId;
+
+            // Shared server-time estimate drives every per-player SnapshotBuffer.
+            cache.Clock.Observe(msg.ServerTick, clientNow);
 
             foreach (var p in msg.Players)
             {
                 var pos = new UnityEngine.Vector3(p.X, p.Y, p.Z);
+
+                if (!cache.PlayerSnapshots.TryGetValue(p.Id, out var buf))
+                {
+                    buf = new ForeverEngine.Core.Network.SnapshotBuffer(tickRateHz: 20.0);
+                    cache.PlayerSnapshots[p.Id] = buf;
+                }
+                buf.Push(new ForeverEngine.Core.Network.PoseSample(
+                    msg.ServerTick, p.X, p.Y, p.Z, p.Yaw));
+                cache.PlayerLastArrivalClientTime[p.Id] = clientNow;
+
                 if (!string.IsNullOrEmpty(localId) && p.Id == localId)
                 {
                     cache.LocalPlayerPosition = pos;
                     cache.LocalPlayerYaw = p.Yaw;
-                    ReconcileLocalPlayer(pos);
-                }
-                else
-                {
-                    cache.RemotePlayerPoses[p.Id] = (pos, p.Yaw, now);
+                    HardDesyncRecover(pos);
                 }
             }
         }
 
-        private void ReconcileLocalPlayer(UnityEngine.Vector3 serverPos)
+        /// <summary>
+        /// Only runs when the client has drifted dramatically from the
+        /// authoritative pose — cheat detection catch-up, respawn, teleport.
+        /// No per-packet transform writes: reconciliation is handled by the
+        /// render-time SnapshotBuffer interpolation for remotes, and by trust
+        /// in client-side prediction for the local player.
+        /// </summary>
+        private void HardDesyncRecover(UnityEngine.Vector3 serverPos)
         {
             var player = _localPlayer;
             if (player == null) return;
 
-            // Reconcile only the horizontal axes. The client's own Rigidbody
-            // owns Y (gravity + jump + ground collision); fighting the server
-            // for Y every 50ms caused teleport/jitter/stuck-can't-move.
             var clientPos = player.transform.position;
-            var target = new UnityEngine.Vector3(serverPos.x, clientPos.y, serverPos.z);
             float horizDelta = UnityEngine.Vector2.Distance(
                 new UnityEngine.Vector2(clientPos.x, clientPos.z),
                 new UnityEngine.Vector2(serverPos.x, serverPos.z));
+            if (horizDelta < HardDesyncMeters) return;
 
-            // DIAGNOSTIC: dead-zone bumped from 3m → 50m to confirm reconciliation
-            // is the stutter source. Rigidbody interpolation cannot survive a
-            // direct transform.position write 20x/sec; if stutter vanishes with
-            // this change we know reconciliation is responsible and the proper
-            // fix is snapshot interpolation (buffered playback).
-            if (horizDelta < 50f)
-                return; // Effectively never correct during normal play.
-
-            // Hard snap — teleport, death, respawn, or egregious desync.
-            player.transform.position = target;
+            Debug.LogWarning($"[ConnectionManager] Hard desync recover: {horizDelta:F1}m drift, snapping.");
+            player.transform.position = new UnityEngine.Vector3(serverPos.x, clientPos.y, serverPos.z);
             var rb = player.GetComponent<UnityEngine.Rigidbody>();
             if (rb != null)
                 rb.linearVelocity = new UnityEngine.Vector3(0f, rb.linearVelocity.y, 0f);

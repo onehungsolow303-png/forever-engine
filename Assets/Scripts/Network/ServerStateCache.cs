@@ -1,5 +1,6 @@
 using ForeverEngine.Core.Messages;
 using ForeverEngine.Core.Messages.DTOs;
+using ForeverEngine.Core.Network;
 
 namespace ForeverEngine.Network
 {
@@ -16,12 +17,25 @@ namespace ForeverEngine.Network
         public float LocalPlayerYaw;
 
         /// <summary>
-        /// Remote-player pose cache keyed by playerId.
-        /// receivedAt is UnityEngine.Time.timeAsDouble when the update arrived —
-        /// RemotePlayerView (Task 13) uses it for interpolation and stale-despawn.
+        /// Per-player snapshot buffer used for server-time interpolation.
+        /// The wall-clock <c>receivedAt</c> stamp the old two-pose cache
+        /// tracked is replaced by the server tick carried on each PlayerSnapshot.
         /// </summary>
-        public readonly System.Collections.Generic.Dictionary<string, (UnityEngine.Vector3 pos, float yaw, double receivedAt)>
-            RemotePlayerPoses = new System.Collections.Generic.Dictionary<string, (UnityEngine.Vector3, float, double)>();
+        public readonly System.Collections.Generic.Dictionary<string, SnapshotBuffer>
+            PlayerSnapshots = new System.Collections.Generic.Dictionary<string, SnapshotBuffer>();
+
+        /// <summary>
+        /// Shared client estimate of current server-loop time. Fed by every
+        /// PlayerUpdate arrival; consumed by all per-player interpolators.
+        /// </summary>
+        public readonly ServerClock Clock = new ServerClock();
+
+        /// <summary>
+        /// Client time (<c>Time.timeAsDouble</c>) when each player last sent
+        /// a snapshot. Used for stale-despawn independent of the buffer.
+        /// </summary>
+        public readonly System.Collections.Generic.Dictionary<string, double>
+            PlayerLastArrivalClientTime = new System.Collections.Generic.Dictionary<string, double>();
 
         // From StatUpdate
         public int HP { get; private set; }
