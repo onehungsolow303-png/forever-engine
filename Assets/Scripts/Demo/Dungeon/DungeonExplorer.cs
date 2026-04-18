@@ -57,6 +57,26 @@ namespace ForeverEngine.Demo.Dungeon
         {
             if (!_initialized || _playerTransform == null) return;
 
+            // Spec 7 Phase 3 Task 7: F5 sends ExitDungeonRequest to the server.
+            // Server validates the exit and responds with DungeonExitedMessage, which
+            // ConnectionManager handles by loading the World scene.
+            // Escape is NOT used here — it is owned by PauseMenu.
+            if (Input.GetKeyDown(KeyCode.F5))
+            {
+                var cm = ForeverEngine.Network.ConnectionManager.Instance;
+                if (cm != null)
+                {
+                    cm.Send(new ForeverEngine.Core.Messages.ExitDungeonRequest());
+                    Debug.Log("[DungeonExplorer] ExitDungeonRequest sent (F5).");
+                }
+                else
+                {
+                    // Offline / editor path: fall back to local overworld return.
+                    Debug.Log("[DungeonExplorer] F5 pressed — no ConnectionManager, returning to overworld locally.");
+                    GameManager.Instance?.ReturnToOverworld();
+                }
+            }
+
             // Tab toggles full minimap overlay — but not when inventory is open
             if (Input.GetKeyDown(KeyCode.Tab) && _minimap != null && !(InventoryScreen.Instance?.IsOpen ?? false))
                 _minimap.ToggleFullMap();
