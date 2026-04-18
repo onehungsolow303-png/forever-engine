@@ -36,6 +36,24 @@ namespace ForeverEngine.Procedural
         private Transform _playerTransform;
         private bool _updating;
 
+        private const int ColliderRadius = 2;
+
+        /// <summary>
+        /// Chunks within Chebyshev distance ≤ ColliderRadius of the player's chunk
+        /// get a MeshCollider for local physics. Distant chunks are render-only —
+        /// the server owns authoritative collision via GetTerrainHeightAt.
+        /// </summary>
+        private bool ChunkNeedsCollider(ChunkCoord chunk)
+        {
+            if (_playerTransform == null) return true;  // Safe default when no player tracked.
+            var pPos = _playerTransform.position;
+            int pcx = Mathf.FloorToInt(pPos.x / ChunkCoord.ChunkSize);
+            int pcz = Mathf.FloorToInt(pPos.z / ChunkCoord.ChunkSize);
+            int dx = Mathf.Abs(chunk.X - pcx);
+            int dz = Mathf.Abs(chunk.Z - pcz);
+            return Mathf.Max(dx, dz) <= ColliderRadius;
+        }
+
         private struct LoadedChunk
         {
             public ChunkData Data;
@@ -102,7 +120,7 @@ namespace ForeverEngine.Procedural
                 return; // already loaded
 
             // Build terrain mesh
-            var terrainGO = TerrainGenerator.CreateTerrain(data);
+            var terrainGO = TerrainGenerator.CreateTerrain(data, needsCollider: ChunkNeedsCollider(coord));
 
             // Decorate with biome-appropriate props
             var props = SurfaceDecorator.DecorateMesh(data, terrainGO);
@@ -172,7 +190,7 @@ namespace ForeverEngine.Procedural
                 if (dist <= LoadRadius)
                 {
                     // Create mesh terrain
-                    var terrainGO = TerrainGenerator.CreateTerrain(data);
+                    var terrainGO = TerrainGenerator.CreateTerrain(data, needsCollider: ChunkNeedsCollider(coord));
                     _loaded[coord] = new LoadedChunk { Data = data, TerrainGO = terrainGO, Props = null };
 
                     yield return null; // Frame break after mesh creation
