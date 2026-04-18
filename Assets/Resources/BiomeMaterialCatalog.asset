@@ -11,5 +11,11 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: cbbe84b308453744d9ff87334342706a, type: 3}
   m_Name: BiomeMaterialCatalog
-  m_EditorClassIdentifier:
-  Entries: []
+  m_EditorClassIdentifier: 
+  Entries:
+  - Biome: 5
+    Material: {fileID: -6064998757138420285, guid: 7c7e4c3b6c8c16b4e884a2bac50a88cd, type: 3}
+  - Biome: 2
+    Material: {fileID: 2100000, guid: 8b917e545e989c5419aaf4cee2421613, type: 2}
+  - Biome: 10
+    Material: {fileID: 2100000, guid: 168a96bd3b6fccd408bcd73f435c5fb6, type: 2}

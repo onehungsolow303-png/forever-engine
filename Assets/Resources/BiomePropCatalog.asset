@@ -1,0 +1,185 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c5f04be88c4705c4788f554af176d0ca, type: 3}
+  m_Name: BiomePropCatalog
+  m_EditorClassIdentifier: ForeverEngine::ForeverEngine.Procedural.BiomePropCatalog
+  Rules:
+  - Biome: 6
+    Prefabs:
+    - {fileID: 109544, guid: 8dd1140c9f448f748b1a1b197613c944, type: 3}
+    - {fileID: 189470, guid: c5d9c0577b207a549ada126bfce8a623, type: 3}
+    - {fileID: 195860, guid: 76501c3edb034324398f3d693cc00182, type: 3}
+    - {fileID: 191158, guid: dffbf78ce99963c48a32cbf1154bf7f3, type: 3}
+    - {fileID: 113732, guid: 5c5c96af336077940b22ec341a7d70c7, type: 3}
+    - {fileID: 154626, guid: 1a5aa764b26037b43a31c4c2d9552837, type: 3}
+    - {fileID: 139514, guid: 2c9a03084d6695d42bffc4fbea66f538, type: 3}
+    - {fileID: 124534, guid: 169988d1b28eb4445a431bc447dc8e54, type: 3}
+    - {fileID: 143778, guid: cb826fcd3d9cea24b9afad3738663b25, type: 3}
+    - {fileID: 151608, guid: 4cae041d47e4abe428f9e751de6de9a0, type: 3}
+    - {fileID: 128830, guid: d2028150ede6d574793ae95ef8e1fd9e, type: 3}
+    - {fileID: 174822, guid: 77d16180dca01094993b44048efd2c95, type: 3}
+    Count: 20
+    MinSpacing: 18
+    BaseScale: 1
+  - Biome: 6
+    Prefabs:
+    - {fileID: 189810, guid: d994b63cacd76674db9be16a418fcdc0, type: 3}
+    - {fileID: 196680, guid: 3650fc3faeba40c4a9eccc45ed8126e2, type: 3}
+    - {fileID: 199478, guid: 449c0e9f247e3cb438118a7359f9d188, type: 3}
+    - {fileID: 115596, guid: 6cc5ff3cac739ce4296fc450e86d98b4, type: 3}
+    - {fileID: 170034, guid: 72a4473e1ba8cb14b8ad93ef6fdb4546, type: 3}
+    - {fileID: 1268384670302125136, guid: 98e8425be9b8eee4a8a4bdeac4d4a0d0, type: 3}
+    - {fileID: 5938200768912259279, guid: b9e98966c9c384048beaa52fd8b49679, type: 3}
+    - {fileID: 4179136129591379913, guid: 84603990a1f963243805545a837fbb08, type: 3}
+    - {fileID: 8369078301411299865, guid: 24fd80a4e0685c849b45a9b41228acf1, type: 3}
+    - {fileID: 2655237007466479926, guid: f8539e62ccdce8f40a013ab5de35e1c3, type: 3}
+    - {fileID: 8090469227932537213, guid: a422fddbefd856e4594b958b400e1326, type: 3}
+    - {fileID: 6794852611398455685, guid: 064294e6bd177024d9f7fcdd8673b17d, type: 3}
+    Count: 10
+    MinSpacing: 20
+    BaseScale: 0.7
+  - Biome: 6
+    Prefabs:
+    - {fileID: 158350, guid: 0cd0d638120d5434094e5b7d72fae2af, type: 3}
+    - {fileID: 139820, guid: 6906883089ab9f941b06538a9ad36c3a, type: 3}
+    - {fileID: 191586, guid: e68f8dd7657d1a140934dede28271216, type: 3}
+    - {fileID: 119960, guid: 3b37080954a1ed74eb9067961862386c, type: 3}
+    - {fileID: 124430, guid: 78a4c7530a1ffc14fb519922916c58ba, type: 3}
+    - {fileID: 178762, guid: a01627f938cb907488c9e2741725ebf4, type: 3}
+    - {fileID: 185560, guid: c1430ee6e3b7e8b4db53d7a15f733fde, type: 3}
+    - {fileID: 122930, guid: faca7026dc03c1445bff13c437e3b5aa, type: 3}
+    - {fileID: 113004, guid: d0b7fb94cea96c84bb7b481f49810607, type: 3}
+    - {fileID: 3644152076974972783, guid: c97e81a1853b8a043be5550f881c60ee, type: 3}
+    - {fileID: 8134217534734601532, guid: a83f37dabb23e28499c92f88110cebf9, type: 3}
+    - {fileID: 6320847413095166771, guid: bfd2286be6ca8a240bd82c117249eaae, type: 3}
+    Count: 5
+    MinSpacing: 35
+    BaseScale: 1
+  - Biome: 8
+    Prefabs:
+    - {fileID: 158350, guid: 0cd0d638120d5434094e5b7d72fae2af, type: 3}
+    - {fileID: 139820, guid: 6906883089ab9f941b06538a9ad36c3a, type: 3}
+    - {fileID: 191586, guid: e68f8dd7657d1a140934dede28271216, type: 3}
+    - {fileID: 119960, guid: 3b37080954a1ed74eb9067961862386c, type: 3}
+    - {fileID: 124430, guid: 78a4c7530a1ffc14fb519922916c58ba, type: 3}
+    - {fileID: 178762, guid: a01627f938cb907488c9e2741725ebf4, type: 3}
+    - {fileID: 185560, guid: c1430ee6e3b7e8b4db53d7a15f733fde, type: 3}
+    - {fileID: 122930, guid: faca7026dc03c1445bff13c437e3b5aa, type: 3}
+    - {fileID: 113004, guid: d0b7fb94cea96c84bb7b481f49810607, type: 3}
+    - {fileID: 3644152076974972783, guid: c97e81a1853b8a043be5550f881c60ee, type: 3}
+    - {fileID: 8134217534734601532, guid: a83f37dabb23e28499c92f88110cebf9, type: 3}
+    - {fileID: 6320847413095166771, guid: bfd2286be6ca8a240bd82c117249eaae, type: 3}
+    Count: 8
+    MinSpacing: 25
+    BaseScale: 1
+  - Biome: 12
+    Prefabs:
+    - {fileID: 158350, guid: 0cd0d638120d5434094e5b7d72fae2af, type: 3}
+    - {fileID: 139820, guid: 6906883089ab9f941b06538a9ad36c3a, type: 3}
+    - {fileID: 191586, guid: e68f8dd7657d1a140934dede28271216, type: 3}
+    - {fileID: 119960, guid: 3b37080954a1ed74eb9067961862386c, type: 3}
+    - {fileID: 124430, guid: 78a4c7530a1ffc14fb519922916c58ba, type: 3}
+    - {fileID: 178762, guid: a01627f938cb907488c9e2741725ebf4, type: 3}
+    - {fileID: 185560, guid: c1430ee6e3b7e8b4db53d7a15f733fde, type: 3}
+    - {fileID: 122930, guid: faca7026dc03c1445bff13c437e3b5aa, type: 3}
+    - {fileID: 113004, guid: d0b7fb94cea96c84bb7b481f49810607, type: 3}
+    - {fileID: 3644152076974972783, guid: c97e81a1853b8a043be5550f881c60ee, type: 3}
+    - {fileID: 8134217534734601532, guid: a83f37dabb23e28499c92f88110cebf9, type: 3}
+    - {fileID: 6320847413095166771, guid: bfd2286be6ca8a240bd82c117249eaae, type: 3}
+    Count: 20
+    MinSpacing: 18
+    BaseScale: 1
+  - Biome: 5
+    Prefabs:
+    - {fileID: 109544, guid: 8dd1140c9f448f748b1a1b197613c944, type: 3}
+    - {fileID: 189470, guid: c5d9c0577b207a549ada126bfce8a623, type: 3}
+    - {fileID: 195860, guid: 76501c3edb034324398f3d693cc00182, type: 3}
+    - {fileID: 191158, guid: dffbf78ce99963c48a32cbf1154bf7f3, type: 3}
+    - {fileID: 113732, guid: 5c5c96af336077940b22ec341a7d70c7, type: 3}
+    - {fileID: 154626, guid: 1a5aa764b26037b43a31c4c2d9552837, type: 3}
+    - {fileID: 139514, guid: 2c9a03084d6695d42bffc4fbea66f538, type: 3}
+    - {fileID: 124534, guid: 169988d1b28eb4445a431bc447dc8e54, type: 3}
+    - {fileID: 143778, guid: cb826fcd3d9cea24b9afad3738663b25, type: 3}
+    - {fileID: 151608, guid: 4cae041d47e4abe428f9e751de6de9a0, type: 3}
+    - {fileID: 128830, guid: d2028150ede6d574793ae95ef8e1fd9e, type: 3}
+    - {fileID: 174822, guid: 77d16180dca01094993b44048efd2c95, type: 3}
+    Count: 3
+    MinSpacing: 50
+    BaseScale: 1
+  - Biome: 5
+    Prefabs:
+    - {fileID: 158350, guid: 0cd0d638120d5434094e5b7d72fae2af, type: 3}
+    - {fileID: 139820, guid: 6906883089ab9f941b06538a9ad36c3a, type: 3}
+    - {fileID: 191586, guid: e68f8dd7657d1a140934dede28271216, type: 3}
+    - {fileID: 119960, guid: 3b37080954a1ed74eb9067961862386c, type: 3}
+    - {fileID: 124430, guid: 78a4c7530a1ffc14fb519922916c58ba, type: 3}
+    - {fileID: 178762, guid: a01627f938cb907488c9e2741725ebf4, type: 3}
+    - {fileID: 185560, guid: c1430ee6e3b7e8b4db53d7a15f733fde, type: 3}
+    - {fileID: 122930, guid: faca7026dc03c1445bff13c437e3b5aa, type: 3}
+    - {fileID: 113004, guid: d0b7fb94cea96c84bb7b481f49810607, type: 3}
+    - {fileID: 3644152076974972783, guid: c97e81a1853b8a043be5550f881c60ee, type: 3}
+    - {fileID: 8134217534734601532, guid: a83f37dabb23e28499c92f88110cebf9, type: 3}
+    - {fileID: 6320847413095166771, guid: bfd2286be6ca8a240bd82c117249eaae, type: 3}
+    Count: 3
+    MinSpacing: 40
+    BaseScale: 0.8
+  - Biome: 4
+    Prefabs:
+    - {fileID: 109544, guid: 8dd1140c9f448f748b1a1b197613c944, type: 3}
+    - {fileID: 189470, guid: c5d9c0577b207a549ada126bfce8a623, type: 3}
+    - {fileID: 195860, guid: 76501c3edb034324398f3d693cc00182, type: 3}
+    - {fileID: 191158, guid: dffbf78ce99963c48a32cbf1154bf7f3, type: 3}
+    - {fileID: 113732, guid: 5c5c96af336077940b22ec341a7d70c7, type: 3}
+    - {fileID: 154626, guid: 1a5aa764b26037b43a31c4c2d9552837, type: 3}
+    - {fileID: 139514, guid: 2c9a03084d6695d42bffc4fbea66f538, type: 3}
+    - {fileID: 124534, guid: 169988d1b28eb4445a431bc447dc8e54, type: 3}
+    - {fileID: 143778, guid: cb826fcd3d9cea24b9afad3738663b25, type: 3}
+    - {fileID: 151608, guid: 4cae041d47e4abe428f9e751de6de9a0, type: 3}
+    - {fileID: 128830, guid: d2028150ede6d574793ae95ef8e1fd9e, type: 3}
+    - {fileID: 174822, guid: 77d16180dca01094993b44048efd2c95, type: 3}
+    Count: 4
+    MinSpacing: 50
+    BaseScale: 1.2
+  - Biome: 7
+    Prefabs:
+    - {fileID: 109544, guid: 8dd1140c9f448f748b1a1b197613c944, type: 3}
+    - {fileID: 189470, guid: c5d9c0577b207a549ada126bfce8a623, type: 3}
+    - {fileID: 195860, guid: 76501c3edb034324398f3d693cc00182, type: 3}
+    - {fileID: 191158, guid: dffbf78ce99963c48a32cbf1154bf7f3, type: 3}
+    - {fileID: 113732, guid: 5c5c96af336077940b22ec341a7d70c7, type: 3}
+    - {fileID: 154626, guid: 1a5aa764b26037b43a31c4c2d9552837, type: 3}
+    - {fileID: 139514, guid: 2c9a03084d6695d42bffc4fbea66f538, type: 3}
+    - {fileID: 124534, guid: 169988d1b28eb4445a431bc447dc8e54, type: 3}
+    - {fileID: 143778, guid: cb826fcd3d9cea24b9afad3738663b25, type: 3}
+    - {fileID: 151608, guid: 4cae041d47e4abe428f9e751de6de9a0, type: 3}
+    - {fileID: 128830, guid: d2028150ede6d574793ae95ef8e1fd9e, type: 3}
+    - {fileID: 174822, guid: 77d16180dca01094993b44048efd2c95, type: 3}
+    Count: 30
+    MinSpacing: 12
+    BaseScale: 1
+  - Biome: 10
+    Prefabs:
+    - {fileID: 158350, guid: 0cd0d638120d5434094e5b7d72fae2af, type: 3}
+    - {fileID: 139820, guid: 6906883089ab9f941b06538a9ad36c3a, type: 3}
+    - {fileID: 191586, guid: e68f8dd7657d1a140934dede28271216, type: 3}
+    - {fileID: 119960, guid: 3b37080954a1ed74eb9067961862386c, type: 3}
+    - {fileID: 124430, guid: 78a4c7530a1ffc14fb519922916c58ba, type: 3}
+    - {fileID: 178762, guid: a01627f938cb907488c9e2741725ebf4, type: 3}
+    - {fileID: 185560, guid: c1430ee6e3b7e8b4db53d7a15f733fde, type: 3}
+    - {fileID: 122930, guid: faca7026dc03c1445bff13c437e3b5aa, type: 3}
+    - {fileID: 113004, guid: d0b7fb94cea96c84bb7b481f49810607, type: 3}
+    - {fileID: 3644152076974972783, guid: c97e81a1853b8a043be5550f881c60ee, type: 3}
+    - {fileID: 8134217534734601532, guid: a83f37dabb23e28499c92f88110cebf9, type: 3}
+    - {fileID: 6320847413095166771, guid: bfd2286be6ca8a240bd82c117249eaae, type: 3}
+    Count: 12
+    MinSpacing: 22
+    BaseScale: 1
