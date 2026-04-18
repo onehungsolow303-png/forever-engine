@@ -332,6 +332,13 @@ namespace ForeverEngine.Procedural
         public float JumpForce = 6f;
         public float MouseSensitivity = 2f;
 
+        // --- Exposed input state for ConnectionManager (see Spec 7 Phase 1) ---
+        [System.NonSerialized] public float LastInputX;
+        [System.NonSerialized] public float LastInputZ;
+        [System.NonSerialized] public bool LastSprint;
+        [System.NonSerialized] public bool JumpPressedThisFrame;
+        public float Yaw => _yaw;
+
         private Rigidbody _rb;
         private bool _grounded;
         private float _yaw;
@@ -369,8 +376,12 @@ namespace ForeverEngine.Procedural
                 transform.rotation = Quaternion.Euler(0f, _yaw, 0f);
             }
 
-            // Jump
-            if (_grounded && Input.GetKeyDown(KeyCode.Space))
+            // Capture Space press as edge-triggered flag. ConnectionManager consumes it
+            // on its next send tick so exactly one MoveInput{Jump=true} is emitted per press.
+            if (Input.GetKeyDown(KeyCode.Space)) JumpPressedThisFrame = true;
+
+            // Local-prediction jump — server also applies JumpImpulse via MovementHandler.
+            if (_grounded && JumpPressedThisFrame)
             {
                 _rb.AddForce(Vector3.up * JumpForce, ForceMode.Impulse);
                 _grounded = false;
@@ -386,6 +397,12 @@ namespace ForeverEngine.Procedural
             if (Input.GetKey(KeyCode.D) || Input.GetKey(KeyCode.RightArrow)) h += 1f;
             if (Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.UpArrow)) v += 1f;
             if (Input.GetKey(KeyCode.S) || Input.GetKey(KeyCode.DownArrow)) v -= 1f;
+
+            // Snapshot for ConnectionManager — ensures the same input that drives local
+            // physics is what gets sent to the server, no split-brain.
+            LastInputX = h;
+            LastInputZ = v;
+            LastSprint = Input.GetKey(KeyCode.LeftShift);
 
             if (Mathf.Abs(h) < 0.01f && Mathf.Abs(v) < 0.01f)
             {
