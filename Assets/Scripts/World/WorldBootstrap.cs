@@ -300,6 +300,12 @@ namespace ForeverEngine.Procedural
                 panelGO.AddComponent<Demo.UI.PartyPanel>();
                 UnityEngine.Object.DontDestroyOnLoad(panelGO);
             }
+
+            // Spec 7 Phase 3 Task 8: F-key debug dungeon entry.
+            if (UnityEngine.Object.FindFirstObjectByType<ForeverEngine.Procedural.DungeonEntryInput>() == null)
+            {
+                new GameObject("DungeonEntryInput").AddComponent<ForeverEngine.Procedural.DungeonEntryInput>();
+            }
         }
 
         private System.Collections.IEnumerator AutoScreenshotLoop()
