@@ -6,7 +6,9 @@ namespace ForeverEngine.Procedural
 {
     /// <summary>
     /// Streams mesh-based terrain chunks around the player.
-    /// Uses simple mesh planes (not Unity Terrain) for fast creation/destruction.
+    /// In multiplayer mode, receives pre-generated ChunkData from the server via
+    /// <see cref="ReceiveServerChunk"/>. In offline/fallback mode, generates
+    /// chunks locally using PlanetSkeleton + TerrainGenerator.
     /// </summary>
     public class ChunkManager : UnityEngine.MonoBehaviour
     {
@@ -21,6 +23,12 @@ namespace ForeverEngine.Procedural
         public int WorldSeed = 42;
 
         public PlanetSkeleton Skeleton { get; private set; }
+
+        /// <summary>Number of currently loaded chunks (with or without mesh).</summary>
+        public int LoadedChunkCount => _loaded.Count;
+
+        /// <summary>True when receiving chunks from the server instead of generating locally.</summary>
+        public bool ServerMode { get; private set; }
 
         private readonly Dictionary<ChunkCoord, LoadedChunk> _loaded = new();
         private readonly HashSet<ChunkCoord> _generating = new();
@@ -37,15 +45,30 @@ namespace ForeverEngine.Procedural
 
         private void Awake() => Instance = this;
 
-        public void Initialize(Transform playerTransform)
+        /// <summary>
+        /// Initialize the chunk manager. In server mode, skeleton is not created
+        /// (the server owns world generation). In offline mode, a local
+        /// PlanetSkeleton is built from the seed for client-side generation.
+        /// </summary>
+        public void Initialize(Transform playerTransform, bool serverMode = false)
         {
             _playerTransform = playerTransform;
-            if (Skeleton == null)
+            ServerMode = serverMode;
+
+            if (!ServerMode && Skeleton == null)
             {
                 Skeleton = new PlanetSkeleton(WorldSeed);
                 Debug.Log($"[ChunkManager] Skeleton generated: seed {WorldSeed}");
             }
             _lastPlayerChunk = new ChunkCoord(int.MinValue, 0);
+        }
+
+        /// <summary>
+        /// Legacy overload — defaults to offline (local generation) mode.
+        /// </summary>
+        public void Initialize(Transform playerTransform)
+        {
+            Initialize(playerTransform, serverMode: false);
         }
 
         private void Update()
@@ -60,10 +83,62 @@ namespace ForeverEngine.Procedural
             }
         }
 
+        /// <summary>
+        /// Receive a chunk from the server. Builds terrain mesh and decorations,
+        /// then tracks the chunk as loaded. Skips chunks already present.
+        /// </summary>
+        public void ReceiveServerChunk(ChunkData data)
+        {
+            // Auto-enable server mode on first received chunk
+            if (!ServerMode)
+            {
+                ServerMode = true;
+                Debug.Log("[ChunkManager] Server mode enabled — receiving chunks from server.");
+            }
+
+            var coord = new ChunkCoord(data.ChunkX, data.ChunkZ);
+
+            if (_loaded.ContainsKey(coord))
+                return; // already loaded
+
+            // Build terrain mesh
+            var terrainGO = TerrainGenerator.CreateTerrain(data);
+
+            // Decorate with biome-appropriate props
+            var props = SurfaceDecorator.DecorateMesh(data, terrainGO);
+
+            // Track as loaded
+            _loaded[coord] = new LoadedChunk
+            {
+                Data = data,
+                TerrainGO = terrainGO,
+                Props = props,
+            };
+
+            Debug.Log($"[ChunkManager] Server chunk loaded: {coord} biome={data.Biome}");
+        }
+
         private IEnumerator UpdateChunks(ChunkCoord center)
         {
             _updating = true;
 
+            // In server mode, the server pushes chunks — client only handles unloading
+            if (!ServerMode)
+            {
+                yield return LocalGenerateChunks(center);
+            }
+
+            // Unload distant chunks (both modes)
+            UnloadDistantChunks(center);
+
+            _updating = false;
+        }
+
+        /// <summary>
+        /// Local (offline/fallback) chunk generation — used when no server is connected.
+        /// </summary>
+        private IEnumerator LocalGenerateChunks(ChunkCoord center)
+        {
             // Collect needed chunks, sorted closest first
             var needed = new List<(ChunkCoord coord, int dist)>();
             for (int dz = -GenerateAheadRadius; dz <= GenerateAheadRadius; dz++)
@@ -114,8 +189,13 @@ namespace ForeverEngine.Procedural
                 _generating.Remove(coord);
                 yield return null; // Frame break between chunks
             }
+        }
 
-            // Unload distant chunks
+        /// <summary>
+        /// Unload chunks beyond the unload radius from the player's current chunk.
+        /// </summary>
+        private void UnloadDistantChunks(ChunkCoord center)
+        {
             var toUnload = new List<ChunkCoord>();
             foreach (var kvp in _loaded)
                 if (center.ChebyshevTo(kvp.Key) > UnloadRadius)
@@ -130,8 +210,6 @@ namespace ForeverEngine.Procedural
                     _loaded.Remove(coord);
                 }
             }
-
-            _updating = false;
         }
 
         public ChunkData GetChunkData(ChunkCoord coord) =>
@@ -141,7 +219,13 @@ namespace ForeverEngine.Procedural
         {
             var coord = ChunkCoord.FromWorldPos(worldPos);
             var data = GetChunkData(coord);
-            return data != null ? data.Biome : Skeleton.SampleAt(coord).Biome;
+            if (data != null) return data.Biome;
+
+            // Fallback: sample from skeleton if available (offline mode only)
+            if (Skeleton != null)
+                return Skeleton.SampleAt(coord).Biome;
+
+            return BiomeType.Grassland;
         }
 
         public int LoadedCount => _loaded.Count;
