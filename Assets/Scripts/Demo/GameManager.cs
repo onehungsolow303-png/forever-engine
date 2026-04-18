@@ -24,6 +24,13 @@ namespace ForeverEngine.Demo
         public bool LastBattleWon { get; set; }
         public bool IsInCombat { get; private set; }
 
+        // ── Spec 7 Phase 3 Task 6: server-driven dungeon routing ──────────
+        /// <summary>Seed for next dungeon scene to build (written by ConnectionManager on DungeonEnteredMessage).</summary>
+        public static int PendingDungeonSeed;
+
+        /// <summary>Template name for next dungeon scene (written by ConnectionManager on DungeonEnteredMessage).</summary>
+        public static string PendingDungeonTemplate = "debug_small";
+
         // Phase 3 pivot: HTTP bridges to Asset Manager (port 7801) and
         // Director Hub (port 7802). The C# brain (AIDirector, AIGameMaster,
         // MemoryManager) was archived to _archive/forever-engine-pre-pivot/

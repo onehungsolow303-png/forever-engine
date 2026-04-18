@@ -45,6 +45,17 @@ namespace ForeverEngine.Network
         // From CharacterSheetData
         public CharacterSheetDto CharacterSheet { get; private set; }
 
+        // ── Spec 7 Phase 3 Task 6: party + dungeon state ──────────────────────
+
+        /// <summary>Current party membership (never null after login — server auto-creates solo party).</summary>
+        public PartyInfo CurrentParty;
+
+        /// <summary>Pending invite from another player. Null when none.</summary>
+        public (string fromPlayerId, string partyId)? PendingInvite;
+
+        /// <summary>Active dungeon instance id if inside a dungeon; empty otherwise.</summary>
+        public string CurrentDungeonInstanceId = "";
+
         // Derived
         public float HPPercent => MaxHP > 0 ? (float)HP / MaxHP : 0f;
         public float HungerPercent => Hunger / 100f;

@@ -292,6 +292,14 @@ namespace ForeverEngine.Procedural
                 new GameObject("RemotePlayerManager")
                     .AddComponent<ForeverEngine.Network.RemotePlayerManager>();
             }
+
+            // Spec 7 Phase 3 Task 6: spawn PartyPanel once, persistent across scene loads.
+            if (UnityEngine.Object.FindFirstObjectByType<Demo.UI.PartyPanel>() == null)
+            {
+                var panelGO = new GameObject("PartyPanel");
+                panelGO.AddComponent<Demo.UI.PartyPanel>();
+                UnityEngine.Object.DontDestroyOnLoad(panelGO);
+            }
         }
 
         private System.Collections.IEnumerator AutoScreenshotLoop()

@@ -88,6 +88,10 @@ namespace ForeverEngine.Network
             _client.RegisterHandler<ShopOpenMessage>(OnShopOpen);
             _client.RegisterHandler<ShopUpdateMessage>(OnShopUpdate);
             _client.RegisterHandler<ChunkDataMessage>(OnChunkData);
+            _client.RegisterHandler<PartyUpdateMessage>(OnPartyUpdate);
+            _client.RegisterHandler<PartyInviteReceivedMessage>(OnPartyInviteReceived);
+            _client.RegisterHandler<DungeonEnteredMessage>(OnDungeonEntered);
+            _client.RegisterHandler<DungeonExitedMessage>(OnDungeonExited);
 
             // Begin connecting
             _client.Connect(Host, Port);
@@ -331,6 +335,47 @@ namespace ForeverEngine.Network
                 chunkMgr.ReceiveServerChunk(localChunk);
             else
                 Debug.LogWarning("[ConnectionManager] ChunkDataMessage received but ChunkManager not ready.");
+        }
+
+        // ── Spec 7 Phase 3 Task 6: party + dungeon handlers ───────────────
+
+        private void OnPartyUpdate(PartyUpdateMessage msg)
+        {
+            ServerStateCache.Instance.CurrentParty = msg.Party;
+            Debug.Log($"[Party] Update: {msg.Party.MemberIds.Length} members, leader={msg.Party.LeaderId}");
+        }
+
+        private void OnPartyInviteReceived(PartyInviteReceivedMessage msg)
+        {
+            ServerStateCache.Instance.PendingInvite = (msg.FromPlayerId, msg.PartyId);
+            Debug.Log($"[Party] Invite from {msg.FromPlayerId}");
+        }
+
+        private void OnDungeonEntered(DungeonEnteredMessage msg)
+        {
+            var cache = ServerStateCache.Instance;
+            cache.CurrentDungeonInstanceId = msg.InstanceId;
+            // Pass seed + template to GameManager so DungeonSceneSetup picks them up after scene load.
+            Demo.GameManager.PendingDungeonSeed = msg.Seed;
+            Demo.GameManager.PendingDungeonTemplate = msg.TemplateName;
+            Debug.Log($"[Dungeon] Entered {msg.InstanceId} seed={msg.Seed} template={msg.TemplateName}");
+            UnityEngine.SceneManagement.SceneManager.LoadScene("DungeonExploration");
+        }
+
+        private void OnDungeonExited(DungeonExitedMessage msg)
+        {
+            ServerStateCache.Instance.CurrentDungeonInstanceId = "";
+            Debug.Log($"[Dungeon] Exited {msg.InstanceId}");
+            UnityEngine.SceneManagement.SceneManager.LoadScene("World");
+        }
+
+        /// <summary>
+        /// Public send wrapper for UI panels and other MonoBehaviours.
+        /// No-op if the client is not connected.
+        /// </summary>
+        public void Send(ForeverEngine.Core.Messages.ClientMessage msg)
+        {
+            if (_client != null) _client.Send(msg);
         }
 
         // ── Connection UI ──────────────────────────────────────────────────
