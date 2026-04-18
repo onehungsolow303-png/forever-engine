@@ -177,26 +177,36 @@ namespace ForeverEngine.Procedural
             if (terrain != null) Object.Destroy(terrain.gameObject);
         }
 
-        /// <summary>Get or create a cached material for a biome.</summary>
+        /// <summary>Get or create a cached material for a biome. Prefers BiomeMaterialCatalog;
+        /// falls back to a solid-color URP Lit material when the catalog is absent or has no
+        /// entry for the biome.</summary>
         private static Material GetBiomeMaterial(BiomeType biome)
         {
             int idx = (int)biome;
             if (idx < 0 || idx >= _biomeMaterials.Length) idx = 0;
 
-            if (_biomeMaterials[idx] == null)
+            if (_biomeMaterials[idx] != null)
+                return _biomeMaterials[idx];
+
+            // 1) Catalog hit — use the curated pack material.
+            var catalog = BiomeMaterialCatalog.Load();
+            var catalogMat = catalog != null ? catalog.GetMaterial(biome) : null;
+            if (catalogMat != null)
             {
-                var color = BiomeTable.BaseColor(biome);
-                var shader = Shader.Find("Universal Render Pipeline/Lit")
-                    ?? Shader.Find("Standard");
-                var mat = new Material(shader);
-                if (mat.HasProperty("_BaseColor"))
-                    mat.SetColor("_BaseColor", color);
-                else
-                    mat.color = color;
-                _biomeMaterials[idx] = mat;
+                _biomeMaterials[idx] = catalogMat;
+                return catalogMat;
             }
 
-            return _biomeMaterials[idx];
+            // 2) Fallback — build a solid-color URP Lit material.
+            var color = BiomeTable.BaseColor(biome);
+            var shader = Shader.Find("Universal Render Pipeline/Lit") ?? Shader.Find("Standard");
+            var mat = new Material(shader);
+            if (mat.HasProperty("_BaseColor"))
+                mat.SetColor("_BaseColor", color);
+            else
+                mat.color = color;
+            _biomeMaterials[idx] = mat;
+            return mat;
         }
 
         /// <summary>Bilinear sample from a flat heightmap array.</summary>
