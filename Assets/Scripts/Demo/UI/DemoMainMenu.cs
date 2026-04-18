@@ -39,6 +39,14 @@ namespace ForeverEngine.Demo.UI
                 var cm = new GameObject("ConnectionManager");
                 cm.AddComponent<ForeverEngine.Network.ConnectionManager>();
             }
+            if (online)
+            {
+                // Wait until login completes so WorldBootstrap doesn't start its
+                // 30s chunk-poll before LoginRequest is even on the wire.
+                while (ForeverEngine.Network.ConnectionManager.Instance == null ||
+                       !ForeverEngine.Network.ConnectionManager.Instance.IsLoggedIn)
+                    yield return null;
+            }
             Debug.Log($"[DemoMainMenu] {(online ? "--connect" : "--skip-menu")} → auto-starting Human Warrior");
             GameManager.Instance.StartGameWithSheet(RPGBridge.CreateHumanWarrior());
         }
