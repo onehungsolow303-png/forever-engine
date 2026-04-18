@@ -64,6 +64,8 @@ namespace ForeverEngine.Procedural
         /// <summary>
         /// Decorate a mesh-based terrain chunk (no Unity Terrain required).
         /// Samples height from the stored heightmap directly.
+        /// Catalog path: if a BiomePropCatalog is loaded and has rules for this biome,
+        /// instantiates real pack prefabs. Falls back to procedural primitives otherwise.
         /// </summary>
         public static GameObject DecorateMesh(ChunkData chunkData, GameObject terrainGO)
         {
@@ -73,6 +75,17 @@ namespace ForeverEngine.Procedural
 
             int seed = chunkData.ChunkX * 73856093 ^ chunkData.ChunkZ * 19349663;
             var rng = new System.Random(seed);
+
+            // 1) Catalog path: if configured, instantiate real prefabs.
+            var catalog = BiomePropCatalog.Load();
+            var catalogRules = catalog != null ? catalog.GetRules(chunkData.Biome) : System.Array.Empty<BiomePropRule>();
+            if (catalogRules.Length > 0)
+            {
+                DecorateFromCatalog(chunkData, parent.transform, rng, catalogRules);
+                return parent;
+            }
+
+            // 2) Fallback: procedural primitive props (original path).
             var rules = GetBiomeRules(chunkData.Biome);
             int hmRes = ChunkData.HeightmapRes;
 
@@ -86,7 +99,6 @@ namespace ForeverEngine.Procedural
                     float worldX = coord.WorldOrigin.x + pos.x;
                     float worldZ = coord.WorldOrigin.z + pos.y;
 
-                    // Sample height from heightmap
                     float hmX = pos.x / ChunkCoord.ChunkSize * (hmRes - 1);
                     float hmZ = pos.y / ChunkCoord.ChunkSize * (hmRes - 1);
                     int ix = Mathf.Clamp(Mathf.RoundToInt(hmX), 0, hmRes - 1);
@@ -107,6 +119,49 @@ namespace ForeverEngine.Procedural
             }
 
             return parent;
+        }
+
+        private static void DecorateFromCatalog(
+            ChunkData chunkData,
+            Transform parent,
+            System.Random rng,
+            BiomePropRule[] rules)
+        {
+            var coord = new ChunkCoord(chunkData.ChunkX, chunkData.ChunkZ);
+            int hmRes = ChunkData.HeightmapRes;
+
+            foreach (var rule in rules)
+            {
+                if (rule.Prefabs == null || rule.Prefabs.Length == 0) continue;
+
+                var positions = PoissonDisk(ChunkCoord.ChunkSize, rule.MinSpacing, rule.Count, rng);
+                foreach (var pos in positions)
+                {
+                    float worldX = coord.WorldOrigin.x + pos.x;
+                    float worldZ = coord.WorldOrigin.z + pos.y;
+
+                    float hmX = pos.x / ChunkCoord.ChunkSize * (hmRes - 1);
+                    float hmZ = pos.y / ChunkCoord.ChunkSize * (hmRes - 1);
+                    int ix = Mathf.Clamp(Mathf.RoundToInt(hmX), 0, hmRes - 1);
+                    int iz = Mathf.Clamp(Mathf.RoundToInt(hmZ), 0, hmRes - 1);
+                    float height = chunkData.Heightmap[iz * hmRes + ix] * TerrainGenerator.MaxHeight;
+
+                    var prefab = rule.Prefabs[rng.Next(rule.Prefabs.Length)];
+                    if (prefab == null) continue;
+
+                    var go = Object.Instantiate(prefab);
+                    float scale = rule.BaseScale * (0.8f + (float)rng.NextDouble() * 0.4f);
+                    float rotation = (float)rng.NextDouble() * 360f;
+                    go.transform.position = new Vector3(worldX, height, worldZ);
+                    go.transform.localScale = Vector3.one * scale;
+                    go.transform.rotation = Quaternion.Euler(0f, rotation, 0f);
+                    go.transform.SetParent(parent, worldPositionStays: true);
+
+                    // Props are pass-through in Phase 2 — strip any collider on the root.
+                    var col = go.GetComponent<Collider>();
+                    if (col != null) Object.Destroy(col);
+                }
+            }
         }
 
         /// <summary>Remove all decoration from a chunk.</summary>
