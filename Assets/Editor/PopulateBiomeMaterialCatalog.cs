@@ -14,18 +14,25 @@ public static class PopulateBiomeMaterialCatalog
 {
     // Biome → substring hints. First material whose asset path contains
     // any hint (case-insensitive) wins. Order the hints most-specific-first.
+    // Tuned 2026-04-18 against actual asset pack contents — Lordenfel for
+    // grass/rock/mountain, NatureManufacture for ground/sand/soil variants,
+    // Eternal Temple for dry-grass, Dragon Catacomb for snow.
     private static readonly (BiomeType biome, string[] hints)[] Rules =
     {
-        (BiomeType.TemperateForest,   new[] { "Forest/Materials/Ground", "ForestGround", "GrassForest" }),
-        (BiomeType.BorealForest,      new[] { "Forest/Materials/Ground", "ForestGround" }),
-        (BiomeType.Mountain,          new[] { "Mountain/Materials/Rock", "MountainRock", "CliffRock" }),
-        (BiomeType.Grassland,         new[] { "Medieval/Materials/Grass", "Grass_", "GrassGround" }),
-        (BiomeType.Savanna,           new[] { "Savanna/Materials/Ground", "DryGrass" }),
-        (BiomeType.Desert,            new[] { "Desert/Materials/Sand", "Sand_", "SandGround" }),
-        (BiomeType.Tundra,            new[] { "Tundra/Materials/Snow", "Snow_", "IceGround" }),
-        (BiomeType.IceSheet,          new[] { "Ice/Materials", "IceSheet", "Glacier" }),
-        (BiomeType.Beach,             new[] { "Beach/Materials/Sand", "BeachSand" }),
-        (BiomeType.Ocean,             new[] { "Water/Materials", "OceanWater" }),
+        (BiomeType.TemperateForest,   new[] { "M_ground_beech_forest_leaves", "M_ground_beech_forest_plants", "MI_Grass_03" }),
+        (BiomeType.BorealForest,      new[] { "M_ground_beech_forest_Moss", "M_ground_beech_forest_moss", "M_ground_beech_forest_roots" }),
+        (BiomeType.Taiga,             new[] { "M_ground_beech_forest_roots", "M_ground_beech_forest_soil" }),
+        (BiomeType.Mountain,          new[] { "MI_Mountain_01.mat", "MI_Cliff_01.mat", "MI_Rock_Pile" }),
+        (BiomeType.Grassland,         new[] { "MI_Grass_03.mat", "Grass_Material_01.mat" }),
+        (BiomeType.Savanna,           new[] { "MI_Grass_03_Dry.mat", "Grass_Dry_Material_01.mat" }),
+        (BiomeType.AridSteppe,        new[] { "M_ground_beech_forest_soil", "MI_Grass_03_Dry" }),
+        (BiomeType.TropicalRainforest,new[] { "M_ground_beech_forest_plants", "M_ground_beech_forest_leaves" }),
+        (BiomeType.Desert,            new[] { "M_ground_beech_forest_sand_rocks", "M_ground_beech_forest_sand.mat" }),
+        (BiomeType.Tundra,            new[] { "_snow.mat", "MI_Brick_snow", "M_ground_beech_forest_sand grey" }),
+        (BiomeType.IceSheet,          new[] { "_snow.mat", "MI_Brick_snow" }),
+        (BiomeType.Beach,             new[] { "M_ground_beech_forest_sand.mat", "MatMarioSand" }),
+        (BiomeType.Ocean,             new[] { "Water.mat", "M_ground_beech_forest_sand_rocks_grey" }),
+        (BiomeType.River,             new[] { "Water.mat" }),
     };
 
     [MenuItem("Forever Engine/Populate Biome Material Catalog")]

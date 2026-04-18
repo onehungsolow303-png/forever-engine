@@ -13,9 +13,31 @@ MonoBehaviour:
   m_Name: BiomeMaterialCatalog
   m_EditorClassIdentifier: 
   Entries:
+  - Biome: 6
+    Material: {fileID: 2100000, guid: 794deb06087e72046b40333a0c8450c2, type: 2}
+  - Biome: 8
+    Material: {fileID: 2100000, guid: 34ab170e60293c34b9832bc7afe9c550, type: 2}
+  - Biome: 9
+    Material: {fileID: 2100000, guid: 75a426984004e244191a6eed5d389c25, type: 2}
+  - Biome: 12
+    Material: {fileID: 2100000, guid: 74bf3355086023243a65dcbc765e09b2, type: 2}
   - Biome: 5
-    Material: {fileID: 2100000, guid: 84f314c314dc68548943ee57eddf90cb, type: 2}
+    Material: {fileID: 2100000, guid: 22fbd3639d08850499d60088d0876cf8, type: 2}
+  - Biome: 4
+    Material: {fileID: 2100000, guid: e509d7af0fbc3574183b7bc8c127f66c, type: 2}
+  - Biome: 3
+    Material: {fileID: 2100000, guid: ea87b2b5a8439b844911fb62e3733455, type: 2}
+  - Biome: 7
+    Material: {fileID: 2100000, guid: 73c8da5eaf41c414aa8bc96170fa99b1, type: 2}
   - Biome: 2
     Material: {fileID: 2100000, guid: 8b917e545e989c5419aaf4cee2421613, type: 2}
   - Biome: 10
-    Material: {fileID: 2100000, guid: 168a96bd3b6fccd408bcd73f435c5fb6, type: 2}
+    Material: {fileID: 2100000, guid: 7db46a0c026ae8a44bf7b4e02b98afd3, type: 2}
+  - Biome: 11
+    Material: {fileID: 2100000, guid: 7db46a0c026ae8a44bf7b4e02b98afd3, type: 2}
+  - Biome: 1
+    Material: {fileID: 2100000, guid: e620925be97edc9418d912a4f2af9024, type: 2}
+  - Biome: 0
+    Material: {fileID: 2100000, guid: 2c9e8220f91f40948aa3723042429283, type: 2}
+  - Biome: 13
+    Material: {fileID: 2100000, guid: 2c9e8220f91f40948aa3723042429283, type: 2}
