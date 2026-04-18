@@ -3,8 +3,9 @@ using UnityEngine;
 namespace ForeverEngine.Procedural
 {
     /// <summary>
-    /// Bootstrap for the new procedural World scene. Creates the planet skeleton,
-    /// chunk manager, spawns the player at (0,0), and sets up the camera + lighting.
+    /// Bootstrap for the new procedural World scene. In server mode, waits for the
+    /// server to stream the spawn chunk before spawning the player. In offline mode,
+    /// generates the spawn chunk locally using PlanetSkeleton + TerrainGenerator.
     /// </summary>
     public class WorldBootstrap : UnityEngine.MonoBehaviour
     {
@@ -92,6 +93,98 @@ namespace ForeverEngine.Procedural
             var chunkManager = cmGO.AddComponent<ChunkManager>();
             chunkManager.WorldSeed = WorldSeed;
 
+            // Detect server mode: ConnectionManager exists and is logged in (or connecting)
+            bool serverMode = Network.ConnectionManager.Instance != null;
+
+            if (serverMode)
+            {
+                // Server mode: initialize without skeleton, server will stream chunks
+                chunkManager.Initialize(null, serverMode: true);
+                Debug.Log("[WorldBootstrap] Server mode — waiting for server to stream spawn chunk.");
+
+                // Wait for server chunk before spawning player
+                StartCoroutine(WaitForServerChunkAndSpawn(chunkManager));
+            }
+            else
+            {
+                // Offline/fallback mode: generate spawn chunk locally
+                OfflineSpawn(chunkManager);
+            }
+
+            // Atmosphere (post-processing)
+            var atmosGO = new GameObject("Atmosphere");
+            atmosGO.AddComponent<Demo.Overworld.AtmosphereSetup>();
+
+            // Skybox
+            if (RenderSettings.skybox == null)
+            {
+                RenderSettings.ambientMode = UnityEngine.Rendering.AmbientMode.Trilight;
+                RenderSettings.ambientSkyColor = new Color(0.5f, 0.6f, 0.8f);
+                RenderSettings.ambientEquatorColor = new Color(0.4f, 0.5f, 0.6f);
+                RenderSettings.ambientGroundColor = new Color(0.2f, 0.25f, 0.2f);
+            }
+        }
+
+        /// <summary>
+        /// Wait for the server to stream at least one chunk, then spawn the player on it.
+        /// </summary>
+        private System.Collections.IEnumerator WaitForServerChunkAndSpawn(ChunkManager chunkManager)
+        {
+            float timeout = 30f;
+            float elapsed = 0f;
+
+            while (chunkManager.LoadedChunkCount == 0)
+            {
+                elapsed += Time.deltaTime;
+                if (elapsed > timeout)
+                {
+                    Debug.LogWarning("[WorldBootstrap] Timed out waiting for server chunk — falling back to local generation.");
+                    OfflineSpawn(chunkManager);
+                    yield break;
+                }
+                yield return null;
+            }
+
+            // Server chunk is loaded — find spawn chunk data
+            var spawnCoord = new ChunkCoord(0, 0);
+            var spawnData = chunkManager.GetChunkData(spawnCoord);
+
+            // If the exact spawn chunk isn't loaded yet, use whatever is available
+            if (spawnData == null)
+            {
+                Debug.LogWarning("[WorldBootstrap] Spawn chunk (0,0) not yet received; waiting...");
+                while (spawnData == null && elapsed < timeout)
+                {
+                    elapsed += Time.deltaTime;
+                    spawnData = chunkManager.GetChunkData(spawnCoord);
+                    yield return null;
+                }
+
+                if (spawnData == null)
+                {
+                    Debug.LogWarning("[WorldBootstrap] Spawn chunk never received — falling back.");
+                    OfflineSpawn(chunkManager);
+                    yield break;
+                }
+            }
+
+            // Sample height from heightmap for spawn position
+            int hmRes = ChunkData.HeightmapRes;
+            int centerHm = hmRes / 2;
+            float terrainHeight = spawnData.Heightmap[centerHm * hmRes + centerHm] * TerrainGenerator.MaxHeight;
+            var spawnPos = spawnCoord.WorldCenter;
+            spawnPos.y = terrainHeight + 3f; // 3m above surface
+
+            SpawnPlayer(spawnPos, chunkManager);
+
+            Debug.Log($"[WorldBootstrap] Server-mode spawn complete. seed={WorldSeed}, spawn={spawnPos}, biome={spawnData.Biome}");
+        }
+
+        /// <summary>
+        /// Offline/fallback spawn: generate spawn chunk locally and spawn the player.
+        /// </summary>
+        private void OfflineSpawn(ChunkManager chunkManager)
+        {
             // Generate the initial chunk FIRST so we can sample terrain height
             var spawnChunk = new ChunkCoord(0, 0);
             chunkManager.Initialize(null); // Initialize skeleton without player yet
@@ -112,6 +205,16 @@ namespace ForeverEngine.Procedural
             var spawnPos = spawnChunk.WorldCenter;
             spawnPos.y = terrainHeight + 3f; // 3m above surface
 
+            SpawnPlayer(spawnPos, chunkManager);
+
+            Debug.Log($"[WorldBootstrap] World initialized (offline). Seed={WorldSeed}, spawn={spawnPos}, terrainH={terrainHeight:F1}m, biome={spawnData.Biome}");
+        }
+
+        /// <summary>
+        /// Spawn or instantiate the player, wire up the camera, and register with ChunkManager.
+        /// </summary>
+        private void SpawnPlayer(Vector3 spawnPos, ChunkManager chunkManager)
+        {
             GameObject player;
             if (PlayerPrefab != null)
             {
@@ -154,7 +257,8 @@ namespace ForeverEngine.Procedural
             }
 
             // Now initialize chunk manager with player for streaming
-            chunkManager.Initialize(player.transform);
+            // (preserves existing mode — server or offline)
+            chunkManager.Initialize(player.transform, chunkManager.ServerMode);
 
             // Setup camera — ensure one exists and follows the player
             var cam = UnityEngine.Camera.main;
@@ -174,21 +278,6 @@ namespace ForeverEngine.Procedural
             var fpsCam = cam.gameObject.AddComponent<FPSCameraController>();
             fpsCam.Target = player.transform;
             Debug.Log($"[WorldBootstrap] FPS camera following {player.name}");
-
-            // Atmosphere (post-processing)
-            var atmosGO = new GameObject("Atmosphere");
-            atmosGO.AddComponent<Demo.Overworld.AtmosphereSetup>();
-
-            // Skybox
-            if (RenderSettings.skybox == null)
-            {
-                RenderSettings.ambientMode = UnityEngine.Rendering.AmbientMode.Trilight;
-                RenderSettings.ambientSkyColor = new Color(0.5f, 0.6f, 0.8f);
-                RenderSettings.ambientEquatorColor = new Color(0.4f, 0.5f, 0.6f);
-                RenderSettings.ambientGroundColor = new Color(0.2f, 0.25f, 0.2f);
-            }
-
-            Debug.Log($"[WorldBootstrap] World initialized. Seed={WorldSeed}, spawn={spawnPos}, terrainH={terrainHeight:F1}m, biome={spawnData.Biome}");
         }
 
         private System.Collections.IEnumerator AutoScreenshotLoop()
