@@ -28,6 +28,9 @@ namespace ForeverEngine.Network
         public bool IsLoggedIn { get; private set; }
         public string PlayerId { get; private set; } = "";
 
+        /// <summary>Spec 7 Phase 1: canonical local-player id for reconciliation.</summary>
+        public string LocalPlayerId => PlayerId;
+
         // ── UI references ──────────────────────────────────────────────────
         private UIDocument _uiDocument;
         private Label _statusText;
@@ -207,6 +210,52 @@ namespace ForeverEngine.Network
         private void OnPlayerUpdate(PlayerUpdate msg)
         {
             ServerStateCache.Instance.ApplyPlayerUpdate(msg);
+
+            // Spec 7 Phase 1: route each snapshot to local-pose or remote-cache.
+            var cache = ServerStateCache.Instance;
+            if (cache == null) return;
+
+            double now = UnityEngine.Time.timeAsDouble;
+            string localId = LocalPlayerId;
+
+            foreach (var p in msg.Players)
+            {
+                var pos = new UnityEngine.Vector3(p.X, p.Y, p.Z);
+                if (!string.IsNullOrEmpty(localId) && p.Id == localId)
+                {
+                    cache.LocalPlayerPosition = pos;
+                    cache.LocalPlayerYaw = p.Yaw;
+                    ReconcileLocalPlayer(pos);
+                }
+                else
+                {
+                    cache.RemotePlayerPoses[p.Id] = (pos, p.Yaw, now);
+                }
+            }
+        }
+
+        private void ReconcileLocalPlayer(UnityEngine.Vector3 serverPos)
+        {
+            var player = _localPlayer;
+            if (player == null) return;
+
+            var clientPos = player.transform.position;
+            float delta = UnityEngine.Vector3.Distance(clientPos, serverPos);
+
+            if (delta < 1f)
+                return; // Prediction is close enough — ignore.
+
+            if (delta < 5f)
+            {
+                // Small divergence — lerp 25% per PlayerUpdate (~200ms at 20Hz).
+                player.transform.position = UnityEngine.Vector3.Lerp(clientPos, serverPos, 0.25f);
+                return;
+            }
+
+            // Hard snap — teleport, death, respawn, or egregious desync.
+            player.transform.position = serverPos;
+            var rb = player.GetComponent<UnityEngine.Rigidbody>();
+            if (rb != null) rb.linearVelocity = UnityEngine.Vector3.zero;
         }
 
         private void OnStatUpdate(StatUpdateMessage msg)

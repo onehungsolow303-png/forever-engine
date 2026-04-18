@@ -11,6 +11,18 @@ namespace ForeverEngine.Network
         public PlayerSnapshot[] AllPlayers { get; private set; } = new PlayerSnapshot[0];
         public string LocalPlayerId { get; set; } = "";
 
+        // --- Spec 7 Phase 1: continuous pose ---
+        public UnityEngine.Vector3 LocalPlayerPosition;
+        public float LocalPlayerYaw;
+
+        /// <summary>
+        /// Remote-player pose cache keyed by playerId.
+        /// receivedAt is UnityEngine.Time.timeAsDouble when the update arrived —
+        /// RemotePlayerView (Task 13) uses it for interpolation and stale-despawn.
+        /// </summary>
+        public readonly System.Collections.Generic.Dictionary<string, (UnityEngine.Vector3 pos, float yaw, double receivedAt)>
+            RemotePlayerPoses = new System.Collections.Generic.Dictionary<string, (UnityEngine.Vector3, float, double)>();
+
         // From StatUpdate
         public int HP { get; private set; }
         public int MaxHP { get; private set; }
