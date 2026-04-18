@@ -157,11 +157,33 @@ namespace ForeverEngine.Procedural
                     go.transform.rotation = Quaternion.Euler(0f, rotation, 0f);
                     go.transform.SetParent(parent, worldPositionStays: true);
 
-                    // Props are pass-through in Phase 2 — strip any collider on the root.
-                    var col = go.GetComponent<Collider>();
-                    if (col != null) Object.Destroy(col);
+                    // Props are pass-through — strip EVERY collider (root + children).
+                    // Imported mesh prefabs often have MeshColliders on child trunk/
+                    // branch/leaf objects; leaving them in place (a) blocks player
+                    // movement and (b) misleads spawn raycast into hitting props
+                    // instead of terrain, causing fall-through-ground bugs.
+                    foreach (var col in go.GetComponentsInChildren<Collider>(includeInactive: true))
+                        Object.Destroy(col);
                 }
             }
+        }
+
+        /// <summary>
+        /// Return the world-space min.y of the instantiated prefab's combined
+        /// Renderer bounds, assuming the prefab is currently at origin. Used to
+        /// anchor imported mesh props on the ground regardless of pivot position.
+        /// Returns 0 if no renderers are found (safe fallback = pivot-at-base).
+        /// </summary>
+        private static float ComputeBaseOffset(GameObject go)
+        {
+            var renderers = go.GetComponentsInChildren<Renderer>(includeInactive: false);
+            if (renderers.Length == 0) return 0f;
+
+            var combined = renderers[0].bounds;
+            for (int i = 1; i < renderers.Length; i++)
+                combined.Encapsulate(renderers[i].bounds);
+
+            return combined.min.y - go.transform.position.y;
         }
 
         /// <summary>Remove all decoration from a chunk.</summary>

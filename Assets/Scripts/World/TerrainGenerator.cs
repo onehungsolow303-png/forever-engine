@@ -92,8 +92,9 @@ namespace ForeverEngine.Procedural
 
             var material = GetBiomeMaterial(chunkData.Biome);
 
-            // LOD 0 — full detail, keeps the collider.
-            var lod0 = BuildLodMesh(chunkData, 33, material, castShadows: true, addCollider: needsCollider);
+            // LOD 0 — full detail, ALWAYS gets the collider. needsCollider is
+            // ignored here (was an optimization that caused fall-through bugs).
+            var lod0 = BuildLodMesh(chunkData, 33, material, castShadows: true, addCollider: true);
             lod0.transform.SetParent(root.transform, worldPositionStays: false);
             lod0.name = "LOD0";
 

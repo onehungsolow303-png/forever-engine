@@ -173,7 +173,17 @@ namespace ForeverEngine.Procedural
             int centerHm = hmRes / 2;
             float terrainHeight = spawnData.Heightmap[centerHm * hmRes + centerHm] * TerrainGenerator.MaxHeight;
             var spawnPos = spawnCoord.WorldCenter;
-            spawnPos.y = terrainHeight + 3f; // 3m above surface
+
+            // Raycast down from well above the heightmap sample to find the true
+            // mesh surface Y (bilinear interp can be taller than the sampled cell).
+            // Spawn 2m above the hit so the rigidbody lands cleanly instead of
+            // starting embedded in the mesh and tunneling out the bottom.
+            spawnPos.y = terrainHeight + 50f;
+            if (Physics.Raycast(new Vector3(spawnPos.x, terrainHeight + 100f, spawnPos.z),
+                                Vector3.down, out var hit, 300f))
+            {
+                spawnPos.y = hit.point.y + 2f;
+            }
 
             SpawnPlayer(spawnPos, chunkManager);
 
@@ -246,6 +256,13 @@ namespace ForeverEngine.Procedural
                 rb.collisionDetectionMode = CollisionDetectionMode.Continuous;
                 rb.interpolation = RigidbodyInterpolation.Interpolate; // Smooths physics-tick position between render frames — kills Rigidbody stutter
 
+                // Start kinematic for 1s to give MeshCollider.sharedMesh time to
+                // finish cooking before gravity activates. Without this the first
+                // physics tick tunnels the capsule through the not-yet-registered
+                // collider and the player free-falls forever.
+                rb.isKinematic = true;
+                StartCoroutine(EnablePlayerPhysics(rb, 1f));
+
                 // High-friction physics material so player doesn't slide on terrain
                 var physMat = new PhysicsMaterial("PlayerFriction");
                 physMat.staticFriction = 1f;
@@ -306,6 +323,19 @@ namespace ForeverEngine.Procedural
             {
                 new GameObject("DungeonEntryInput").AddComponent<ForeverEngine.Procedural.DungeonEntryInput>();
             }
+        }
+
+        /// <summary>
+        /// Holds the player as a kinematic Rigidbody for a short delay so the
+        /// freshly-created terrain MeshColliders have time to finish cooking
+        /// before gravity engages. Without this the first physics tick tunnels
+        /// the capsule through the not-yet-active collider and the player
+        /// free-falls indefinitely.
+        /// </summary>
+        private System.Collections.IEnumerator EnablePlayerPhysics(Rigidbody rb, float delay)
+        {
+            yield return new WaitForSeconds(delay);
+            if (rb != null) rb.isKinematic = false;
         }
 
         private System.Collections.IEnumerator AutoScreenshotLoop()
