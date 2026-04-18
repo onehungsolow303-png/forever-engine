@@ -75,9 +75,8 @@ namespace ForeverEngine.Demo.UI
             float x = Screen.width / 2 - btnW / 2;
             float y = Screen.height * 0.5f;
 
-            if (GUI.Button(new Rect(x, y, btnW, btnH), "New Game", UITheme.Button()))
+            if (GUI.Button(new Rect(x, y, btnW, btnH), "New Game (Offline)", UITheme.Button()))
             {
-                // Ensure GameManager exists before opening character selection
                 if (GameManager.Instance == null)
                 {
                     var go = new GameObject("GameManager");
@@ -86,7 +85,20 @@ namespace ForeverEngine.Demo.UI
                 _showCharSelect = true;
             }
 
-            // Continue button removed: server is now authoritative for state persistence.
+            if (GUI.Button(new Rect(x, y + 50, btnW, btnH), "Connect to Server", UITheme.Button()))
+            {
+                if (GameManager.Instance == null)
+                {
+                    var gm = new GameObject("GameManager");
+                    gm.AddComponent<GameManager>();
+                }
+                if (ForeverEngine.Network.ConnectionManager.Instance == null)
+                {
+                    var cm = new GameObject("ConnectionManager");
+                    cm.AddComponent<ForeverEngine.Network.ConnectionManager>();
+                }
+                _showCharSelect = true;
+            }
 
             if (GUI.Button(new Rect(x, y + 100, btnW, btnH), "Quit", UITheme.Button()))
             {
