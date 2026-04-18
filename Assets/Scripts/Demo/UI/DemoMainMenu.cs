@@ -9,6 +9,13 @@ namespace ForeverEngine.Demo.UI
 
         private void Awake()
         {
+            // Keep the player loop running when the window loses focus. Set here
+            // rather than in WorldBootstrap because multi-client --connect playtests
+            // deadlock otherwise: the second-launched client never gets focus, its
+            // Update/NetworkClient main-thread queue freezes, and its LoginRequest
+            // never fires. WorldBootstrap is too late — it runs only after login.
+            Application.runInBackground = true;
+
             // Attach CharacterCreationUI to the same GameObject
             _charCreation = gameObject.AddComponent<CharacterCreationUI>();
 
