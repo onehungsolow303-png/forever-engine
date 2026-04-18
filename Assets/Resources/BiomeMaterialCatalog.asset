@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Entries:
   - Biome: 5
-    Material: {fileID: -6064998757138420285, guid: 7c7e4c3b6c8c16b4e884a2bac50a88cd, type: 3}
+    Material: {fileID: 2100000, guid: 84f314c314dc68548943ee57eddf90cb, type: 2}
   - Biome: 2
     Material: {fileID: 2100000, guid: 8b917e545e989c5419aaf4cee2421613, type: 2}
   - Biome: 10

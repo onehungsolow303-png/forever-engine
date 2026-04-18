@@ -42,7 +42,13 @@ public static class PopulateBiomeMaterialCatalog
         var allMaterialGuids = AssetDatabase.FindAssets("t:Material");
         var matPaths = new List<string>(allMaterialGuids.Length);
         foreach (var guid in allMaterialGuids)
-            matPaths.Add(AssetDatabase.GUIDToAssetPath(guid));
+        {
+            var p = AssetDatabase.GUIDToAssetPath(guid);
+            // Skip embedded sub-asset materials inside mesh files (.obj/.fbx).
+            // Only standalone .mat assets carry usable shader+texture setups.
+            if (p.EndsWith(".mat", System.StringComparison.OrdinalIgnoreCase))
+                matPaths.Add(p);
+        }
 
         var entries = new List<BiomeMaterialEntry>();
         int found = 0, missing = 0;
