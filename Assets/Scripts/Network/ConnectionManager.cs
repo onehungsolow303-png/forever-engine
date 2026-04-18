@@ -1,5 +1,7 @@
 using ForeverEngine.Core.Messages;
 using ForeverEngine.Demo.Battle;
+using ForeverEngine.Demo.UI;
+using ForeverEngine.Procedural;
 using UnityEngine;
 using UnityEngine.UIElements;
 
@@ -75,6 +77,9 @@ namespace ForeverEngine.Network
             _client.RegisterHandler<CharacterSheetDataMessage>(OnCharacterSheet);
             _client.RegisterHandler<NarrativeMessage>(OnNarrative);
             _client.RegisterHandler<BattleStartMessage>(OnBattleStart);
+            _client.RegisterHandler<ShopOpenMessage>(OnShopOpen);
+            _client.RegisterHandler<ShopUpdateMessage>(OnShopUpdate);
+            _client.RegisterHandler<ChunkDataMessage>(OnChunkData);
 
             // Begin connecting
             _client.Connect(Host, Port);
@@ -199,6 +204,30 @@ namespace ForeverEngine.Network
 
             if (Demo.GameManager.Instance != null)
                 Demo.GameManager.Instance.OnServerBattleStart();
+        }
+
+        private void OnShopOpen(ShopOpenMessage msg)
+        {
+            if (ShopPanel.Instance == null)
+                gameObject.AddComponent<ShopPanel>();
+            ShopPanel.Instance.Open(msg.NpcId, msg.ShopName, msg.Items, msg.PlayerGold);
+        }
+
+        private void OnShopUpdate(ShopUpdateMessage msg)
+        {
+            ShopPanel.Instance?.UpdateShop(msg.Items, msg.PlayerGold);
+        }
+
+        private void OnChunkData(ChunkDataMessage msg)
+        {
+            if (msg.Chunk == null) return;
+
+            var localChunk = ChunkDataMapper.MapServerToLocal(msg.Chunk);
+            var chunkMgr = ChunkManager.Instance;
+            if (chunkMgr != null)
+                chunkMgr.ReceiveServerChunk(localChunk);
+            else
+                Debug.LogWarning("[ConnectionManager] ChunkDataMessage received but ChunkManager not ready.");
         }
 
         // ── Connection UI ──────────────────────────────────────────────────
