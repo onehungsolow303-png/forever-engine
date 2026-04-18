@@ -101,7 +101,7 @@ namespace ForeverEngine.Demo.Dungeon
         {
             if (_builder == null || _builder.Rooms == null) return;
             if (DialoguePanel.Instance != null && DialoguePanel.Instance.IsOpen) return;
-            if (InventoryScreen.IsOpen) return;
+            if ((InventoryScreen.Instance?.IsOpen ?? false)) return;
 
             if (IsFullOpen)
                 DrawFullOverlay();

@@ -15,7 +15,7 @@ namespace ForeverEngine.Network
         Connected,
     }
 
-    public class NetworkClient : MonoBehaviour
+    public class NetworkClient : UnityEngine.MonoBehaviour
     {
         public static NetworkClient Instance { get; private set; }
 

@@ -11,7 +11,7 @@ namespace ForeverEngine.Demo.UI
     /// sends <see cref="CastSpellRequest"/> to the server. The server resolves
     /// the cast, deducts the slot, and pushes updated stats/sheet back.
     /// </summary>
-    public class SpellPanel : MonoBehaviour
+    public class SpellPanel : UnityEngine.MonoBehaviour
     {
         public static SpellPanel Instance { get; private set; }
         public bool IsOpen { get; private set; }

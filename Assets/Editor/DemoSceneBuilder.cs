@@ -128,9 +128,9 @@ namespace ForeverEngine.Editor
             camGO.transform.position = new Vector3(4, 4, -10);
             camGO.tag = "MainCamera";
 
-            // Battle Manager
-            var bmGO = new GameObject("BattleManager");
-            bmGO.AddComponent<BattleManager>();
+            // Battle Manager — deleted in Spec 3B Phase 2 (server-authoritative combat).
+            // Editor scene-builder no longer wires a client-side BattleManager; server
+            // drives battle via BattleRenderer (instantiated on demand by ConnectionManager).
 
             // Battle HUD
             var hudGO = new GameObject("BattleHUD");

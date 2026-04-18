@@ -12,11 +12,8 @@ namespace ForeverEngine.Tests.Bridges
             Assert.AreEqual("http://127.0.0.1:7802", c.BaseUrl);
         }
 
-        [Test]
-        public void RetryCountDefaultsToThree()
-        {
-            var c = new DirectorClient();
-            Assert.AreEqual(3, c.RetryCount);
-        }
+        // RetryCountDefaultsToThree test removed — DirectorClient no longer exposes
+        // RetryCount after the Spec 3B thin-client refactor (the bridge was gutted
+        // to a stub since the server drives the Director Hub flow now).
     }
 }

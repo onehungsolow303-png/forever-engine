@@ -58,7 +58,7 @@ namespace ForeverEngine.Demo.Dungeon
             if (!_initialized || _playerTransform == null) return;
 
             // Tab toggles full minimap overlay — but not when inventory is open
-            if (Input.GetKeyDown(KeyCode.Tab) && _minimap != null && !InventoryScreen.IsOpen)
+            if (Input.GetKeyDown(KeyCode.Tab) && _minimap != null && !(InventoryScreen.Instance?.IsOpen ?? false))
                 _minimap.ToggleFullMap();
 
             // R triggers long rest (if not in combat)

@@ -15,7 +15,7 @@ namespace ForeverEngine.Network
     ///
     /// Part of Spec 3B — multiplayer thin-client wiring.
     /// </summary>
-    public class ConnectionManager : MonoBehaviour
+    public class ConnectionManager : UnityEngine.MonoBehaviour
     {
         // ── Inspector fields ───────────────────────────────────────────────
         public string Host = "127.0.0.1";

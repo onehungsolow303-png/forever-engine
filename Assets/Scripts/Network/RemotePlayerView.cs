@@ -6,7 +6,7 @@ namespace ForeverEngine.Network
     /// Renders one remote player. Interpolates between the last two
     /// received poses across InterpSeconds for smooth motion.
     /// </summary>
-    public class RemotePlayerView : MonoBehaviour
+    public class RemotePlayerView : UnityEngine.MonoBehaviour
     {
         private const float InterpSeconds = 0.1f;
 

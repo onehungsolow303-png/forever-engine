@@ -160,7 +160,10 @@ namespace ForeverEngine.Demo.Overworld
                     var client = NetworkClient.Instance;
                     if (client != null && client.State == ConnectionState.Connected)
                     {
-                        client.Send(new MoveInput { Dx = moveDir.x, Dy = moveDir.z });
+                        // Spec 7: legacy hex-overworld MoveInput path deprecated —
+                        // ConnectionManager's 20Hz send loop from SimplePlayerController
+                        // is the live send path in the procedural World scene.
+                        client.Send(new MoveInput { InputX = moveDir.x, InputZ = moveDir.z });
                     }
                     else
                     {

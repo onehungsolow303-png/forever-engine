@@ -7,7 +7,7 @@ namespace ForeverEngine.Network
     /// Spawns/despawns RemotePlayerViews as remote poses arrive and go stale.
     /// Polls ServerStateCache.RemotePlayerPoses each frame.
     /// </summary>
-    public class RemotePlayerManager : MonoBehaviour
+    public class RemotePlayerManager : UnityEngine.MonoBehaviour
     {
         private const double StaleSeconds = 5.0;
         private readonly Dictionary<string, RemotePlayerView> _views = new Dictionary<string, RemotePlayerView>();
