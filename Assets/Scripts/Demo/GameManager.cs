@@ -24,14 +24,6 @@ namespace ForeverEngine.Demo
         public bool LastBattleWon { get; set; }
         public bool IsInCombat { get; private set; }
 
-        [Header("3D Transition")]
-        [Tooltip("When true, loads the Overworld3D scene instead of the 2D Overworld scene.")]
-        public bool Use3DOverworld = true;
-
-        [Header("Procedural World")]
-        [Tooltip("When true, loads the procedural World scene instead of Overworld3D.")]
-        public bool UseProceduralWorld = true;
-
         // Phase 3 pivot: HTTP bridges to Asset Manager (port 7801) and
         // Director Hub (port 7802). The C# brain (AIDirector, AIGameMaster,
         // MemoryManager) was archived to _archive/forever-engine-pre-pivot/
@@ -68,6 +60,8 @@ namespace ForeverEngine.Demo
             gameObject.AddComponent<PauseMenu>();
             // Spell panel — V-toggled, out-of-combat spell casting.
             gameObject.AddComponent<SpellPanel>();
+            // Shop panel — opened by server ShopOpenMessage when talking to merchant NPCs.
+            gameObject.AddComponent<ShopPanel>();
         }
 
         private IEnumerator Start()
@@ -89,12 +83,12 @@ namespace ForeverEngine.Demo
             CurrentSeed = seed;
             Player = new PlayerData { HexQ = 2, HexR = 2 };
             Player.DiscoveredLocations.Add("camp");
-            SceneManager.LoadScene(UseProceduralWorld ? "World" : Use3DOverworld ? "Overworld3D" : "Overworld");
+            SceneManager.LoadScene("World");
         }
 
         /// <summary>
         /// Called by CharacterCreationUI when the player confirms their character.
-        /// Converts CharacterData to PlayerData, then loads the Overworld.
+        /// Converts CharacterData to PlayerData, then loads the World scene.
         /// </summary>
         public void StartGameWithCharacter(CharacterData characterData, int seed = 0)
         {
@@ -102,12 +96,12 @@ namespace ForeverEngine.Demo
             CurrentSeed   = seed > 0 ? seed : Random.Range(1, 99999);
             Player        = PlayerData.FromCharacterData(characterData);
             Player.DiscoveredLocations.Add("camp");
-            SceneManager.LoadScene(UseProceduralWorld ? "World" : Use3DOverworld ? "Overworld3D" : "Overworld");
+            SceneManager.LoadScene("World");
         }
 
         /// <summary>
         /// Called by the premade character selection buttons.
-        /// Creates PlayerData from the CharacterSheet, then loads Overworld.
+        /// Creates PlayerData from the CharacterSheet, then loads the World scene.
         /// </summary>
         public void StartGameWithSheet(CharacterSheet sheet, int seed = 0)
         {
@@ -116,7 +110,7 @@ namespace ForeverEngine.Demo
             Player        = new PlayerData { HexQ = 2, HexR = 2 };
             Player.DiscoveredLocations.Add("camp");
             SyncPlayerFromCharacter();
-            SceneManager.LoadScene(UseProceduralWorld ? "World" : Use3DOverworld ? "Overworld3D" : "Overworld");
+            SceneManager.LoadScene("World");
         }
 
         /// <summary>
@@ -181,7 +175,7 @@ namespace ForeverEngine.Demo
             PendingEncounterId = null;
             PendingLocationId = null;
             PendingDungeonState = null;
-            SceneManager.LoadScene(UseProceduralWorld ? "World" : Use3DOverworld ? "Overworld3D" : "Overworld");
+            SceneManager.LoadScene("World");
         }
 
         public void PlayerDied()
@@ -207,7 +201,7 @@ namespace ForeverEngine.Demo
             {
                 Character.HP = player.HP;
             }
-            SceneManager.LoadScene(UseProceduralWorld ? "World" : Use3DOverworld ? "Overworld3D" : "Overworld");
+            SceneManager.LoadScene("World");
         }
 
         public void GameComplete()
