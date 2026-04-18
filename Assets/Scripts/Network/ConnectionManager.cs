@@ -21,7 +21,9 @@ namespace ForeverEngine.Network
         public string Host = "127.0.0.1";
         public int Port = 7900;
         public string PlayerName = "Player";
-        public string PlayerToken = "player_1";
+        // Resolved in Awake(); command-line --player <id> wins, otherwise a
+        // process-unique id so two clients on one machine don't collide.
+        public string PlayerToken;
 
         // ── Public state ───────────────────────────────────────────────────
         public static ConnectionManager Instance { get; private set; }
@@ -56,6 +58,23 @@ namespace ForeverEngine.Network
 
             Instance = this;
             DontDestroyOnLoad(gameObject);
+
+            // Resolve player token: --player <id> from CLI, else "player_<pid>"
+            if (string.IsNullOrEmpty(PlayerToken))
+            {
+                var args = System.Environment.GetCommandLineArgs();
+                for (int i = 0; i < args.Length - 1; i++)
+                {
+                    if (args[i] == "--player" || args[i] == "-player")
+                    {
+                        PlayerToken = args[i + 1];
+                        break;
+                    }
+                }
+                if (string.IsNullOrEmpty(PlayerToken))
+                    PlayerToken = $"player_{System.Diagnostics.Process.GetCurrentProcess().Id}";
+                Debug.Log($"[ConnectionManager] PlayerToken resolved: {PlayerToken}");
+            }
         }
 
         private void Start()
@@ -325,6 +344,11 @@ namespace ForeverEngine.Network
             ShopPanel.Instance?.UpdateShop(msg.Items, msg.PlayerGold);
         }
 
+        // Chunks streamed before the World scene has a ChunkManager are buffered
+        // here and flushed once the ChunkManager singleton comes online.
+        private readonly System.Collections.Generic.List<ForeverEngine.Procedural.ChunkData> _pendingChunks =
+            new System.Collections.Generic.List<ForeverEngine.Procedural.ChunkData>();
+
         private void OnChunkData(ChunkDataMessage msg)
         {
             if (msg.Chunk == null) return;
@@ -332,9 +356,25 @@ namespace ForeverEngine.Network
             var localChunk = ChunkDataMapper.MapServerToLocal(msg.Chunk);
             var chunkMgr = ChunkManager.Instance;
             if (chunkMgr != null)
+            {
                 chunkMgr.ReceiveServerChunk(localChunk);
+            }
             else
-                Debug.LogWarning("[ConnectionManager] ChunkDataMessage received but ChunkManager not ready.");
+            {
+                _pendingChunks.Add(localChunk);
+            }
+        }
+
+        private void Update()
+        {
+            if (_pendingChunks.Count == 0) return;
+            var chunkMgr = ChunkManager.Instance;
+            if (chunkMgr == null) return;
+
+            for (int i = 0; i < _pendingChunks.Count; i++)
+                chunkMgr.ReceiveServerChunk(_pendingChunks[i]);
+            Debug.Log($"[ConnectionManager] Flushed {_pendingChunks.Count} buffered chunk(s) to ChunkManager.");
+            _pendingChunks.Clear();
         }
 
         // ── Spec 7 Phase 3 Task 6: party + dungeon handlers ───────────────
