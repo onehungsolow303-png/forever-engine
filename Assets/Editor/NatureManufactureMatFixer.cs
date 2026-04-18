@@ -71,6 +71,29 @@ namespace ForeverEngine.Editor
                     }
                 }
 
+                // Force _Metallic = 0 on ground terrain materials. Packs ship
+                // with _Metallic = 1 + a metallic mask, but URP reads the wrong
+                // keyword (_METALLICSPECGLOSSMAP instead of _METALLICGLOSSMAP)
+                // and treats the surface as a perfect mirror → solid-white
+                // reflections of the sky. Zeroing Metallic bypasses the bug.
+                if (path.Contains("/Ground/Materials/") || path.Contains("/Materials/M_ground"))
+                {
+                    var floats2 = so.FindProperty("m_SavedProperties.m_Floats");
+                    if (floats2 != null)
+                        changed |= SetFloatProperty(floats2, "_Metallic", 0f);
+                }
+
+                // Force _EmissionColor = black on EVERY pack material. Packs
+                // were authored in HDRP where emission lives in _EmissiveColor
+                // (defaults to 0). URP reads the sibling _EmissionColor which
+                // defaults to (1,1,1,1) — surface self-emits pure white,
+                // swamping the albedo texture and producing solid-white
+                // terrain / glowing props. Zero the color so emission is a
+                // no-op even while the _EMISSION keyword stays enabled.
+                var colors = so.FindProperty("m_SavedProperties.m_Colors");
+                if (colors != null)
+                    changed |= SetColorProperty(colors, "_EmissionColor", new Color(0f, 0f, 0f, 1f));
+
                 if (changed)
                 {
                     so.ApplyModifiedPropertiesWithoutUndo();
@@ -135,6 +158,31 @@ namespace ForeverEngine.Editor
             if (srcOffset != null && dstOffset != null)
                 dstOffset.vector2Value = srcOffset.vector2Value;
 
+            return true;
+        }
+
+        private static bool SetColorProperty(SerializedProperty colors, string name, Color value)
+        {
+            for (int i = 0; i < colors.arraySize; i++)
+            {
+                var entry = colors.GetArrayElementAtIndex(i);
+                var key = entry.FindPropertyRelative("first");
+                if (key != null && key.stringValue == name)
+                {
+                    var val = entry.FindPropertyRelative("second");
+                    if (val != null && val.colorValue != value)
+                    {
+                        val.colorValue = value;
+                        return true;
+                    }
+                    return false;
+                }
+            }
+            // Property doesn't exist, add it
+            colors.InsertArrayElementAtIndex(colors.arraySize);
+            var newEntry = colors.GetArrayElementAtIndex(colors.arraySize - 1);
+            newEntry.FindPropertyRelative("first").stringValue = name;
+            newEntry.FindPropertyRelative("second").colorValue = value;
             return true;
         }
 

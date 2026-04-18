@@ -262,23 +262,28 @@ namespace ForeverEngine.Network
             var player = _localPlayer;
             if (player == null) return;
 
+            // Reconcile only the horizontal axes. The client's own Rigidbody
+            // owns Y (gravity + jump + ground collision); fighting the server
+            // for Y every 50ms caused teleport/jitter/stuck-can't-move.
             var clientPos = player.transform.position;
-            float delta = UnityEngine.Vector3.Distance(clientPos, serverPos);
+            var target = new UnityEngine.Vector3(serverPos.x, clientPos.y, serverPos.z);
+            float horizDelta = UnityEngine.Vector2.Distance(
+                new UnityEngine.Vector2(clientPos.x, clientPos.z),
+                new UnityEngine.Vector2(serverPos.x, serverPos.z));
 
-            if (delta < 1f)
-                return; // Prediction is close enough — ignore.
-
-            if (delta < 5f)
-            {
-                // Small divergence — lerp 25% per PlayerUpdate (~200ms at 20Hz).
-                player.transform.position = UnityEngine.Vector3.Lerp(clientPos, serverPos, 0.25f);
-                return;
-            }
+            // DIAGNOSTIC: dead-zone bumped from 3m → 50m to confirm reconciliation
+            // is the stutter source. Rigidbody interpolation cannot survive a
+            // direct transform.position write 20x/sec; if stutter vanishes with
+            // this change we know reconciliation is responsible and the proper
+            // fix is snapshot interpolation (buffered playback).
+            if (horizDelta < 50f)
+                return; // Effectively never correct during normal play.
 
             // Hard snap — teleport, death, respawn, or egregious desync.
-            player.transform.position = serverPos;
+            player.transform.position = target;
             var rb = player.GetComponent<UnityEngine.Rigidbody>();
-            if (rb != null) rb.linearVelocity = UnityEngine.Vector3.zero;
+            if (rb != null)
+                rb.linearVelocity = new UnityEngine.Vector3(0f, rb.linearVelocity.y, 0f);
         }
 
         private void OnStatUpdate(StatUpdateMessage msg)

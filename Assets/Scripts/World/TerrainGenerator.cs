@@ -144,7 +144,11 @@ namespace ForeverEngine.Procedural
                     float hmZ = (float)z / res * (hmRes - 1);
                     float height = SampleHeightmap(chunkData.Heightmap, hmRes, hmX, hmZ) * MaxHeight;
                     vertices[idx] = new Vector3(localX, height, localZ);
-                    uvs[idx] = new Vector2((float)x / res, (float)z / res);
+                    // Tile the biome material 32x per chunk (one tile per 8m).
+                    // Without this the whole 256m chunk stretches a single
+                    // texture sample, producing visible blurry polygon splats.
+                    const float tilesPerChunk = 32f;
+                    uvs[idx] = new Vector2((float)x / res * tilesPerChunk, (float)z / res * tilesPerChunk);
                 }
             }
 

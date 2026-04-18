@@ -17,15 +17,16 @@ public static class PopulateBiomePropCatalog
         (BiomeType.TemperateForest,    new[] { "Tree_", "BroadleafTree", "OakTree" },             20, 18f, 1.0f),
         (BiomeType.TemperateForest,    new[] { "Bush_", "Shrub" },                                10, 20f, 0.7f),
         (BiomeType.TemperateForest,    new[] { "Rock_", "Stone_" },                               5,  35f, 1.0f),
-        (BiomeType.BorealForest,       new[] { "Conifer", "PineTree", "SpruceTree" },             25, 16f, 1.0f),
+        (BiomeType.BorealForest,       new[] { "dwarf_pine", "Prefab_pine", "Pine_LOD" },          25, 16f, 1.0f),
         (BiomeType.BorealForest,       new[] { "Rock_", "Stone_" },                               8,  25f, 1.0f),
         (BiomeType.Mountain,           new[] { "Rock_", "Boulder", "Cliff_" },                    20, 18f, 1.0f),
-        (BiomeType.Mountain,           new[] { "Conifer", "PineTree" },                           4,  40f, 0.9f),
+        (BiomeType.Mountain,           new[] { "dwarf_pine", "Prefab_pine" },                     4,  40f, 0.9f),
         (BiomeType.Grassland,          new[] { "Tree_", "OakTree" },                              3,  50f, 1.0f),
         (BiomeType.Grassland,          new[] { "Rock_", "Stone_" },                               3,  40f, 0.8f),
         (BiomeType.Desert,             new[] { "Cactus_", "DesertPlant" },                        4,  45f, 1.0f),
         (BiomeType.Savanna,            new[] { "AcaciaTree", "SavannaTree", "Tree_" },            4,  50f, 1.2f),
         (BiomeType.TropicalRainforest, new[] { "Palm_", "JungleTree", "Tree_" },                  30, 12f, 1.0f),
+        (BiomeType.Tundra,             new[] { "dwarf_pine", "Prefab_pine", "Pine_LOD" },          6,  35f, 0.8f),
         (BiomeType.Tundra,             new[] { "Rock_", "Stone_" },                               12, 22f, 1.0f),
     };
 

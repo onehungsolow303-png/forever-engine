@@ -32,6 +32,8 @@ namespace ForeverEngine.Procedural
 
         private readonly Dictionary<ChunkCoord, LoadedChunk> _loaded = new();
         private readonly HashSet<ChunkCoord> _generating = new();
+        private readonly Queue<ChunkData> _serverChunkQueue = new();
+        private bool _processingServerQueue;
         private ChunkCoord _lastPlayerChunk;
         private Transform _playerTransform;
         private bool _updating;
@@ -102,8 +104,11 @@ namespace ForeverEngine.Procedural
         }
 
         /// <summary>
-        /// Receive a chunk from the server. Builds terrain mesh and decorations,
-        /// then tracks the chunk as loaded. Skips chunks already present.
+        /// Receive a chunk from the server. Queues the chunk for async build —
+        /// the actual mesh + collider cook + prop decoration is spread across
+        /// subsequent frames to avoid main-thread hitches when multiple chunks
+        /// arrive in the same tick. Mirrors the frame-breaking pattern used
+        /// by LocalGenerateChunks for the offline path.
         /// </summary>
         public void ReceiveServerChunk(ChunkData data)
         {
@@ -119,21 +124,41 @@ namespace ForeverEngine.Procedural
             if (_loaded.ContainsKey(coord))
                 return; // already loaded
 
-            // Build terrain mesh
-            var terrainGO = TerrainGenerator.CreateTerrain(data, needsCollider: ChunkNeedsCollider(coord));
+            _serverChunkQueue.Enqueue(data);
+            if (!_processingServerQueue)
+                StartCoroutine(ProcessServerChunkQueue());
+        }
 
-            // Decorate with biome-appropriate props
-            var props = SurfaceDecorator.DecorateMesh(data, terrainGO);
-
-            // Track as loaded
-            _loaded[coord] = new LoadedChunk
+        private IEnumerator ProcessServerChunkQueue()
+        {
+            _processingServerQueue = true;
+            while (_serverChunkQueue.Count > 0)
             {
-                Data = data,
-                TerrainGO = terrainGO,
-                Props = props,
-            };
+                var data = _serverChunkQueue.Dequeue();
+                var coord = new ChunkCoord(data.ChunkX, data.ChunkZ);
 
-            Debug.Log($"[ChunkManager] Server chunk loaded: {coord} biome={data.Biome}");
+                if (_loaded.ContainsKey(coord))
+                    continue;
+
+                // Build the render + collider mesh (heaviest step — MeshCollider
+                // cook at LOD 0 is a few ms of main-thread work).
+                var terrainGO = TerrainGenerator.CreateTerrain(data, needsCollider: ChunkNeedsCollider(coord));
+                yield return null; // frame break before prop instantiation
+
+                // Instantiate biome props (trees, rocks, foliage). Spreads the
+                // hit for prop-heavy chunks across two frames total.
+                var props = SurfaceDecorator.DecorateMesh(data, terrainGO);
+                _loaded[coord] = new LoadedChunk
+                {
+                    Data = data,
+                    TerrainGO = terrainGO,
+                    Props = props,
+                };
+
+                Debug.Log($"[ChunkManager] Server chunk loaded: {coord} biome={data.Biome}");
+                yield return null; // frame break between chunks in the queue
+            }
+            _processingServerQueue = false;
         }
 
         private IEnumerator UpdateChunks(ChunkCoord center)

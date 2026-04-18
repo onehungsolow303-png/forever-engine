@@ -121,6 +121,8 @@ namespace ForeverEngine.Network
                 "taiga" => Procedural.BiomeType.Taiga,
                 "tundra" => Procedural.BiomeType.Tundra,
                 "icesheet" => Procedural.BiomeType.IceSheet,
+                "icesnow" => Procedural.BiomeType.IceSheet, // server emits "ice_snow" for cold+wet; client has no IceSnow member
+                "snow" => Procedural.BiomeType.IceSheet,
                 "mountain" => Procedural.BiomeType.Mountain,
                 "river" => Procedural.BiomeType.River,
                 _ => FallbackParseBiome(biome),

@@ -68,15 +68,20 @@ namespace ForeverEngine.Procedural
             //   On fast mouse movement, an uncapped / at-cap frame rate can produce a frame
             //   that straddles vblank → partial-frame tear. Cap at (refresh - 3) keeps every
             //   frame fully inside its vblank window.
+            // D3D11 on Win11 borderless fullscreen logs "vsync is broken" and
+            // falls back to CPU-side delta-time stamping, which paces frames
+            // unevenly under the software targetFrameRate cap (causes visible
+            // stutter on mouse-look + movement). Leaving the frame rate
+            // uncapped lets the DWM compositor handle vsync timing — the GPU
+            // can draw as fast as it wants, the compositor limits output to
+            // refresh. No tearing because DWM owns the present.
             QualitySettings.vSyncCount = 0;
-            Application.targetFrameRate = System.Math.Max(60, (int)System.Math.Round(bestHz) - 3);
+            Application.targetFrameRate = -1;
 
-            // Raise physics tick rate to reduce render-vs-physics mismatch.
-            // Default fixedDeltaTime=0.02 (50Hz) — at 175Hz render, that's 3-4 frames between
-            // physics updates, causing visible micro-jitter even with Rigidbody interpolation
-            // (because transform rotation is written in Update while velocity reads forward in
-            // FixedUpdate → direction lag on strafe). Running physics at render rate eliminates
-            // the mismatch. Capped at 120Hz to bound CPU cost.
+            // Physics at 120Hz — higher rates (175Hz matched to render) made
+            // jitter slightly worse in playtest, suggesting physics can't keep
+            // up and some render frames see 0 integrations while others see 2.
+            // 120Hz is a stable sweet spot for PhysX on modern hardware.
             float physicsHz = Mathf.Min((float)bestHz, 120f);
             Time.fixedDeltaTime = 1f / physicsHz;
             Time.maximumDeltaTime = 0.1f; // safety clamp
@@ -256,12 +261,14 @@ namespace ForeverEngine.Procedural
                 rb.collisionDetectionMode = CollisionDetectionMode.Continuous;
                 rb.interpolation = RigidbodyInterpolation.Interpolate; // Smooths physics-tick position between render frames — kills Rigidbody stutter
 
-                // Start kinematic for 1s to give MeshCollider.sharedMesh time to
-                // finish cooking before gravity activates. Without this the first
-                // physics tick tunnels the capsule through the not-yet-registered
-                // collider and the player free-falls forever.
+                // Brief kinematic grace (300ms) so MeshCollider cooking finishes
+                // before gravity activates. Without this the capsule starts
+                // mid-air and oscillates as physics tries to settle it onto
+                // terrain whose collider isn't ready yet — visible as persistent
+                // micro-stutter + capsule hovering above ground. Coroutine is
+                // started from the MonoBehaviour so it always runs.
                 rb.isKinematic = true;
-                StartCoroutine(EnablePlayerPhysics(rb, 1f));
+                StartCoroutine(EnablePlayerPhysics(rb, 0.3f));
 
                 // High-friction physics material so player doesn't slide on terrain
                 var physMat = new PhysicsMaterial("PlayerFriction");
@@ -426,12 +433,20 @@ namespace ForeverEngine.Procedural
                 }
             }
 
-            // Mouse look — only horizontal on player (vertical on camera)
+            // Mouse look — only horizontal on player (vertical on camera).
+            // Use Rigidbody.MoveRotation so Unity's physics interpolation smooths
+            // the rotation between FixedUpdate ticks. Setting transform.rotation
+            // directly resets the interpolation state every render frame and
+            // produces visible micro-stutter in the camera follow.
             if (Cursor.lockState == CursorLockMode.Locked)
             {
-                float mouseX = Input.GetAxis("Mouse X") * MouseSensitivity;
+                float mouseX = Input.GetAxisRaw("Mouse X") * MouseSensitivity;
                 _yaw += mouseX;
-                transform.rotation = Quaternion.Euler(0f, _yaw, 0f);
+                var targetRot = Quaternion.Euler(0f, _yaw, 0f);
+                if (_rb != null)
+                    _rb.MoveRotation(targetRot);
+                else
+                    transform.rotation = targetRot;
             }
 
             // Capture Space press as edge-triggered flag. ConnectionManager consumes it
@@ -517,13 +532,13 @@ namespace ForeverEngine.Procedural
             // Vertical mouse look (pitch)
             if (Cursor.lockState == CursorLockMode.Locked)
             {
-                float mouseY = Input.GetAxis("Mouse Y") * MouseSensitivity;
+                float mouseY = Input.GetAxisRaw("Mouse Y") * MouseSensitivity;
                 _pitch -= mouseY;
                 _pitch = Mathf.Clamp(_pitch, MinPitch, MaxPitch);
             }
 
             // Scroll zoom
-            float scroll = Input.GetAxis("Mouse ScrollWheel");
+            float scroll = Input.GetAxisRaw("Mouse ScrollWheel");
             if (Mathf.Abs(scroll) > 0.01f)
             {
                 Distance -= scroll * ScrollZoomSpeed;
@@ -536,9 +551,11 @@ namespace ForeverEngine.Procedural
             Vector3 offset = rotation * new Vector3(0f, 0f, -Distance);
             Vector3 targetPos = Target.position + Vector3.up * HeightOffset + offset;
 
-            // Smooth follow — frame-rate independent exponential smoothing
-            float t = 1f - Mathf.Exp(-SmoothSpeed * Time.deltaTime);
-            transform.position = Vector3.Lerp(transform.position, targetPos, t);
+            // Instant follow — the player's Rigidbody is interpolated so
+            // Target.position is already smooth. Re-lerping here adds phase
+            // lag between camera and player that reads as stutter on
+            // mouse-look + movement. Direct assignment tracks 1:1.
+            transform.position = targetPos;
             transform.LookAt(Target.position + Vector3.up * 1.5f);
         }
     }
