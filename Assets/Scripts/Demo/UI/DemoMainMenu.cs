@@ -12,21 +12,21 @@ namespace ForeverEngine.Demo.UI
             // Attach CharacterCreationUI to the same GameObject
             _charCreation = gameObject.AddComponent<CharacterCreationUI>();
 
-            // Dev-only: --skip-menu command-line arg bypasses MainMenu and spawns a default
-            // character straight into the World scene. Used for automated playtest iteration.
+            // Dev-only CLI flags:
+            //   --skip-menu : offline auto-start as Human Warrior
+            //   --connect   : online auto-start (spawns ConnectionManager, then Human Warrior)
+            bool online = false, skip = false;
             foreach (var arg in System.Environment.GetCommandLineArgs())
             {
-                if (arg == "--skip-menu" || arg == "-skip-menu")
-                {
-                    StartCoroutine(AutoStart());
-                    return;
-                }
+                if (arg == "--connect" || arg == "-connect") { online = true; skip = true; }
+                else if (arg == "--skip-menu" || arg == "-skip-menu") { skip = true; }
             }
+            if (skip)
+                StartCoroutine(AutoStart(online));
         }
 
-        private System.Collections.IEnumerator AutoStart()
+        private System.Collections.IEnumerator AutoStart(bool online)
         {
-            // One-frame delay so GameManager.Awake runs first (it's created by this scene's GameManager GO if not present).
             yield return null;
             if (GameManager.Instance == null)
             {
@@ -34,7 +34,12 @@ namespace ForeverEngine.Demo.UI
                 go.AddComponent<GameManager>();
                 yield return null;
             }
-            Debug.Log("[DemoMainMenu] --skip-menu → auto-starting Human Warrior");
+            if (online && ForeverEngine.Network.ConnectionManager.Instance == null)
+            {
+                var cm = new GameObject("ConnectionManager");
+                cm.AddComponent<ForeverEngine.Network.ConnectionManager>();
+            }
+            Debug.Log($"[DemoMainMenu] {(online ? "--connect" : "--skip-menu")} → auto-starting Human Warrior");
             GameManager.Instance.StartGameWithSheet(RPGBridge.CreateHumanWarrior());
         }
 
