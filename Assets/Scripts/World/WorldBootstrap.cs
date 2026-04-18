@@ -285,6 +285,13 @@ namespace ForeverEngine.Procedural
             var connMgr = Network.ConnectionManager.Instance;
             if (connMgr != null)
                 connMgr.RegisterLocalPlayer(player);
+
+            // Spec 7 Task 13: spawn RemotePlayerManager once (idempotent).
+            if (UnityEngine.Object.FindFirstObjectByType<ForeverEngine.Network.RemotePlayerManager>() == null)
+            {
+                new GameObject("RemotePlayerManager")
+                    .AddComponent<ForeverEngine.Network.RemotePlayerManager>();
+            }
         }
 
         private System.Collections.IEnumerator AutoScreenshotLoop()
