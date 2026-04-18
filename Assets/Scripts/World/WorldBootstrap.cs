@@ -278,6 +278,13 @@ namespace ForeverEngine.Procedural
             var fpsCam = cam.gameObject.AddComponent<FPSCameraController>();
             fpsCam.Target = player.transform;
             Debug.Log($"[WorldBootstrap] FPS camera following {player.name}");
+
+            // Spec 7 Phase 1: wire local player to network send loop.
+            // ConnectionManager.Instance is null in offline mode — send loop
+            // starts only if a connection exists.
+            var connMgr = Network.ConnectionManager.Instance;
+            if (connMgr != null)
+                connMgr.RegisterLocalPlayer(player);
         }
 
         private System.Collections.IEnumerator AutoScreenshotLoop()

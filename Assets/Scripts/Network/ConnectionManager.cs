@@ -36,6 +36,11 @@ namespace ForeverEngine.Network
         // ── Internal ───────────────────────────────────────────────────────
         private NetworkClient _client;
 
+        // ── Spec 7 Phase 1: 20Hz MoveInput send loop ──────────────────────
+        private UnityEngine.GameObject _localPlayer;
+        private ForeverEngine.Procedural.SimplePlayerController _localPlayerController;
+        private UnityEngine.Coroutine _moveSendCoroutine;
+
         // ── Unity lifecycle ────────────────────────────────────────────────
 
         private void Awake()
@@ -83,6 +88,55 @@ namespace ForeverEngine.Network
 
             // Begin connecting
             _client.Connect(Host, Port);
+        }
+
+        // ── Spec 7 Phase 1: local player registration ─────────────────────
+
+        /// <summary>
+        /// Called by WorldBootstrap after the player is spawned. Starts the
+        /// 20Hz MoveInput send loop. If called with null (e.g., battle scene
+        /// swap), stops the loop.
+        /// </summary>
+        public void RegisterLocalPlayer(UnityEngine.GameObject player)
+        {
+            _localPlayer = player;
+            _localPlayerController = player != null
+                ? player.GetComponent<ForeverEngine.Procedural.SimplePlayerController>()
+                : null;
+
+            if (_moveSendCoroutine != null)
+            {
+                StopCoroutine(_moveSendCoroutine);
+                _moveSendCoroutine = null;
+            }
+            if (_localPlayerController != null)
+                _moveSendCoroutine = StartCoroutine(MoveSendLoop());
+        }
+
+        public UnityEngine.GameObject LocalPlayer => _localPlayer;
+
+        private System.Collections.IEnumerator MoveSendLoop()
+        {
+            var wait = new UnityEngine.WaitForSeconds(0.05f); // 20 Hz
+            while (true)
+            {
+                yield return wait;
+                if (_localPlayerController == null) continue;
+                if (!IsLoggedIn) continue;
+
+                var msg = new ForeverEngine.Core.Messages.MoveInput
+                {
+                    InputX = _localPlayerController.LastInputX,
+                    InputZ = _localPlayerController.LastInputZ,
+                    Yaw    = _localPlayerController.Yaw,
+                    Sprint = _localPlayerController.LastSprint,
+                    Jump   = _localPlayerController.JumpPressedThisFrame,
+                };
+                _client.Send(msg);
+
+                // Edge-trigger reset — exactly one MoveInput per Space press carries Jump=true.
+                _localPlayerController.JumpPressedThisFrame = false;
+            }
         }
 
         private void OnDestroy()
