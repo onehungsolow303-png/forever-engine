@@ -291,28 +291,31 @@ namespace ForeverEngine.Network
             float horizDelta = UnityEngine.Vector2.Distance(
                 new UnityEngine.Vector2(clientPos.x, clientPos.z),
                 new UnityEngine.Vector2(serverPos.x, serverPos.z));
+            float vertFallDelta = serverPos.y - clientPos.y; // >0 when client is below server
 
-            // Horizontal snap — login teleport, death/respawn, egregious desync.
             bool horizDesync = horizDelta >= HardDesyncMeters;
-
-            // Vertical rescue — client fell through un-cooked terrain and is
-            // dropping indefinitely. Pull them back up to the server's Y.
-            bool verticalRescue = (serverPos.y - clientPos.y) >= VerticalRescueMeters;
+            bool verticalRescue = vertFallDelta >= VerticalRescueMeters;
 
             if (!horizDesync && !verticalRescue) return;
 
-            string reason = horizDesync
-                ? $"Hard desync recover: {horizDelta:F1}m horizontal drift"
-                : $"Vertical rescue: fell {serverPos.y - clientPos.y:F1}m below server Y";
+            // Build the snap target axis-by-axis. Horizontal desync implies
+            // the server has moved us (teleport/respawn) — snap X/Z. Vertical
+            // rescue implies we tunneled below un-cooked terrain — snap Y.
+            // Both can be true simultaneously (falling through while also
+            // having drifted off from server input): apply both without one
+            // branch hiding the other.
+            float snapX = horizDesync ? serverPos.x : clientPos.x;
+            float snapZ = horizDesync ? serverPos.z : clientPos.z;
+            float snapY = verticalRescue ? serverPos.y : clientPos.y;
+
+            string reason = horizDesync && verticalRescue
+                ? $"Full resync: {horizDelta:F1}m horiz + {vertFallDelta:F1}m vertical"
+                : horizDesync
+                    ? $"Hard desync recover: {horizDelta:F1}m horizontal drift"
+                    : $"Vertical rescue: fell {vertFallDelta:F1}m below server Y";
             Debug.LogWarning($"[ConnectionManager] {reason}, snapping to server pose.");
 
-            // On vertical rescue keep the horizontal client pose to avoid a
-            // surprise teleport; on horizontal desync keep the client's Y
-            // because physics will settle.
-            var snapTo = horizDesync
-                ? new UnityEngine.Vector3(serverPos.x, clientPos.y, serverPos.z)
-                : new UnityEngine.Vector3(clientPos.x, serverPos.y, clientPos.z);
-            player.transform.position = snapTo;
+            player.transform.position = new UnityEngine.Vector3(snapX, snapY, snapZ);
             var rb = player.GetComponent<UnityEngine.Rigidbody>();
             if (rb != null)
                 rb.linearVelocity = UnityEngine.Vector3.zero;

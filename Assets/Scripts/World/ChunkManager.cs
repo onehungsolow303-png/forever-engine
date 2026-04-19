@@ -17,7 +17,12 @@ namespace ForeverEngine.Procedural
         [Header("Streaming Radii (in chunks)")]
         public int LoadRadius = 2;
         public int GenerateAheadRadius = 3;
-        public int UnloadRadius = 5;
+        // Must be >= server's GameLoop.MoveChunkRadius (currently 5) plus enough
+        // hysteresis to survive a round-trip walk. At radius 12 the client keeps
+        // 25*25 = 625 chunks resident (~8km across), which is plenty of slack
+        // against the server's 11*11 = 121 streamed window without the bandwidth
+        // storm of re-streaming already-delivered chunks on every chunk-cross.
+        public int UnloadRadius = 12;
 
         [Header("World")]
         public int WorldSeed = 42;
