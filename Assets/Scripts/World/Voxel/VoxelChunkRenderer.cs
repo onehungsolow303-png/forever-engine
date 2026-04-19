@@ -12,13 +12,15 @@ namespace ForeverEngine.World.Voxel
     {
         private readonly Transform _root;
         private readonly Material _material;
+        private readonly bool _renderMeshes;
         private readonly Dictionary<ChunkCoord3D, GameObject> _children = new();
         private readonly MeshPool _meshPool = new MeshPool(maxSize: 64);
 
-        public VoxelChunkRenderer(Transform root, Material material)
+        public VoxelChunkRenderer(Transform root, Material material, bool renderMeshes = true)
         {
             _root = root;
             _material = material;
+            _renderMeshes = renderMeshes;
         }
 
         public void OnArrived(
@@ -48,6 +50,12 @@ namespace ForeverEngine.World.Voxel
             var mf = go.AddComponent<MeshFilter>(); mf.sharedMesh = mesh;
             var mr = go.AddComponent<MeshRenderer>();
             if (_material != null) mr.sharedMaterial = _material;
+            // Phase A polish: voxel mesh has Surface-Nets smoothing artifacts
+            // that intersect the player capsule and conflict visually with the
+            // heightmap. Until Phase C ships proper voxel materials + replaces
+            // the heightmap visual, keep voxel data streaming for collision /
+            // future carving but don't draw the mesh. Toggleable per-instance.
+            mr.enabled = _renderMeshes;
             _children[coord] = go;
         }
 

@@ -15,6 +15,9 @@ namespace ForeverEngine.World.Voxel
         [UnityEngine.Tooltip("Max chunks meshed per frame. Default 2 keeps the upload sync below ~10ms/frame at 60 FPS.")]
         public int MaxMeshBuildsPerFrame = 2;
 
+        [UnityEngine.Tooltip("Draw the voxel mesh. Default OFF — voxel data still streams + meshes for future carving and collision, but the heightmap stays the visible surface until Phase C replaces it.")]
+        public bool RenderMeshes = false;
+
         private readonly List<ChunkCoord3D> _pendingArrived = new List<ChunkCoord3D>();
         private readonly HashSet<ChunkCoord3D> _pendingSet = new HashSet<ChunkCoord3D>();
 
@@ -62,7 +65,7 @@ namespace ForeverEngine.World.Voxel
                     Debug.LogWarning("[VoxelWorldManager] No URP/Lit or Standard shader found; voxel meshes will render with Unity's missing-material pink.");
                 }
             }
-            _renderer = new VoxelChunkRenderer(transform, voxelMaterial);
+            _renderer = new VoxelChunkRenderer(transform, voxelMaterial, renderMeshes: RenderMeshes);
         }
 
         void OnDestroy()
