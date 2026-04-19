@@ -113,10 +113,31 @@ namespace ForeverEngine.World.Voxel
                 if (_renderer != null)
                 {
                     var chunk = Streamer.Get(coord);
-                    if (chunk != null) _renderer.OnArrived(coord, chunk);
+                    if (chunk != null)
+                    {
+                        var nx = Streamer.Get(new ChunkCoord3D(coord.X + 1, coord.Y, coord.Z));
+                        var ny = Streamer.Get(new ChunkCoord3D(coord.X, coord.Y + 1, coord.Z));
+                        var nz = Streamer.Get(new ChunkCoord3D(coord.X, coord.Y, coord.Z + 1));
+                        _renderer.OnArrived(coord, chunk, nx, ny, nz);
+
+                        // Re-mesh -X / -Y / -Z neighbors so THEIR boundary closes against us.
+                        ReMeshIfLoaded(new ChunkCoord3D(coord.X - 1, coord.Y, coord.Z));
+                        ReMeshIfLoaded(new ChunkCoord3D(coord.X, coord.Y - 1, coord.Z));
+                        ReMeshIfLoaded(new ChunkCoord3D(coord.X, coord.Y, coord.Z - 1));
+                    }
                 }
                 processed++;
             }
+        }
+
+        private void ReMeshIfLoaded(ChunkCoord3D coord)
+        {
+            var c = Streamer.Get(coord);
+            if (c == null) return;
+            var nx = Streamer.Get(new ChunkCoord3D(coord.X + 1, coord.Y, coord.Z));
+            var ny = Streamer.Get(new ChunkCoord3D(coord.X, coord.Y + 1, coord.Z));
+            var nz = Streamer.Get(new ChunkCoord3D(coord.X, coord.Y, coord.Z + 1));
+            _renderer.OnArrived(coord, c, nx, ny, nz);
         }
     }
 }

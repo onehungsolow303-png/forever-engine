@@ -14,21 +14,30 @@ namespace ForeverEngine.World.Voxel
 
         /// <summary>
         /// Builds a Unity Mesh from a voxel chunk using Core's Surface Nets mesher.
+        /// Optional neighbor chunks close seams at chunk boundaries.
+        /// Pass <paramref name="meshToReuse"/> to avoid a new Mesh allocation (Task 3 pool).
         /// </summary>
         /// <remarks>
         /// Must be called from the Unity main thread. <see cref="Mesh"/> construction
         /// is not thread-safe. Background streaming callbacks must marshal to the main
         /// thread before calling this.
         /// </remarks>
-        public static Mesh Build(VoxelChunk chunk)
+        public static Mesh Build(
+            VoxelChunk chunk,
+            VoxelChunk neighborPosX = null,
+            VoxelChunk neighborPosY = null,
+            VoxelChunk neighborPosZ = null,
+            Mesh meshToReuse = null)
         {
             var meshVerts = _tlsMeshVerts ??= new List<MeshVertex>(8192);
             var indices   = _tlsIndices   ??= new List<int>(24576);
             var positions = _tlsPositions ??= new List<Vector3>(8192);
 
-            SurfaceNets.Mesh(chunk, meshVerts, indices);
+            SurfaceNets.Mesh(chunk, meshVerts, indices, neighborPosX, neighborPosY, neighborPosZ);
 
-            var mesh = new Mesh { name = $"VoxelChunk {chunk.Coord}" };
+            var mesh = meshToReuse ?? new Mesh();
+            mesh.name = $"VoxelChunk {chunk.Coord}";
+            mesh.Clear();
             if (meshVerts.Count == 0) return mesh;
 
             positions.Clear();

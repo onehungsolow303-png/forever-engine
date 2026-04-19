@@ -20,7 +20,12 @@ namespace ForeverEngine.World.Voxel
             _material = material;
         }
 
-        public void OnArrived(ChunkCoord3D coord, VoxelChunk chunk)
+        public void OnArrived(
+            ChunkCoord3D coord,
+            VoxelChunk chunk,
+            VoxelChunk neighborPosX = null,
+            VoxelChunk neighborPosY = null,
+            VoxelChunk neighborPosZ = null)
         {
             if (_children.TryGetValue(coord, out var existing))
             {
@@ -30,7 +35,7 @@ namespace ForeverEngine.World.Voxel
                 _children.Remove(coord);
             }
 
-            var mesh = VoxelMeshBuilder.Build(chunk);
+            var mesh = VoxelMeshBuilder.Build(chunk, neighborPosX, neighborPosY, neighborPosZ);
             if (mesh.vertexCount == 0) return;   // all air / all solid interior
 
             var go = new GameObject($"VC {coord}");
