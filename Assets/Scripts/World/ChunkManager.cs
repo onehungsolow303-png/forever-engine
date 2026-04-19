@@ -112,14 +112,7 @@ namespace ForeverEngine.Procedural
             }
         }
 
-        private void Awake()
-        {
-            Instance = this;
-            // If a VoxelWorldManager is already in the scene (e.g., it Awoke before us),
-            // set the flag immediately so any chunks loaded after this point arrive disabled.
-            var voxel = Object.FindFirstObjectByType<ForeverEngine.World.Voxel.VoxelWorldManager>();
-            if (voxel != null) _voxelTerrainActive = true;
-        }
+        private void Awake() => Instance = this;
 
         /// <summary>
         /// Initialize the chunk manager. In server mode, skeleton is not created
