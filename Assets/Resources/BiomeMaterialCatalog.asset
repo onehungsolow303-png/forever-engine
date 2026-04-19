@@ -38,6 +38,6 @@ MonoBehaviour:
   - Biome: 1
     Material: {fileID: 2100000, guid: e620925be97edc9418d912a4f2af9024, type: 2}
   - Biome: 0
-    Material: {fileID: 2100000, guid: 2c9e8220f91f40948aa3723042429283, type: 2}
+    Material: {fileID: 2100000, guid: c55afdc4a8a3b4890b07cc7d176510bb, type: 2}
   - Biome: 13
-    Material: {fileID: 2100000, guid: 2c9e8220f91f40948aa3723042429283, type: 2}
+    Material: {fileID: 2100000, guid: c55afdc4a8a3b4890b07cc7d176510bb, type: 2}

@@ -100,18 +100,18 @@ MonoBehaviour:
     BaseScale: 1
   - Biome: 12
     Prefabs:
-    - {fileID: 158350, guid: 0cd0d638120d5434094e5b7d72fae2af, type: 3}
-    - {fileID: 139820, guid: 6906883089ab9f941b06538a9ad36c3a, type: 3}
-    - {fileID: 191586, guid: e68f8dd7657d1a140934dede28271216, type: 3}
-    - {fileID: 119960, guid: 3b37080954a1ed74eb9067961862386c, type: 3}
-    - {fileID: 124430, guid: 78a4c7530a1ffc14fb519922916c58ba, type: 3}
-    - {fileID: 178762, guid: a01627f938cb907488c9e2741725ebf4, type: 3}
-    - {fileID: 185560, guid: c1430ee6e3b7e8b4db53d7a15f733fde, type: 3}
-    - {fileID: 122930, guid: faca7026dc03c1445bff13c437e3b5aa, type: 3}
-    - {fileID: 113004, guid: d0b7fb94cea96c84bb7b481f49810607, type: 3}
-    - {fileID: 3644152076974972783, guid: c97e81a1853b8a043be5550f881c60ee, type: 3}
-    - {fileID: 8134217534734601532, guid: a83f37dabb23e28499c92f88110cebf9, type: 3}
-    - {fileID: 6320847413095166771, guid: bfd2286be6ca8a240bd82c117249eaae, type: 3}
+    - {fileID: 3277021642672265599, guid: 623f9d5108e1405499b7220ebd8b63f7, type: 3}
+    - {fileID: 4887113621990586965, guid: 30484ff37cb7d3c4da96a95411e41ba3, type: 3}
+    - {fileID: 4574462154851429117, guid: 347784dfee5314b488e98c6958108833, type: 3}
+    - {fileID: 6825173865056411971, guid: 84d251614079c13438561a35d60c7865, type: 3}
+    - {fileID: 2836178344859666813, guid: fefc1a826084a8a4fa6fc55703ba945f, type: 3}
+    - {fileID: 3277021642672265599, guid: 8d4c697973e3ceb449de5306f8ed8736, type: 3}
+    - {fileID: 4887113621990586965, guid: dca6bbc2c345ab34da4322bde71612b9, type: 3}
+    - {fileID: 4574462154851429117, guid: 712ec9a20b6e7484283803e003ca9537, type: 3}
+    - {fileID: 6825173865056411971, guid: 30161118658096247ba8ae975e61bba4, type: 3}
+    - {fileID: 2836178344859666813, guid: e837b052c4b13bd42a8bf715c144f1f2, type: 3}
+    - {fileID: 3277021642672265599, guid: bfa3bae651378f24c9e4f1f437072a08, type: 3}
+    - {fileID: 4887113621990586965, guid: d2157949bad09b44eaad7cd9d4e1c9bf, type: 3}
     Count: 20
     MinSpacing: 18
     BaseScale: 1
@@ -166,6 +166,40 @@ MonoBehaviour:
     Count: 3
     MinSpacing: 40
     BaseScale: 0.8
+  - Biome: 2
+    Prefabs:
+    - {fileID: 7124327472978663689, guid: c99549ca3266d324580b66c9225cdcaa, type: 3}
+    - {fileID: 3496968330695343580, guid: 0963f94ce1c79b44f9f8caf1d3889135, type: 3}
+    - {fileID: 2792556185026468212, guid: 23502db242f412848a2eb50303378458, type: 3}
+    - {fileID: 8852388988735290595, guid: 6e9719898757c904b8b806b7d0ba0496, type: 3}
+    - {fileID: 7124327472978663689, guid: 6083ffddcb8480b4e9222e3e87a83aa3, type: 3}
+    - {fileID: 3496968330695343580, guid: f24a72bd3ad8b1c49ad493d6857a155a, type: 3}
+    - {fileID: 2792556185026468212, guid: 865d09a60b9b74a4ba96dc6df74ce19a, type: 3}
+    - {fileID: 8852388988735290595, guid: be48a6e34ae98f54c935b204b3fa319f, type: 3}
+    - {fileID: 7124327472978663689, guid: a3eb92e0dbea05a439e1e66bbda910e5, type: 3}
+    - {fileID: 3496968330695343580, guid: 1150167131d6b5546a103d6be515cda3, type: 3}
+    - {fileID: 2792556185026468212, guid: 135a1ce880c76ef41bcfe0895807aa37, type: 3}
+    - {fileID: 8852388988735290595, guid: 344cbc3f62688134b9a7ddc6436967ac, type: 3}
+    Count: 8
+    MinSpacing: 30
+    BaseScale: 1
+  - Biome: 2
+    Prefabs:
+    - {fileID: 100000, guid: 00a6cac23bc59014fa450c91781b74ec, type: 3}
+    - {fileID: 100000, guid: 2a44cf3a50db2074cad978680a437715, type: 3}
+    - {fileID: 100000, guid: 51330e59c8f889e4e810ee839b0c3f49, type: 3}
+    - {fileID: 100000, guid: fc9a095b769301f4f84c064d44c2c718, type: 3}
+    - {fileID: 100000, guid: 15b5f5c4af05b3b449da31aa7e9b2e25, type: 3}
+    - {fileID: 100000, guid: 05ee2aa0083d5de4aa60958425ead1f2, type: 3}
+    - {fileID: 100000, guid: 148d0dd869d06c7498a4c2da2703dea8, type: 3}
+    - {fileID: 100000, guid: f18bd71e7c48f9d4094632c6512d8e28, type: 3}
+    - {fileID: 100000, guid: d845e611fe647b841bba97e218ba855b, type: 3}
+    - {fileID: 100000, guid: edb226dd75a495a4e9b45dbf1d926a20, type: 3}
+    - {fileID: 100000, guid: 6c3a119b220269145a2e50d3fbc2b3c7, type: 3}
+    - {fileID: 100000, guid: a3b0831576ed2d14aa579c72a67703af, type: 3}
+    Count: 4
+    MinSpacing: 55
+    BaseScale: 0.9
   - Biome: 4
     Prefabs:
     - {fileID: 109544, guid: 8dd1140c9f448f748b1a1b197613c944, type: 3}
@@ -183,6 +217,23 @@ MonoBehaviour:
     Count: 4
     MinSpacing: 50
     BaseScale: 1.2
+  - Biome: 4
+    Prefabs:
+    - {fileID: 7124327472978663689, guid: c99549ca3266d324580b66c9225cdcaa, type: 3}
+    - {fileID: 3496968330695343580, guid: 0963f94ce1c79b44f9f8caf1d3889135, type: 3}
+    - {fileID: 2792556185026468212, guid: 23502db242f412848a2eb50303378458, type: 3}
+    - {fileID: 8852388988735290595, guid: 6e9719898757c904b8b806b7d0ba0496, type: 3}
+    - {fileID: 7124327472978663689, guid: 6083ffddcb8480b4e9222e3e87a83aa3, type: 3}
+    - {fileID: 3496968330695343580, guid: f24a72bd3ad8b1c49ad493d6857a155a, type: 3}
+    - {fileID: 2792556185026468212, guid: 865d09a60b9b74a4ba96dc6df74ce19a, type: 3}
+    - {fileID: 8852388988735290595, guid: be48a6e34ae98f54c935b204b3fa319f, type: 3}
+    - {fileID: 7124327472978663689, guid: a3eb92e0dbea05a439e1e66bbda910e5, type: 3}
+    - {fileID: 3496968330695343580, guid: 1150167131d6b5546a103d6be515cda3, type: 3}
+    - {fileID: 2792556185026468212, guid: 135a1ce880c76ef41bcfe0895807aa37, type: 3}
+    - {fileID: 8852388988735290595, guid: 344cbc3f62688134b9a7ddc6436967ac, type: 3}
+    Count: 3
+    MinSpacing: 45
+    BaseScale: 0.9
   - Biome: 7
     Prefabs:
     - {fileID: 109544, guid: 8dd1140c9f448f748b1a1b197613c944, type: 3}

@@ -12,19 +12,37 @@ public static class RoomCatalogPopulator
 {
     // ── Pack scan directories ─────────────────────────────────────────────
 
+    // Prop source directories are intentionally mix-and-match across all
+    // installed packs. Per user 2026-04-19: the game benefits from cross-pack
+    // variety in a single room rather than one-pack-per-room homogeneity.
     private static readonly string[] PropDirs =
     {
+        // Lordenfel / Multistory / Eternal Temple — original catalog
         "Assets/Lordenfel/Prefabs/Props",
         "Assets/Multistory Dungeons 2/Prefabs/Props",
         "Assets/Eternal Temple/Prefabs/Props",
         "Assets/Eternal Temple/Prefabs/Lanterns",
+        // 3DForge Cave Adventure kit — lots of dungeon/cave decor
+        "Assets/3DForge/Cave Adventure kit/Prefabs/Props",
+        "Assets/3DForge/Cave Adventure kit/Prefabs/Wooden",
+        "Assets/3DForge/Cave Adventure kit/Prefabs/Special",
+        "Assets/3DForge/Cave Adventure kit/Prefabs/Plants",
+        // 3DForge Catacombs — bones, skulls, corpses (good Lighting/Debris/Decorative)
+        "Assets/3DForge/Fantasy_Interiors/Villages_&_Towns/Prefabs/Catacombs/catacombs_props",
+        // WaltWW Cave Dungeon Toolkit — purpose-built dungeon props
+        "Assets/WaltWW/CaveDungeonToolkit/Prefabs/Props",
+        "Assets/WaltWW/CaveDungeonToolkit/Prefabs/VFX",
+        // Realistic Natural Cave 2 — small stalagmites work as room-floor debris
+        "Assets/Realistic Natural Cave 2/Prefabs",
+        // NAKED_SINGULARITY skeletons — great Debris for any dungeon
+        "Assets/NAKED_SINGULARITY/DRAGON_CATACOMB/PREFABS/Decor/Skeleton_Bone",
     };
 
     // ── Name-based classification rules ──────────────────────────────────
 
     private static readonly (string pattern, ForeverEngine.PropCategory cat, bool wallMounted, float yOffset)[] Rules =
     {
-        // Lighting
+        // Lighting (Lordenfel/Eternal Temple/Magic Pig classics)
         ("Torch",       ForeverEngine.PropCategory.Lighting,    true,  1.8f),
         ("torch",       ForeverEngine.PropCategory.Lighting,    true,  1.8f),
         ("Candle",      ForeverEngine.PropCategory.Lighting,    false, 0f),
@@ -36,6 +54,11 @@ public static class RoomCatalogPopulator
         ("lantern",     ForeverEngine.PropCategory.Lighting,    false, 0f),
         ("Lamp",        ForeverEngine.PropCategory.Lighting,    false, 0f),
         ("lamp",        ForeverEngine.PropCategory.Lighting,    false, 0f),
+        // Lighting (3DForge Cave Adventure kit VFX)
+        ("candle_flame",   ForeverEngine.PropCategory.Lighting, false, 0f),
+        ("Godray",         ForeverEngine.PropCategory.Lighting, true,  2.5f),
+        ("vent_gas",       ForeverEngine.PropCategory.Lighting, false, 0f),
+        ("fog_spirit",     ForeverEngine.PropCategory.Lighting, false, 0f),
 
         // Containers
         ("Barrel",      ForeverEngine.PropCategory.Container,   false, 0f),
@@ -60,11 +83,15 @@ public static class RoomCatalogPopulator
         ("Ladder",      ForeverEngine.PropCategory.Furniture,   true,  0f),
 
         // Debris
-        ("Bone",        ForeverEngine.PropCategory.Debris,      false, 0f),
-        ("bone",        ForeverEngine.PropCategory.Debris,      false, 0f),
-        ("Rubble",      ForeverEngine.PropCategory.Debris,      false, 0f),
-        ("rubble",      ForeverEngine.PropCategory.Debris,      false, 0f),
-        ("Debris",      ForeverEngine.PropCategory.Debris,      false, 0f),
+        ("Bone",         ForeverEngine.PropCategory.Debris,     false, 0f),
+        ("bone",         ForeverEngine.PropCategory.Debris,     false, 0f),
+        ("Skeleton",     ForeverEngine.PropCategory.Debris,     false, 0f),
+        ("Rubble",       ForeverEngine.PropCategory.Debris,     false, 0f),
+        ("rubble",       ForeverEngine.PropCategory.Debris,     false, 0f),
+        ("Debris",       ForeverEngine.PropCategory.Debris,     false, 0f),
+        ("Stalagmit",    ForeverEngine.PropCategory.Debris,     false, 0f),
+        ("Stalagnat",    ForeverEngine.PropCategory.Debris,     true,  2.0f),
+        ("CaveRock",     ForeverEngine.PropCategory.Debris,     false, 0f),
 
         // Decorative (catch-all for remaining props)
         ("Goblet",      ForeverEngine.PropCategory.Decorative,  false, 0f),
