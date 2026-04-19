@@ -2,6 +2,7 @@ using ForeverEngine.Core.Messages;
 using ForeverEngine.Demo.Battle;
 using ForeverEngine.Demo.UI;
 using ForeverEngine.Procedural;
+using ForeverEngine.World.Voxel;
 using UnityEngine;
 using UnityEngine.UIElements;
 
@@ -111,6 +112,8 @@ namespace ForeverEngine.Network
             _client.RegisterHandler<PartyInviteReceivedMessage>(OnPartyInviteReceived);
             _client.RegisterHandler<DungeonEnteredMessage>(OnDungeonEntered);
             _client.RegisterHandler<DungeonExitedMessage>(OnDungeonExited);
+            _client.RegisterHandler<VoxelChunkSync>(OnVoxelChunkSync);
+            _client.RegisterHandler<VoxelChunkUnsubscribe>(OnVoxelChunkUnsubscribe);
 
             // Begin connecting
             _client.Connect(Host, Port);
@@ -447,6 +450,28 @@ namespace ForeverEngine.Network
             ServerStateCache.Instance.CurrentDungeonInstanceId = "";
             Debug.Log($"[Dungeon] Exited {msg.InstanceId}");
             UnityEngine.SceneManagement.SceneManager.LoadScene("World");
+        }
+
+        // Cache the VoxelWorldManager so FindFirstObjectByType isn't called on every chunk.
+        private VoxelWorldManager _voxelWorldManager;
+
+        private VoxelWorldManager GetVoxelWorldManager()
+        {
+            if (_voxelWorldManager == null)
+                _voxelWorldManager = UnityEngine.Object.FindFirstObjectByType<VoxelWorldManager>();
+            return _voxelWorldManager;
+        }
+
+        private void OnVoxelChunkSync(VoxelChunkSync msg)
+        {
+            var vwm = GetVoxelWorldManager();
+            if (vwm != null) vwm.Streamer.OnSync(msg);
+        }
+
+        private void OnVoxelChunkUnsubscribe(VoxelChunkUnsubscribe msg)
+        {
+            var vwm = GetVoxelWorldManager();
+            if (vwm != null) vwm.Streamer.OnUnsubscribe(msg);
         }
 
         /// <summary>
