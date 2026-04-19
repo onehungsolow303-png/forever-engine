@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using System.Linq;
 using ForeverEngine.Core.Messages;
 using ForeverEngine.Core.World;
 
@@ -22,8 +21,14 @@ namespace ForeverEngine.World.Voxel
         public VoxelChunk Get(ChunkCoord3D coord) =>
             _chunks.TryGetValue(coord, out var c) ? c : null;
 
-        public IEnumerable<(ChunkCoord3D coord, VoxelChunk chunk)> All() =>
-            _chunks.Select(kv => (kv.Key, kv.Value));
+        public IReadOnlyList<(ChunkCoord3D coord, VoxelChunk chunk)> All()
+        {
+            // Snapshot to avoid "Collection modified" if a message arrives mid-iteration.
+            var list = new List<(ChunkCoord3D, VoxelChunk)>(_chunks.Count);
+            foreach (var kv in _chunks)
+                list.Add((kv.Key, kv.Value));
+            return list;
+        }
 
         public void OnSync(VoxelChunkSync msg)
         {
@@ -42,7 +47,10 @@ namespace ForeverEngine.World.Voxel
             }
             else
             {
-                return;   // malformed payload; ignore silently.
+                UnityEngine.Debug.LogWarning(
+                    $"[VoxelChunkStreamer] Malformed VoxelChunkSync for chunk ({msg.ChunkX},{msg.ChunkY},{msg.ChunkZ}): " +
+                    $"neither HomogenousMaterial nor VoxelBlobBase64 set; dropping.");
+                return;
             }
             _chunks[coord] = chunk;
             ChunkArrived?.Invoke(coord);
