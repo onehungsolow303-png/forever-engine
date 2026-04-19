@@ -60,22 +60,23 @@ namespace ForeverEngine.Network
             Instance = this;
             DontDestroyOnLoad(gameObject);
 
-            // Resolve player token: --player <id> from CLI, else "player_<pid>"
-            if (string.IsNullOrEmpty(PlayerToken))
+            // Resolve player token, server host, and port from CLI.
+            // --player <id> / --host <addr> / --port <n> override inspector values.
+            var args = System.Environment.GetCommandLineArgs();
+            for (int i = 0; i < args.Length - 1; i++)
             {
-                var args = System.Environment.GetCommandLineArgs();
-                for (int i = 0; i < args.Length - 1; i++)
+                if (string.IsNullOrEmpty(PlayerToken) && (args[i] == "--player" || args[i] == "-player"))
+                    PlayerToken = args[i + 1];
+                else if (args[i] == "--host" || args[i] == "-host")
+                    Host = args[i + 1];
+                else if (args[i] == "--port" || args[i] == "-port")
                 {
-                    if (args[i] == "--player" || args[i] == "-player")
-                    {
-                        PlayerToken = args[i + 1];
-                        break;
-                    }
+                    if (int.TryParse(args[i + 1], out int p)) Port = p;
                 }
-                if (string.IsNullOrEmpty(PlayerToken))
-                    PlayerToken = $"player_{System.Diagnostics.Process.GetCurrentProcess().Id}";
-                Debug.Log($"[ConnectionManager] PlayerToken resolved: {PlayerToken}");
             }
+            if (string.IsNullOrEmpty(PlayerToken))
+                PlayerToken = $"player_{System.Diagnostics.Process.GetCurrentProcess().Id}";
+            Debug.Log($"[ConnectionManager] PlayerToken={PlayerToken} Host={Host} Port={Port}");
         }
 
         private void Start()
