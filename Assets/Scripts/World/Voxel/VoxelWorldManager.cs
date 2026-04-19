@@ -63,6 +63,11 @@ namespace ForeverEngine.World.Voxel
                 }
             }
             _renderer = new VoxelChunkRenderer(transform, voxelMaterial);
+
+            // Once voxel rendering is alive, the heightmap terrain is redundant —
+            // disable its renderer to eliminate z-fighting and double draw cost.
+            if (ForeverEngine.Procedural.ChunkManager.Instance != null)
+                ForeverEngine.Procedural.ChunkManager.Instance.VoxelTerrainActive = true;
         }
 
         void OnDestroy()

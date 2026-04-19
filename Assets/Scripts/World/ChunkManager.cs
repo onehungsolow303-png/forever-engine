@@ -68,7 +68,58 @@ namespace ForeverEngine.Procedural
             public GameObject Props;
         }
 
-        private void Awake() => Instance = this;
+        private bool _voxelTerrainActive;
+
+        /// <summary>
+        /// When true, the heightmap-based terrain MeshRenderers are kept disabled —
+        /// the voxel world rendering takes over the visual surface inside the voxel
+        /// streaming radius. Props remain enabled so trees/rocks still show against
+        /// the voxel mesh.
+        /// </summary>
+        public bool VoxelTerrainActive
+        {
+            get => _voxelTerrainActive;
+            set
+            {
+                if (_voxelTerrainActive == value) return;
+                _voxelTerrainActive = value;
+                ApplyTerrainVisibility();
+            }
+        }
+
+        private void ApplyTerrainVisibility()
+        {
+            foreach (var kv in _loaded)
+            {
+                var go = kv.Value.TerrainGO;
+                if (go == null) continue;
+                var mr = go.GetComponent<MeshRenderer>();
+                if (mr != null) mr.enabled = !_voxelTerrainActive;
+            }
+        }
+
+        /// <summary>
+        /// Test-only helper. Keeps the test alongside the production code without
+        /// introducing a new internalsVisibleTo for the EditMode test asmdef.
+        /// </summary>
+        public void RegisterTerrainForTest(ChunkCoord coord, GameObject terrainGO)
+        {
+            _loaded[coord] = new LoadedChunk { Data = null, TerrainGO = terrainGO, Props = null };
+            if (_voxelTerrainActive)
+            {
+                var mr = terrainGO.GetComponent<MeshRenderer>();
+                if (mr != null) mr.enabled = false;
+            }
+        }
+
+        private void Awake()
+        {
+            Instance = this;
+            // If a VoxelWorldManager is already in the scene (e.g., it Awoke before us),
+            // set the flag immediately so any chunks loaded after this point arrive disabled.
+            var voxel = Object.FindFirstObjectByType<ForeverEngine.World.Voxel.VoxelWorldManager>();
+            if (voxel != null) _voxelTerrainActive = true;
+        }
 
         /// <summary>
         /// Initialize the chunk manager. In server mode, skeleton is not created
@@ -162,6 +213,12 @@ namespace ForeverEngine.Procedural
                     Props = props,
                 };
 
+                if (_voxelTerrainActive && terrainGO != null)
+                {
+                    var mr = terrainGO.GetComponent<MeshRenderer>();
+                    if (mr != null) mr.enabled = false;
+                }
+
                 Debug.Log($"[ChunkManager] Server chunk loaded: {coord} biome={data.Biome}");
                 yield return null; // frame break between chunks in the queue
             }
@@ -224,6 +281,12 @@ namespace ForeverEngine.Procedural
                     // Create mesh terrain
                     var terrainGO = TerrainGenerator.CreateTerrain(data, needsCollider: ChunkNeedsCollider(coord));
                     _loaded[coord] = new LoadedChunk { Data = data, TerrainGO = terrainGO, Props = null };
+
+                    if (_voxelTerrainActive && terrainGO != null)
+                    {
+                        var mr = terrainGO.GetComponent<MeshRenderer>();
+                        if (mr != null) mr.enabled = false;
+                    }
 
                     yield return null; // Frame break after mesh creation
 
