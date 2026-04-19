@@ -4,12 +4,17 @@ using UnityEngine;
 namespace ForeverEngine.World.Voxel
 {
     /// <summary>
-    /// Tiny FIFO pool of Unity Mesh instances. Per-chunk Mesh allocation is
+    /// Tiny LIFO pool of Unity Mesh instances. Per-chunk Mesh allocation is
     /// the dominant cost on the streaming hot path — each new Mesh triggers
     /// a native handle alloc and a GPU upload. Reusing instances lets the
     /// VBO/IBO be re-uploaded into the same handle, which Unity batches more
     /// efficiently and keeps the C# GC quiet.
     /// </summary>
+    /// <remarks>
+    /// Main-thread-only. <see cref="UnityEngine.Object.Destroy"/> is not safe to
+    /// call from background threads; callers must ensure <see cref="Return"/> is
+    /// invoked on the Unity main thread.
+    /// </remarks>
     public sealed class MeshPool
     {
         private readonly Stack<Mesh> _stash = new();

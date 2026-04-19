@@ -61,6 +61,53 @@ namespace ForeverEngine.Tests.EditMode.World
         }
 
         [Test]
+        public void OnArrived_Then_OnDeparted_Then_OnArrived_Reuses_PooledMesh()
+        {
+            // After a chunk arrives, departs, and arrives again, the renderer should
+            // reuse the Mesh instance returned to the pool on departure —
+            // proving the rent/return round-trip is wired up.
+            var parent = new GameObject("VoxelRoot");
+            try
+            {
+                var renderer = new VoxelChunkRenderer(parent.transform, null);
+                var coord = new ChunkCoord3D(3, 0, 0);
+
+                // Build a half-solid chunk so SurfaceNets generates a non-empty mesh.
+                var chunk = new VoxelChunk(coord);
+                for (int y = 0; y < 32; y++)
+                for (int z = 0; z < 64; z++)
+                for (int x = 0; x < 64; x++)
+                    chunk.SetVoxel(x, y, z, sbyte.MinValue, VoxelMaterial.Stone);
+
+                // First arrival — capture the Mesh reference.
+                renderer.OnArrived(coord, chunk);
+                Assert.AreEqual(1, parent.transform.childCount, "chunk should have a GameObject after first arrival");
+                var mfs = parent.GetComponentsInChildren<MeshFilter>();
+                Assert.AreEqual(1, mfs.Length, "expected exactly one MeshFilter");
+                Assert.Greater(mfs[0].sharedMesh.vertexCount, 0, "first mesh must be non-empty for pool reuse to be meaningful");
+                var firstMesh = mfs[0].sharedMesh;
+
+                // Depart — mesh is returned to the pool, GameObject is destroyed.
+                renderer.OnDeparted(coord);
+                Assert.AreEqual(0, parent.transform.childCount, "GameObject should be removed after departure");
+
+                // Second arrival with the same chunk data — pool should hand back the same Mesh instance.
+                renderer.OnArrived(coord, chunk);
+                Assert.AreEqual(1, parent.transform.childCount, "chunk should have a GameObject after second arrival");
+                var mfs2 = parent.GetComponentsInChildren<MeshFilter>();
+                Assert.AreEqual(1, mfs2.Length, "expected exactly one MeshFilter on second arrival");
+                var secondMesh = mfs2[0].sharedMesh;
+
+                Assert.AreSame(firstMesh, secondMesh,
+                    "second OnArrived should reuse the Mesh instance returned to the pool by OnDeparted");
+            }
+            finally
+            {
+                Object.DestroyImmediate(parent);
+            }
+        }
+
+        [Test]
         public void Render_ArriveTwiceForSameCoord_ReplacesExistingGameObject()
         {
             var parent = new GameObject("VoxelRoot");
