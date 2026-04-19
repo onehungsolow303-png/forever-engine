@@ -15,6 +15,9 @@ namespace ForeverEngine.World.Voxel
         {
             int dx = System.Math.Abs(chunk.X - center.X);
             int dz = System.Math.Abs(chunk.Z - center.Z);
+            // Only horizontal distance is used: the server's VoxelSubscriptionPolicy
+            // already enforces VerticalRadius=2, so any chunk reaching the client is
+            // within vertical range by construction. Client LOD classifies purely on XZ.
             int horiz = System.Math.Max(dx, dz);
             if (horiz > L2Radius) return LodBand.Hidden;
             if (speed >= SpeedThreshold) return LodBand.L2;
