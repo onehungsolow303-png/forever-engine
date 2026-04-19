@@ -235,6 +235,11 @@ namespace ForeverEngine.Network
         // teleport-and-settle. Normal localhost drift is sub-meter.
         private const float HardDesyncMeters = 100f;
 
+        // Vertical rescue threshold: if the client falls more than this far
+        // below the server's authoritative Y (ground + capsule half-height),
+        // assume we've tunneled through un-cooked terrain and snap back up.
+        private const float VerticalRescueMeters = 50f;
+
         private void OnPlayerUpdate(PlayerUpdate msg)
         {
             ServerStateCache.Instance.ApplyPlayerUpdate(msg);
@@ -286,13 +291,31 @@ namespace ForeverEngine.Network
             float horizDelta = UnityEngine.Vector2.Distance(
                 new UnityEngine.Vector2(clientPos.x, clientPos.z),
                 new UnityEngine.Vector2(serverPos.x, serverPos.z));
-            if (horizDelta < HardDesyncMeters) return;
 
-            Debug.LogWarning($"[ConnectionManager] Hard desync recover: {horizDelta:F1}m drift, snapping.");
-            player.transform.position = new UnityEngine.Vector3(serverPos.x, clientPos.y, serverPos.z);
+            // Horizontal snap — login teleport, death/respawn, egregious desync.
+            bool horizDesync = horizDelta >= HardDesyncMeters;
+
+            // Vertical rescue — client fell through un-cooked terrain and is
+            // dropping indefinitely. Pull them back up to the server's Y.
+            bool verticalRescue = (serverPos.y - clientPos.y) >= VerticalRescueMeters;
+
+            if (!horizDesync && !verticalRescue) return;
+
+            string reason = horizDesync
+                ? $"Hard desync recover: {horizDelta:F1}m horizontal drift"
+                : $"Vertical rescue: fell {serverPos.y - clientPos.y:F1}m below server Y";
+            Debug.LogWarning($"[ConnectionManager] {reason}, snapping to server pose.");
+
+            // On vertical rescue keep the horizontal client pose to avoid a
+            // surprise teleport; on horizontal desync keep the client's Y
+            // because physics will settle.
+            var snapTo = horizDesync
+                ? new UnityEngine.Vector3(serverPos.x, clientPos.y, serverPos.z)
+                : new UnityEngine.Vector3(clientPos.x, serverPos.y, clientPos.z);
+            player.transform.position = snapTo;
             var rb = player.GetComponent<UnityEngine.Rigidbody>();
             if (rb != null)
-                rb.linearVelocity = new UnityEngine.Vector3(0f, rb.linearVelocity.y, 0f);
+                rb.linearVelocity = UnityEngine.Vector3.zero;
         }
 
         private void OnStatUpdate(StatUpdateMessage msg)

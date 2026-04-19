@@ -142,7 +142,16 @@ namespace ForeverEngine.Procedural
 
                 // Build the render + collider mesh (heaviest step — MeshCollider
                 // cook at LOD 0 is a few ms of main-thread work).
-                var terrainGO = TerrainGenerator.CreateTerrain(data, needsCollider: ChunkNeedsCollider(coord));
+                //
+                // Always build the collider on server-streamed chunks. The old
+                // radius-2 gate left distant chunks render-only, but the
+                // re-stream path silently dedupes on `_loaded.ContainsKey`, so a
+                // chunk built without a collider never gets one retroactively —
+                // walking toward it was dropping the player through the ground.
+                // A cheaper "upgrade collider on proximity" pass is possible but
+                // 121 chunks * a few ms of bake spread across the queue's two
+                // frames-per-chunk is fine for a localhost playtest.
+                var terrainGO = TerrainGenerator.CreateTerrain(data, needsCollider: true);
                 yield return null; // frame break before prop instantiation
 
                 // Instantiate biome props (trees, rocks, foliage). Spreads the
