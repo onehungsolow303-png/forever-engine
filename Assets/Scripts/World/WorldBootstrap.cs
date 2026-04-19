@@ -333,16 +333,48 @@ namespace ForeverEngine.Procedural
         }
 
         /// <summary>
-        /// Holds the player as a kinematic Rigidbody for a short delay so the
-        /// freshly-created terrain MeshColliders have time to finish cooking
-        /// before gravity engages. Without this the first physics tick tunnels
-        /// the capsule through the not-yet-active collider and the player
-        /// free-falls indefinitely.
+        /// Holds the player as a kinematic Rigidbody until the chunk under
+        /// their spawn position has actually meshed + cooked a MeshCollider.
+        /// With the async chunk queue spreading 121 login chunks across ~4s
+        /// a fixed 300ms delay was way too short — the player spawned,
+        /// kinematic flipped off before the collider existed, physics tick
+        /// tunneled them through the mesh and they free-fell forever. We now
+        /// poll ChunkManager until the spawn chunk is present in _loaded,
+        /// then add a one-frame settle buffer before releasing.
         /// </summary>
         private System.Collections.IEnumerator EnablePlayerPhysics(Rigidbody rb, float delay)
         {
+            if (rb == null) yield break;
+
+            // Minimum grace (matches the old magic 0.3s — covers the "chunk is
+            // loaded but MeshCollider.sharedMesh = null until next Update"
+            // race Unity can exhibit on fresh colliders).
             yield return new WaitForSeconds(delay);
-            if (rb != null) rb.isKinematic = false;
+
+            // Wait until the chunk under the spawn position is actually loaded.
+            // Bail out after ChunkWaitTimeoutSec so a bug here never bricks
+            // the player forever.
+            const float chunkWaitTimeoutSec = 10f;
+            const float pollIntervalSec = 0.1f;
+            float waited = 0f;
+            var chunkMgr = ChunkManager.Instance;
+            while (rb != null && chunkMgr != null && waited < chunkWaitTimeoutSec)
+            {
+                var spawnCoord = ForeverEngine.Procedural.ChunkCoord.FromWorldPos(rb.transform.position);
+                if (chunkMgr.GetChunkData(spawnCoord) != null) break;
+                yield return new WaitForSeconds(pollIntervalSec);
+                waited += pollIntervalSec;
+            }
+
+            // One more frame so the MeshCollider bake the chunk just built
+            // has a chance to register with the physics scene.
+            yield return null;
+
+            if (rb != null)
+            {
+                rb.isKinematic = false;
+                Debug.Log($"[WorldBootstrap] Player physics enabled after {delay + waited:F2}s (chunk-wait).");
+            }
         }
 
         private System.Collections.IEnumerator AutoScreenshotLoop()
