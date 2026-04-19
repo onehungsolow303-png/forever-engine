@@ -346,34 +346,52 @@ namespace ForeverEngine.Procedural
         {
             if (rb == null) yield break;
 
-            // Minimum grace (matches the old magic 0.3s — covers the "chunk is
-            // loaded but MeshCollider.sharedMesh = null until next Update"
-            // race Unity can exhibit on fresh colliders).
+            // Baseline grace — lets the physics scene settle after first spawn
+            // frame.
             yield return new WaitForSeconds(delay);
 
-            // Wait until the chunk under the spawn position is actually loaded.
-            // Bail out after ChunkWaitTimeoutSec so a bug here never bricks
-            // the player forever.
-            const float chunkWaitTimeoutSec = 10f;
-            const float pollIntervalSec = 0.1f;
+            // Stage 1: wait until the chunk under the spawn position has data
+            // in ChunkManager (mesh + collider constructed).
+            const float chunkTimeoutSec = 10f;
+            const float pollSec = 0.1f;
             float waited = 0f;
             var chunkMgr = ChunkManager.Instance;
-            while (rb != null && chunkMgr != null && waited < chunkWaitTimeoutSec)
+            while (rb != null && chunkMgr != null && waited < chunkTimeoutSec)
             {
                 var spawnCoord = ForeverEngine.Procedural.ChunkCoord.FromWorldPos(rb.transform.position);
                 if (chunkMgr.GetChunkData(spawnCoord) != null) break;
-                yield return new WaitForSeconds(pollIntervalSec);
-                waited += pollIntervalSec;
+                yield return new WaitForSeconds(pollSec);
+                waited += pollSec;
             }
 
-            // One more frame so the MeshCollider bake the chunk just built
-            // has a chance to register with the physics scene.
-            yield return null;
+            // Stage 2: wait until Physics can actually hit the ground under us.
+            // Unity's MeshCollider is queued into the physics scene asynchronously
+            // after sharedMesh is set; GetChunkData returning non-null does NOT
+            // mean a Raycast at that position will hit the terrain this frame.
+            // Poll a downward ray until it reports a hit before releasing.
+            const float raycastTimeoutSec = 3f;
+            float rayWaited = 0f;
+            while (rb != null && rayWaited < raycastTimeoutSec)
+            {
+                var probePos = rb.transform.position + Vector3.up * 5f;
+                if (Physics.Raycast(probePos, Vector3.down, out var hit, 500f))
+                {
+                    // Good — collider live. Snap player 2m above hit point to
+                    // guarantee we land on top, not spawn embedded in it.
+                    rb.transform.position = new Vector3(
+                        rb.transform.position.x,
+                        hit.point.y + 2f,
+                        rb.transform.position.z);
+                    break;
+                }
+                yield return new WaitForSeconds(pollSec);
+                rayWaited += pollSec;
+            }
 
             if (rb != null)
             {
                 rb.isKinematic = false;
-                Debug.Log($"[WorldBootstrap] Player physics enabled after {delay + waited:F2}s (chunk-wait).");
+                Debug.Log($"[WorldBootstrap] Player physics enabled after {delay + waited:F2}s chunk-wait + {rayWaited:F2}s raycast-wait.");
             }
         }
 
