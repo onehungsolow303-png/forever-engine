@@ -5,6 +5,14 @@ namespace ForeverEngine.World.Voxel
 {
     public static class VoxelMeshBuilder
     {
+        /// <summary>
+        /// Builds a Unity Mesh from a voxel chunk using Core's Surface Nets mesher.
+        /// </summary>
+        /// <remarks>
+        /// Must be called from the Unity main thread. <see cref="Mesh"/> construction
+        /// is not thread-safe. Background streaming callbacks must marshal to the main
+        /// thread before calling this.
+        /// </remarks>
         public static Mesh Build(VoxelChunk chunk)
         {
             var voxelMesh = SurfaceNets.Mesh(chunk);
@@ -16,6 +24,7 @@ namespace ForeverEngine.World.Voxel
             for (int i = 0; i < verts.Length; i++)
             {
                 var v = voxelMesh.Vertices[i];
+                // v.Material intentionally dropped — Phase B will add submesh split or vertex colors.
                 verts[i] = new Vector3(v.X, v.Y, v.Z);
             }
             mesh.indexFormat = verts.Length > 65535
