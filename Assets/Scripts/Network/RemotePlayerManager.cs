@@ -38,7 +38,17 @@ namespace ForeverEngine.Network
                 {
                     var mat = new Material(Shader.Find("Universal Render Pipeline/Lit")
                         ?? Shader.Find("Standard"));
-                    mat.color = new Color(0.9f, 0.4f, 0.3f);
+                    // Bright emissive green — no natural biome prop shares this
+                    // color, so remote players are unmistakable across deserts,
+                    // forests, tundra alike. Emission also catches the eye in
+                    // overcast/ambient-lit scenes where base color alone would
+                    // blend with terrain.
+                    mat.color = new Color(0.1f, 1f, 0.3f);
+                    if (mat.HasProperty("_EmissionColor"))
+                    {
+                        mat.EnableKeyword("_EMISSION");
+                        mat.SetColor("_EmissionColor", new Color(0.0f, 0.5f, 0.1f));
+                    }
                     r.material = mat;
                 }
                 var view = go.AddComponent<RemotePlayerView>();
