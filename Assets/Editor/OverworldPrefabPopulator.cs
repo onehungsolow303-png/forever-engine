@@ -14,10 +14,46 @@ public static class OverworldPrefabPopulator
     private static readonly string TreeDir =
         "Assets/NatureManufacture Assets/Forest Environment Dynamic Nature/Beech Trees/Prefabs";
 
+    // Finished-building directories across packs. Per user 2026-04-19:
+    // overworld buildings mix-and-match across packs the same way room props
+    // do. 3DForge's "fe_vil_*" / "fi_vil_*" naming flags modular kit pieces
+    // that must be filtered out — see BuildingPieceSkipPrefixes below.
     private static readonly string[] BuildingDirs =
     {
         "Assets/Magic Pig Games (Infinity PBR)/Medieval Environment Pack/_Prefabs/_Building Sets",
+        "Assets/3DForge/FantasyExteriors/Village & Towns/Prefabs/Base/Templates",
+        "Assets/3DForge/FantasyExteriors/Village & Towns/Prefabs/Buildings/CountrySide",
+        "Assets/3DForge/FantasyExteriors/Village & Towns/Prefabs/Buildings/Farm",
+        "Assets/3DForge/FantasyExteriors/Village & Towns/Prefabs/Buildings/ForestVillage",
+        "Assets/3DForge/FantasyExteriors/Village & Towns/Prefabs/Buildings/MedievalVillage",
+        "Assets/3DForge/FantasyExteriors/Village & Towns/Prefabs/Buildings/Mountain Side",
+        "Assets/3DForge/FantasyExteriors/Village & Towns/Prefabs/Buildings/Vikings",
     };
+
+    // Prefab-name prefixes that mark modular kit pieces inside a "Buildings"
+    // directory (e.g., 19 of Farm's 22 prefabs are "fe_vil_farm_silo_roof_*"
+    // etc.). Registering these as standalone buildings looks broken — only
+    // assembled houses should flow into the town/ruins scatter.
+    private static readonly string[] BuildingPieceSkipPrefixes =
+    {
+        "fe_vil_",
+        "fi_vil_",
+    };
+
+    private static readonly string[] BuildingPieceSkipFragments =
+    {
+        "_part_",
+        "_piece_",
+    };
+
+    private static bool LooksLikeKitPiece(string fileName)
+    {
+        foreach (var p in BuildingPieceSkipPrefixes)
+            if (fileName.StartsWith(p, System.StringComparison.OrdinalIgnoreCase)) return true;
+        foreach (var f in BuildingPieceSkipFragments)
+            if (fileName.IndexOf(f, System.StringComparison.OrdinalIgnoreCase) >= 0) return true;
+        return false;
+    }
 
     private static readonly string[] GatePrefabPaths =
     {
@@ -97,17 +133,27 @@ public static class OverworldPrefabPopulator
         // ── Buildings (TownPrefab + scatter) ─────────────────────────────
 
         var buildings = new System.Collections.Generic.List<GameObject>();
+        int kitPiecesSkipped = 0;
         foreach (string dir in BuildingDirs)
         {
+            if (!AssetDatabase.IsValidFolder(dir))
+            {
+                Debug.LogWarning($"[OverworldPrefabPopulator] BuildingDirs entry missing: {dir}");
+                continue;
+            }
             string[] guids = AssetDatabase.FindAssets("t:Prefab", new[] { dir });
             foreach (string guid in guids)
             {
                 string path = AssetDatabase.GUIDToAssetPath(guid);
+                var fileName = System.IO.Path.GetFileNameWithoutExtension(path);
+                if (LooksLikeKitPiece(fileName)) { kitPiecesSkipped++; continue; }
                 var prefab = AssetDatabase.LoadAssetAtPath<GameObject>(path);
                 if (prefab != null)
                     buildings.Add(prefab);
             }
         }
+        if (kitPiecesSkipped > 0)
+            Debug.Log($"[OverworldPrefabPopulator] Skipped {kitPiecesSkipped} modular kit pieces (fe_vil_*/fi_vil_*/_part_/_piece_)");
 
         // First building becomes TownPrefab, rest become RuinsScatter
         if (buildings.Count > 0)
