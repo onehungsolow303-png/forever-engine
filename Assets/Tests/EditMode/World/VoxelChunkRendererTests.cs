@@ -59,5 +59,44 @@ namespace ForeverEngine.Tests.EditMode.World
                 Object.DestroyImmediate(parent);
             }
         }
+
+        [Test]
+        public void Render_ArriveTwiceForSameCoord_ReplacesExistingGameObject()
+        {
+            var parent = new GameObject("VoxelRoot");
+            try
+            {
+                var renderer = new VoxelChunkRenderer(parent.transform, null);
+                var coord = new ChunkCoord3D(2, 0, 0);
+
+                // First arrive — half-solid chunk.
+                var chunkA = new VoxelChunk(coord);
+                for (int y = 0; y < 32; y++)
+                for (int z = 0; z < 64; z++)
+                for (int x = 0; x < 64; x++)
+                    chunkA.SetVoxel(x, y, z, sbyte.MinValue, VoxelMaterial.Stone);
+                renderer.OnArrived(coord, chunkA);
+                Assert.AreEqual(1, parent.transform.childCount);
+                var firstGo = parent.transform.GetChild(0).gameObject;
+
+                // Second arrive for the SAME coord — different slice (quarter-solid).
+                var chunkB = new VoxelChunk(coord);
+                for (int y = 0; y < 16; y++)
+                for (int z = 0; z < 64; z++)
+                for (int x = 0; x < 64; x++)
+                    chunkB.SetVoxel(x, y, z, sbyte.MinValue, VoxelMaterial.Stone);
+                renderer.OnArrived(coord, chunkB);
+
+                // childCount stays at 1; old GameObject was destroyed and replaced.
+                Assert.AreEqual(1, parent.transform.childCount);
+                var secondGo = parent.transform.GetChild(0).gameObject;
+                Assert.AreNotEqual(firstGo.GetInstanceID(), secondGo.GetInstanceID(),
+                    "replacement should be a new GameObject, not the same one reused");
+            }
+            finally
+            {
+                Object.DestroyImmediate(parent);
+            }
+        }
     }
 }

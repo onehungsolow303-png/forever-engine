@@ -24,9 +24,9 @@ namespace ForeverEngine.World.Voxel
         {
             if (_children.TryGetValue(coord, out var existing))
             {
-                // Replacement path — destroy the prior GameObject synchronously
-                // so the new one takes its place in the same frame.
-                Object.DestroyImmediate(existing);
+                // Drop the prior GameObject; conditional destroy keeps Play Mode quiet and
+                // EditMode tests synchronous.
+                DestroyGameObject(existing);
                 _children.Remove(coord);
             }
 
@@ -49,12 +49,19 @@ namespace ForeverEngine.World.Voxel
         {
             if (_children.TryGetValue(coord, out var go))
             {
-                // DestroyImmediate required for EditMode tests; play-mode Unity
-                // accepts it too. Standard Destroy() is deferred and would fail
-                // the EditMode synchronous-child-count assertion.
-                Object.DestroyImmediate(go);
+                // Drop the prior GameObject; conditional destroy keeps Play Mode quiet and
+                // EditMode tests synchronous.
+                DestroyGameObject(go);
                 _children.Remove(coord);
             }
+        }
+
+        private static void DestroyGameObject(GameObject go)
+        {
+            // Play Mode: deferred frame-end cleanup (what Unity's frame pipeline expects).
+            // Edit Mode (tests, editor tooling): synchronous so assertions are reliable.
+            if (Application.isPlaying) Object.Destroy(go);
+            else                       Object.DestroyImmediate(go);
         }
     }
 }
