@@ -93,8 +93,8 @@ namespace ForeverEngine.Procedural
             {
                 var go = kv.Value.TerrainGO;
                 if (go == null) continue;
-                var mr = go.GetComponent<MeshRenderer>();
-                if (mr != null) mr.enabled = !_voxelTerrainActive;
+                foreach (var mr in go.GetComponentsInChildren<MeshRenderer>(true))
+                    mr.enabled = !_voxelTerrainActive;
             }
         }
 
@@ -107,8 +107,8 @@ namespace ForeverEngine.Procedural
             _loaded[coord] = new LoadedChunk { Data = null, TerrainGO = terrainGO, Props = null };
             if (_voxelTerrainActive)
             {
-                var mr = terrainGO.GetComponent<MeshRenderer>();
-                if (mr != null) mr.enabled = false;
+                foreach (var mr in terrainGO.GetComponentsInChildren<MeshRenderer>(true))
+                    mr.enabled = false;
             }
         }
 
@@ -215,8 +215,8 @@ namespace ForeverEngine.Procedural
 
                 if (_voxelTerrainActive && terrainGO != null)
                 {
-                    var mr = terrainGO.GetComponent<MeshRenderer>();
-                    if (mr != null) mr.enabled = false;
+                    foreach (var mr in terrainGO.GetComponentsInChildren<MeshRenderer>(true))
+                        mr.enabled = false;
                 }
 
                 Debug.Log($"[ChunkManager] Server chunk loaded: {coord} biome={data.Biome}");
@@ -284,8 +284,8 @@ namespace ForeverEngine.Procedural
 
                     if (_voxelTerrainActive && terrainGO != null)
                     {
-                        var mr = terrainGO.GetComponent<MeshRenderer>();
-                        if (mr != null) mr.enabled = false;
+                        foreach (var mr in terrainGO.GetComponentsInChildren<MeshRenderer>(true))
+                            mr.enabled = false;
                     }
 
                     yield return null; // Frame break after mesh creation
