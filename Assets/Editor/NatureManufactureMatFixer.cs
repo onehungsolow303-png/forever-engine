@@ -20,6 +20,11 @@ namespace ForeverEngine.Editor
                 "Assets/NatureManufacture Assets",
                 "Assets/Lordenfel",
                 "Assets/NAKED_SINGULARITY",
+                "Assets/3DForge",
+                "Assets/WaltWW",
+                "Assets/Realistic Natural Cave 2",
+                "Assets/Magic Pig Games (Infinity PBR)",
+                "Assets/Procedural Worlds",
                 "Assets/Prefabs/Overworld"
             });
 

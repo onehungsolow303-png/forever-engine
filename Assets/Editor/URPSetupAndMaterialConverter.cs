@@ -102,6 +102,10 @@ namespace ForeverEngine.Editor
                 "Assets/Multistory Dungeons 2",
                 "Assets/NAKED_SINGULARITY",
                 "Assets/NatureManufacture Assets",
+                "Assets/3DForge",
+                "Assets/WaltWW",
+                "Assets/Realistic Natural Cave 2",
+                "Assets/Procedural Worlds",
                 "Assets/GeneratedModels",
                 "Assets/Prefabs",
             };
@@ -154,12 +158,14 @@ namespace ForeverEngine.Editor
                     }
                     else
                     {
-                        // Unknown shader — force to URP/Lit as fallback so it's
-                        // at least not pink. Textures may need manual fixup.
-                        Debug.LogWarning($"[URPConverter] Unknown shader '{shaderName}' on {path} — forcing URP/Lit.");
-                        mat.shader = urpLit;
-                        EditorUtility.SetDirty(mat);
-                        converted++;
+                        // Unknown shader — LEAVE ALONE. Custom Shader Graphs author their
+                        // own Shader.name (e.g. "Custom/Lordenfel/URP/FoliageWind",
+                        // "CDT/Master", "NatureManufacture/URP/Foliage/Foliage 2") and are
+                        // already URP-compatible despite not matching the "Universal Render
+                        // Pipeline/" or "Shader Graphs/" name prefixes. A previous version
+                        // of this script force-overwrote ~486 such shaders with URP/Lit;
+                        // recovery required URPConverterReverter.cs.
+                        skipped++;
                     }
                 }
                 catch (System.Exception ex)
