@@ -19,7 +19,7 @@ namespace ForeverEngine.Network
     public class ConnectionManager : UnityEngine.MonoBehaviour
     {
         // ── Inspector fields ───────────────────────────────────────────────
-        public string Host = "127.0.0.1";
+        public string Host = "192.168.1.110";
         public int Port = 7900;
         public string PlayerName = "Player";
         // Resolved in Awake(); command-line --player <id> wins, otherwise a
