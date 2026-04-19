@@ -13,6 +13,7 @@ namespace ForeverEngine.World.Voxel
         private readonly Transform _root;
         private readonly Material _material;
         private readonly Dictionary<ChunkCoord3D, GameObject> _children = new();
+        private readonly MeshPool _meshPool = new MeshPool(maxSize: 64);
 
         public VoxelChunkRenderer(Transform root, Material material)
         {
@@ -29,14 +30,14 @@ namespace ForeverEngine.World.Voxel
         {
             if (_children.TryGetValue(coord, out var existing))
             {
-                // Drop the prior GameObject; conditional destroy keeps Play Mode quiet and
-                // EditMode tests synchronous.
+                // Return the mesh to the pool BEFORE destroying the GameObject.
                 DestroyGameObject(existing);
                 _children.Remove(coord);
             }
 
-            var mesh = VoxelMeshBuilder.Build(chunk, neighborPosX, neighborPosY, neighborPosZ);
-            if (mesh.vertexCount == 0) return;   // all air / all solid interior
+            var rented = _meshPool.Rent();
+            var mesh = VoxelMeshBuilder.Build(chunk, neighborPosX, neighborPosY, neighborPosZ, meshToReuse: rented);
+            if (mesh.vertexCount == 0) { _meshPool.Return(rented); return; }
 
             var go = new GameObject($"VC {coord}");
             go.transform.SetParent(_root, worldPositionStays: false);
@@ -54,15 +55,18 @@ namespace ForeverEngine.World.Voxel
         {
             if (_children.TryGetValue(coord, out var go))
             {
-                // Drop the prior GameObject; conditional destroy keeps Play Mode quiet and
-                // EditMode tests synchronous.
+                // Return the mesh to the pool BEFORE destroying the GameObject.
                 DestroyGameObject(go);
                 _children.Remove(coord);
             }
         }
 
-        private static void DestroyGameObject(GameObject go)
+        private void DestroyGameObject(GameObject go)
         {
+            // Return the mesh to the pool before destroying the GO so the
+            // native Mesh handle can be reused for the next arriving chunk.
+            var mf = go.GetComponent<MeshFilter>();
+            if (mf != null && mf.sharedMesh != null) _meshPool.Return(mf.sharedMesh);
             // Play Mode: deferred frame-end cleanup (what Unity's frame pipeline expects).
             // Edit Mode (tests, editor tooling): synchronous so assertions are reliable.
             if (Application.isPlaying) Object.Destroy(go);

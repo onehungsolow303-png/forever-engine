@@ -12,8 +12,8 @@ namespace ForeverEngine.World.Voxel
         /// Max chunks meshed into Unity Meshes per Update frame. Higher = faster
         /// initial catchup, lower = smoother frame pacing during chunk burst.
         /// </summary>
-        [UnityEngine.Tooltip("Max chunks meshed per frame. Default 4 keeps ~20ms/frame budget.")]
-        public int MaxMeshBuildsPerFrame = 4;
+        [UnityEngine.Tooltip("Max chunks meshed per frame. Default 2 keeps the upload sync below ~10ms/frame at 60 FPS.")]
+        public int MaxMeshBuildsPerFrame = 2;
 
         private readonly List<ChunkCoord3D> _pendingArrived = new List<ChunkCoord3D>();
         private readonly HashSet<ChunkCoord3D> _pendingSet = new HashSet<ChunkCoord3D>();
