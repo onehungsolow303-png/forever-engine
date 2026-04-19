@@ -1,5 +1,6 @@
 using UnityEngine;
 using Unity.Entities;
+using ECSWorld = Unity.Entities.World;
 using ForeverEngine.ECS.Components;
 using ForeverEngine.ECS.Systems;
 
@@ -49,7 +50,7 @@ namespace ForeverEngine.MonoBehaviour.RPG
                 return;
             }
 
-            var world = World.DefaultGameObjectInjectionWorld;
+            var world = ECSWorld.DefaultGameObjectInjectionWorld;
             if (world == null) return;
 
             var em = world.EntityManager;
@@ -88,7 +89,7 @@ namespace ForeverEngine.MonoBehaviour.RPG
                 return;
             }
 
-            var world = World.DefaultGameObjectInjectionWorld;
+            var world = ECSWorld.DefaultGameObjectInjectionWorld;
             if (world == null) return;
 
             var em = world.EntityManager;
@@ -133,7 +134,7 @@ namespace ForeverEngine.MonoBehaviour.RPG
             var playerEntity = GetPlayerEntity();
             if (playerEntity == Entity.Null) return;
 
-            var world = World.DefaultGameObjectInjectionWorld;
+            var world = ECSWorld.DefaultGameObjectInjectionWorld;
             if (world == null) return;
 
             var em = world.EntityManager;
@@ -156,7 +157,7 @@ namespace ForeverEngine.MonoBehaviour.RPG
 
         private static Entity GetPlayerEntity()
         {
-            var world = World.DefaultGameObjectInjectionWorld;
+            var world = ECSWorld.DefaultGameObjectInjectionWorld;
             if (world == null) return Entity.Null;
 
             var em = world.EntityManager;

@@ -1,5 +1,6 @@
 using UnityEngine;
 using Unity.Entities;
+using ECSWorld = Unity.Entities.World;
 using ForeverEngine.ECS.Components;
 using ForeverEngine.Data;
 
@@ -42,7 +43,7 @@ namespace ForeverEngine.MonoBehaviour.RPG
         {
             if (!_pendingLevelUp) return;
 
-            var world = World.DefaultGameObjectInjectionWorld;
+            var world = ECSWorld.DefaultGameObjectInjectionWorld;
             if (world == null) return;
 
             var em = world.EntityManager;
@@ -97,7 +98,7 @@ namespace ForeverEngine.MonoBehaviour.RPG
 
         private void CheckForLevelUp()
         {
-            var world = World.DefaultGameObjectInjectionWorld;
+            var world = ECSWorld.DefaultGameObjectInjectionWorld;
             if (world == null) return;
 
             var em = world.EntityManager;

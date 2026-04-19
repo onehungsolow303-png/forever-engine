@@ -1,5 +1,6 @@
 using UnityEngine;
 using Unity.Entities;
+using ECSWorld = Unity.Entities.World;
 using Unity.Mathematics;
 using System.Collections.Generic;
 using ForeverEngine.ECS.Components;
@@ -17,7 +18,7 @@ namespace ForeverEngine.MonoBehaviour.Rendering
 
         private void Start()
         {
-            _em = World.DefaultGameObjectInjectionWorld.EntityManager;
+            _em = ECSWorld.DefaultGameObjectInjectionWorld.EntityManager;
             _entityQuery = _em.CreateEntityQuery(
                 typeof(PositionComponent), typeof(VisualComponent), typeof(CombatStateComponent));
         }

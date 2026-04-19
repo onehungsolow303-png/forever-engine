@@ -1,5 +1,6 @@
 using UnityEngine;
 using Unity.Entities;
+using ECSWorld = Unity.Entities.World;
 using System.IO;
 using ForeverEngine.ECS.Components;
 using ForeverEngine.ECS.Systems;
@@ -80,7 +81,7 @@ namespace ForeverEngine.MonoBehaviour.ContentLoader
                 return;
             }
 
-            var em = World.DefaultGameObjectInjectionWorld.EntityManager;
+            var em = ECSWorld.DefaultGameObjectInjectionWorld.EntityManager;
             mapImporter.Import(mapDataPath, em);
         }
 
@@ -133,7 +134,7 @@ namespace ForeverEngine.MonoBehaviour.ContentLoader
 
         private void ProcessActivatedEncounters()
         {
-            var world = World.DefaultGameObjectInjectionWorld;
+            var world = ECSWorld.DefaultGameObjectInjectionWorld;
             if (world == null) return;
 
             var em = world.EntityManager;

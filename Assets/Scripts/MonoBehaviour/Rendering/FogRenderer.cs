@@ -1,5 +1,6 @@
 using UnityEngine;
 using Unity.Entities;
+using ECSWorld = Unity.Entities.World;
 using ForeverEngine.ECS.Data;
 
 namespace ForeverEngine.MonoBehaviour.Rendering
@@ -63,7 +64,7 @@ namespace ForeverEngine.MonoBehaviour.Rendering
             if (!_enabled) return;
 
             // Complete any in-flight fog jobs before reading FogGrid
-            var world = World.DefaultGameObjectInjectionWorld;
+            var world = ECSWorld.DefaultGameObjectInjectionWorld;
             if (world != null && world.IsCreated)
                 world.EntityManager.CompleteAllTrackedJobs();
 

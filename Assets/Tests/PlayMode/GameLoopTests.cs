@@ -3,6 +3,7 @@ using NUnit.Framework;
 using UnityEngine;
 using UnityEngine.TestTools;
 using Unity.Entities;
+using ECSWorld = Unity.Entities.World;
 using Unity.Jobs;
 using ForeverEngine.ECS.Components;
 using ForeverEngine.ECS.Data;
@@ -16,12 +17,12 @@ namespace ForeverEngine.Tests
         public IEnumerator LoadMap_SpawnsPlayerAndEnemy()
         {
             // Ensure ECS world exists
-            if (World.DefaultGameObjectInjectionWorld == null)
+            if (ECSWorld.DefaultGameObjectInjectionWorld == null)
                 DefaultWorldInitialization.Initialize("TestWorld", false);
 
             yield return null;
 
-            var em = World.DefaultGameObjectInjectionWorld.EntityManager;
+            var em = ECSWorld.DefaultGameObjectInjectionWorld.EntityManager;
 
             // Import map directly
             var go = new GameObject("Importer");
@@ -52,8 +53,8 @@ namespace ForeverEngine.Tests
             Assert.AreEqual(8, store.Height);
 
             // Complete all pending jobs before reading NativeArrays
-            World.DefaultGameObjectInjectionWorld.Unmanaged.ResolveSystemStateRef(
-                World.DefaultGameObjectInjectionWorld.GetExistingSystem(
+            ECSWorld.DefaultGameObjectInjectionWorld.Unmanaged.ResolveSystemStateRef(
+                ECSWorld.DefaultGameObjectInjectionWorld.GetExistingSystem(
                     typeof(ForeverEngine.ECS.Systems.FogOfWarSystem))).Dependency.Complete();
 
             Assert.IsTrue(store.Walkability[1 * 8 + 1]);
@@ -62,7 +63,7 @@ namespace ForeverEngine.Tests
             // Cleanup — complete all jobs before dispose
             Object.Destroy(go);
             JobHandle.ScheduleBatchedJobs();
-            World.DefaultGameObjectInjectionWorld.EntityManager.CompleteAllTrackedJobs();
+            ECSWorld.DefaultGameObjectInjectionWorld.EntityManager.CompleteAllTrackedJobs();
             store.Dispose();
         }
     }

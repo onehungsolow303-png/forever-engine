@@ -10,5 +10,12 @@
   ],
   "optionalUnityReferences": ["TestAssemblies"],
   "includePlatforms": ["Editor"],
-  "excludePlatforms": []
+  "excludePlatforms": [],
+  "overrideReferences": true,
+  "precompiledReferences": [
+    "ForeverEngine.Core.dll",
+    "nunit.framework.dll",
+    "UnityEditor.TestRunner.dll",
+    "UnityEngine.TestRunner.dll"
+  ]
 }

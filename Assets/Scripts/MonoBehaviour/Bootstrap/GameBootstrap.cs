@@ -2,6 +2,7 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.Tilemaps;
 using Unity.Entities;
+using ECSWorld = Unity.Entities.World;
 using ForeverEngine.Demo;
 using ForeverEngine.ECS.Data;
 using ForeverEngine.MonoBehaviour.Rendering;
@@ -29,7 +30,7 @@ namespace ForeverEngine.MonoBehaviour.Bootstrap
         {
             EnsureComponents();
 
-            _entityManager = World.DefaultGameObjectInjectionWorld.EntityManager;
+            _entityManager = ECSWorld.DefaultGameObjectInjectionWorld.EntityManager;
 
             string pendingPath = GameManager.Instance?.PendingMapDataPath;
             if (!string.IsNullOrEmpty(pendingPath))

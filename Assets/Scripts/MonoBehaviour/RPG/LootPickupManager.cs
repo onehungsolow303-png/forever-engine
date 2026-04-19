@@ -1,5 +1,6 @@
 using UnityEngine;
 using Unity.Entities;
+using ECSWorld = Unity.Entities.World;
 using ForeverEngine.ECS.Components;
 
 namespace ForeverEngine.MonoBehaviour.RPG
@@ -35,7 +36,7 @@ namespace ForeverEngine.MonoBehaviour.RPG
         /// </summary>
         public void OpenLootContainer(Entity containerEntity)
         {
-            var world = World.DefaultGameObjectInjectionWorld;
+            var world = ECSWorld.DefaultGameObjectInjectionWorld;
             if (world == null) return;
 
             var em = world.EntityManager;
@@ -72,7 +73,7 @@ namespace ForeverEngine.MonoBehaviour.RPG
         {
             if (_currentLootEntity == Entity.Null) return;
 
-            var world = World.DefaultGameObjectInjectionWorld;
+            var world = ECSWorld.DefaultGameObjectInjectionWorld;
             if (world == null) return;
 
             var em = world.EntityManager;
@@ -111,7 +112,7 @@ namespace ForeverEngine.MonoBehaviour.RPG
         {
             if (_currentLootEntity == Entity.Null) return;
 
-            var world = World.DefaultGameObjectInjectionWorld;
+            var world = ECSWorld.DefaultGameObjectInjectionWorld;
             if (world == null) return;
 
             var em = world.EntityManager;
