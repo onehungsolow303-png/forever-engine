@@ -458,7 +458,18 @@ namespace ForeverEngine.Network
         private VoxelWorldManager GetVoxelWorldManager()
         {
             if (_voxelWorldManager == null)
+            {
                 _voxelWorldManager = UnityEngine.Object.FindFirstObjectByType<VoxelWorldManager>();
+                if (_voxelWorldManager == null)
+                {
+                    // Auto-bootstrap a scene-root VoxelWorldManager if none was placed.
+                    // Chunk GameObjects are positioned in world-space so the manager's
+                    // own transform just needs to exist at origin.
+                    var go = new GameObject("VoxelWorld");
+                    _voxelWorldManager = go.AddComponent<VoxelWorldManager>();
+                    UnityEngine.Debug.Log("[ConnectionManager] Auto-bootstrapped VoxelWorldManager; no scene-placed instance found.");
+                }
+            }
             return _voxelWorldManager;
         }
 
