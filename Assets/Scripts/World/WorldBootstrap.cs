@@ -457,6 +457,7 @@ namespace ForeverEngine.Procedural
         private Rigidbody _rb;
         private bool _grounded;
         private float _yaw;
+        private bool _diagHadInput;
 
         private void Start()
         {
@@ -526,6 +527,14 @@ namespace ForeverEngine.Procedural
             LastInputX = h;
             LastInputZ = v;
             LastSprint = Input.GetKey(KeyCode.LeftShift);
+
+            // DIAG: log on input-state edge so we can tell if keys are even registering.
+            bool hasInputNow = Mathf.Abs(h) > 0.01f || Mathf.Abs(v) > 0.01f;
+            if (hasInputNow != _diagHadInput)
+            {
+                _diagHadInput = hasInputNow;
+                Debug.Log($"[INPUT-DIAG] edge: h={h} v={v} focused={Application.isFocused} cursorLocked={Cursor.lockState}");
+            }
 
             if (Mathf.Abs(h) < 0.01f && Mathf.Abs(v) < 0.01f)
             {

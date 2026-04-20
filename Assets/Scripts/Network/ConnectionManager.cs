@@ -45,6 +45,7 @@ namespace ForeverEngine.Network
         // ── Spec 7 Phase 1: 20Hz MoveInput send loop ──────────────────────
         private UnityEngine.GameObject _localPlayer;
         private ForeverEngine.Procedural.SimplePlayerController _localPlayerController;
+        private bool _diagHadIntent;
         private UnityEngine.Coroutine _moveSendCoroutine;
 
         // ── Unity lifecycle ────────────────────────────────────────────────
@@ -140,7 +141,14 @@ namespace ForeverEngine.Network
                 _moveSendCoroutine = null;
             }
             if (_localPlayerController != null)
+            {
+                Debug.Log("[REGISTER-DIAG] SimplePlayerController found — MoveSendLoop starting.");
                 _moveSendCoroutine = StartCoroutine(MoveSendLoop());
+            }
+            else
+            {
+                Debug.LogError("[REGISTER-DIAG] SimplePlayerController is NULL on registered player — server will never receive input.");
+            }
         }
 
         public UnityEngine.GameObject LocalPlayer => _localPlayer;
@@ -163,6 +171,14 @@ namespace ForeverEngine.Network
                     Jump   = _localPlayerController.JumpPressedThisFrame,
                 };
                 _client.Send(msg);
+
+                // DIAG: log on intent-edge to confirm non-zero input reaches the wire.
+                bool intentNow = UnityEngine.Mathf.Abs(msg.InputX) > 0.01f || UnityEngine.Mathf.Abs(msg.InputZ) > 0.01f;
+                if (intentNow != _diagHadIntent)
+                {
+                    _diagHadIntent = intentNow;
+                    Debug.Log($"[SEND-DIAG] MoveInput edge: x={msg.InputX} z={msg.InputZ} loggedIn={IsLoggedIn}");
+                }
 
                 // Edge-trigger reset — exactly one MoveInput per Space press carries Jump=true.
                 _localPlayerController.JumpPressedThisFrame = false;
