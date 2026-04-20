@@ -1,4 +1,5 @@
 #if UNITY_EDITOR
+using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 
@@ -155,18 +156,27 @@ public static class OverworldPrefabPopulator
         if (kitPiecesSkipped > 0)
             Debug.Log($"[OverworldPrefabPopulator] Skipped {kitPiecesSkipped} modular kit pieces (fe_vil_*/fi_vil_*/_part_/_piece_)");
 
-        // First building becomes TownPrefab, rest become RuinsScatter
+        // Collect ALL Exterior/Basic matches for variety — each town/camp picks
+        // a random prefab from its array at spawn. Keeps the single-slot fields
+        // populated as a fallback for consumers that haven't migrated yet.
         if (buildings.Count > 0)
         {
-            // Pick ExteriorBuilding types for town, BasicBuilding for camp
-            GameObject town = null, camp = null;
+            var towns = new List<GameObject>();
+            var camps = new List<GameObject>();
             foreach (var b in buildings)
             {
-                if (town == null && b.name.Contains("Exterior")) town = b;
-                if (camp == null && b.name.Contains("Basic")) camp = b;
+                if (b.name.Contains("Exterior")) towns.Add(b);
+                if (b.name.Contains("Basic")) camps.Add(b);
             }
-            mapper.TownPrefab = town ?? buildings[0];
-            mapper.CampPrefab = camp ?? (buildings.Count > 1 ? buildings[1] : buildings[0]);
+            // Fallback — if zero Exterior matches, treat any building as a town candidate.
+            if (towns.Count == 0) towns.AddRange(buildings);
+            if (camps.Count == 0)
+                camps.AddRange(buildings.Count > 1 ? buildings.GetRange(1, buildings.Count - 1) : buildings);
+
+            mapper.TownPrefab = towns[0];
+            mapper.CampPrefab = camps[0];
+            mapper.TownPrefabs = towns.ToArray();
+            mapper.CampPrefabs = camps.ToArray();
             mapper.RuinsPrefabs = buildings.ToArray();
             mapper.RuinsScatter = buildings.Count > 3
                 ? buildings.GetRange(0, 3).ToArray()
@@ -174,6 +184,7 @@ public static class OverworldPrefabPopulator
             mapper.PlainsScatter = buildings.Count > 2
                 ? new[] { buildings[buildings.Count - 1] }
                 : new GameObject[0];
+            Debug.Log($"[OverworldPrefabPopulator] TownPrefabs={towns.Count}, CampPrefabs={camps.Count}");
         }
         Debug.Log($"[OverworldPrefabPopulator] Found {buildings.Count} building prefabs");
 

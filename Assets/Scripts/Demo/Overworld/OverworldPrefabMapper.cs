@@ -31,6 +31,10 @@ namespace ForeverEngine.Demo.Overworld
         public GameObject CampPrefab;
         public GameObject DungeonEntrancePrefab;
 
+        [Header("Location Variety Arrays (picked random-per-location, falls back to single above if empty)")]
+        public GameObject[] TownPrefabs;
+        public GameObject[] CampPrefabs;
+
         [Header("Location Markers")]
         public GameObject ShrinePrefab;      // Stone altar or portal base
         public GameObject GladePrefab;       // Arch alley or column arrangement

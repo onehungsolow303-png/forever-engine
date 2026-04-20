@@ -365,10 +365,21 @@ namespace ForeverEngine.Demo.Overworld
                 _          => 0.5f,
             };
 
+            // PickFromArray: random pick with fallback to single-slot prefab when array is empty.
+            // Town/Camp arrays let the populator surface all Exterior/Basic matches for variety.
+            GameObject PickTown() =>
+                _prefabMap.TownPrefabs is { Length: > 0 }
+                    ? _prefabMap.TownPrefabs[Random.Range(0, _prefabMap.TownPrefabs.Length)]
+                    : _prefabMap.TownPrefab;
+            GameObject PickCamp() =>
+                _prefabMap.CampPrefabs is { Length: > 0 }
+                    ? _prefabMap.CampPrefabs[Random.Range(0, _prefabMap.CampPrefabs.Length)]
+                    : _prefabMap.CampPrefab;
+
             GameObject prefab = locationType switch
             {
-                "camp"     => _prefabMap.CampFirePrefab ?? _prefabMap.CampPrefab,
-                "town"     => _prefabMap.TownPrefab,
+                "camp"     => _prefabMap.CampFirePrefab ?? PickCamp(),
+                "town"     => PickTown(),
                 "shrine"   => _prefabMap.ShrinePrefab,
                 "glade"    => _prefabMap.GladePrefab,
                 "dungeon"  => _prefabMap.DungeonEntrancePrefab,
@@ -377,7 +388,7 @@ namespace ForeverEngine.Demo.Overworld
                 "ruins"    => _prefabMap.LocationRuinsPrefabs is { Length: > 0 }
                     ? _prefabMap.LocationRuinsPrefabs[Random.Range(0, _prefabMap.LocationRuinsPrefabs.Length)]
                     : null,
-                _          => _prefabMap.TownPrefab,
+                _          => PickTown(),
             };
 
             if (prefab == null) return CreateFallbackMarker(locationType, position);
