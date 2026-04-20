@@ -157,6 +157,16 @@ namespace ForeverEngine.Procedural
             return _elevation[sz * Width + sx];
         }
 
+        /// <summary>Direct biome lookup by skeleton grid coords. Used for bilinear
+        /// amplitude blending across cells so cross-biome chunk edges don't step.</summary>
+        public BiomeType GetBiome(int sx, int sz)
+        {
+            sx = ((sx % Width) + Width) % Width;
+            sz = ((sz % Height) + Height) % Height;
+            int idx = sz * Width + sx;
+            return BiomeTable.Lookup(_elevation[idx], _temperature[idx], _moisture[idx]);
+        }
+
         public struct SkeletonSample
         {
             public float Elevation;

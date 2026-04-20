@@ -251,7 +251,12 @@ namespace ForeverEngine.Procedural
         /// <summary>Remove all decoration from a chunk.</summary>
         public static void RemoveDecoration(GameObject propsParent)
         {
-            if (propsParent != null) Object.Destroy(propsParent);
+            if (propsParent != null)
+            {
+                int childCount = propsParent.transform.childCount;
+                Debug.Log($"[DECOR-DIAG] remove parent={propsParent.name} children={childCount} t={Time.realtimeSinceStartup:F2}");
+                Object.Destroy(propsParent);
+            }
         }
 
         // ── Prop Types ────────────────────────────────────────────────────

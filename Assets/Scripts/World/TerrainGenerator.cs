@@ -14,10 +14,6 @@ namespace ForeverEngine.Procedural
         // Cached biome materials — shared across all chunks of same biome
         private static readonly Material[] _biomeMaterials = new Material[System.Enum.GetValues(typeof(BiomeType)).Length];
 
-        // Shared seed state for edge computation
-        private static float _seedX, _seedZ;
-        private static PlanetSkeleton _activeSkeleton;
-
         /// <summary>
         /// Generate heightmap data for a chunk. Writes into chunkData.Heightmap.
         /// </summary>
@@ -36,13 +32,6 @@ namespace ForeverEngine.Procedural
             // With (hmRes - 1), both chunks sample identical noise at their shared edge.
             float step = (float)chunkSize / (hmRes - 1);
 
-            _seedX = worldSeed * 1.7f;
-            _seedZ = worldSeed * 3.1f;
-            _activeSkeleton = skeleton;
-
-            float amplitude = GetBiomeAmplitude(sample.Biome);
-            int octaves = GetBiomeOctaves(sample.Biome);
-
             for (int z = 0; z < hmRes; z++)
             {
                 for (int x = 0; x < hmRes; x++)
@@ -57,12 +46,12 @@ namespace ForeverEngine.Procedural
 
         /// <summary>
         /// Position-deterministic height sampler. Returns the same value for the
-        /// same (worldX, worldZ) regardless of which chunk calls it — so long as
-        /// the biome argument matches. Used by GenerateHeightmap (bulk fill) and
-        /// by BuildLodMesh's analytical normal calc so lighting is continuous
-        /// across chunk boundaries within a biome.
+        /// same (worldX, worldZ) regardless of which chunk calls it. Amplitude is
+        /// bilinear-blended across the 4 surrounding skeleton cells' biomes so
+        /// cross-biome chunk edges don't produce a height step. The `biomeHint`
+        /// argument is ignored for terrain math; kept for API compatibility.
         /// </summary>
-        public static float SampleHeightAt(float worldX, float worldZ, BiomeType biome,
+        public static float SampleHeightAt(float worldX, float worldZ, BiomeType biomeHint,
                                             PlanetSkeleton skeleton, int worldSeed)
         {
             int chunkSize = ChunkCoord.ChunkSize;
@@ -83,8 +72,26 @@ namespace ForeverEngine.Procedural
                 Mathf.Lerp(skeleton.GetElevation(sx0, sz1), skeleton.GetElevation(sx1, sz1), fx),
                 fz);
 
-            float amplitude = GetBiomeAmplitude(biome);
-            int octaves = GetBiomeOctaves(biome);
+            // Bilinear-blend per-biome amplitude across the same 4 cells used for
+            // elevation interpolation. Two chunks sharing an edge now sample
+            // identical (blended) amplitude at that edge → no step.
+            BiomeType b00 = skeleton.GetBiome(sx0, sz0);
+            BiomeType b10 = skeleton.GetBiome(sx1, sz0);
+            BiomeType b01 = skeleton.GetBiome(sx0, sz1);
+            BiomeType b11 = skeleton.GetBiome(sx1, sz1);
+            float amplitude = Mathf.Lerp(
+                Mathf.Lerp(GetBiomeAmplitude(b00), GetBiomeAmplitude(b10), fx),
+                Mathf.Lerp(GetBiomeAmplitude(b01), GetBiomeAmplitude(b11), fx),
+                fz);
+
+            // Octaves: use max across the 4 corners. OctaveNoise normalizes to 0-1
+            // regardless of count, so higher octaves only add finer detail multiplied
+            // by the small amplitude in low-amp biomes — visually invisible there,
+            // preserves mountain detail at mountain-adjacent boundaries.
+            int octaves = Mathf.Max(
+                Mathf.Max(GetBiomeOctaves(b00), GetBiomeOctaves(b10)),
+                Mathf.Max(GetBiomeOctaves(b01), GetBiomeOctaves(b11)));
+
             float seedX = worldSeed * 1.7f;
             float seedZ = worldSeed * 3.1f;
             float noise = SimplexNoise.OctaveNoise(worldX * 0.01f, worldZ * 0.01f,
@@ -288,39 +295,6 @@ namespace ForeverEngine.Procedural
             float h11 = heightmap[z1 * res + x1];
 
             return Mathf.Lerp(Mathf.Lerp(h00, h10, fx), Mathf.Lerp(h01, h11, fx), fz);
-        }
-
-        /// <summary>Compute height at world position (for edge stitching and spawn).</summary>
-        public static float ComputeHeightAtWorldPos(int worldX, int worldZ, BiomeType biome, float baseFallback)
-        {
-            float nx = worldX * 0.01f;
-            float nz = worldZ * 0.01f;
-
-            float baseHeight = baseFallback;
-            if (_activeSkeleton != null)
-            {
-                float skX = (float)worldX / ChunkCoord.ChunkSize + _activeSkeleton.Width / 2f;
-                float skZ = (float)worldZ / ChunkCoord.ChunkSize + _activeSkeleton.Height / 2f;
-                skX = ((skX % _activeSkeleton.Width) + _activeSkeleton.Width) % _activeSkeleton.Width;
-                skZ = ((skZ % _activeSkeleton.Height) + _activeSkeleton.Height) % _activeSkeleton.Height;
-
-                int sx0 = Mathf.FloorToInt(skX);
-                int sz0 = Mathf.FloorToInt(skZ);
-                int sx1 = (sx0 + 1) % _activeSkeleton.Width;
-                int sz1 = (sz0 + 1) % _activeSkeleton.Height;
-                float fx = skX - sx0;
-                float fz = skZ - sz0;
-
-                baseHeight = Mathf.Lerp(
-                    Mathf.Lerp(_activeSkeleton.GetElevation(sx0, sz0), _activeSkeleton.GetElevation(sx1, sz0), fx),
-                    Mathf.Lerp(_activeSkeleton.GetElevation(sx0, sz1), _activeSkeleton.GetElevation(sx1, sz1), fx),
-                    fz);
-            }
-
-            float amplitude = GetBiomeAmplitude(biome);
-            int octaves = GetBiomeOctaves(biome);
-            float noise = SimplexNoise.OctaveNoise(nx, nz, octaves, 0.5f, 2f, _seedX, _seedZ);
-            return Mathf.Clamp01(baseHeight + (noise - 0.5f) * amplitude);
         }
 
         private static float GetBiomeAmplitude(BiomeType biome) => biome switch

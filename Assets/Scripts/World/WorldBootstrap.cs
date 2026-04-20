@@ -98,6 +98,9 @@ namespace ForeverEngine.Procedural
             var chunkManager = cmGO.AddComponent<ChunkManager>();
             chunkManager.WorldSeed = WorldSeed;
 
+            // Hitch detector for flicker correlation (logs [HITCH-DIAG] on long frames).
+            new GameObject("HitchDetector").AddComponent<HitchDetector>();
+
             // Detect server mode: ConnectionManager exists and is logged in (or connecting)
             bool serverMode = Network.ConnectionManager.Instance != null;
 

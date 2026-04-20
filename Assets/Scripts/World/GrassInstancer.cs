@@ -67,5 +67,11 @@ namespace ForeverEngine.Procedural
                     castShadows: UnityEngine.Rendering.ShadowCastingMode.Off,
                     receiveShadows: true);
         }
+
+        private void OnDestroy()
+        {
+            int batches = _batches != null ? _batches.Length : 0;
+            Debug.Log($"[GRASS-DIAG] destroyed center={_chunkCenter} batches={batches} t={Time.realtimeSinceStartup:F2}");
+        }
     }
 }
