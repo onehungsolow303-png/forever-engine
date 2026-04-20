@@ -82,6 +82,7 @@ namespace ForeverEngine.Procedural
             if (catalogRules.Length > 0)
             {
                 DecorateFromCatalog(chunkData, parent.transform, rng, catalogRules);
+                ScatterGrass(chunkData, parent, rng);
                 return parent;
             }
 
@@ -120,6 +121,59 @@ namespace ForeverEngine.Procedural
 
             return parent;
         }
+
+        /// <summary>
+        /// Attach a GrassInstancer to the chunk props parent for biomes that
+        /// should have ground foliage. Positions are Poisson-disk scattered with
+        /// the same seeded RNG as props, so the result is deterministic per chunk.
+        /// </summary>
+        private static void ScatterGrass(ChunkData chunkData, GameObject parent, System.Random rng)
+        {
+            if (!GrassInstancer.Enabled) return;
+            if (!BiomeHasGrass(chunkData.Biome)) return;
+
+            var cfg = GrassConfig.Load();
+            if (cfg == null || cfg.GrassMesh == null || cfg.GrassMaterial == null) return;
+
+            var coord = new ChunkCoord(chunkData.ChunkX, chunkData.ChunkZ);
+            int hmRes = ChunkData.HeightmapRes;
+            var positions = PoissonDisk(ChunkCoord.ChunkSize, cfg.MinSpacing, cfg.CountPerChunk, rng);
+
+            var matrices = new Matrix4x4[positions.Count];
+            for (int i = 0; i < positions.Count; i++)
+            {
+                var pos = positions[i];
+                float worldX = coord.WorldOrigin.x + pos.x;
+                float worldZ = coord.WorldOrigin.z + pos.y;
+                float hmX = pos.x / ChunkCoord.ChunkSize * (hmRes - 1);
+                float hmZ = pos.y / ChunkCoord.ChunkSize * (hmRes - 1);
+                int ix = Mathf.Clamp(Mathf.RoundToInt(hmX), 0, hmRes - 1);
+                int iz = Mathf.Clamp(Mathf.RoundToInt(hmZ), 0, hmRes - 1);
+                float height = chunkData.Heightmap[iz * hmRes + ix] * TerrainGenerator.MaxHeight;
+
+                float scale = cfg.BaseScale * (0.8f + (float)rng.NextDouble() * 0.4f);
+                float yaw = (float)rng.NextDouble() * 360f;
+                matrices[i] = Matrix4x4.TRS(
+                    new Vector3(worldX, height, worldZ),
+                    Quaternion.Euler(0f, yaw, 0f),
+                    Vector3.one * scale);
+            }
+
+            var instancer = parent.AddComponent<GrassInstancer>();
+            var center = coord.WorldOrigin + new Vector3(ChunkCoord.ChunkSize * 0.5f, 0f, ChunkCoord.ChunkSize * 0.5f);
+            instancer.Setup(cfg.GrassMesh, cfg.GrassMaterial, matrices, center, cfg.MaxDrawDistance);
+        }
+
+        private static bool BiomeHasGrass(BiomeType biome) => biome switch
+        {
+            BiomeType.Grassland or
+            BiomeType.TemperateForest or
+            BiomeType.BorealForest or
+            BiomeType.Savanna or
+            BiomeType.TropicalRainforest or
+            BiomeType.Taiga => true,
+            _ => false,
+        };
 
         // Diagnostic kill-switch for SurfaceDecorator. Tested 2026-04-19 with
         // PropsEnabled=false → FPS remained ~4, so prop instantiation was NOT
