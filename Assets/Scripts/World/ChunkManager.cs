@@ -147,8 +147,13 @@ namespace ForeverEngine.Procedural
             ChunkCoord playerChunk = ChunkCoord.FromWorldPos(_playerTransform.position);
             if (playerChunk != _lastPlayerChunk && !_updating)
             {
+                Debug.Log($"[CHUNKMGR-DIAG] Boundary cross: {_lastPlayerChunk} -> {playerChunk}, ServerMode={ServerMode}, loaded={_loaded.Count}");
                 _lastPlayerChunk = playerChunk;
                 StartCoroutine(UpdateChunks(playerChunk));
+            }
+            else if (playerChunk != _lastPlayerChunk && _updating)
+            {
+                Debug.Log($"[CHUNKMGR-DIAG] Boundary cross SUPPRESSED (_updating=true): at {playerChunk}");
             }
         }
 
@@ -250,7 +255,34 @@ namespace ForeverEngine.Procedural
                         needed.Add((coord, dist));
                 }
 
+            // Upgrade pass: chunks generated previously at GenerateAheadRadius got
+            // TerrainGO=null because they were beyond LoadRadius at the time.
+            // When the player walks closer, they're already in _loaded so the
+            // needed-list skip above misses them. Without this pass, such chunks
+            // stay as phantom data-only entries forever and the world visibly
+            // ends at an invisible wall.
+            var toUpgrade = new List<ChunkCoord>();
+            foreach (var kvp in _loaded)
+            {
+                int dist = center.ChebyshevTo(kvp.Key);
+                if (dist <= LoadRadius && kvp.Value.TerrainGO == null)
+                    toUpgrade.Add(kvp.Key);
+            }
+            foreach (var coord in toUpgrade)
+            {
+                var data = _loaded[coord].Data;
+                var terrainGO = TerrainGenerator.CreateTerrain(data, needsCollider: ChunkNeedsCollider(coord));
+                if (_voxelTerrainActive && terrainGO != null)
+                    foreach (var mr in terrainGO.GetComponentsInChildren<MeshRenderer>(true))
+                        mr.enabled = false;
+                yield return null;
+                var props = SurfaceDecorator.DecorateMesh(data, terrainGO);
+                _loaded[coord] = new LoadedChunk { Data = data, TerrainGO = terrainGO, Props = props };
+                yield return null;
+            }
+
             needed.Sort((a, b) => a.dist.CompareTo(b.dist));
+            Debug.Log($"[CHUNKMGR-DIAG] LocalGenerate center={center}, needed={needed.Count}, upgraded={toUpgrade.Count}, loaded={_loaded.Count}");
 
             foreach (var (coord, dist) in needed)
             {
