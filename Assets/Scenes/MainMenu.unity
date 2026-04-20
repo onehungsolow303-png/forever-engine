@@ -119,6 +119,21 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
+--- !u!115 &1122219524
+MonoScript:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: 
+  serializedVersion: 7
+  m_DefaultReferences: {}
+  m_Icon: {fileID: 0}
+  m_Type: 0
+  m_ExecutionOrder: 0
+  m_ClassName: ClientBoot
+  m_Namespace: ForeverEngine.Demo.Boot
+  m_AssemblyName: ForeverEngine
 --- !u!1 &1243328368
 GameObject:
   m_ObjectHideFlags: 0
@@ -230,7 +245,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1381817900}
-  - component: {fileID: 1381817899}
+  - component: {fileID: 1381817901}
   m_Layer: 0
   m_Name: MainMenu
   m_TagString: Untagged
@@ -238,18 +253,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &1381817899
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1381817898}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 911cdd2dbe9b6c9489b36fcb869ac151, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: ForeverEngine::ForeverEngine.Demo.UI.DemoMainMenu
 --- !u!4 &1381817900
 Transform:
   m_ObjectHideFlags: 0
@@ -265,6 +268,18 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1381817901
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1381817898}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 1122219524}
+  m_Name: 
+  m_EditorClassIdentifier: ForeverEngine::ForeverEngine.Demo.Boot.ClientBoot
 --- !u!1 &1578085064
 GameObject:
   m_ObjectHideFlags: 0
@@ -438,6 +453,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: de47991a03f95454dae05abb05926b61, type: 3}
   m_Name: 
   m_EditorClassIdentifier: ForeverEngine::ForeverEngine.Demo.Audio.SoundManager
+  _config: {fileID: 0}
   hitSound: {fileID: 0}
   critSound: {fileID: 0}
   missSound: {fileID: 0}
