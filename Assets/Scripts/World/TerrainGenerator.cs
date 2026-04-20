@@ -49,31 +49,47 @@ namespace ForeverEngine.Procedural
                 {
                     float worldX = coord.X * chunkSize + x * step;
                     float worldZ = coord.Z * chunkSize + z * step;
-
-                    float skeletonX = (worldX / chunkSize + skeleton.Width / 2f) % skeleton.Width;
-                    float skeletonZ = (worldZ / chunkSize + skeleton.Height / 2f) % skeleton.Height;
-                    if (skeletonX < 0) skeletonX += skeleton.Width;
-                    if (skeletonZ < 0) skeletonZ += skeleton.Height;
-
-                    int sx0 = Mathf.FloorToInt(skeletonX);
-                    int sz0 = Mathf.FloorToInt(skeletonZ);
-                    int sx1 = (sx0 + 1) % skeleton.Width;
-                    int sz1 = (sz0 + 1) % skeleton.Height;
-                    float fx = skeletonX - sx0;
-                    float fz = skeletonZ - sz0;
-
-                    float baseHeight = Mathf.Lerp(
-                        Mathf.Lerp(skeleton.GetElevation(sx0, sz0), skeleton.GetElevation(sx1, sz0), fx),
-                        Mathf.Lerp(skeleton.GetElevation(sx0, sz1), skeleton.GetElevation(sx1, sz1), fx),
-                        fz);
-
-                    float nx = worldX * 0.01f;
-                    float nz = worldZ * 0.01f;
-                    float noise = SimplexNoise.OctaveNoise(nx, nz, octaves, 0.5f, 2f, _seedX, _seedZ);
-
-                    chunkData.Heightmap[z * hmRes + x] = Mathf.Clamp01(baseHeight + (noise - 0.5f) * amplitude);
+                    chunkData.Heightmap[z * hmRes + x] =
+                        SampleHeightAt(worldX, worldZ, sample.Biome, skeleton, worldSeed);
                 }
             }
+        }
+
+        /// <summary>
+        /// Position-deterministic height sampler. Returns the same value for the
+        /// same (worldX, worldZ) regardless of which chunk calls it — so long as
+        /// the biome argument matches. Used by GenerateHeightmap (bulk fill) and
+        /// by BuildLodMesh's analytical normal calc so lighting is continuous
+        /// across chunk boundaries within a biome.
+        /// </summary>
+        public static float SampleHeightAt(float worldX, float worldZ, BiomeType biome,
+                                            PlanetSkeleton skeleton, int worldSeed)
+        {
+            int chunkSize = ChunkCoord.ChunkSize;
+            float skeletonX = (worldX / chunkSize + skeleton.Width / 2f) % skeleton.Width;
+            float skeletonZ = (worldZ / chunkSize + skeleton.Height / 2f) % skeleton.Height;
+            if (skeletonX < 0) skeletonX += skeleton.Width;
+            if (skeletonZ < 0) skeletonZ += skeleton.Height;
+
+            int sx0 = Mathf.FloorToInt(skeletonX);
+            int sz0 = Mathf.FloorToInt(skeletonZ);
+            int sx1 = (sx0 + 1) % skeleton.Width;
+            int sz1 = (sz0 + 1) % skeleton.Height;
+            float fx = skeletonX - sx0;
+            float fz = skeletonZ - sz0;
+
+            float baseHeight = Mathf.Lerp(
+                Mathf.Lerp(skeleton.GetElevation(sx0, sz0), skeleton.GetElevation(sx1, sz0), fx),
+                Mathf.Lerp(skeleton.GetElevation(sx0, sz1), skeleton.GetElevation(sx1, sz1), fx),
+                fz);
+
+            float amplitude = GetBiomeAmplitude(biome);
+            int octaves = GetBiomeOctaves(biome);
+            float seedX = worldSeed * 1.7f;
+            float seedZ = worldSeed * 3.1f;
+            float noise = SimplexNoise.OctaveNoise(worldX * 0.01f, worldZ * 0.01f,
+                                                   octaves, 0.5f, 2f, seedX, seedZ);
+            return Mathf.Clamp01(baseHeight + (noise - 0.5f) * amplitude);
         }
 
         /// <summary>
@@ -92,31 +108,14 @@ namespace ForeverEngine.Procedural
 
             var material = GetBiomeMaterial(chunkData.Biome);
 
-            // LOD 0 — full detail, ALWAYS gets the collider. needsCollider is
-            // ignored here (was an optimization that caused fall-through bugs).
+            // Single-LOD build: LOD swaps between 33 / 17 / 9 vert meshes at
+            // chunk level produced both visible cracks at neighbor boundaries
+            // (different vertex densities on shared edges) and a pop on every
+            // threshold cross. With ~1ms frame time headroom, a uniform LOD0
+            // across all rendered chunks is cheaper than the swap artifacts.
             var lod0 = BuildLodMesh(chunkData, 33, material, castShadows: true, addCollider: true);
             lod0.transform.SetParent(root.transform, worldPositionStays: false);
             lod0.name = "LOD0";
-
-            // LOD 1 — half detail.
-            var lod1 = BuildLodMesh(chunkData, 17, material, castShadows: true, addCollider: false);
-            lod1.transform.SetParent(root.transform, worldPositionStays: false);
-            lod1.name = "LOD1";
-
-            // LOD 2 — quarter detail, no shadows.
-            var lod2 = BuildLodMesh(chunkData, 9, material, castShadows: false, addCollider: false);
-            lod2.transform.SetParent(root.transform, worldPositionStays: false);
-            lod2.name = "LOD2";
-
-            var lodGroup = root.AddComponent<LODGroup>();
-            var lods = new LOD[3]
-            {
-                new LOD(0.60f, new[] { lod0.GetComponent<Renderer>() }),
-                new LOD(0.25f, new[] { lod1.GetComponent<Renderer>() }),
-                new LOD(0.05f, new[] { lod2.GetComponent<Renderer>() }),
-            };
-            lodGroup.SetLODs(lods);
-            lodGroup.RecalculateBounds();
 
             return root;
         }
@@ -130,8 +129,16 @@ namespace ForeverEngine.Procedural
             var mesh = new Mesh { name = $"LodMesh_{res}" };
             int vertCount = (res + 1) * (res + 1);
             var vertices = new Vector3[vertCount];
+            var normals = new Vector3[vertCount];
             var uvs = new Vector2[vertCount];
             float cellSize = (float)chunkSize / res;
+
+            // Central-difference epsilon for analytical normal sampling. Small enough
+            // to read local slope, large enough to avoid noise from finite precision.
+            const float normalEps = 0.5f;
+            var mgr = ChunkManager.Instance;
+            bool haveSkeleton = mgr != null && mgr.Skeleton != null;
+            var coord = new ChunkCoord(chunkData.ChunkX, chunkData.ChunkZ);
 
             for (int z = 0; z <= res; z++)
             {
@@ -144,10 +151,31 @@ namespace ForeverEngine.Procedural
                     float hmZ = (float)z / res * (hmRes - 1);
                     float height = SampleHeightmap(chunkData.Heightmap, hmRes, hmX, hmZ) * MaxHeight;
                     vertices[idx] = new Vector3(localX, height, localZ);
-                    // Tile the biome material 32x per chunk (one tile per 8m).
-                    // Without this the whole 256m chunk stretches a single
-                    // texture sample, producing visible blurry polygon splats.
-                    const float tilesPerChunk = 32f;
+
+                    // Analytical normal via central difference on the deterministic
+                    // height sampler. Shared across chunks: adjacent same-biome chunks
+                    // compute identical normals at their shared edge → no seam.
+                    if (haveSkeleton)
+                    {
+                        float wx = coord.X * chunkSize + localX;
+                        float wz = coord.Z * chunkSize + localZ;
+                        float hE = SampleHeightAt(wx + normalEps, wz, chunkData.Biome, mgr.Skeleton, mgr.WorldSeed) * MaxHeight;
+                        float hW = SampleHeightAt(wx - normalEps, wz, chunkData.Biome, mgr.Skeleton, mgr.WorldSeed) * MaxHeight;
+                        float hN = SampleHeightAt(wx, wz - normalEps, chunkData.Biome, mgr.Skeleton, mgr.WorldSeed) * MaxHeight;
+                        float hS = SampleHeightAt(wx, wz + normalEps, chunkData.Biome, mgr.Skeleton, mgr.WorldSeed) * MaxHeight;
+                        float dYdX = (hE - hW) / (2f * normalEps);
+                        float dYdZ = (hS - hN) / (2f * normalEps);
+                        normals[idx] = new Vector3(-dYdX, 1f, -dYdZ).normalized;
+                    }
+                    else
+                    {
+                        normals[idx] = Vector3.up;
+                    }
+                    // Tile the biome material 128x per chunk (one tile per 2m).
+                    // 32x (8m/tile) read as a flat wash — ground textures lose
+                    // their per-pixel detail at player height. 128x (2m/tile)
+                    // matches the natural scale of grass/sand/rock textures.
+                    const float tilesPerChunk = 128f;
                     uvs[idx] = new Vector2((float)x / res * tilesPerChunk, (float)z / res * tilesPerChunk);
                 }
             }
@@ -175,7 +203,7 @@ namespace ForeverEngine.Procedural
             mesh.vertices = vertices;
             mesh.uv = uvs;
             mesh.triangles = triangles;
-            mesh.RecalculateNormals();
+            mesh.normals = normals; // Skip RecalculateNormals — we own normals now.
             mesh.RecalculateBounds();
 
             var go = new GameObject();
