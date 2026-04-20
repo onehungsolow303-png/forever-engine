@@ -15,7 +15,7 @@ namespace ForeverEngine.World.Voxel
         [UnityEngine.Tooltip("Max chunks meshed per frame. Default 2 keeps the upload sync below ~10ms/frame at 60 FPS.")]
         public int MaxMeshBuildsPerFrame = 2;
 
-        [UnityEngine.Tooltip("Draw the voxel mesh. Default OFF — voxel data still streams + meshes for future carving and collision, but the heightmap stays the visible surface until Phase C replaces it.")]
+        [UnityEngine.Tooltip("Draw the voxel mesh AND build it. Default OFF — voxel data still streams for future carving + collision, but meshes are skipped entirely because Surface-Nets + 3× neighbor re-mesh per chunk costs ~15ms each, which at 2205-chunk worst-case subscription tanks the main thread to 3-5 FPS even though nothing would be visible.")]
         public bool RenderMeshes = false;
 
         private readonly List<ChunkCoord3D> _pendingArrived = new List<ChunkCoord3D>();
@@ -112,8 +112,10 @@ namespace ForeverEngine.World.Voxel
                 _pendingSet.Remove(coord);
                 // _renderer is null in EditMode tests where Awake hasn't fired; skip
                 // the mesh-build step but still consume the budget slot so queue-drain
-                // assertions are valid.
-                if (_renderer != null)
+                // assertions are valid. Also skip when RenderMeshes=false — building
+                // meshes we won't render wastes 15ms/chunk × 2205 chunks worst-case.
+                // Voxel data remains cached in Streamer for future carving/collision.
+                if (_renderer != null && RenderMeshes)
                 {
                     var chunk = Streamer.Get(coord);
                     if (chunk != null)

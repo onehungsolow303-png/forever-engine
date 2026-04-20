@@ -121,12 +121,20 @@ namespace ForeverEngine.Procedural
             return parent;
         }
 
+        // Diagnostic kill-switch for SurfaceDecorator. Tested 2026-04-19 with
+        // PropsEnabled=false → FPS remained ~4, so prop instantiation was NOT
+        // the dominant bottleneck. Leave this enabled for normal play; flip if
+        // the prop-cost hypothesis ever needs revisiting.
+        public static bool PropsEnabled = true;
+
         private static void DecorateFromCatalog(
             ChunkData chunkData,
             Transform parent,
             System.Random rng,
             BiomePropRule[] rules)
         {
+            if (!PropsEnabled) return;
+
             var coord = new ChunkCoord(chunkData.ChunkX, chunkData.ChunkZ);
             int hmRes = ChunkData.HeightmapRes;
 
