@@ -32,7 +32,9 @@ namespace ForeverEngine.Procedural.Editor
             var mats    = new List<Material>();
             var audio   = new List<AudioClip>();
 
-            foreach (var prefabPath in Directory.GetFiles(packAbsPath, "*.prefab", SearchOption.AllDirectories))
+            var prefabPaths = Directory.GetFiles(packAbsPath, "*.prefab", SearchOption.AllDirectories);
+            System.Array.Sort(prefabPaths, System.StringComparer.Ordinal);
+            foreach (var prefabPath in prefabPaths)
             {
                 var rel = "Assets" + prefabPath.Replace(Application.dataPath, "").Replace('\\', '/');
                 var go = AssetDatabase.LoadAssetAtPath<GameObject>(rel);
@@ -46,14 +48,18 @@ namespace ForeverEngine.Procedural.Editor
                 }
             }
 
-            foreach (var matPath in Directory.GetFiles(packAbsPath, "*.mat", SearchOption.AllDirectories))
+            var matPaths = Directory.GetFiles(packAbsPath, "*.mat", SearchOption.AllDirectories);
+            System.Array.Sort(matPaths, System.StringComparer.Ordinal);
+            foreach (var matPath in matPaths)
             {
                 var rel = "Assets" + matPath.Replace(Application.dataPath, "").Replace('\\', '/');
                 var m = AssetDatabase.LoadAssetAtPath<Material>(rel);
                 if (m != null) mats.Add(m);
             }
 
-            foreach (var wavPath in Directory.GetFiles(packAbsPath, "*.wav", SearchOption.AllDirectories))
+            var wavPaths = Directory.GetFiles(packAbsPath, "*.wav", SearchOption.AllDirectories);
+            System.Array.Sort(wavPaths, System.StringComparer.Ordinal);
+            foreach (var wavPath in wavPaths)
             {
                 var rel = "Assets" + wavPath.Replace(Application.dataPath, "").Replace('\\', '/');
                 var a = AssetDatabase.LoadAssetAtPath<AudioClip>(rel);

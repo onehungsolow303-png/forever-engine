@@ -25,5 +25,30 @@ namespace ForeverEngine.Tests.World.Baked
             }
             finally { Directory.Delete(tmp, recursive: true); }
         }
+
+        [Test]
+        public void Scan_OrderIsOrdinalSorted_RegardlessOfInsertionOrder()
+        {
+            // Windows insertion order can differ from lexical order; verify the scanner
+            // sorts ordinally so bakes are reproducible across machines.
+            var tmp = System.IO.Path.Combine(System.IO.Path.GetTempPath(),
+                "pack_scan_order_" + System.Guid.NewGuid().ToString("N"));
+            System.IO.Directory.CreateDirectory(tmp);
+            try
+            {
+                // Create in reverse alpha order to catch any "insertion-order" reliance.
+                System.IO.Directory.CreateDirectory(System.IO.Path.Combine(tmp, "zzz_Last"));
+                System.IO.Directory.CreateDirectory(System.IO.Path.Combine(tmp, "mmm_Mid"));
+                System.IO.Directory.CreateDirectory(System.IO.Path.Combine(tmp, "aaa_First"));
+
+                var packs = AssetPackScanner.ScanRoot(tmp);
+
+                Assert.AreEqual(3, packs.Length);
+                Assert.AreEqual("aaa_First", packs[0].Name);
+                Assert.AreEqual("mmm_Mid",   packs[1].Name);
+                Assert.AreEqual("zzz_Last",  packs[2].Name);
+            }
+            finally { System.IO.Directory.Delete(tmp, recursive: true); }
+        }
     }
 }

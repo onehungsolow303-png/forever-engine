@@ -71,7 +71,9 @@ namespace ForeverEngine.Procedural.Editor
             var heroRoot = Path.Combine(layerDir, "hero");
             if (Directory.Exists(heroRoot))
             {
-                foreach (var dir in Directory.GetDirectories(heroRoot))
+                var heroDirs = Directory.GetDirectories(heroRoot);
+                System.Array.Sort(heroDirs, System.StringComparer.Ordinal);
+                foreach (var dir in heroDirs)
                 {
                     var metaPath = Path.Combine(dir, "metadata.json");
                     if (File.Exists(metaPath))

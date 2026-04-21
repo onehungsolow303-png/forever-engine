@@ -32,7 +32,9 @@ namespace ForeverEngine.Procedural.Editor
         {
             if (!Directory.Exists(rootDir)) return System.Array.Empty<DiscoveredPack>();
             var packs = new List<DiscoveredPack>();
-            foreach (var dir in Directory.GetDirectories(rootDir))
+            var dirs = Directory.GetDirectories(rootDir);
+            System.Array.Sort(dirs, System.StringComparer.Ordinal);
+            foreach (var dir in dirs)
             {
                 var name = Path.GetFileName(dir);
                 if (SkipFolders.Contains(name)) continue;
