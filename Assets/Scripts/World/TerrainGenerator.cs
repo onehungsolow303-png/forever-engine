@@ -136,15 +136,9 @@ namespace ForeverEngine.Procedural
             var mesh = new Mesh { name = $"LodMesh_{res}" };
             int vertCount = (res + 1) * (res + 1);
             var vertices = new Vector3[vertCount];
-            var normals = new Vector3[vertCount];
             var uvs = new Vector2[vertCount];
             float cellSize = (float)chunkSize / res;
 
-            // Central-difference epsilon for analytical normal sampling. Small enough
-            // to read local slope, large enough to avoid noise from finite precision.
-            const float normalEps = 0.5f;
-            var mgr = ChunkManager.Instance;
-            bool haveSkeleton = mgr != null && mgr.Skeleton != null;
             var coord = new ChunkCoord(chunkData.ChunkX, chunkData.ChunkZ);
 
             for (int z = 0; z <= res; z++)
@@ -158,26 +152,6 @@ namespace ForeverEngine.Procedural
                     float hmZ = (float)z / res * (hmRes - 1);
                     float height = SampleHeightmap(chunkData.Heightmap, hmRes, hmX, hmZ) * MaxHeight;
                     vertices[idx] = new Vector3(localX, height, localZ);
-
-                    // Analytical normal via central difference on the deterministic
-                    // height sampler. Shared across chunks: adjacent same-biome chunks
-                    // compute identical normals at their shared edge → no seam.
-                    if (haveSkeleton)
-                    {
-                        float wx = coord.X * chunkSize + localX;
-                        float wz = coord.Z * chunkSize + localZ;
-                        float hE = SampleHeightAt(wx + normalEps, wz, chunkData.Biome, mgr.Skeleton, mgr.WorldSeed) * MaxHeight;
-                        float hW = SampleHeightAt(wx - normalEps, wz, chunkData.Biome, mgr.Skeleton, mgr.WorldSeed) * MaxHeight;
-                        float hN = SampleHeightAt(wx, wz - normalEps, chunkData.Biome, mgr.Skeleton, mgr.WorldSeed) * MaxHeight;
-                        float hS = SampleHeightAt(wx, wz + normalEps, chunkData.Biome, mgr.Skeleton, mgr.WorldSeed) * MaxHeight;
-                        float dYdX = (hE - hW) / (2f * normalEps);
-                        float dYdZ = (hS - hN) / (2f * normalEps);
-                        normals[idx] = new Vector3(-dYdX, 1f, -dYdZ).normalized;
-                    }
-                    else
-                    {
-                        normals[idx] = Vector3.up;
-                    }
                     // Tile the biome material 128x per chunk (one tile per 2m).
                     // 32x (8m/tile) read as a flat wash — ground textures lose
                     // their per-pixel detail at player height. 128x (2m/tile)
@@ -210,7 +184,7 @@ namespace ForeverEngine.Procedural
             mesh.vertices = vertices;
             mesh.uv = uvs;
             mesh.triangles = triangles;
-            mesh.normals = normals; // Skip RecalculateNormals — we own normals now.
+            mesh.RecalculateNormals(); // Server-mode: analytical normals removed; let Unity compute smooth normals from heightmap geometry.
             mesh.RecalculateBounds();
 
             var go = new GameObject();

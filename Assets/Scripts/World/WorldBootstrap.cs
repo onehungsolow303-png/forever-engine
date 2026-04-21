@@ -96,7 +96,6 @@ namespace ForeverEngine.Procedural
             // Create chunk manager
             var cmGO = new GameObject("ChunkManager");
             var chunkManager = cmGO.AddComponent<ChunkManager>();
-            chunkManager.WorldSeed = WorldSeed;
 
             // Hitch detector for flicker correlation (logs [HITCH-DIAG] on long frames).
             new GameObject("HitchDetector").AddComponent<HitchDetector>();
@@ -250,9 +249,8 @@ namespace ForeverEngine.Procedural
                 player.AddComponent<SimplePlayerController>();
             }
 
-            // Now initialize chunk manager with player for streaming
-            // (preserves existing mode — server or offline)
-            chunkManager.Initialize(player.transform, chunkManager.ServerMode);
+            // Now initialize chunk manager with player for streaming.
+            chunkManager.Initialize(player.transform);
 
             // Setup camera — ensure one exists and follows the player
             var cam = UnityEngine.Camera.main;
