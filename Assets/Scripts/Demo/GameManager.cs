@@ -85,14 +85,6 @@ namespace ForeverEngine.Demo
             SessionId = ForeverEngine.Network.ConnectionManager.Instance.PlayerId;
         }
 
-        public void NewGame(int seed = 42)
-        {
-            CurrentSeed = seed;
-            Player = new PlayerData { HexQ = 2, HexR = 2 };
-            Player.DiscoveredLocations.Add("camp");
-            SceneManager.LoadScene("World");
-        }
-
         /// <summary>
         /// Called by CharacterCreationUI when the player confirms their character.
         /// Converts CharacterData to PlayerData, then loads the World scene.
@@ -102,7 +94,6 @@ namespace ForeverEngine.Demo
             CharacterData = characterData;
             CurrentSeed   = seed > 0 ? seed : Random.Range(1, 99999);
             Player        = PlayerData.FromCharacterData(characterData);
-            Player.DiscoveredLocations.Add("camp");
             SceneManager.LoadScene("World");
         }
 
@@ -114,8 +105,7 @@ namespace ForeverEngine.Demo
         {
             Character     = sheet;
             CurrentSeed   = seed > 0 ? seed : Random.Range(1, 99999);
-            Player        = new PlayerData { HexQ = 2, HexR = 2 };
-            Player.DiscoveredLocations.Add("camp");
+            Player        = new PlayerData();
             SyncPlayerFromCharacter();
             SceneManager.LoadScene("World");
         }
@@ -168,23 +158,6 @@ namespace ForeverEngine.Demo
             SceneManager.LoadScene("DungeonExploration");
         }
 
-        public void ReturnToOverworld()
-        {
-            // If we won a battle while inside a dungeon, return to dungeon exploration
-            // instead of the overworld so the player can continue to the next room.
-            if (LastBattleWon && PendingDungeonState != null)
-            {
-                LastBattleWon = false;
-                SceneManager.LoadScene("DungeonExploration");
-                return;
-            }
-
-            PendingEncounterId = null;
-            PendingLocationId = null;
-            PendingDungeonState = null;
-            SceneManager.LoadScene("World");
-        }
-
         public void PlayerDied()
         {
             // Respawn at last safe location, fully restored. Previously
@@ -195,9 +168,6 @@ namespace ForeverEngine.Demo
             Player.HP = Player.MaxHP;
             Player.Hunger = Player.MaxHunger;
             Player.Thirst = Player.MaxThirst;
-            var loc = LocationData.Get(Player.LastSafeLocation);
-            if (loc != null) { Player.HexQ = loc.HexQ; Player.HexR = loc.HexR; }
-            ReturnToOverworld();
         }
 
         /// <summary>Load a saved PlayerData and return to the overworld.</summary>

@@ -22,7 +22,6 @@ namespace ForeverEngine.Demo
     [System.Serializable]
     public class PlayerData
     {
-        public int HexQ, HexR;
         public int HP = 20, MaxHP = 20, AC = 12;
         public int Strength = 14, Dexterity = 12, Constitution = 12;
         public int Speed = 6;
@@ -70,10 +69,6 @@ namespace ForeverEngine.Demo
             // Speed: CharacterData stores feet; PlayerData uses tiles (1 tile = 5 ft)
             pd.Speed = cd.speed / 5;
 
-            // Starting position
-            pd.HexQ = 2;
-            pd.HexR = 2;
-
             // Class-based weapon and attack dice
             (pd.WeaponName, pd.AttackDice, pd.ArmorName) = GetClassGear(cd.className);
 
@@ -112,7 +107,6 @@ namespace ForeverEngine.Demo
         public float HungerPercent => Hunger / MaxHunger;
         public float ThirstPercent => Thirst / MaxThirst;
         public float HPPercent => MaxHP > 0 ? (float)HP / MaxHP : 0;
-        public string HexKey => $"{HexQ},{HexR}";
 
         public void DrainHunger(float amount) { Hunger = System.Math.Max(0, Hunger - amount); }
         public void DrainThirst(float amount) { Thirst = System.Math.Max(0, Thirst - amount); }
