@@ -49,7 +49,8 @@ namespace ForeverEngine.Demo.Dungeon
             {
                 Debug.LogError("DungeonSceneSetup: No dungeon prefab found. " +
                     "Assign in Inspector or place at Resources/DungeonSnap");
-                gm.ReturnToOverworld();
+                ForeverEngine.Network.ConnectionManager.Instance?.Send(
+                    new ForeverEngine.Core.Messages.ExitDungeonRequest());
                 return;
             }
 
@@ -72,7 +73,8 @@ namespace ForeverEngine.Demo.Dungeon
             if (dungeon == null)
             {
                 Debug.LogError("DungeonSceneSetup: Prefab has no Dungeon component");
-                gm.ReturnToOverworld();
+                ForeverEngine.Network.ConnectionManager.Instance?.Send(
+                    new ForeverEngine.Core.Messages.ExitDungeonRequest());
                 return;
             }
 
