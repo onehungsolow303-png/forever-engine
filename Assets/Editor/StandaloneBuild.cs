@@ -18,8 +18,6 @@ namespace ForeverEngine.Editor
             EditorBuildSettings.scenes = new[]
             {
                 new EditorBuildSettingsScene("Assets/Scenes/MainMenu.unity", true),
-                new EditorBuildSettingsScene("Assets/Scenes/Overworld.unity", true),
-                new EditorBuildSettingsScene("Assets/Scenes/Overworld3D.unity", true),
                 new EditorBuildSettingsScene("Assets/Scenes/World.unity", true),
                 new EditorBuildSettingsScene("Assets/Scenes/BattleMap.unity", true),
                 new EditorBuildSettingsScene("Assets/Scenes/DungeonExploration.unity", true),
@@ -33,8 +31,6 @@ namespace ForeverEngine.Editor
                 scenes = new[]
                 {
                     "Assets/Scenes/MainMenu.unity",
-                    "Assets/Scenes/Overworld.unity",
-                    "Assets/Scenes/Overworld3D.unity",
                     "Assets/Scenes/World.unity",
                     "Assets/Scenes/BattleMap.unity",
                     "Assets/Scenes/DungeonExploration.unity",
