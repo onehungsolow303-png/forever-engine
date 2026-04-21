@@ -3,8 +3,8 @@ using UnityEditor;
 using UnityEditor.SceneManagement;
 using System.IO;
 using ForeverEngine.Demo;
-using ForeverEngine.Demo.Boot;
 using ForeverEngine.Demo.Battle;
+using ForeverEngine.Demo.UI;
 using ForeverEngine.MonoBehaviour.Bootstrap;
 using ForeverEngine.MonoBehaviour.Rendering;
 using ForeverEngine.MonoBehaviour.Input;
@@ -35,7 +35,7 @@ namespace ForeverEngine.Editor
             camGO.tag = "MainCamera";
 
             var menuGO = new GameObject("MainMenu");
-            menuGO.AddComponent<ClientBoot>();
+            menuGO.AddComponent<ForeverEngine.Demo.Boot.ClientBoot>();
 
             // GameManager (persistent)
             var gmGO = new GameObject("GameManager");
