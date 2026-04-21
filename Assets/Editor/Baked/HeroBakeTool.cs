@@ -56,6 +56,7 @@ namespace ForeverEngine.Procedural.Editor
                 layerId: zoneAsset.LayerId);
 
             var zone = new BakedHeroZone(
+                Magic: "FEW1", FormatVersion: 0x0001,
                 ZoneId: zoneAsset.ZoneId,
                 LayerId: zoneAsset.LayerId,
                 WorldMinX: zoneAsset.WorldMinX, WorldMinZ: zoneAsset.WorldMinZ,

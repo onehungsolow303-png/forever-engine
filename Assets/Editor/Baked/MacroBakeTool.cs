@@ -64,6 +64,7 @@ namespace ForeverEngine.Procedural.Editor
                 seed: seed, layerId: layerId);
 
             var header = new BakedLayerHeader(
+                Magic: "FEW1", FormatVersion: 0x0001,
                 LayerId: layerId,
                 WorldMinX: tOrigin.x, WorldMinZ: tOrigin.z,
                 WorldMaxX: tOrigin.x + tSize.x, WorldMaxZ: tOrigin.z + tSize.z,
