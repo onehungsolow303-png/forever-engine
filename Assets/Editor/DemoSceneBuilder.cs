@@ -4,10 +4,7 @@ using UnityEditor.SceneManagement;
 using System.IO;
 using ForeverEngine.Demo;
 using ForeverEngine.Demo.Boot;
-using ForeverEngine.Demo.Overworld;
 using ForeverEngine.Demo.Battle;
-using ForeverEngine.Demo.Encounters;
-using ForeverEngine.Demo.Locations;
 using ForeverEngine.MonoBehaviour.Bootstrap;
 using ForeverEngine.MonoBehaviour.Rendering;
 using ForeverEngine.MonoBehaviour.Input;
@@ -21,11 +18,10 @@ namespace ForeverEngine.Editor
         [MenuItem("Forever Engine/Build Demo Scenes")]
         public static void BuildAll()
         {
-            BuildOverworld();
             BuildBattleMap();
             BuildGame();
             BuildMainMenu(); // Last so editor opens to MainMenu
-            Debug.Log("[DemoSceneBuilder] All 4 demo scenes created!");
+            Debug.Log("[DemoSceneBuilder] All 3 demo scenes created!");
         }
 
         private static void BuildMainMenu()
@@ -72,46 +68,6 @@ namespace ForeverEngine.Editor
 
             EditorSceneManager.SaveScene(scene, "Assets/Scenes/MainMenu.unity");
             Debug.Log("[DemoSceneBuilder] MainMenu scene created");
-        }
-
-        private static void BuildOverworld()
-        {
-            var scene = EditorSceneManager.NewScene(NewSceneSetup.EmptyScene, NewSceneMode.Single);
-
-            // Camera
-            var camGO = new GameObject("Main Camera");
-            var cam = camGO.AddComponent<Camera>();
-            cam.orthographic = true;
-            cam.orthographicSize = 8;
-            cam.clearFlags = CameraClearFlags.SolidColor;
-            cam.backgroundColor = new Color(0.1f, 0.15f, 0.1f);
-            camGO.transform.position = new Vector3(0, 0, -10);
-            camGO.tag = "MainCamera";
-
-            // Overworld Manager
-            var owGO = new GameObject("OverworldManager");
-            owGO.AddComponent<OverworldManager>();
-
-            // Encounter Manager
-            var encGO = new GameObject("EncounterManager");
-            encGO.AddComponent<EncounterManager>();
-
-            // LocationManager was deleted in the dead-code sweep (commit
-            // 3b7b265) — OverworldManager.TryEnterLocation now routes
-            // safe locations to DialoguePanel and unsafe locations to
-            // LocationInteriorManager directly. No separate LocationManager
-            // MonoBehaviour exists anymore.
-
-            // HUD
-            var hudGO = new GameObject("OverworldHUD");
-            hudGO.AddComponent<OverworldHUD>();
-
-            // Victory Screen (hidden by default)
-            var victoryGO = new GameObject("VictoryScreen");
-            victoryGO.AddComponent<VictoryScreen>();
-
-            EditorSceneManager.SaveScene(scene, "Assets/Scenes/Overworld.unity");
-            Debug.Log("[DemoSceneBuilder] Overworld scene created");
         }
 
         private static void BuildBattleMap()
