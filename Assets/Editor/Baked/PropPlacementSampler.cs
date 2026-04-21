@@ -73,7 +73,13 @@ namespace ForeverEngine.Procedural.Editor
                         float scale = 0.9f + (float)rng.NextDouble() * 0.2f;
 
                         string assetPath = AssetDatabase.GetAssetPath(prefab);
-                        placements.Add(new BakedPropPlacement(assetPath, wx, wy, wz, yaw, scale));
+                        string assetGuid = AssetDatabase.AssetPathToGUID(assetPath);
+                        placements.Add(new BakedPropPlacement(
+                            PrefabGuid: assetGuid,
+                            PrefabResourcePath: assetPath,
+                            WorldX: wx, WorldY: wy, WorldZ: wz,
+                            YawDegrees: yaw,
+                            UniformScale: scale));
                     }
                 }
             }
