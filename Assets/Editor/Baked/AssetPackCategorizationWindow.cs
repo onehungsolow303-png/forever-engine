@@ -79,11 +79,13 @@ namespace ForeverEngine.Procedural.Editor
             {
                 var assigned = _assignments[p.Name];
                 if (assigned.Count == 0) continue;
-                entries.Add(new AssetPackBiomeEntry
+                var entry = new AssetPackBiomeEntry
                 {
                     PackName = p.Name,
                     SuitableBiomes = assigned.ToArray(),
-                });
+                };
+                PackPrefabHarvester.Harvest(p.AbsolutePath, entry);
+                entries.Add(entry);
             }
             catalog.Entries = entries.ToArray();
             EditorUtility.SetDirty(catalog);
