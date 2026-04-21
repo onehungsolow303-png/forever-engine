@@ -1,0 +1,1692 @@
+[Licensing::Module] Trying to connect to existing licensing client channel...
+Built from '6000.4/staging' branch; Version is '6000.4.1f1 (8535861f39e1) revision 8729990'; Using compiler version '194234433'; Build Type 'Release'
+OS: 'Windows 11  (10.0.26200) Professional' Language: 'en' Physical Memory: 63063 MB
+BatchMode: 1, IsHumanControllingUs: 0, StartBugReporterOnCrash: 0, Is64bit: 1
+[Licensing::IpcConnector] Successfully connected to: "LicenseClient-bp303" at "2026-04-19T22:29:22.9093813Z"
+System  architecture: x64
+Process architecture: x64
+Date: 2026-04-19T22:29:22Z
+
+COMMAND LINE ARGUMENTS:
+C:\Program Files\Unity\Hub\Editor\6000.4.1f1\Editor\Unity.exe
+-batchmode
+-nographics
+-projectPath
+C:/Dev/Forever engine
+-executeMethod
+ForeverEngine.Editor.AuditAllPopulators.Run
+-quit
+-logFile
+C:/Dev/Forever engine/audit2.log
+Successfully changed project path to: C:/Dev/Forever engine
+C:/Dev/Forever engine
+[UnityMemory] Configuration Parameters - Can be set up in boot.config
+    "memorysetup-temp-allocator-size-gi-baking-worker=262144"
+    "memorysetup-temp-allocator-size-gi-baking-worker=262144"
+    "memorysetup-temp-allocator-size-gi-baking-worker=262144"
+    "memorysetup-temp-allocator-size-gi-baking-worker=262144"
+    "memorysetup-temp-allocator-size-gi-baking-worker=262144"
+    "memorysetup-temp-allocator-size-nav-mesh-worker=65536"
+    "memorysetup-temp-allocator-size-audio-worker=65536"
+    "memorysetup-temp-allocator-size-cloud-worker=32768"
+    "memorysetup-temp-allocator-size-gfx=262144"
+    "memorysetup-temp-allocator-size-preload-manager=33554432"
+    "memorysetup-temp-allocator-size-job-worker=262144"
+    "memorysetup-temp-allocator-size-background-worker=32768"
+    "memorysetup-allocator-temp-initial-block-size-main=262144"
+    "memorysetup-allocator-temp-initial-block-size-worker=262144"
+    "memorysetup-bucket-allocator-granularity=16"
+    "memorysetup-bucket-allocator-bucket-count=8"
+    "memorysetup-bucket-allocator-block-size=33554432"
+    "memorysetup-bucket-allocator-block-count=8"
+    "memorysetup-main-allocator-block-size=16777216"
+    "memorysetup-thread-allocator-block-size=16777216"
+    "memorysetup-gfx-main-allocator-block-size=16777216"
+    "memorysetup-gfx-thread-allocator-block-size=16777216"
+    "memorysetup-cache-allocator-block-size=4194304"
+    "memorysetup-typetree-allocator-block-size=2097152"
+    "memorysetup-profiler-bucket-allocator-granularity=16"
+    "memorysetup-profiler-bucket-allocator-bucket-count=8"
+    "memorysetup-profiler-bucket-allocator-block-size=33554432"
+    "memorysetup-profiler-bucket-allocator-block-count=8"
+    "memorysetup-profiler-allocator-block-size=16777216"
+    "memorysetup-profiler-editor-allocator-block-size=1048576"
+    "memorysetup-temp-allocator-size-main=16777216"
+    "memorysetup-job-temp-allocator-block-size=2097152"
+    "memorysetup-job-temp-allocator-block-size-background=1048576"
+    "memorysetup-job-temp-allocator-reduction-small-platforms=262144"
+Player connection [46152]  Target information:
+
+Player connection [46152]  * "[IP] 192.168.1.113 [Port] 55504 [Flags] 2 [Guid] 3990499573 [EditorId] 3990499573 [Version] 1048832 [Id] WindowsEditor(7,DESKTOP-2LJVMIP) [Debug] 1 [PackageName] WindowsEditor [ProjectName] Editor" 
+
+Player connection [46152] Host joined multi-casting on [225.0.0.222:54997]...
+Player connection [46152] Host joined alternative multi-casting on [225.0.0.222:34997]...
+Input System module state changed to: Initialized.
+[Physics::Module] Initialized fallback backend.
+[Physics::Module] Id: 0xdecafbad
+[Package Manager] Connected to IPC stream "Upm-22360" after 0.2 seconds.
+[Licensing::Module] Licensing is not yet initialized.
+[Licensing::Client] Error: HandshakeResponse reported an error:
+	ResponseCode: 505
+	ResponseStatus: Unsupported protocol version '1.18.1'.
+[Licensing::Module] Error: Failed to handshake to channel: "LicenseClient-bp303"
+[Licensing::IpcConnector] LicenseClient-bp303 channel disconnected successfully.
+[Licensing::IpcConnector] Channel LicenseClient-bp303-6000.4.1 doesn't exist
+[Licensing::Module] Successfully launched the LicensingClient (PId: 33144)
+Starting IPC server.
+Waiting for clients to connect on \\.\pipe\Unity-LicenseClient-bp303-6000.4.1, press Ctrl-C to exit.
+[Licensing::IpcConnector] Successfully connected to: "LicenseClient-bp303-6000.4.1" at "2026-04-19T22:29:23.6589032Z"
+[Licensing::Client] Handshaking with LicensingClient:
+  Version:                 1.18.1+9fbee8e
+  Session Id:              784b53a5f7af4b939237d8ed432e9f0d
+  Correlation Id:          23ad4d10316ccb057d2b7e9630d0955c
+  External correlation Id: 3712817211146701865
+  Machine Id:              gstSTUP4QwZYnBaUulASzeuKBU0=
+[Licensing::Module] Successfully connected to LicensingClient on channel: "LicenseClient-bp303-6000.4.1" (connect: 0.16s, validation: 0.03s, handshake: 0.54s)
+[Licensing::IpcConnector] Successfully connected to: "LicenseClient-bp303-6000.4.1-notifications" at "2026-04-19T22:29:24.2271586Z"
+[Licensing::Module] Connected to LicensingClient (PId: 33144, launch time: 0.00, total connection time: 0.73s)
+[Licensing::Module] Error: Access token is unavailable; failed to update
+[Licensing::Client] Successfully resolved entitlement details
+[Licensing::Module] License group:
+  Id: 20067582077754-UnityPersXXXX
+  Product: Unity Personal
+  Type: Assigned
+  Expiration: Unlimited
+[Licensing::Client] Successfully updated license, isAsync: True, time: 0.00
+[Licensing::Client] Successfully resolved entitlement details
+[Licensing::Module] Licensing Background thread has ended after 1.33s
+[Licensing::Module] Licensing is initialized (took 0.99s).
+[Licensing::Client] Successfully resolved entitlement details
+Library Redirect Path: Library/
+[Physics::Module] Selected backend.
+[Physics::Module] Name: PhysX
+[Physics::Module] Id: 0xf2b8ea05
+[Physics::Module] SDK Version: 4.1.2
+[Physics::Module] Integration Version: 1.0.0
+[Physics::Module] Threading Mode: Multi-Threaded
+Artifact Garbage Collection - Removed 1 unused hashed content files
+Initialize engine version: 6000.4.1f1 (8535861f39e1)
+[Subsystems] Discovering subsystems at path C:/Program Files/Unity/Hub/Editor/6000.4.1f1/Editor/Data/Resources/UnitySubsystems
+[Subsystems] Discovering subsystems at path C:/Dev/Forever engine/Assets
+Forcing GfxDevice: Null
+GfxDevice: creating device client; kGfxThreadingModeNonThreaded
+NullGfxDevice:
+    Version:  NULL 1.0 [1.0]
+    Renderer: Null Device
+    Vendor:   Unity Technologies
+Initialize mono
+Mono path[0] = 'C:/Program Files/Unity/Hub/Editor/6000.4.1f1/Editor/Data/Managed'
+Mono path[1] = 'C:/Program Files/Unity/Hub/Editor/6000.4.1f1/Editor/Data/MonoBleedingEdge/lib/mono/unityjit-win32'
+Mono config path = 'C:/Program Files/Unity/Hub/Editor/6000.4.1f1/Editor/Data/MonoBleedingEdge/etc'
+Using monoOptions --debugger-agent=transport=dt_socket,embedding=1,server=y,suspend=n,address=127.0.0.1:56360
+CodeReloadManager initialized
+Using cacheserver namespaces - metadata:defaultmetadata, artifacts:defaultartifacts
+Using cacheserver namespaces - metadata:defaultmetadata, artifacts:defaultartifacts
+ImportWorker Server TCP listen port: 0
+AcceleratorClientConnectionCallback - disconnected - :0
+Begin MonoManager ReloadAssembly
+Registering precompiled unity dll's ...
+Register platform support module: C:/Program Files/Unity/Hub/Editor/6000.4.1f1/Editor/Data/PlaybackEngines/WindowsStandaloneSupport/UnityEditor.WindowsStandalone.Extensions.dll
+Registered in 0.000897 seconds.
+Native extension for WindowsStandalone target not found
+Package Manager log level set to [2]
+ScheduleIndexationOnStartup MainProcess:False IndexOnStartup:True
+Mono: successfully reloaded assembly
+- Finished resetting the current domain, in  0.226 seconds
+Domain Reload Profiling: 473ms
+	BeginReloadAssembly (76ms)
+		CreateAndSetChildDomain (11ms)
+	RebuildCommonClasses (22ms)
+	RebuildNativeTypeToScriptingClass (8ms)
+	initialDomainReloadingComplete (32ms)
+	LoadAllAssembliesAndSetupDomain (107ms)
+		LoadAssemblies (63ms)
+		AnalyzeDomain (103ms)
+			TypeCache.Refresh (102ms)
+				TypeCache.ScanAssembly (94ms)
+	FinalizeReload (227ms)
+		SetupLoadedEditorAssemblies (0ms)
+			InitializePlatformSupportModulesInManaged (25ms)
+			BeforeProcessingInitializeOnLoad (45ms)
+			ProcessInitializeOnLoadAttributes (61ms)
+			ProcessInitializeOnLoadMethodAttributes (59ms)
+[Licensing::Client] Successfully resolved entitlement details
+Application.AssetDatabase Initial Refresh Start
+[Package Manager] Restoring resolved packages state from cache
+[Licensing::Client] Successfully resolved entitlement details
+Embedded package [com.tripo3d.unitybridge] was found in the directory [C:\Dev\Forever engine\Packages\Tripo3d_Unity_Bridge]. Please consider changing the directory name to match the package name.
+[Package Manager] Registered 83 packages:
+  Packages from [https://packages.unity.com]:
+    com.unity.ai.navigation@2.0.8 (location: C:\Dev\Forever engine\Library\PackageCache\com.unity.ai.navigation@eb5635ad590d)
+    com.unity.burst@1.8.28 (location: C:\Dev\Forever engine\Library\PackageCache\com.unity.burst@07790c2d06d9)
+    com.unity.cinemachine@3.1.6 (location: C:\Dev\Forever engine\Library\PackageCache\com.unity.cinemachine@285f38545487)
+    com.unity.collab-proxy@2.11.4 (location: C:\Dev\Forever engine\Library\PackageCache\com.unity.collab-proxy@a5329f833fa8)
+    com.unity.ide.visualstudio@2.0.27 (location: C:\Dev\Forever engine\Library\PackageCache\com.unity.ide.visualstudio@dc1ddd4f09b6)
+    com.unity.ide.vscode@1.2.5 (location: C:\Dev\Forever engine\Library\PackageCache\com.unity.ide.vscode@82e68656b7bd)
+    com.unity.inputsystem@1.19.0 (location: C:\Dev\Forever engine\Library\PackageCache\com.unity.inputsystem@21a28c3a6c83)
+    com.unity.learn.iet-framework@5.0.3 (location: C:\Dev\Forever engine\Library\PackageCache\com.unity.learn.iet-framework@ef99a8956a31)
+    com.unity.mathematics@1.3.3 (location: C:\Dev\Forever engine\Library\PackageCache\com.unity.mathematics@19a9377c4ffa)
+    com.unity.postprocessing@3.5.4 (location: C:\Dev\Forever engine\Library\PackageCache\com.unity.postprocessing@141166b789e3)
+    com.unity.recorder@5.1.5 (location: C:\Dev\Forever engine\Library\PackageCache\com.unity.recorder@544ed421bd22)
+    com.unity.timeline@1.8.11 (location: C:\Dev\Forever engine\Library\PackageCache\com.unity.timeline@bfd27f8016ff)
+    com.unity.visualscripting@1.9.11 (location: C:\Dev\Forever engine\Library\PackageCache\com.unity.visualscripting@8bed5ad90189)
+    com.unity.ai.inference@2.5.0 (location: C:\Dev\Forever engine\Library\PackageCache\com.unity.ai.inference@e760aa121ec7)
+    com.unity.bindings.openimageio@1.0.2 (location: C:\Dev\Forever engine\Library\PackageCache\com.unity.bindings.openimageio@94e2abc0bc65)
+    com.unity.editorcoroutines@1.0.1 (location: C:\Dev\Forever engine\Library\PackageCache\com.unity.editorcoroutines@54394ed3283c)
+    com.unity.settings-manager@2.1.1 (location: C:\Dev\Forever engine\Library\PackageCache\com.unity.settings-manager@0b8638c5ce86)
+    com.unity.ide.rider@3.0.40 (location: C:\Dev\Forever engine\Library\PackageCache\com.unity.ide.rider@e4950c6d131b)
+    com.unity.performance.profile-analyzer@1.3.4 (location: C:\Dev\Forever engine\Library\PackageCache\com.unity.performance.profile-analyzer@418130329099)
+    com.unity.testtools.codecoverage@1.3.0 (location: C:\Dev\Forever engine\Library\PackageCache\com.unity.testtools.codecoverage@19a841221620)
+    com.unity.nuget.mono-cecil@1.11.6 (location: C:\Dev\Forever engine\Library\PackageCache\com.unity.nuget.mono-cecil@ecb9724e46ff)
+    com.unity.profiling.core@1.0.3 (location: C:\Dev\Forever engine\Library\PackageCache\com.unity.profiling.core@8a49f7027d06)
+    com.unity.scriptablebuildpipeline@2.6.1 (location: C:\Dev\Forever engine\Library\PackageCache\com.unity.scriptablebuildpipeline@36e3b5898ee2)
+    com.unity.serialization@3.1.5 (location: C:\Dev\Forever engine\Library\PackageCache\com.unity.serialization@c463b52e88d7)
+    com.unity.test-framework.performance@3.2.0 (location: C:\Dev\Forever engine\Library\PackageCache\com.unity.test-framework.performance@0840f58e4562)
+    com.unity.splines@2.8.4 (location: C:\Dev\Forever engine\Library\PackageCache\com.unity.splines@9b00833aca09)
+    com.unity.searcher@4.9.4 (location: C:\Dev\Forever engine\Library\PackageCache\com.unity.searcher@d45a78918735)
+    com.unity.dt.app-ui@2.1.1 (location: C:\Dev\Forever engine\Library\PackageCache\com.unity.dt.app-ui@8ac7e730dd5d)
+    com.unity.nuget.newtonsoft-json@3.2.2 (location: C:\Dev\Forever engine\Library\PackageCache\com.unity.nuget.newtonsoft-json@4dfd81071c64)
+  Built-in packages:
+    com.unity.2d.sprite@1.0.0 (location: C:\Dev\Forever engine\Library\PackageCache\com.unity.2d.sprite@929df5adbb1f)
+    com.unity.2d.tilemap@1.0.0 (location: C:\Dev\Forever engine\Library\PackageCache\com.unity.2d.tilemap@c457c5249013)
+    com.unity.collections@6.4.0 (location: C:\Dev\Forever engine\Library\PackageCache\com.unity.collections@538ace9075bc)
+    com.unity.entities@6.4.0 (location: C:\Dev\Forever engine\Library\PackageCache\com.unity.entities@55bdc42e3b8d)
+    com.unity.feature.development@1.0.2 (location: C:\Dev\Forever engine\Library\PackageCache\com.unity.feature.development@767aadbc6eb7)
+    com.unity.render-pipelines.high-definition@17.4.0 (location: C:\Dev\Forever engine\Library\PackageCache\com.unity.render-pipelines.high-definition@95ab22451c74)
+    com.unity.render-pipelines.universal@17.4.0 (location: C:\Dev\Forever engine\Library\PackageCache\com.unity.render-pipelines.universal@580a03820d50)
+    com.unity.sentis@2.2.0 (location: C:\Dev\Forever engine\Library\PackageCache\com.unity.sentis@eef1e5173b44)
+    com.unity.test-framework@1.6.0 (location: C:\Dev\Forever engine\Library\PackageCache\com.unity.test-framework@76560ee600cb)
+    com.unity.ugui@2.0.0 (location: C:\Dev\Forever engine\Library\PackageCache\com.unity.ugui@d8a2716f3013)
+    com.unity.ui@2.0.0 (location: C:\Dev\Forever engine\Library\PackageCache\com.unity.ui@ccd6582d7949)
+    com.unity.visualeffectgraph@17.4.0 (location: C:\Dev\Forever engine\Library\PackageCache\com.unity.visualeffectgraph@e00a147af410)
+    com.unity.modules.adaptiveperformance@1.0.0 (location: C:\Dev\Forever engine\Library\PackageCache\com.unity.modules.adaptiveperformance)
+    com.unity.modules.ai@1.0.0 (location: C:\Dev\Forever engine\Library\PackageCache\com.unity.modules.ai)
+    com.unity.modules.androidjni@1.0.0 (location: C:\Dev\Forever engine\Library\PackageCache\com.unity.modules.androidjni)
+    com.unity.modules.animation@1.0.0 (location: C:\Dev\Forever engine\Library\PackageCache\com.unity.modules.animation)
+    com.unity.modules.assetbundle@1.0.0 (location: C:\Dev\Forever engine\Library\PackageCache\com.unity.modules.assetbundle)
+    com.unity.modules.audio@1.0.0 (location: C:\Dev\Forever engine\Library\PackageCache\com.unity.modules.audio)
+    com.unity.modules.cloth@1.0.0 (location: C:\Dev\Forever engine\Library\PackageCache\com.unity.modules.cloth)
+    com.unity.modules.director@1.0.0 (location: C:\Dev\Forever engine\Library\PackageCache\com.unity.modules.director)
+    com.unity.modules.imageconversion@1.0.0 (location: C:\Dev\Forever engine\Library\PackageCache\com.unity.modules.imageconversion)
+    com.unity.modules.imgui@1.0.0 (location: C:\Dev\Forever engine\Library\PackageCache\com.unity.modules.imgui)
+    com.unity.modules.jsonserialize@1.0.0 (location: C:\Dev\Forever engine\Library\PackageCache\com.unity.modules.jsonserialize)
+    com.unity.modules.particlesystem@1.0.0 (location: C:\Dev\Forever engine\Library\PackageCache\com.unity.modules.particlesystem)
+    com.unity.modules.physics@1.0.0 (location: C:\Dev\Forever engine\Library\PackageCache\com.unity.modules.physics)
+    com.unity.modules.physics2d@1.0.0 (location: C:\Dev\Forever engine\Library\PackageCache\com.unity.modules.physics2d)
+    com.unity.modules.screencapture@1.0.0 (location: C:\Dev\Forever engine\Library\PackageCache\com.unity.modules.screencapture)
+    com.unity.modules.terrain@1.0.0 (location: C:\Dev\Forever engine\Library\PackageCache\com.unity.modules.terrain)
+    com.unity.modules.terrainphysics@1.0.0 (location: C:\Dev\Forever engine\Library\PackageCache\com.unity.modules.terrainphysics)
+    com.unity.modules.tilemap@1.0.0 (location: C:\Dev\Forever engine\Library\PackageCache\com.unity.modules.tilemap)
+    com.unity.modules.ui@1.0.0 (location: C:\Dev\Forever engine\Library\PackageCache\com.unity.modules.ui)
+    com.unity.modules.uielements@1.0.0 (location: C:\Dev\Forever engine\Library\PackageCache\com.unity.modules.uielements)
+    com.unity.modules.umbra@1.0.0 (location: C:\Dev\Forever engine\Library\PackageCache\com.unity.modules.umbra)
+    com.unity.modules.unityanalytics@1.0.0 (location: C:\Dev\Forever engine\Library\PackageCache\com.unity.modules.unityanalytics)
+    com.unity.modules.unitywebrequest@1.0.0 (location: C:\Dev\Forever engine\Library\PackageCache\com.unity.modules.unitywebrequest)
+    com.unity.modules.unitywebrequestassetbundle@1.0.0 (location: C:\Dev\Forever engine\Library\PackageCache\com.unity.modules.unitywebrequestassetbundle)
+    com.unity.modules.unitywebrequestaudio@1.0.0 (location: C:\Dev\Forever engine\Library\PackageCache\com.unity.modules.unitywebrequestaudio)
+    com.unity.modules.unitywebrequesttexture@1.0.0 (location: C:\Dev\Forever engine\Library\PackageCache\com.unity.modules.unitywebrequesttexture)
+    com.unity.modules.unitywebrequestwww@1.0.0 (location: C:\Dev\Forever engine\Library\PackageCache\com.unity.modules.unitywebrequestwww)
+    com.unity.modules.vectorgraphics@1.0.0 (location: C:\Dev\Forever engine\Library\PackageCache\com.unity.modules.vectorgraphics)
+    com.unity.modules.vehicles@1.0.0 (location: C:\Dev\Forever engine\Library\PackageCache\com.unity.modules.vehicles)
+    com.unity.modules.video@1.0.0 (location: C:\Dev\Forever engine\Library\PackageCache\com.unity.modules.video)
+    com.unity.modules.vr@1.0.0 (location: C:\Dev\Forever engine\Library\PackageCache\com.unity.modules.vr)
+    com.unity.modules.wind@1.0.0 (location: C:\Dev\Forever engine\Library\PackageCache\com.unity.modules.wind)
+    com.unity.modules.xr@1.0.0 (location: C:\Dev\Forever engine\Library\PackageCache\com.unity.modules.xr)
+    com.unity.render-pipelines.core@17.4.0 (location: C:\Dev\Forever engine\Library\PackageCache\com.unity.render-pipelines.core@e6c93b445dd3)
+    com.unity.shadergraph@17.4.0 (location: C:\Dev\Forever engine\Library\PackageCache\com.unity.shadergraph@6ab0d236faac)
+    com.unity.modules.subsystems@1.0.0 (location: C:\Dev\Forever engine\Library\PackageCache\com.unity.modules.subsystems)
+    com.unity.modules.hierarchycore@1.0.0 (location: C:\Dev\Forever engine\Library\PackageCache\com.unity.modules.hierarchycore)
+    com.unity.ext.nunit@2.0.5 (location: C:\Dev\Forever engine\Library\PackageCache\com.unity.ext.nunit@d8c07649098d)
+    com.unity.render-pipelines.universal-config@17.4.0 (location: C:\Dev\Forever engine\Library\PackageCache\com.unity.render-pipelines.universal-config@0db4263b9e6b)
+    com.unity.render-pipelines.high-definition-config@17.4.0 (location: C:\Dev\Forever engine\Library\PackageCache\com.unity.render-pipelines.high-definition-config@f2a20abb2a1c)
+  Embedded packages:
+    com.tripo3d.unitybridge@file:C:\Dev\Forever engine\Packages\Tripo3d_Unity_Bridge (location: C:\Dev\Forever engine\Packages\Tripo3d_Unity_Bridge)
+    com.waveharmonic.crest@file:C:\Dev\Forever engine\Packages\com.waveharmonic.crest (location: C:\Dev\Forever engine\Packages\com.waveharmonic.crest)
+[Package Manager] com.unity.ide.vscode is deprecated: Visual Studio Code package is not supported anymore. You can continue to use it, but we won't provide any update anymore.
+[Subsystems] No new subsystems found in resolved package list.
+[Package Manager] Done registering packages in 0.01 seconds
+Assembly reference Packages/com.unity.entities/Unity.Scenes.Editor/Internals/Properties/Unity.Properties.Internals.asmref has no target assembly definition
+Assembly reference Packages/com.unity.entities/Unity.Scenes.Editor/Internals/Properties/Unity.Properties.Internals.asmref has no target assembly definition
+[ScriptCompilation] Requested script compilation because: AssetDatabase observed changes in script compilation related files
+info: Microsoft.Hosting.Lifetime[14]
+      Now listening on: http://localhost:80
+info: Microsoft.Hosting.Lifetime[0]
+      Application started. Press Ctrl+C to shut down.
+info: Microsoft.Hosting.Lifetime[0]
+      Hosting environment: Production
+info: Microsoft.Hosting.Lifetime[0]
+      Content root path: C:\Dev\Forever engine
+info: Microsoft.AspNetCore.Hosting.Diagnostics[1]
+      Request starting HTTP/2 POST http://ilpp/UnityILPP.PostProcessing/Ping - application/grpc -
+info: Microsoft.AspNetCore.Routing.EndpointMiddleware[0]
+      Executing endpoint 'gRPC - /UnityILPP.PostProcessing/Ping'
+info: Microsoft.AspNetCore.Routing.EndpointMiddleware[1]
+      Executed endpoint 'gRPC - /UnityILPP.PostProcessing/Ping'
+info: Microsoft.AspNetCore.Hosting.Diagnostics[2]
+      Request finished HTTP/2 POST http://ilpp/UnityILPP.PostProcessing/Ping - 200 - application/grpc 18.2890ms
+Starting: C:\Program Files\Unity\Hub\Editor\6000.4.1f1\Editor\Data\Tools\BuildPipeline\bee_backend.exe --ipc --defer-dag-verification --dagfile="Library/Bee/1900b0aE.dag" --continue-on-failure --profile="Library/Bee/backend1.traceevents" ScriptAssemblies
+WorkingDir: C:/Dev/Forever engine
+info: Microsoft.AspNetCore.Hosting.Diagnostics[1]
+      Request starting HTTP/2 POST http://ilpp/UnityILPP.PostProcessing/ConfigurePostProcessors - application/grpc -
+info: Microsoft.AspNetCore.Routing.EndpointMiddleware[0]
+      Executing endpoint 'gRPC - /UnityILPP.PostProcessing/ConfigurePostProcessors'
+warn: Unity.ILPP.Runner.PostProcessingAssemblyLoadContext[0]
+      Assembly system.runtime.interopservices.windowsruntime has duplicate hint path. Ignoring "C:\Program Files\Unity\Hub\Editor\6000.4.1f1\Editor\Data\UnityReferenceAssemblies\unity-4.8-api\Facades\System.Runtime.InteropServices.WindowsRuntime.dll" in favor of "C:\Program Files\Unity\Hub\Editor\6000.4.1f1\Editor\Data\NetStandard\Extensions\2.0.0\System.Runtime.InteropServices.WindowsRuntime.dll"
+warn: Unity.ILPP.Runner.PostProcessingAssemblyLoadContext[0]
+      Assembly system.componentmodel.composition has duplicate hint path. Ignoring "C:\Program Files\Unity\Hub\Editor\6000.4.1f1\Editor\Data\UnityReferenceAssemblies\unity-4.8-api\System.ComponentModel.Composition.dll" in favor of "C:\Program Files\Unity\Hub\Editor\6000.4.1f1\Editor\Data\NetStandard\compat\2.1.0\shims\netfx\System.ComponentModel.Composition.dll"
+info: Unity.ILPP.Runner.PostProcessingAssemblyLoadContext[0]
+      Resolved Unity.Burst.Cecil, Version=0.11.4.0, Culture=neutral, PublicKeyToken=50cebf1cceb9d05e with Library\PackageCache\com.unity.burst@07790c2d06d9\Unity.Burst.CodeGen\Unity.Burst.Cecil.dll
+info: Unity.ILPP.Runner.PostProcessingAssemblyLoadContext[0]
+      Resolved Mono.Cecil, Version=0.11.5.0, Culture=neutral, PublicKeyToken=50cebf1cceb9d05e with Library\PackageCache\com.unity.nuget.mono-cecil@ecb9724e46ff\Mono.Cecil.dll
+info: Unity.ILPP.Runner.PostProcessingAssemblyLoadContext[0]
+      Resolved Unity.Entities, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null with Library\Bee\artifacts\1900b0aE.dag\Unity.Entities.dll
+info: Microsoft.AspNetCore.Routing.EndpointMiddleware[1]
+      Executed endpoint 'gRPC - /UnityILPP.PostProcessing/ConfigurePostProcessors'
+info: Microsoft.AspNetCore.Hosting.Diagnostics[2]
+      Request finished HTTP/2 POST http://ilpp/UnityILPP.PostProcessing/ConfigurePostProcessors - 200 - application/grpc 40.1418ms
+DisplayProgressbar: Compiling Scripts
+info: Microsoft.AspNetCore.Hosting.Diagnostics[1]
+      Request starting HTTP/2 POST http://ilpp/UnityILPP.PostProcessing/PostProcessAssembly - application/grpc -
+info: Microsoft.AspNetCore.Routing.EndpointMiddleware[0]
+      Executing endpoint 'gRPC - /UnityILPP.PostProcessing/PostProcessAssembly'
+info: Unity.ILPP.Runner.PostProcessingPipeline[0]
+      Processing assembly Library/Bee/artifacts/1900b0aE.dag/Assembly-CSharp-Editor.dll, with 147 defines and 436 references
+info: Unity.ILPP.Runner.PostProcessingPipeline[0]
+      processors: Unity.Entities.CodeGen.EntitiesILPostProcessors, Unity.Jobs.CodeGen.JobsILPostProcessor, zzzUnity.Burst.CodeGen.BurstILPostProcessor
+info: Unity.ILPP.Runner.PostProcessingPipeline[0]
+      running Unity.Entities.CodeGen.EntitiesILPostProcessors
+info: Unity.ILPP.Runner.PostProcessingAssemblyLoadContext[0]
+      Resolved Mono.Cecil.Rocks, Version=0.11.5.0, Culture=neutral, PublicKeyToken=50cebf1cceb9d05e with Library\PackageCache\com.unity.nuget.mono-cecil@ecb9724e46ff\Mono.Cecil.Rocks.dll
+info: Unity.ILPP.Runner.PostProcessingAssemblyLoadContext[0]
+      Resolved UnityEngine.CoreModule, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null with C:\Program Files\Unity\Hub\Editor\6000.4.1f1\Editor\Data\Managed\UnityEngine\UnityEngine.CoreModule.dll
+info: Unity.ILPP.Runner.PostProcessingAssemblyLoadContext[0]
+      Resolved Unity.Collections, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null with Library\Bee\artifacts\1900b0aE.dag\Unity.Collections.dll
+info: Unity.ILPP.Runner.PostProcessingAssemblyLoadContext[0]
+      Resolved Unity.Burst, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null with Library\Bee\artifacts\1900b0aE.dag\Unity.Burst.dll
+info: Unity.ILPP.Runner.PostProcessingAssemblyLoadContext[0]
+      Resolved Unity.Cecil.Awesome, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null with Library\PackageCache\com.unity.entities@55bdc42e3b8d\Unity.Entities.CodeGen\Unity.Cecil.Awesome.dll
+  - EILPP : Assembly-CSharp-Editor : : 346ms (~159ms)
+    - EILPP : Assembly-CSharp-Editor : GetAllComponentTypes: 8ms 
+    - EILPP : Assembly-CSharp-Editor : Cloner: 1ms 
+    - EILPP : Assembly-CSharp-Editor : ComponentDataPP: 14ms 
+    - EILPP : Assembly-CSharp-Editor : StaticTypeRegistryPostProcessor: 49ms 
+    - EILPP : Assembly-CSharp-Editor : WriteAssembly: 115ms 
+info: Unity.ILPP.Runner.PostProcessingPipeline[0]
+      running Unity.Jobs.CodeGen.JobsILPostProcessor
+info: Unity.ILPP.Runner.PostProcessingAssemblyLoadContext[0]
+      Resolved UnityEditor.CoreModule, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null with C:\Program Files\Unity\Hub\Editor\6000.4.1f1\Editor\Data\Managed\UnityEngine\UnityEditor.CoreModule.dll
+info: Unity.ILPP.Runner.PostProcessingPipeline[0]
+      running zzzUnity.Burst.CodeGen.BurstILPostProcessor
+info: Unity.ILPP.Runner.PostProcessingAssemblyLoadContext[0]
+      Resolved Unity.Burst.Cecil.Rocks, Version=0.11.4.0, Culture=neutral, PublicKeyToken=50cebf1cceb9d05e with Library\PackageCache\com.unity.burst@07790c2d06d9\Unity.Burst.CodeGen\Unity.Burst.Cecil.Rocks.dll
+info: Microsoft.AspNetCore.Routing.EndpointMiddleware[1]
+      Executed endpoint 'gRPC - /UnityILPP.PostProcessing/PostProcessAssembly'
+info: Microsoft.AspNetCore.Hosting.Diagnostics[2]
+      Request finished HTTP/2 POST http://ilpp/UnityILPP.PostProcessing/PostProcessAssembly - 200 - application/grpc 507.2412ms
+ExitCode: 0 Duration: 3s717ms
+[1479/1967  0s] ILPP-Configuration Library/ilpp-configuration.nevergeneratedoutput
+[1963/1967  2s] Csc Library/Bee/artifacts/1900b0aE.dag/Assembly-CSharp-Editor.dll (+2 others)
+Assets\Magic Pig Games (Infinity PBR)\Editor\InfinitySoEditor.cs(7,29): warning CS0108: 'InfinitySoEditor<T>.inactive' hides inherited member 'InfinityEditor.inactive'. Use the new keyword if hiding was intended.
+
+Assets\Magic Pig Games (Infinity PBR)\Editor\InfinitySoEditor.cs(8,29): warning CS0108: 'InfinitySoEditor<T>.active' hides inherited member 'InfinityEditor.active'. Use the new keyword if hiding was intended.
+
+Assets\Magic Pig Games (Infinity PBR)\Editor\InfinitySoEditor.cs(9,29): warning CS0108: 'InfinitySoEditor<T>.active2' hides inherited member 'InfinityEditor.active2'. Use the new keyword if hiding was intended.
+
+Assets\Magic Pig Games (Infinity PBR)\Editor\InfinitySoEditor.cs(10,29): warning CS0108: 'InfinitySoEditor<T>.dark' hides inherited member 'InfinityEditor.dark'. Use the new keyword if hiding was intended.
+
+Assets\Magic Pig Games (Infinity PBR)\Editor\InfinitySoEditor.cs(11,29): warning CS0108: 'InfinitySoEditor<T>.mixed' hides inherited member 'InfinityEditor.mixed'. Use the new keyword if hiding was intended.
+
+Assets\Magic Pig Games (Infinity PBR)\Editor\InfinitySoEditor.cs(12,29): warning CS0108: 'InfinitySoEditor<T>.red' hides inherited member 'InfinityEditor.red'. Use the new keyword if hiding was intended.
+
+Assets\Magic Pig Games (Infinity PBR)\Editor\InfinitySoEditor.cs(13,29): warning CS0108: 'InfinitySoEditor<T>.blue' hides inherited member 'InfinityEditor.blue'. Use the new keyword if hiding was intended.
+
+Assets\Magic Pig Games (Infinity PBR)\Equipment System\Editor\BlendShapesManagerEditor.cs(731,24): warning CS0108: 'BlendShapesManagerEditor.symbolInfo' hides inherited member 'InfinityEditor.symbolInfo'. Use the new keyword if hiding was intended.
+
+Assets\Magic Pig Games (Infinity PBR)\Equipment System\Editor\BlendShapesManagerEditor.cs(732,24): warning CS0108: 'BlendShapesManagerEditor.symbolX' hides inherited member 'InfinityEditor.symbolX'. Use the new keyword if hiding was intended.
+
+Assets\Magic Pig Games (Infinity PBR)\Equipment System\Editor\BlendShapesManagerEditor.cs(733,24): warning CS0108: 'BlendShapesManagerEditor.symbolCheck' hides inherited member 'InfinityEditor.symbolCheck'. Use the new keyword if hiding was intended.
+
+Assets\Magic Pig Games (Infinity PBR)\Equipment System\Editor\BlendShapesManagerEditor.cs(734,24): warning CS0108: 'BlendShapesManagerEditor.symbolCheckSquare' hides inherited member 'InfinityEditor.symbolCheckSquare'. Use the new keyword if hiding was intended.
+
+Assets\Magic Pig Games (Infinity PBR)\Equipment System\Editor\BlendShapesManagerEditor.cs(735,24): warning CS0108: 'BlendShapesManagerEditor.symbolDollar' hides inherited member 'InfinityEditor.symbolDollar'. Use the new keyword if hiding was intended.
+
+Assets\Magic Pig Games (Infinity PBR)\Equipment System\Editor\BlendShapesManagerEditor.cs(736,24): warning CS0108: 'BlendShapesManagerEditor.symbolCent' hides inherited member 'InfinityEditor.symbolCent'. Use the new keyword if hiding was intended.
+
+Assets\Magic Pig Games (Infinity PBR)\Equipment System\Editor\BlendShapesManagerEditor.cs(737,24): warning CS0108: 'BlendShapesManagerEditor.symbolCarrotRight' hides inherited member 'InfinityEditor.symbolCarrotRight'. Use the new keyword if hiding was intended.
+
+Assets\Magic Pig Games (Infinity PBR)\Equipment System\Editor\BlendShapesManagerEditor.cs(738,24): warning CS0108: 'BlendShapesManagerEditor.symbolCarrotLeft' hides inherited member 'InfinityEditor.symbolCarrotLeft'. Use the new keyword if hiding was intended.
+
+Assets\Magic Pig Games (Infinity PBR)\Equipment System\Editor\BlendShapesManagerEditor.cs(739,24): warning CS0108: 'BlendShapesManagerEditor.symbolCarrotUp' hides inherited member 'InfinityEditor.symbolCarrotUp'. Use the new keyword if hiding was intended.
+
+Assets\Magic Pig Games (Infinity PBR)\Equipment System\Editor\BlendShapesManagerEditor.cs(740,24): warning CS0108: 'BlendShapesManagerEditor.symbolCarrotDown' hides inherited member 'InfinityEditor.symbolCarrotDown'. Use the new keyword if hiding was intended.
+
+Assets\Magic Pig Games (Infinity PBR)\Equipment System\Editor\BlendShapesManagerEditor.cs(741,24): warning CS0108: 'BlendShapesManagerEditor.symbolDash' hides inherited member 'InfinityEditor.symbolDash'. Use the new keyword if hiding was intended.
+
+Assets\Magic Pig Games (Infinity PBR)\Equipment System\Editor\BlendShapesManagerEditor.cs(742,24): warning CS0108: 'BlendShapesManagerEditor.symbolBulletClosed' hides inherited member 'InfinityEditor.symbolBulletClosed'. Use the new keyword if hiding was intended.
+
+Assets\Magic Pig Games (Infinity PBR)\Equipment System\Editor\BlendShapesManagerEditor.cs(743,24): warning CS0108: 'BlendShapesManagerEditor.symbolBulletOpen' hides inherited member 'InfinityEditor.symbolBulletOpen'. Use the new keyword if hiding was intended.
+
+Assets\Magic Pig Games (Infinity PBR)\Equipment System\Editor\EquipmentSystemStatic.cs(122,13): warning CS0162: Unreachable code detected
+
+Assets\Magic Pig Games (Infinity PBR)\Equipment System\Editor\BlendShapesManagerEditor.cs(733,24): warning CS0414: The field 'BlendShapesManagerEditor.symbolCheck' is assigned but its value is never used
+
+Assets\Magic Pig Games (Infinity PBR)\Equipment System\Editor\BlendShapesManagerEditor.cs(742,24): warning CS0414: The field 'BlendShapesManagerEditor.symbolBulletClosed' is assigned but its value is never used
+
+Assets\Magic Pig Games (Infinity PBR)\Equipment System\Editor\BlendShapesManagerEditor.cs(737,24): warning CS0414: The field 'BlendShapesManagerEditor.symbolCarrotRight' is assigned but its value is never used
+
+Assets\Magic Pig Games (Infinity PBR)\Equipment System\Editor\BlendShapesManagerEditor.cs(740,24): warning CS0414: The field 'BlendShapesManagerEditor.symbolCarrotDown' is assigned but its value is never used
+
+Assets\Magic Pig Games (Infinity PBR)\Equipment System\Editor\BlendShapesManagerEditor.cs(732,24): warning CS0414: The field 'BlendShapesManagerEditor.symbolX' is assigned but its value is never used
+
+Assets\Magic Pig Games (Infinity PBR)\Equipment System\Editor\BlendShapesManagerEditor.cs(734,24): warning CS0414: The field 'BlendShapesManagerEditor.symbolCheckSquare' is assigned but its value is never used
+
+Assets\Magic Pig Games (Infinity PBR)\Equipment System\Editor\BlendShapesManagerEditor.cs(735,24): warning CS0414: The field 'BlendShapesManagerEditor.symbolDollar' is assigned but its value is never used
+
+Assets\Magic Pig Games (Infinity PBR)\Equipment System\Editor\WardrobePrefabManagerEditor.cs(33,22): warning CS0414: The field 'WardrobePrefabManagerEditor._initialCheck' is assigned but its value is never used
+
+Assets\Magic Pig Games (Infinity PBR)\Equipment System\Editor\BlendShapesManagerEditor.cs(736,24): warning CS0414: The field 'BlendShapesManagerEditor.symbolCent' is assigned but its value is never used
+
+Assets\Magic Pig Games (Infinity PBR)\Equipment System\Editor\BlendShapesManagerEditor.cs(738,24): warning CS0414: The field 'BlendShapesManagerEditor.symbolCarrotLeft' is assigned but its value is never used
+
+Assets\Magic Pig Games (Infinity PBR)\Equipment System\Editor\BlendShapesManagerEditor.cs(741,24): warning CS0414: The field 'BlendShapesManagerEditor.symbolDash' is assigned but its value is never used
+
+Assets\Magic Pig Games (Infinity PBR)\Equipment System\Editor\BlendShapesManagerEditor.cs(743,24): warning CS0414: The field 'BlendShapesManagerEditor.symbolBulletOpen' is assigned but its value is never used
+
+Assets\Magic Pig Games (Infinity PBR)\Equipment System\Editor\BlendShapesManagerEditor.cs(739,24): warning CS0414: The field 'BlendShapesManagerEditor.symbolCarrotUp' is assigned but its value is never used
+
+Assets\Magic Pig Games (Infinity PBR)\Equipment System\Editor\EquipmentObjectEditor.cs(15,21): warning CS0414: The field 'EquipmentObjectEditor._wardrobePrefabManagerIndex' is assigned but its value is never used
+[1964/1967  0s] ILPostProcess Library/Bee/artifacts/1900b0aE.dag/post-processed/Assembly-CSharp-Editor.dll (+pdb)
+Processing assembly Library/Bee/artifacts/1900b0aE.dag/Assembly-CSharp-Editor.dll, with 147 defines and 436 references
+
+processors: Unity.Entities.CodeGen.EntitiesILPostProcessors, Unity.Jobs.CodeGen.JobsILPostProcessor, zzzUnity.Burst.CodeGen.BurstILPostProcessor
+
+running Unity.Entities.CodeGen.EntitiesILPostProcessors
+
+running Unity.Jobs.CodeGen.JobsILPostProcessor
+
+running zzzUnity.Burst.CodeGen.BurstILPostProcessor
+[1965/1967  0s] CopyFiles Library/ScriptAssemblies/Assembly-CSharp-Editor.pdb
+[1966/1967  0s] CopyFiles Library/ScriptAssemblies/Assembly-CSharp-Editor.dll
+*** Tundra build success (3.69 seconds), 5 items updated, 1967 evaluated
+Assets\Magic Pig Games (Infinity PBR)\Editor\InfinitySoEditor.cs(7,29): warning CS0108: 'InfinitySoEditor<T>.inactive' hides inherited member 'InfinityEditor.inactive'. Use the new keyword if hiding was intended.
+Assets\Magic Pig Games (Infinity PBR)\Editor\InfinitySoEditor.cs(8,29): warning CS0108: 'InfinitySoEditor<T>.active' hides inherited member 'InfinityEditor.active'. Use the new keyword if hiding was intended.
+Assets\Magic Pig Games (Infinity PBR)\Editor\InfinitySoEditor.cs(9,29): warning CS0108: 'InfinitySoEditor<T>.active2' hides inherited member 'InfinityEditor.active2'. Use the new keyword if hiding was intended.
+Assets\Magic Pig Games (Infinity PBR)\Editor\InfinitySoEditor.cs(10,29): warning CS0108: 'InfinitySoEditor<T>.dark' hides inherited member 'InfinityEditor.dark'. Use the new keyword if hiding was intended.
+Assets\Magic Pig Games (Infinity PBR)\Editor\InfinitySoEditor.cs(11,29): warning CS0108: 'InfinitySoEditor<T>.mixed' hides inherited member 'InfinityEditor.mixed'. Use the new keyword if hiding was intended.
+Assets\Magic Pig Games (Infinity PBR)\Editor\InfinitySoEditor.cs(12,29): warning CS0108: 'InfinitySoEditor<T>.red' hides inherited member 'InfinityEditor.red'. Use the new keyword if hiding was intended.
+Assets\Magic Pig Games (Infinity PBR)\Editor\InfinitySoEditor.cs(13,29): warning CS0108: 'InfinitySoEditor<T>.blue' hides inherited member 'InfinityEditor.blue'. Use the new keyword if hiding was intended.
+Assets\Magic Pig Games (Infinity PBR)\Equipment System\Editor\BlendShapesManagerEditor.cs(731,24): warning CS0108: 'BlendShapesManagerEditor.symbolInfo' hides inherited member 'InfinityEditor.symbolInfo'. Use the new keyword if hiding was intended.
+Assets\Magic Pig Games (Infinity PBR)\Equipment System\Editor\BlendShapesManagerEditor.cs(732,24): warning CS0108: 'BlendShapesManagerEditor.symbolX' hides inherited member 'InfinityEditor.symbolX'. Use the new keyword if hiding was intended.
+Assets\Magic Pig Games (Infinity PBR)\Equipment System\Editor\BlendShapesManagerEditor.cs(733,24): warning CS0108: 'BlendShapesManagerEditor.symbolCheck' hides inherited member 'InfinityEditor.symbolCheck'. Use the new keyword if hiding was intended.
+Assets\Magic Pig Games (Infinity PBR)\Equipment System\Editor\BlendShapesManagerEditor.cs(734,24): warning CS0108: 'BlendShapesManagerEditor.symbolCheckSquare' hides inherited member 'InfinityEditor.symbolCheckSquare'. Use the new keyword if hiding was intended.
+Assets\Magic Pig Games (Infinity PBR)\Equipment System\Editor\BlendShapesManagerEditor.cs(735,24): warning CS0108: 'BlendShapesManagerEditor.symbolDollar' hides inherited member 'InfinityEditor.symbolDollar'. Use the new keyword if hiding was intended.
+Assets\Magic Pig Games (Infinity PBR)\Equipment System\Editor\BlendShapesManagerEditor.cs(736,24): warning CS0108: 'BlendShapesManagerEditor.symbolCent' hides inherited member 'InfinityEditor.symbolCent'. Use the new keyword if hiding was intended.
+Assets\Magic Pig Games (Infinity PBR)\Equipment System\Editor\BlendShapesManagerEditor.cs(737,24): warning CS0108: 'BlendShapesManagerEditor.symbolCarrotRight' hides inherited member 'InfinityEditor.symbolCarrotRight'. Use the new keyword if hiding was intended.
+Assets\Magic Pig Games (Infinity PBR)\Equipment System\Editor\BlendShapesManagerEditor.cs(738,24): warning CS0108: 'BlendShapesManagerEditor.symbolCarrotLeft' hides inherited member 'InfinityEditor.symbolCarrotLeft'. Use the new keyword if hiding was intended.
+Assets\Magic Pig Games (Infinity PBR)\Equipment System\Editor\BlendShapesManagerEditor.cs(739,24): warning CS0108: 'BlendShapesManagerEditor.symbolCarrotUp' hides inherited member 'InfinityEditor.symbolCarrotUp'. Use the new keyword if hiding was intended.
+Assets\Magic Pig Games (Infinity PBR)\Equipment System\Editor\BlendShapesManagerEditor.cs(740,24): warning CS0108: 'BlendShapesManagerEditor.symbolCarrotDown' hides inherited member 'InfinityEditor.symbolCarrotDown'. Use the new keyword if hiding was intended.
+Assets\Magic Pig Games (Infinity PBR)\Equipment System\Editor\BlendShapesManagerEditor.cs(741,24): warning CS0108: 'BlendShapesManagerEditor.symbolDash' hides inherited member 'InfinityEditor.symbolDash'. Use the new keyword if hiding was intended.
+Assets\Magic Pig Games (Infinity PBR)\Equipment System\Editor\BlendShapesManagerEditor.cs(742,24): warning CS0108: 'BlendShapesManagerEditor.symbolBulletClosed' hides inherited member 'InfinityEditor.symbolBulletClosed'. Use the new keyword if hiding was intended.
+Assets\Magic Pig Games (Infinity PBR)\Equipment System\Editor\BlendShapesManagerEditor.cs(743,24): warning CS0108: 'BlendShapesManagerEditor.symbolBulletOpen' hides inherited member 'InfinityEditor.symbolBulletOpen'. Use the new keyword if hiding was intended.
+Assets\Magic Pig Games (Infinity PBR)\Equipment System\Editor\EquipmentSystemStatic.cs(122,13): warning CS0162: Unreachable code detected
+Assets\Magic Pig Games (Infinity PBR)\Equipment System\Editor\BlendShapesManagerEditor.cs(733,24): warning CS0414: The field 'BlendShapesManagerEditor.symbolCheck' is assigned but its value is never used
+Assets\Magic Pig Games (Infinity PBR)\Equipment System\Editor\BlendShapesManagerEditor.cs(742,24): warning CS0414: The field 'BlendShapesManagerEditor.symbolBulletClosed' is assigned but its value is never used
+Assets\Magic Pig Games (Infinity PBR)\Equipment System\Editor\BlendShapesManagerEditor.cs(737,24): warning CS0414: The field 'BlendShapesManagerEditor.symbolCarrotRight' is assigned but its value is never used
+Assets\Magic Pig Games (Infinity PBR)\Equipment System\Editor\BlendShapesManagerEditor.cs(740,24): warning CS0414: The field 'BlendShapesManagerEditor.symbolCarrotDown' is assigned but its value is never used
+Assets\Magic Pig Games (Infinity PBR)\Equipment System\Editor\BlendShapesManagerEditor.cs(732,24): warning CS0414: The field 'BlendShapesManagerEditor.symbolX' is assigned but its value is never used
+Assets\Magic Pig Games (Infinity PBR)\Equipment System\Editor\BlendShapesManagerEditor.cs(734,24): warning CS0414: The field 'BlendShapesManagerEditor.symbolCheckSquare' is assigned but its value is never used
+Assets\Magic Pig Games (Infinity PBR)\Equipment System\Editor\BlendShapesManagerEditor.cs(735,24): warning CS0414: The field 'BlendShapesManagerEditor.symbolDollar' is assigned but its value is never used
+Assets\Magic Pig Games (Infinity PBR)\Equipment System\Editor\WardrobePrefabManagerEditor.cs(33,22): warning CS0414: The field 'WardrobePrefabManagerEditor._initialCheck' is assigned but its value is never used
+Assets\Magic Pig Games (Infinity PBR)\Equipment System\Editor\BlendShapesManagerEditor.cs(736,24): warning CS0414: The field 'BlendShapesManagerEditor.symbolCent' is assigned but its value is never used
+Assets\Magic Pig Games (Infinity PBR)\Equipment System\Editor\BlendShapesManagerEditor.cs(738,24): warning CS0414: The field 'BlendShapesManagerEditor.symbolCarrotLeft' is assigned but its value is never used
+Assets\Magic Pig Games (Infinity PBR)\Equipment System\Editor\BlendShapesManagerEditor.cs(741,24): warning CS0414: The field 'BlendShapesManagerEditor.symbolDash' is assigned but its value is never used
+Assets\Magic Pig Games (Infinity PBR)\Equipment System\Editor\BlendShapesManagerEditor.cs(743,24): warning CS0414: The field 'BlendShapesManagerEditor.symbolBulletOpen' is assigned but its value is never used
+Assets\Magic Pig Games (Infinity PBR)\Equipment System\Editor\BlendShapesManagerEditor.cs(739,24): warning CS0414: The field 'BlendShapesManagerEditor.symbolCarrotUp' is assigned but its value is never used
+Assets\Magic Pig Games (Infinity PBR)\Equipment System\Editor\EquipmentObjectEditor.cs(15,21): warning CS0414: The field 'EquipmentObjectEditor._wardrobePrefabManagerIndex' is assigned but its value is never used
+AssetDatabase: script compilation time: 4.011891s
+Begin MonoManager ReloadAssembly
+Assembly Assembly-CSharp-Editor-firstpass.dll at Library/ScriptAssemblies/Assembly-CSharp-Editor-firstpass.dll not valid. Loading of assembly skipped.
+Assembly Assembly-CSharp-firstpass.dll at Library/ScriptAssemblies/Assembly-CSharp-firstpass.dll not valid. Loading of assembly skipped.
+Assembly DocCodeExamples.dll at Library/ScriptAssemblies/DocCodeExamples.dll not valid. Loading of assembly skipped.
+Assembly DocCodeSamples.dll at Library/ScriptAssemblies/DocCodeSamples.dll not valid. Loading of assembly skipped.
+Assembly MockTests.dll at Library/ScriptAssemblies/MockTests.dll not valid. Loading of assembly skipped.
+Assembly TestNewCustomAssembly.dll at Library/ScriptAssemblies/TestNewCustomAssembly.dll not valid. Loading of assembly skipped.
+Assembly TypeDependencyCacheTestAssembly.dll at Library/ScriptAssemblies/TypeDependencyCacheTestAssembly.dll not valid. Loading of assembly skipped.
+Assembly Unity.2D.Sprite.Package.EditorTests.dll at Library/ScriptAssemblies/Unity.2D.Sprite.Package.EditorTests.dll not valid. Loading of assembly skipped.
+Assembly Unity.2D.Tilemap.Package.EditorTests.dll at Library/ScriptAssemblies/Unity.2D.Tilemap.Package.EditorTests.dll not valid. Loading of assembly skipped.
+Assembly Unity.AI.Navigation.Editor.Tests.dll at Library/ScriptAssemblies/Unity.AI.Navigation.Editor.Tests.dll not valid. Loading of assembly skipped.
+Assembly Unity.AI.Navigation.LegacyOffMeshLink.Tests.dll at Library/ScriptAssemblies/Unity.AI.Navigation.LegacyOffMeshLink.Tests.dll not valid. Loading of assembly skipped.
+Assembly Unity.AI.Navigation.Tests.dll at Library/ScriptAssemblies/Unity.AI.Navigation.Tests.dll not valid. Loading of assembly skipped.
+Assembly Unity.AI.Navigation.Tests.EditorInPlaymode.dll at Library/ScriptAssemblies/Unity.AI.Navigation.Tests.EditorInPlaymode.dll not valid. Loading of assembly skipped.
+Assembly Unity.AppUI.Editor.Tests.dll at Library/ScriptAssemblies/Unity.AppUI.Editor.Tests.dll not valid. Loading of assembly skipped.
+Assembly Unity.AppUI.Tests.dll at Library/ScriptAssemblies/Unity.AppUI.Tests.dll not valid. Loading of assembly skipped.
+Assembly Unity.Burst.Tests.dll at Library/ScriptAssemblies/Unity.Burst.Tests.dll not valid. Loading of assembly skipped.
+Assembly Unity.Collections.BurstCompatibilityGen.dll at Library/ScriptAssemblies/Unity.Collections.BurstCompatibilityGen.dll not valid. Loading of assembly skipped.
+Assembly Unity.Collections.DocCodeSamples.dll at Library/ScriptAssemblies/Unity.Collections.DocCodeSamples.dll not valid. Loading of assembly skipped.
+Assembly Unity.Collections.PerformanceTests.dll at Library/ScriptAssemblies/Unity.Collections.PerformanceTests.dll not valid. Loading of assembly skipped.
+Assembly Unity.Collections.Tests.dll at Library/ScriptAssemblies/Unity.Collections.Tests.dll not valid. Loading of assembly skipped.
+Assembly Unity.Collections.Tests.Playmode.dll at Library/ScriptAssemblies/Unity.Collections.Tests.Playmode.dll not valid. Loading of assembly skipped.
+Assembly Unity.Entities.CodeGen.Tests.dll at Library/ScriptAssemblies/Unity.Entities.CodeGen.Tests.dll not valid. Loading of assembly skipped.
+Assembly Unity.Entities.ContentDelivery.Tests.dll at Library/ScriptAssemblies/Unity.Entities.ContentDelivery.Tests.dll not valid. Loading of assembly skipped.
+Assembly Unity.Entities.Editor.PerformanceTests.dll at Library/ScriptAssemblies/Unity.Entities.Editor.PerformanceTests.dll not valid. Loading of assembly skipped.
+Assembly Unity.Entities.Editor.Tests.dll at Library/ScriptAssemblies/Unity.Entities.Editor.Tests.dll not valid. Loading of assembly skipped.
+Assembly Unity.Entities.Hybrid.EndToEnd.Tests.dll at Library/ScriptAssemblies/Unity.Entities.Hybrid.EndToEnd.Tests.dll not valid. Loading of assembly skipped.
+Assembly Unity.Entities.Hybrid.PerformanceTests.dll at Library/ScriptAssemblies/Unity.Entities.Hybrid.PerformanceTests.dll not valid. Loading of assembly skipped.
+Assembly Unity.Entities.Hybrid.Tests.dll at Library/ScriptAssemblies/Unity.Entities.Hybrid.Tests.dll not valid. Loading of assembly skipped.
+Assembly Unity.Entities.Hybrid.Tests.ExcludedAssembly.dll at Library/ScriptAssemblies/Unity.Entities.Hybrid.Tests.ExcludedAssembly.dll not valid. Loading of assembly skipped.
+Assembly Unity.Entities.Hybrid.Tests.SeparateAssembly.dll at Library/ScriptAssemblies/Unity.Entities.Hybrid.Tests.SeparateAssembly.dll not valid. Loading of assembly skipped.
+Assembly Unity.Entities.PerformanceTests.dll at Library/ScriptAssemblies/Unity.Entities.PerformanceTests.dll not valid. Loading of assembly skipped.
+Assembly Unity.Entities.TestComponents.dll at Library/ScriptAssemblies/Unity.Entities.TestComponents.dll not valid. Loading of assembly skipped.
+Assembly Unity.Entities.Tests.dll at Library/ScriptAssemblies/Unity.Entities.Tests.dll not valid. Loading of assembly skipped.
+Assembly Unity.Entities.Tests.InAnotherAssembly.dll at Library/ScriptAssemblies/Unity.Entities.Tests.InAnotherAssembly.dll not valid. Loading of assembly skipped.
+Assembly Unity.Entities.Tests.InAnotherEmptyAssembly.dll at Library/ScriptAssemblies/Unity.Entities.Tests.InAnotherEmptyAssembly.dll not valid. Loading of assembly skipped.
+Assembly Unity.InputSystem.IntegrationTests.dll at Library/ScriptAssemblies/Unity.InputSystem.IntegrationTests.dll not valid. Loading of assembly skipped.
+Assembly Unity.Mathematics.Extensions.Tests.dll at Library/ScriptAssemblies/Unity.Mathematics.Extensions.Tests.dll not valid. Loading of assembly skipped.
+Assembly Unity.Mathematics.Tests.dll at Library/ScriptAssemblies/Unity.Mathematics.Tests.dll not valid. Loading of assembly skipped.
+Assembly Unity.Nuget.Mono-Cecil.dll at Library/ScriptAssemblies/Unity.Nuget.Mono-Cecil.dll not valid. Loading of assembly skipped.
+Assembly Unity.OpenImageIO.Editor.Tests.dll at Library/ScriptAssemblies/Unity.OpenImageIO.Editor.Tests.dll not valid. Loading of assembly skipped.
+Assembly Unity.PathTracing.Editor.Tests.dll at Library/ScriptAssemblies/Unity.PathTracing.Editor.Tests.dll not valid. Loading of assembly skipped.
+Assembly Unity.PathTracing.Runtime.Tests.dll at Library/ScriptAssemblies/Unity.PathTracing.Runtime.Tests.dll not valid. Loading of assembly skipped.
+Assembly Unity.Performance.Profile-Analyzer.EditorTests.dll at Library/ScriptAssemblies/Unity.Performance.Profile-Analyzer.EditorTests.dll not valid. Loading of assembly skipped.
+Assembly Unity.Postprocessing.Editor.Tests.dll at Library/ScriptAssemblies/Unity.Postprocessing.Editor.Tests.dll not valid. Loading of assembly skipped.
+Assembly Unity.Postprocessing.Runtime.Tests.dll at Library/ScriptAssemblies/Unity.Postprocessing.Runtime.Tests.dll not valid. Loading of assembly skipped.
+Assembly Unity.RenderPipelines.Core.Editor.Tests.dll at Library/ScriptAssemblies/Unity.RenderPipelines.Core.Editor.Tests.dll not valid. Loading of assembly skipped.
+Assembly Unity.RenderPipelines.Core.Runtime.Tests.dll at Library/ScriptAssemblies/Unity.RenderPipelines.Core.Runtime.Tests.dll not valid. Loading of assembly skipped.
+Assembly Unity.RenderPipelines.HighDefinition.Editor.Tests.dll at Library/ScriptAssemblies/Unity.RenderPipelines.HighDefinition.Editor.Tests.dll not valid. Loading of assembly skipped.
+Assembly Unity.RenderPipelines.HighDefinition.Runtime.Tests.dll at Library/ScriptAssemblies/Unity.RenderPipelines.HighDefinition.Runtime.Tests.dll not valid. Loading of assembly skipped.
+Assembly Unity.RenderPipelines.HighDefinitionConfig.Editor.Tests.dll at Library/ScriptAssemblies/Unity.RenderPipelines.HighDefinitionConfig.Editor.Tests.dll not valid. Loading of assembly skipped.
+Assembly Unity.RenderPipelines.Universal.Config.Editor.Tests.dll at Library/ScriptAssemblies/Unity.RenderPipelines.Universal.Config.Editor.Tests.dll not valid. Loading of assembly skipped.
+Assembly Unity.RenderPipelines.Universal.Editor.Tests.dll at Library/ScriptAssemblies/Unity.RenderPipelines.Universal.Editor.Tests.dll not valid. Loading of assembly skipped.
+Assembly Unity.RenderPipelines.Universal.Runtime.Tests.dll at Library/ScriptAssemblies/Unity.RenderPipelines.Universal.Runtime.Tests.dll not valid. Loading of assembly skipped.
+Assembly Unity.Scenes.Editor.PerformanceTests.dll at Library/ScriptAssemblies/Unity.Scenes.Editor.PerformanceTests.dll not valid. Loading of assembly skipped.
+Assembly Unity.Scenes.Editor.Tests.dll at Library/ScriptAssemblies/Unity.Scenes.Editor.Tests.dll not valid. Loading of assembly skipped.
+Assembly Unity.Scenes.Hybrid.Tests.dll at Library/ScriptAssemblies/Unity.Scenes.Hybrid.Tests.dll not valid. Loading of assembly skipped.
+Assembly Unity.Scenes.Hybrid.Tests.Editmode.Content.dll at Library/ScriptAssemblies/Unity.Scenes.Hybrid.Tests.Editmode.Content.dll not valid. Loading of assembly skipped.
+Assembly Unity.Scenes.Hybrid.Tests.Playmode.dll at Library/ScriptAssemblies/Unity.Scenes.Hybrid.Tests.Playmode.dll not valid. Loading of assembly skipped.
+Assembly Unity.Scenes.PerformanceTests.dll at Library/ScriptAssemblies/Unity.Scenes.PerformanceTests.dll not valid. Loading of assembly skipped.
+Assembly Unity.Scenes.Tests.dll at Library/ScriptAssemblies/Unity.Scenes.Tests.dll not valid. Loading of assembly skipped.
+Assembly Unity.ScriptableBuildPipeline.Editor.Tests.dll at Library/ScriptAssemblies/Unity.ScriptableBuildPipeline.Editor.Tests.dll not valid. Loading of assembly skipped.
+Assembly Unity.ScriptableBuildPipeline.Tests.dll at Library/ScriptAssemblies/Unity.ScriptableBuildPipeline.Tests.dll not valid. Loading of assembly skipped.
+Assembly Unity.ScriptableBuildPipelineTests.Runtime.Tests.dll at Library/ScriptAssemblies/Unity.ScriptableBuildPipelineTests.Runtime.Tests.dll not valid. Loading of assembly skipped.
+Assembly Unity.Searcher.EditorTests.dll at Library/ScriptAssemblies/Unity.Searcher.EditorTests.dll not valid. Loading of assembly skipped.
+Assembly Unity.Serialization.Tests.dll at Library/ScriptAssemblies/Unity.Serialization.Tests.dll not valid. Loading of assembly skipped.
+Assembly Unity.Settings.Tests.dll at Library/ScriptAssemblies/Unity.Settings.Tests.dll not valid. Loading of assembly skipped.
+Assembly Unity.ShaderGraph.Editor.Tests.dll at Library/ScriptAssemblies/Unity.ShaderGraph.Editor.Tests.dll not valid. Loading of assembly skipped.
+Assembly Unity.TestTools.CodeCoverage.Editor.Compatibility.dll at Library/ScriptAssemblies/Unity.TestTools.CodeCoverage.Editor.Compatibility.dll not valid. Loading of assembly skipped.
+Assembly Unity.TextMeshPro.Editor.Tests.dll at Library/ScriptAssemblies/Unity.TextMeshPro.Editor.Tests.dll not valid. Loading of assembly skipped.
+Assembly Unity.TextMeshPro.Tests.dll at Library/ScriptAssemblies/Unity.TextMeshPro.Tests.dll not valid. Loading of assembly skipped.
+Assembly Unity.Transforms.Hybrid.Tests.dll at Library/ScriptAssemblies/Unity.Transforms.Hybrid.Tests.dll not valid. Loading of assembly skipped.
+Assembly Unity.Transforms.PerformanceTests.dll at Library/ScriptAssemblies/Unity.Transforms.PerformanceTests.dll not valid. Loading of assembly skipped.
+Assembly Unity.Transforms.Tests.dll at Library/ScriptAssemblies/Unity.Transforms.Tests.dll not valid. Loading of assembly skipped.
+Assembly Unity.Tutorials.Core.Editor.Tests.dll at Library/ScriptAssemblies/Unity.Tutorials.Core.Editor.Tests.dll not valid. Loading of assembly skipped.
+Assembly Unity.Tutorials.Core.Tests.dll at Library/ScriptAssemblies/Unity.Tutorials.Core.Tests.dll not valid. Loading of assembly skipped.
+Assembly Unity.UnifiedRayTracing.Editor.Tests.dll at Library/ScriptAssemblies/Unity.UnifiedRayTracing.Editor.Tests.dll not valid. Loading of assembly skipped.
+Assembly Unity.VisualEffectGraph.Editor.Tests.dll at Library/ScriptAssemblies/Unity.VisualEffectGraph.Editor.Tests.dll not valid. Loading of assembly skipped.
+Assembly Unity.VisualEffectGraph.Runtime.Tests.dll at Library/ScriptAssemblies/Unity.VisualEffectGraph.Runtime.Tests.dll not valid. Loading of assembly skipped.
+Assembly UnityEditor.UI.Common.Tests.dll at Library/ScriptAssemblies/UnityEditor.UI.Common.Tests.dll not valid. Loading of assembly skipped.
+Assembly UnityEditor.UI.EditorTests.dll at Library/ScriptAssemblies/UnityEditor.UI.EditorTests.dll not valid. Loading of assembly skipped.
+Assembly UnityEngine.UI.Tests.dll at Library/ScriptAssemblies/UnityEngine.UI.Tests.dll not valid. Loading of assembly skipped.
+Symbol file LoadedFromMemory is not a mono symbol file
+Symbol file LoadedFromMemory is not a mono symbol file
+'Packages/com.unity.cinemachine/Editor/Editors/CinemachineVirtualCameraBaseEditor.cs' contains partial class of Unity.Object, exactly 1 of the partial classes needs to be in a file with the same filename. This is to know the one that can be referenced from ie. GameObjects
+'Packages/com.unity.cinemachine/Editor/Obsolete/CinemachineVirtualCameraBaseEditor.cs' contains partial class of Unity.Object, exactly 1 of the partial classes needs to be in a file with the same filename. This is to know the one that can be referenced from ie. GameObjects
+Refreshing native plugins compatible for Editor in 2.42 ms, found 9 plugins.
+Native extension for WindowsStandalone target not found
+Assembly reference Packages/com.unity.entities/Unity.Scenes.Editor/Internals/Properties/Unity.Properties.Internals.asmref has no target assembly definition
+TypeManager.Initialize took: 61ms
+ScheduleIndexationOnStartup MainProcess:True IndexOnStartup:True
+Mono: successfully reloaded assembly
+- Finished resetting the current domain, in  3.214 seconds
+Domain Reload Profiling: 4271ms
+	BeginReloadAssembly (219ms)
+		DisableScriptedObjects (7ms)
+		CreateAndSetChildDomain (136ms)
+	RebuildCommonClasses (21ms)
+	RebuildNativeTypeToScriptingClass (8ms)
+	initialDomainReloadingComplete (276ms)
+	LoadAllAssembliesAndSetupDomain (534ms)
+		LoadAssemblies (269ms)
+		AnalyzeDomain (310ms)
+			TypeCache.Refresh (221ms)
+				TypeCache.ScanAssembly (208ms)
+			BuildScriptInfoCaches (73ms)
+			ResolveRequiredComponents (13ms)
+	FinalizeReload (3214ms)
+		SetupLoadedEditorAssemblies (0ms)
+			InitializePlatformSupportModulesInManaged (12ms)
+			BeforeProcessingInitializeOnLoad (139ms)
+			ProcessInitializeOnLoadAttributes (2710ms)
+			ProcessInitializeOnLoadMethodAttributes (212ms)
+			AfterProcessingInitializeOnLoad (3ms)
+		AwakeInstancesAfterBackupRestoration (5ms)
+Refreshing native plugins compatible for Editor in 2.31 ms, found 9 plugins.
+(Values over 0.050ms)
+Asset Pipeline Refresh (id=1ea0c305b5609ed46aa6ffb8e7cd2fcb): Total: 11.063 seconds - Initiated by InitialRefreshV2(ForceSynchronousImport)
+	Summary:
+		Imports: total=0 (actual=0, local cache=0, cache server=0)
+		Asset DB Process Time: managed=0 ms, native=4207 ms
+		Asset DB Callback time: managed=1692 ms, native=23 ms
+		Scripting: domain reloads=1, domain reload time=1061 ms, compile time=4013 ms, other=65 ms
+		Project Asset Count: scripts=6056, non-scripts=42873
+		Asset File Changes: new=0, changed=2, moved=0, deleted=0
+		Scan Filter Count: 0
+	InvokePackagesCallback: 18.472ms
+	ApplyChangesToAssetFolders: 1.182ms
+	Scan: 264.383ms
+	OnSourceAssetsModified: 0.893ms
+	CategorizeScriptCompilationAssets: 70.005ms
+	ProcessAssetsWithTransientArtifactChanges: 119.164ms
+	CategorizeAssets: 371.944ms
+	CompileScripts: 4012.836ms
+	ImportOutOfDateAssets: 3233.997ms (3225.934ms without children)
+		UnloadImportedAssets: 0.859ms
+		EnsureUptoDateAssetsAreRegisteredWithGuidPM: 4.980ms
+		OnDemandSchedulerStart: 2.191ms
+	PostProcessAllAssets: 1693.558ms
+		VCAutoAddAssetPostprocess 0.814ms
+		XRBuildSystem.XRAssetImported 0.635ms
+		MonoPostProcessAllAssets: 1691.770ms
+			CleanUpEditor.OnPostprocessAllAssets 400.652ms
+			InputSystemDefineEditor.OnPostprocessAllAssets 362.657ms
+			SetupAutostart.OnPostprocessAllAssets 236.429ms
+			HDRenderPipelineGlobalSettingsPostprocessor.OnPostprocessAllAssets 105.926ms
+			StyleCatalogPostProcessor.OnPostprocessAllAssets 78.357ms
+			AssetPostprocessor.OnPostprocessAllAssets 4.383ms
+			BuilderAssetPostprocessor.OnPostprocessAllAssets 3.942ms
+			SceneAssetPostProcessor.OnPostprocessAllAssets 2.891ms
+			SyncVS.PostprocessSyncProject 1.988ms
+			UniversalRenderPipelineGlobalSettingsPostprocessor.OnPostprocessAllAssets 1.594ms
+			SpeedTree9Postprocessor.OnPostprocessAllAssets 1.255ms
+			AssetPostProcessor.OnPostprocessAllAssets 1.109ms
+			WindowAssetPostprocessingWatcher.OnPostprocessAllAssets 0.957ms
+			ShaderGraphAssetPostProcessor.OnPostprocessAllAssets 0.889ms
+			VFXGraphPreprocessor.OnPostprocessAllAssets 0.845ms
+			RetainedModeAssetPostprocessor.OnPostprocessAllAssets 0.799ms
+			AssetChangedListener.OnPostprocessAllAssets 0.749ms
+			AssetEvents.OnPostprocessAllAssets 0.709ms
+			RenderPipelineGlobalSettingsPostprocessor.OnPostprocessAllAssets 0.604ms
+			MaterialPostprocessor.OnPostprocessAllAssets 0.439ms
+			ArtifactBrowserPostProcessor.OnPostprocessAllAssets 0.326ms
+			CubeLutAssetImporter.OnPostprocessAllAssets 0.322ms
+			SpriteEditorTexturePostprocessor.OnPostprocessAllAssets 0.322ms
+			AssetProcessor.OnPostprocessAllAssets 0.299ms
+			TMPro_TexturePostProcessor.OnPostprocessAllAssets 0.268ms
+			ReferencedClipsPostProcessor.OnPostprocessAllAssets 0.251ms
+			InputActionAssetPostprocessor.OnPostprocessAllAssets 0.239ms
+			UVCSAssetPostprocessor.OnPostprocessAllAssets 0.209ms
+			TextAssetPostProcessor.OnPostprocessAllAssets 0.199ms
+			MaterialPostProcessor.OnPostprocessAllAssets 0.182ms
+			ModelAssetProcessor.OnPostprocessAllAssets 0.179ms
+			CinemachineSettings.OnPostprocessAllAssets 0.178ms
+			LaunchPadWindowImportLauncher.OnPostprocessAllAssets 0.175ms
+			ScanForBiomes.OnPostprocessAllAssets 0.170ms
+			GaiaManagerRefresh.OnPostprocessAllAssets 0.163ms
+			AudioMixerPostprocessor.OnPostprocessAllAssets 0.161ms
+			InputActionJsonNameModifierAssetProcessor.OnPostprocessAllAssets 0.156ms
+			SetupEditorWindowPostProcessor.OnPostprocessAllAssets 0.151ms
+			DomainReloadProcessor.OnPostprocessAllAssets 0.144ms
+			AssetDatabaseCallbacks.OnPostprocessAllAssets 0.133ms
+			PostProcessor.OnPostprocessAllAssets 0.126ms
+			TerrainToolbarOverlayPostProcessor.OnPostprocessAllAssets 0.124ms
+			SpeedTreePostProcessor.OnPostprocessAllAssets 0.095ms
+			SamplePostprocessor.OnPostprocessAllAssets 0.093ms
+			ProjectSettingsPostprocessor.OnPostprocessAllAssets 0.087ms
+			ConfigAssetsTracker.OnPostprocessAllAssets 0.074ms
+			ScenarioDriftAssetsTracker.OnPostprocessAllAssets 0.067ms
+	PostAssetChangesProfiler: 4.139ms
+	UnloadStreamsBegin: 5.231ms
+	PersistCurrentRevisions: 0.891ms
+	GenerateScriptTypeHashes: 15.686ms
+	GenerateScriptTypeSerializationHashes: 28.510ms
+	Untracked: 1264.419ms
+
+Application.AssetDatabase Initial Refresh End
+Shader Hidden/ChartRasterizerHardware is not supported: GPU does not support conservative rasterization
+Scanning for USB devices : 44.666ms
+Initializing Unity extensions:
+[MODES] ModeService[none].Initialize
+[MODES] ModeService[none].LoadModes
+[MODES] Loading mode Default (0) for mode-current-id-Forever engin
+Unloading 520 Unused Serialized files (Serialized files now loaded: 0)
+Unloading 14313 unused Assets / (10.0 MB). Loaded Objects now: 15595.
+Memory consumption went from 0.84 GB to 0.83 GB.
+Total: 12.055000 ms (FindLiveObjects: 0.656500 ms CreateObjectMapping: 0.356500 ms MarkObjects: 7.262500 ms  DeleteObjects: 3.777700 ms)
+
+[Audit] === Running all populators ===
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace ()
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+ForeverEngine.Editor.AuditAllPopulators:Run () (at Assets/Editor/AuditAllPopulators.cs:12)
+
+(Filename: Assets/Editor/AuditAllPopulators.cs Line: 12)
+
+[Audit] --- CreateMissingAssets.Create ---
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace ()
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+ForeverEngine.Editor.AuditAllPopulators:SafeRun (string,System.Action) (at Assets/Editor/AuditAllPopulators.cs:28)
+ForeverEngine.Editor.AuditAllPopulators:Run () (at Assets/Editor/AuditAllPopulators.cs:14)
+
+(Filename: Assets/Editor/AuditAllPopulators.cs Line: 28)
+
+[CreateMissingAssets] Already exists: Assets/Resources/GameConfig.asset
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace ()
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+CreateMissingAssets:CreateIfMissing<ForeverEngine.GameConfig> (string) (at Assets/Editor/CreateMissingAssets.cs:41)
+CreateMissingAssets:Create () (at Assets/Editor/CreateMissingAssets.cs:17)
+ForeverEngine.Editor.AuditAllPopulators/<>c:<Run>b__0_0 () (at Assets/Editor/AuditAllPopulators.cs:14)
+ForeverEngine.Editor.AuditAllPopulators:SafeRun (string,System.Action) (at Assets/Editor/AuditAllPopulators.cs:29)
+ForeverEngine.Editor.AuditAllPopulators:Run () (at Assets/Editor/AuditAllPopulators.cs:14)
+
+(Filename: Assets/Editor/CreateMissingAssets.cs Line: 41)
+
+[CreateMissingAssets] Already exists: Assets/Resources/RoomCatalog.asset
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace ()
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+CreateMissingAssets:CreateIfMissing<ForeverEngine.RoomCatalog> (string) (at Assets/Editor/CreateMissingAssets.cs:41)
+CreateMissingAssets:Create () (at Assets/Editor/CreateMissingAssets.cs:18)
+ForeverEngine.Editor.AuditAllPopulators/<>c:<Run>b__0_0 () (at Assets/Editor/AuditAllPopulators.cs:14)
+ForeverEngine.Editor.AuditAllPopulators:SafeRun (string,System.Action) (at Assets/Editor/AuditAllPopulators.cs:29)
+ForeverEngine.Editor.AuditAllPopulators:Run () (at Assets/Editor/AuditAllPopulators.cs:14)
+
+(Filename: Assets/Editor/CreateMissingAssets.cs Line: 41)
+
+Start importing ProjectSettings/ProjectSettings.asset using Guid(00000000000000004000000000000000) (LibraryAssetImporter) -> (Import Result ID: '4de104edfd78ab77a73881c60ea2feef') in 0.0059196 seconds [static dependencies only]. Details - ImportResultOutputID=d3ca6db29495033f6ec6c171ea098da8 DependenciesID=457e7bc3b656e253b1a582e165f6ea5a StaticDependenciesID=be2fce9d7d5d224ed0a5ac82605a8259 
+Start importing ProjectSettings/EditorBuildSettings.asset using Guid(0000000000000000b000000000000000) (LibraryAssetImporter) -> (Import Result ID: 'b359c78542f410099e4d42d8b4c51a7e') in 0.0011803 seconds [static dependencies only]. Details - ImportResultOutputID=d777934f36c664454d62eda103573334 DependenciesID=827535fce8df504db0d32842d6b7696e StaticDependenciesID=1ebe990dfddc5a95de273daf46c114e3 
+Refreshing native plugins compatible for Editor in 2.40 ms, found 9 plugins.
+(Values over 0.050ms)
+Asset Pipeline Refresh (id=22bf65ad423dff84a8844f1db9093c69): Total: 1.083 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+	Summary:
+		Imports: total=2 (actual=2, local cache=0, cache server=0)
+		Asset DB Process Time: managed=2 ms, native=525 ms
+		Asset DB Callback time: managed=466 ms, native=89 ms
+		Scripting: domain reloads=0, domain reload time=0 ms, compile time=0 ms, other=0 ms
+		Project Asset Count: scripts=6056, non-scripts=42873
+		Asset File Changes: new=0, changed=0, moved=0, deleted=0
+		Scan Filter Count: 0
+	ApplyChangesToAssetFolders: 0.188ms
+	Scan: 14.195ms
+	ProcessAssetsWithTransientArtifactChanges: 0.141ms
+	CategorizeAssets: 451.369ms
+	ImportOutOfDateAssets: 23.014ms (2.915ms without children)
+		ImportManagerImport: 8.450ms (1.027ms without children)
+		ReloadNativeAssets: 0.111ms
+		UnloadImportedAssets: 0.423ms
+		EnsureUptoDateAssetsAreRegisteredWithGuidPM: 8.870ms
+		OnDemandSchedulerStart: 2.241ms
+	PostProcessAllAssets: 801.257ms
+		XRBuildSystem.XRAssetImported 3.652ms
+		MonoPostProcessAllAssets: 466.243ms
+			SetupAutostart.OnPostprocessAllAssets 199.175ms
+			CleanUpEditor.OnPostprocessAllAssets 197.270ms
+			InputSystemDefineEditor.OnPostprocessAllAssets 67.953ms
+			SyncVS.PostprocessSyncProject 0.299ms
+			AssetChangedListener.OnPostprocessAllAssets 0.118ms
+			RenderPipelineGlobalSettingsPostprocessor.OnPostprocessAllAssets 0.076ms
+			ShaderGraphAssetPostProcessor.OnPostprocessAllAssets 0.052ms
+	PostAssetChangesProfiler: 2.608ms
+	GatherAllCurrentPrimaryImportResultRevisions: 1.719ms
+	UnloadStreamsBegin: 5.470ms
+	PersistCurrentRevisions: 1.734ms
+	Untracked: 17.327ms
+
+[CreateMissingAssets] Done — all missing assets created.
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace ()
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+CreateMissingAssets:Create () (at Assets/Editor/CreateMissingAssets.cs:34)
+ForeverEngine.Editor.AuditAllPopulators/<>c:<Run>b__0_0 () (at Assets/Editor/AuditAllPopulators.cs:14)
+ForeverEngine.Editor.AuditAllPopulators:SafeRun (string,System.Action) (at Assets/Editor/AuditAllPopulators.cs:29)
+ForeverEngine.Editor.AuditAllPopulators:Run () (at Assets/Editor/AuditAllPopulators.cs:14)
+
+(Filename: Assets/Editor/CreateMissingAssets.cs Line: 34)
+
+[Audit] CreateMissingAssets.Create OK
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace ()
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+ForeverEngine.Editor.AuditAllPopulators:SafeRun (string,System.Action) (at Assets/Editor/AuditAllPopulators.cs:29)
+ForeverEngine.Editor.AuditAllPopulators:Run () (at Assets/Editor/AuditAllPopulators.cs:14)
+
+(Filename: Assets/Editor/AuditAllPopulators.cs Line: 29)
+
+[Audit] --- OverworldPrefabPopulator.Populate ---
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace ()
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+ForeverEngine.Editor.AuditAllPopulators:SafeRun (string,System.Action) (at Assets/Editor/AuditAllPopulators.cs:28)
+ForeverEngine.Editor.AuditAllPopulators:Run () (at Assets/Editor/AuditAllPopulators.cs:15)
+
+(Filename: Assets/Editor/AuditAllPopulators.cs Line: 28)
+
+[OverworldPrefabPopulator] Found 17 tree prefabs
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace ()
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+OverworldPrefabPopulator:Populate () (at Assets/Editor/OverworldPrefabPopulator.cs:95)
+ForeverEngine.Editor.AuditAllPopulators/<>c:<Run>b__0_1 () (at Assets/Editor/AuditAllPopulators.cs:15)
+ForeverEngine.Editor.AuditAllPopulators:SafeRun (string,System.Action) (at Assets/Editor/AuditAllPopulators.cs:29)
+ForeverEngine.Editor.AuditAllPopulators:Run () (at Assets/Editor/AuditAllPopulators.cs:15)
+
+(Filename: Assets/Editor/OverworldPrefabPopulator.cs Line: 95)
+
+[OverworldPrefabPopulator] Found 57 building prefabs
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace ()
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+OverworldPrefabPopulator:Populate () (at Assets/Editor/OverworldPrefabPopulator.cs:132)
+ForeverEngine.Editor.AuditAllPopulators/<>c:<Run>b__0_1 () (at Assets/Editor/AuditAllPopulators.cs:15)
+ForeverEngine.Editor.AuditAllPopulators:SafeRun (string,System.Action) (at Assets/Editor/AuditAllPopulators.cs:29)
+ForeverEngine.Editor.AuditAllPopulators:Run () (at Assets/Editor/AuditAllPopulators.cs:15)
+
+(Filename: Assets/Editor/OverworldPrefabPopulator.cs Line: 132)
+
+[OverworldPrefabPopulator] Dungeon entrance: SM_Gate_02
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace ()
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+OverworldPrefabPopulator:Populate () (at Assets/Editor/OverworldPrefabPopulator.cs:142)
+ForeverEngine.Editor.AuditAllPopulators/<>c:<Run>b__0_1 () (at Assets/Editor/AuditAllPopulators.cs:15)
+ForeverEngine.Editor.AuditAllPopulators:SafeRun (string,System.Action) (at Assets/Editor/AuditAllPopulators.cs:29)
+ForeverEngine.Editor.AuditAllPopulators:Run () (at Assets/Editor/AuditAllPopulators.cs:15)
+
+(Filename: Assets/Editor/OverworldPrefabPopulator.cs Line: 142)
+
+[OverworldPrefabPopulator] Assigned 10 location marker prefabs
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace ()
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+OverworldPrefabPopulator:Populate () (at Assets/Editor/OverworldPrefabPopulator.cs:217)
+ForeverEngine.Editor.AuditAllPopulators/<>c:<Run>b__0_1 () (at Assets/Editor/AuditAllPopulators.cs:15)
+ForeverEngine.Editor.AuditAllPopulators:SafeRun (string,System.Action) (at Assets/Editor/AuditAllPopulators.cs:29)
+ForeverEngine.Editor.AuditAllPopulators:Run () (at Assets/Editor/AuditAllPopulators.cs:15)
+
+(Filename: Assets/Editor/OverworldPrefabPopulator.cs Line: 217)
+
+Start importing Assets/Resources/OverworldPrefabMap.asset using Guid(5a6bbf212856b1741892de1164b85029) (NativeFormatImporter) -> (Import Result ID: '120535a95361166b2c8f25aec88cbf5a') in 0.0015232 seconds [static dependencies only]. Details - ImportResultOutputID=a1ba3c8e817620b46d5580800d29b4d6 DependenciesID=1337e8cc2d33c85be146cfc1df0a4d10 StaticDependenciesID=01f40512455780f04c5b75211bb720ce 
+Refreshing native plugins compatible for Editor in 2.46 ms, found 9 plugins.
+(Values over 0.050ms)
+Asset Pipeline Refresh (id=4b18b38a2f02c394ca339e58fde62712): Total: 0.456 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+	Summary:
+		Imports: total=1 (actual=1, local cache=0, cache server=0)
+		Asset DB Process Time: managed=0 ms, native=96 ms
+		Asset DB Callback time: managed=345 ms, native=14 ms
+		Scripting: domain reloads=0, domain reload time=0 ms, compile time=0 ms, other=0 ms
+		Project Asset Count: scripts=6056, non-scripts=42873
+		Asset File Changes: new=0, changed=0, moved=0, deleted=0
+		Scan Filter Count: 3
+	ApplyChangesToAssetFolders: 0.093ms
+	Scan: 4.889ms
+	ProcessAssetsWithTransientArtifactChanges: 0.051ms
+	CategorizeAssets: 14.746ms
+	ImportOutOfDateAssets: 9.145ms (1.464ms without children)
+		ImportManagerImport: 3.008ms (1.235ms without children)
+		ReloadNativeAssets: 0.164ms
+		UnloadImportedAssets: 0.130ms
+		EnsureUptoDateAssetsAreRegisteredWithGuidPM: 3.408ms
+		OnDemandSchedulerStart: 0.965ms
+	PostProcessAllAssets: 345.951ms
+		XRBuildSystem.XRAssetImported 0.546ms
+		MonoPostProcessAllAssets: 345.324ms
+			CleanUpEditor.OnPostprocessAllAssets 204.347ms
+			InputSystemDefineEditor.OnPostprocessAllAssets 98.942ms
+			SetupAutostart.OnPostprocessAllAssets 40.190ms
+			GaiaManagerRefresh.OnPostprocessAllAssets 0.372ms
+			ModelAssetProcessor.OnPostprocessAllAssets 0.365ms
+			SyncVS.PostprocessSyncProject 0.249ms
+			TMPro_TexturePostProcessor.OnPostprocessAllAssets 0.236ms
+			SpriteEditorTexturePostprocessor.OnPostprocessAllAssets 0.156ms
+			RenderPipelineGlobalSettingsPostprocessor.OnPostprocessAllAssets 0.063ms
+	PostAssetChangesProfiler: 13.957ms
+	GatherAllCurrentPrimaryImportResultRevisions: 1.261ms
+	UnloadStreamsBegin: 55.774ms
+	PersistCurrentRevisions: 0.939ms
+	Untracked: 9.546ms
+
+[OverworldPrefabPopulator] Done — 84 total prefabs assigned to mapper
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace ()
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+OverworldPrefabPopulator:Populate () (at Assets/Editor/OverworldPrefabPopulator.cs:223)
+ForeverEngine.Editor.AuditAllPopulators/<>c:<Run>b__0_1 () (at Assets/Editor/AuditAllPopulators.cs:15)
+ForeverEngine.Editor.AuditAllPopulators:SafeRun (string,System.Action) (at Assets/Editor/AuditAllPopulators.cs:29)
+ForeverEngine.Editor.AuditAllPopulators:Run () (at Assets/Editor/AuditAllPopulators.cs:15)
+
+(Filename: Assets/Editor/OverworldPrefabPopulator.cs Line: 223)
+
+[Audit] OverworldPrefabPopulator.Populate OK
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace ()
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+ForeverEngine.Editor.AuditAllPopulators:SafeRun (string,System.Action) (at Assets/Editor/AuditAllPopulators.cs:29)
+ForeverEngine.Editor.AuditAllPopulators:Run () (at Assets/Editor/AuditAllPopulators.cs:15)
+
+(Filename: Assets/Editor/AuditAllPopulators.cs Line: 29)
+
+[Audit] --- RoomCatalogPopulator.Populate ---
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace ()
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+ForeverEngine.Editor.AuditAllPopulators:SafeRun (string,System.Action) (at Assets/Editor/AuditAllPopulators.cs:28)
+ForeverEngine.Editor.AuditAllPopulators:Run () (at Assets/Editor/AuditAllPopulators.cs:16)
+
+(Filename: Assets/Editor/AuditAllPopulators.cs Line: 28)
+
+Start importing Assets/Resources/RoomCatalog.asset using Guid(6a100949c9d4c48448640f88551da085) (NativeFormatImporter) -> (Import Result ID: '39b1003fe2561551cf2ea9d22782e263') in 0.0019246 seconds [static dependencies only]. Details - ImportResultOutputID=c1fae2d6ec32223bda424fef8a710af4 DependenciesID=2cdb705fe75b187241a08c878b5fbf2b StaticDependenciesID=c21396b31cfa84862684cc4adefee3b6 
+Refreshing native plugins compatible for Editor in 2.53 ms, found 9 plugins.
+(Values over 0.050ms)
+Asset Pipeline Refresh (id=884f05d3d66dc1c4a9dc74162ffbe5b5): Total: 0.563 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+	Summary:
+		Imports: total=1 (actual=1, local cache=0, cache server=0)
+		Asset DB Process Time: managed=0 ms, native=129 ms
+		Asset DB Callback time: managed=417 ms, native=15 ms
+		Scripting: domain reloads=0, domain reload time=0 ms, compile time=0 ms, other=0 ms
+		Project Asset Count: scripts=6056, non-scripts=42873
+		Asset File Changes: new=0, changed=1, moved=0, deleted=0
+		Scan Filter Count: 3
+	ApplyChangesToAssetFolders: 0.080ms
+	Scan: 4.944ms
+	OnSourceAssetsModified: 0.558ms
+	ProcessAssetsWithTransientArtifactChanges: 0.058ms
+	CategorizeAssets: 90.572ms
+	ImportOutOfDateAssets: 10.457ms (1.439ms without children)
+		ImportManagerImport: 3.507ms (1.329ms without children)
+		ReloadNativeAssets: 0.110ms
+		UnloadImportedAssets: 0.157ms
+		EnsureUptoDateAssetsAreRegisteredWithGuidPM: 3.820ms
+		OnDemandSchedulerStart: 1.417ms
+	PostProcessAllAssets: 417.490ms
+		XRBuildSystem.XRAssetImported 0.550ms
+		MonoPostProcessAllAssets: 416.853ms
+			CleanUpEditor.OnPostprocessAllAssets 236.566ms
+			SetupAutostart.OnPostprocessAllAssets 111.190ms
+			InputSystemDefineEditor.OnPostprocessAllAssets 67.390ms
+			ModelAssetProcessor.OnPostprocessAllAssets 0.379ms
+			GaiaManagerRefresh.OnPostprocessAllAssets 0.375ms
+			SyncVS.PostprocessSyncProject 0.254ms
+			SpriteEditorTexturePostprocessor.OnPostprocessAllAssets 0.172ms
+			RenderPipelineGlobalSettingsPostprocessor.OnPostprocessAllAssets 0.070ms
+			TMPro_TexturePostProcessor.OnPostprocessAllAssets 0.058ms
+	PostAssetChangesProfiler: 14.600ms
+	GatherAllCurrentPrimaryImportResultRevisions: 1.004ms
+	UnloadStreamsBegin: 7.877ms
+	PersistCurrentRevisions: 0.940ms
+	Untracked: 14.216ms
+
+[RoomCatalogPopulator] Cataloged 722 props from 13 directories, 5 presets
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace ()
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+RoomCatalogPopulator:Populate () (at Assets/Editor/RoomCatalogPopulator.cs:193)
+ForeverEngine.Editor.AuditAllPopulators/<>c:<Run>b__0_2 () (at Assets/Editor/AuditAllPopulators.cs:16)
+ForeverEngine.Editor.AuditAllPopulators:SafeRun (string,System.Action) (at Assets/Editor/AuditAllPopulators.cs:29)
+ForeverEngine.Editor.AuditAllPopulators:Run () (at Assets/Editor/AuditAllPopulators.cs:16)
+
+(Filename: Assets/Editor/RoomCatalogPopulator.cs Line: 193)
+
+[Audit] RoomCatalogPopulator.Populate OK
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace ()
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+ForeverEngine.Editor.AuditAllPopulators:SafeRun (string,System.Action) (at Assets/Editor/AuditAllPopulators.cs:29)
+ForeverEngine.Editor.AuditAllPopulators:Run () (at Assets/Editor/AuditAllPopulators.cs:16)
+
+(Filename: Assets/Editor/AuditAllPopulators.cs Line: 29)
+
+[Audit] --- AudioPopulator.Populate ---
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace ()
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+ForeverEngine.Editor.AuditAllPopulators:SafeRun (string,System.Action) (at Assets/Editor/AuditAllPopulators.cs:28)
+ForeverEngine.Editor.AuditAllPopulators:Run () (at Assets/Editor/AuditAllPopulators.cs:17)
+
+(Filename: Assets/Editor/AuditAllPopulators.cs Line: 28)
+
+Start importing Assets/Resources/AudioConfig.asset using Guid(538c783e6af0d4746bc2ad47255ae8d6) (NativeFormatImporter) -> (Import Result ID: 'e0e9cc666daa6c146bf2f2770eb240df') in 0.0015722 seconds [static dependencies only]. Details - ImportResultOutputID=71380e831e3f8a9aba61095faa19c2f0 DependenciesID=bfdad7c2f9c7f0cadae98f9df5ed3e60 StaticDependenciesID=cb5fca73056e66cd2184ebd437826cad 
+Refreshing native plugins compatible for Editor in 2.50 ms, found 9 plugins.
+(Values over 0.050ms)
+Asset Pipeline Refresh (id=5ec7cdbdfc7ccfc4a898cdd9b9a6be1f): Total: 0.379 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+	Summary:
+		Imports: total=1 (actual=1, local cache=0, cache server=0)
+		Asset DB Process Time: managed=0 ms, native=36 ms
+		Asset DB Callback time: managed=327 ms, native=14 ms
+		Scripting: domain reloads=0, domain reload time=0 ms, compile time=0 ms, other=0 ms
+		Project Asset Count: scripts=6056, non-scripts=42873
+		Asset File Changes: new=0, changed=0, moved=0, deleted=0
+		Scan Filter Count: 3
+	ApplyChangesToAssetFolders: 0.081ms
+	Scan: 4.836ms
+	ProcessAssetsWithTransientArtifactChanges: 0.051ms
+	CategorizeAssets: 13.277ms
+	ImportOutOfDateAssets: 9.079ms (1.500ms without children)
+		ImportManagerImport: 3.027ms (1.212ms without children)
+		ReloadNativeAssets: 0.163ms
+		UnloadImportedAssets: 0.128ms
+		EnsureUptoDateAssetsAreRegisteredWithGuidPM: 3.153ms
+		OnDemandSchedulerStart: 1.101ms
+	PostProcessAllAssets: 328.126ms
+		XRBuildSystem.XRAssetImported 0.580ms
+		MonoPostProcessAllAssets: 327.470ms
+			CleanUpEditor.OnPostprocessAllAssets 219.653ms
+			InputSystemDefineEditor.OnPostprocessAllAssets 65.542ms
+			SetupAutostart.OnPostprocessAllAssets 40.289ms
+			ModelAssetProcessor.OnPostprocessAllAssets 0.375ms
+			GaiaManagerRefresh.OnPostprocessAllAssets 0.373ms
+			SyncVS.PostprocessSyncProject 0.309ms
+			TMPro_TexturePostProcessor.OnPostprocessAllAssets 0.300ms
+			SpriteEditorTexturePostprocessor.OnPostprocessAllAssets 0.162ms
+			RenderPipelineGlobalSettingsPostprocessor.OnPostprocessAllAssets 0.060ms
+	PostAssetChangesProfiler: 13.908ms
+	GatherAllCurrentPrimaryImportResultRevisions: 0.923ms
+	UnloadStreamsBegin: 0.201ms
+	PersistCurrentRevisions: 0.856ms
+	Untracked: 7.299ms
+
+[AudioPopulator] Scanned 51 clips, assigned 5 to AudioConfig (Hit:0 Miss:0 Footstep:0 Death:4 UIClick:0)
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace ()
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+AudioPopulator:Populate () (at Assets/Editor/AudioPopulator.cs:231)
+ForeverEngine.Editor.AuditAllPopulators/<>c:<Run>b__0_3 () (at Assets/Editor/AuditAllPopulators.cs:17)
+ForeverEngine.Editor.AuditAllPopulators:SafeRun (string,System.Action) (at Assets/Editor/AuditAllPopulators.cs:29)
+ForeverEngine.Editor.AuditAllPopulators:Run () (at Assets/Editor/AuditAllPopulators.cs:17)
+
+(Filename: Assets/Editor/AudioPopulator.cs Line: 231)
+
+[Audit] AudioPopulator.Populate OK
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace ()
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+ForeverEngine.Editor.AuditAllPopulators:SafeRun (string,System.Action) (at Assets/Editor/AuditAllPopulators.cs:29)
+ForeverEngine.Editor.AuditAllPopulators:Run () (at Assets/Editor/AuditAllPopulators.cs:17)
+
+(Filename: Assets/Editor/AuditAllPopulators.cs Line: 29)
+
+[Audit] --- PopulateBiomeMaterialCatalog.Populate ---
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace ()
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+ForeverEngine.Editor.AuditAllPopulators:SafeRun (string,System.Action) (at Assets/Editor/AuditAllPopulators.cs:28)
+ForeverEngine.Editor.AuditAllPopulators:Run () (at Assets/Editor/AuditAllPopulators.cs:18)
+
+(Filename: Assets/Editor/AuditAllPopulators.cs Line: 28)
+
+[PopulateBiomeMaterialCatalog]   TemperateForest → Assets/NatureManufacture Assets/Mountain Environment/Ground/Materials/M_ground_moss_01.mat
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace ()
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+PopulateBiomeMaterialCatalog:Populate () (at Assets/Editor/PopulateBiomeMaterialCatalog.cs:88)
+ForeverEngine.Editor.AuditAllPopulators/<>c:<Run>b__0_4 () (at Assets/Editor/AuditAllPopulators.cs:18)
+ForeverEngine.Editor.AuditAllPopulators:SafeRun (string,System.Action) (at Assets/Editor/AuditAllPopulators.cs:29)
+ForeverEngine.Editor.AuditAllPopulators:Run () (at Assets/Editor/AuditAllPopulators.cs:18)
+
+(Filename: Assets/Editor/PopulateBiomeMaterialCatalog.cs Line: 88)
+
+[PopulateBiomeMaterialCatalog]   BorealForest → Assets/NatureManufacture Assets/Mountain Environment/Ground/Materials/M_ground_pine_needles_02.mat
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace ()
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+PopulateBiomeMaterialCatalog:Populate () (at Assets/Editor/PopulateBiomeMaterialCatalog.cs:88)
+ForeverEngine.Editor.AuditAllPopulators/<>c:<Run>b__0_4 () (at Assets/Editor/AuditAllPopulators.cs:18)
+ForeverEngine.Editor.AuditAllPopulators:SafeRun (string,System.Action) (at Assets/Editor/AuditAllPopulators.cs:29)
+ForeverEngine.Editor.AuditAllPopulators:Run () (at Assets/Editor/AuditAllPopulators.cs:18)
+
+(Filename: Assets/Editor/PopulateBiomeMaterialCatalog.cs Line: 88)
+
+[PopulateBiomeMaterialCatalog]   Taiga → Assets/NatureManufacture Assets/Mountain Environment/Ground/Materials/M_ground_roots_01.mat
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace ()
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+PopulateBiomeMaterialCatalog:Populate () (at Assets/Editor/PopulateBiomeMaterialCatalog.cs:88)
+ForeverEngine.Editor.AuditAllPopulators/<>c:<Run>b__0_4 () (at Assets/Editor/AuditAllPopulators.cs:18)
+ForeverEngine.Editor.AuditAllPopulators:SafeRun (string,System.Action) (at Assets/Editor/AuditAllPopulators.cs:29)
+ForeverEngine.Editor.AuditAllPopulators:Run () (at Assets/Editor/AuditAllPopulators.cs:18)
+
+(Filename: Assets/Editor/PopulateBiomeMaterialCatalog.cs Line: 88)
+
+[PopulateBiomeMaterialCatalog]   TropicalRainforest → Assets/NatureManufacture Assets/Mountain Environment/Ground/Materials/M_ground_moss_01.mat
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace ()
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+PopulateBiomeMaterialCatalog:Populate () (at Assets/Editor/PopulateBiomeMaterialCatalog.cs:88)
+ForeverEngine.Editor.AuditAllPopulators/<>c:<Run>b__0_4 () (at Assets/Editor/AuditAllPopulators.cs:18)
+ForeverEngine.Editor.AuditAllPopulators:SafeRun (string,System.Action) (at Assets/Editor/AuditAllPopulators.cs:29)
+ForeverEngine.Editor.AuditAllPopulators:Run () (at Assets/Editor/AuditAllPopulators.cs:18)
+
+(Filename: Assets/Editor/PopulateBiomeMaterialCatalog.cs Line: 88)
+
+[PopulateBiomeMaterialCatalog]   Grassland → Assets/NatureManufacture Assets/Mountain Environment/Ground/Materials/M_ground_grass_01.mat
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace ()
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+PopulateBiomeMaterialCatalog:Populate () (at Assets/Editor/PopulateBiomeMaterialCatalog.cs:88)
+ForeverEngine.Editor.AuditAllPopulators/<>c:<Run>b__0_4 () (at Assets/Editor/AuditAllPopulators.cs:18)
+ForeverEngine.Editor.AuditAllPopulators:SafeRun (string,System.Action) (at Assets/Editor/AuditAllPopulators.cs:29)
+ForeverEngine.Editor.AuditAllPopulators:Run () (at Assets/Editor/AuditAllPopulators.cs:18)
+
+(Filename: Assets/Editor/PopulateBiomeMaterialCatalog.cs Line: 88)
+
+[PopulateBiomeMaterialCatalog]   Savanna → Assets/NatureManufacture Assets/Mountain Environment/Ground/Materials/M_ground_grass_01_dry.mat
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace ()
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+PopulateBiomeMaterialCatalog:Populate () (at Assets/Editor/PopulateBiomeMaterialCatalog.cs:88)
+ForeverEngine.Editor.AuditAllPopulators/<>c:<Run>b__0_4 () (at Assets/Editor/AuditAllPopulators.cs:18)
+ForeverEngine.Editor.AuditAllPopulators:SafeRun (string,System.Action) (at Assets/Editor/AuditAllPopulators.cs:29)
+ForeverEngine.Editor.AuditAllPopulators:Run () (at Assets/Editor/AuditAllPopulators.cs:18)
+
+(Filename: Assets/Editor/PopulateBiomeMaterialCatalog.cs Line: 88)
+
+[PopulateBiomeMaterialCatalog]   AridSteppe → Assets/NatureManufacture Assets/Mountain Environment/Ground/Materials/M_ground_soil_01.mat
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace ()
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+PopulateBiomeMaterialCatalog:Populate () (at Assets/Editor/PopulateBiomeMaterialCatalog.cs:88)
+ForeverEngine.Editor.AuditAllPopulators/<>c:<Run>b__0_4 () (at Assets/Editor/AuditAllPopulators.cs:18)
+ForeverEngine.Editor.AuditAllPopulators:SafeRun (string,System.Action) (at Assets/Editor/AuditAllPopulators.cs:29)
+ForeverEngine.Editor.AuditAllPopulators:Run () (at Assets/Editor/AuditAllPopulators.cs:18)
+
+(Filename: Assets/Editor/PopulateBiomeMaterialCatalog.cs Line: 88)
+
+[PopulateBiomeMaterialCatalog]   Tundra → Assets/NatureManufacture Assets/Mountain Environment/Ground/Materials/M_Ground_Flat_rock_01.mat
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace ()
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+PopulateBiomeMaterialCatalog:Populate () (at Assets/Editor/PopulateBiomeMaterialCatalog.cs:88)
+ForeverEngine.Editor.AuditAllPopulators/<>c:<Run>b__0_4 () (at Assets/Editor/AuditAllPopulators.cs:18)
+ForeverEngine.Editor.AuditAllPopulators:SafeRun (string,System.Action) (at Assets/Editor/AuditAllPopulators.cs:29)
+ForeverEngine.Editor.AuditAllPopulators:Run () (at Assets/Editor/AuditAllPopulators.cs:18)
+
+(Filename: Assets/Editor/PopulateBiomeMaterialCatalog.cs Line: 88)
+
+[PopulateBiomeMaterialCatalog]   IceSheet → Assets/NatureManufacture Assets/Mountain Environment/Ground/Materials/M_ground_stones_01.mat
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace ()
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+PopulateBiomeMaterialCatalog:Populate () (at Assets/Editor/PopulateBiomeMaterialCatalog.cs:88)
+ForeverEngine.Editor.AuditAllPopulators/<>c:<Run>b__0_4 () (at Assets/Editor/AuditAllPopulators.cs:18)
+ForeverEngine.Editor.AuditAllPopulators:SafeRun (string,System.Action) (at Assets/Editor/AuditAllPopulators.cs:29)
+ForeverEngine.Editor.AuditAllPopulators:Run () (at Assets/Editor/AuditAllPopulators.cs:18)
+
+(Filename: Assets/Editor/PopulateBiomeMaterialCatalog.cs Line: 88)
+
+[PopulateBiomeMaterialCatalog]   Mountain → Assets/NatureManufacture Assets/Mountain Environment/Ground/Materials/M_Ground_Flat_rock_01.mat
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace ()
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+PopulateBiomeMaterialCatalog:Populate () (at Assets/Editor/PopulateBiomeMaterialCatalog.cs:88)
+ForeverEngine.Editor.AuditAllPopulators/<>c:<Run>b__0_4 () (at Assets/Editor/AuditAllPopulators.cs:18)
+ForeverEngine.Editor.AuditAllPopulators:SafeRun (string,System.Action) (at Assets/Editor/AuditAllPopulators.cs:29)
+ForeverEngine.Editor.AuditAllPopulators:Run () (at Assets/Editor/AuditAllPopulators.cs:18)
+
+(Filename: Assets/Editor/PopulateBiomeMaterialCatalog.cs Line: 88)
+
+[PopulateBiomeMaterialCatalog]   Desert → Assets/NatureManufacture Assets/Forest Environment Dynamic Nature/Ground/Materials/M_ground_beech_forest_sand_rocks.mat
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace ()
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+PopulateBiomeMaterialCatalog:Populate () (at Assets/Editor/PopulateBiomeMaterialCatalog.cs:88)
+ForeverEngine.Editor.AuditAllPopulators/<>c:<Run>b__0_4 () (at Assets/Editor/AuditAllPopulators.cs:18)
+ForeverEngine.Editor.AuditAllPopulators:SafeRun (string,System.Action) (at Assets/Editor/AuditAllPopulators.cs:29)
+ForeverEngine.Editor.AuditAllPopulators:Run () (at Assets/Editor/AuditAllPopulators.cs:18)
+
+(Filename: Assets/Editor/PopulateBiomeMaterialCatalog.cs Line: 88)
+
+[PopulateBiomeMaterialCatalog]   Beach → Assets/NatureManufacture Assets/Forest Environment Dynamic Nature/Ground/Materials/M_ground_beech_forest_sand.mat
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace ()
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+PopulateBiomeMaterialCatalog:Populate () (at Assets/Editor/PopulateBiomeMaterialCatalog.cs:88)
+ForeverEngine.Editor.AuditAllPopulators/<>c:<Run>b__0_4 () (at Assets/Editor/AuditAllPopulators.cs:18)
+ForeverEngine.Editor.AuditAllPopulators:SafeRun (string,System.Action) (at Assets/Editor/AuditAllPopulators.cs:29)
+ForeverEngine.Editor.AuditAllPopulators:Run () (at Assets/Editor/AuditAllPopulators.cs:18)
+
+(Filename: Assets/Editor/PopulateBiomeMaterialCatalog.cs Line: 88)
+
+[PopulateBiomeMaterialCatalog]   Ocean → Assets/3DForge/Cave Adventure kit/Standard Assets/Water (Basic)/Sources/Materials/Nighttime Simple Water.mat
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace ()
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+PopulateBiomeMaterialCatalog:Populate () (at Assets/Editor/PopulateBiomeMaterialCatalog.cs:88)
+ForeverEngine.Editor.AuditAllPopulators/<>c:<Run>b__0_4 () (at Assets/Editor/AuditAllPopulators.cs:18)
+ForeverEngine.Editor.AuditAllPopulators:SafeRun (string,System.Action) (at Assets/Editor/AuditAllPopulators.cs:29)
+ForeverEngine.Editor.AuditAllPopulators:Run () (at Assets/Editor/AuditAllPopulators.cs:18)
+
+(Filename: Assets/Editor/PopulateBiomeMaterialCatalog.cs Line: 88)
+
+[PopulateBiomeMaterialCatalog]   River → Assets/3DForge/Cave Adventure kit/Standard Assets/Water (Basic)/Sources/Materials/Nighttime Simple Water.mat
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace ()
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+PopulateBiomeMaterialCatalog:Populate () (at Assets/Editor/PopulateBiomeMaterialCatalog.cs:88)
+ForeverEngine.Editor.AuditAllPopulators/<>c:<Run>b__0_4 () (at Assets/Editor/AuditAllPopulators.cs:18)
+ForeverEngine.Editor.AuditAllPopulators:SafeRun (string,System.Action) (at Assets/Editor/AuditAllPopulators.cs:29)
+ForeverEngine.Editor.AuditAllPopulators:Run () (at Assets/Editor/AuditAllPopulators.cs:18)
+
+(Filename: Assets/Editor/PopulateBiomeMaterialCatalog.cs Line: 88)
+
+Start importing Assets/Resources/BiomeMaterialCatalog.asset using Guid(6f78c9244b0e78d4cbf5b51d326d1477) (NativeFormatImporter) -> (Import Result ID: '5f9f9b8fd22b2c29719beafc27173480') in 0.0016433 seconds [static dependencies only]. Details - ImportResultOutputID=51d78191040429e5ae05f0f2a8940522 DependenciesID=9f2af0febd119be7f4f1972b2132ad0b StaticDependenciesID=6a5605b279e7bec2b50da541394309e3 
+Refreshing native plugins compatible for Editor in 2.99 ms, found 9 plugins.
+(Values over 0.050ms)
+Asset Pipeline Refresh (id=bd5558763fa4f99438e227e939f43432): Total: 0.388 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+	Summary:
+		Imports: total=1 (actual=1, local cache=0, cache server=0)
+		Asset DB Process Time: managed=0 ms, native=38 ms
+		Asset DB Callback time: managed=333 ms, native=15 ms
+		Scripting: domain reloads=0, domain reload time=0 ms, compile time=0 ms, other=0 ms
+		Project Asset Count: scripts=6056, non-scripts=42873
+		Asset File Changes: new=0, changed=0, moved=0, deleted=0
+		Scan Filter Count: 3
+	ApplyChangesToAssetFolders: 0.092ms
+	Scan: 5.040ms
+	ProcessAssetsWithTransientArtifactChanges: 0.052ms
+	CategorizeAssets: 13.093ms
+	ImportOutOfDateAssets: 9.405ms (1.506ms without children)
+		ImportManagerImport: 3.222ms (1.291ms without children)
+		ReloadNativeAssets: 0.177ms
+		UnloadImportedAssets: 0.131ms
+		EnsureUptoDateAssetsAreRegisteredWithGuidPM: 3.175ms
+		OnDemandSchedulerStart: 1.186ms
+	PostProcessAllAssets: 334.170ms
+		XRBuildSystem.XRAssetImported 0.575ms
+		MonoPostProcessAllAssets: 333.512ms
+			CleanUpEditor.OnPostprocessAllAssets 219.320ms
+			InputSystemDefineEditor.OnPostprocessAllAssets 68.429ms
+			SetupAutostart.OnPostprocessAllAssets 43.889ms
+			GaiaManagerRefresh.OnPostprocessAllAssets 0.385ms
+			ModelAssetProcessor.OnPostprocessAllAssets 0.378ms
+			SyncVS.PostprocessSyncProject 0.245ms
+			TMPro_TexturePostProcessor.OnPostprocessAllAssets 0.208ms
+			SpriteEditorTexturePostprocessor.OnPostprocessAllAssets 0.168ms
+			RenderPipelineGlobalSettingsPostprocessor.OnPostprocessAllAssets 0.062ms
+	PostAssetChangesProfiler: 14.410ms
+	GatherAllCurrentPrimaryImportResultRevisions: 1.085ms
+	PersistCurrentRevisions: 0.924ms
+	Untracked: 9.441ms
+
+[PopulateBiomeMaterialCatalog] Populated 14/14 biomes (0 missing).
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace ()
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+PopulateBiomeMaterialCatalog:Populate () (at Assets/Editor/PopulateBiomeMaterialCatalog.cs:101)
+ForeverEngine.Editor.AuditAllPopulators/<>c:<Run>b__0_4 () (at Assets/Editor/AuditAllPopulators.cs:18)
+ForeverEngine.Editor.AuditAllPopulators:SafeRun (string,System.Action) (at Assets/Editor/AuditAllPopulators.cs:29)
+ForeverEngine.Editor.AuditAllPopulators:Run () (at Assets/Editor/AuditAllPopulators.cs:18)
+
+(Filename: Assets/Editor/PopulateBiomeMaterialCatalog.cs Line: 101)
+
+[Audit] PopulateBiomeMaterialCatalog.Populate OK
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace ()
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+ForeverEngine.Editor.AuditAllPopulators:SafeRun (string,System.Action) (at Assets/Editor/AuditAllPopulators.cs:29)
+ForeverEngine.Editor.AuditAllPopulators:Run () (at Assets/Editor/AuditAllPopulators.cs:18)
+
+(Filename: Assets/Editor/AuditAllPopulators.cs Line: 29)
+
+[Audit] --- PopulateBiomePropCatalog.Populate ---
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace ()
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+ForeverEngine.Editor.AuditAllPopulators:SafeRun (string,System.Action) (at Assets/Editor/AuditAllPopulators.cs:28)
+ForeverEngine.Editor.AuditAllPopulators:Run () (at Assets/Editor/AuditAllPopulators.cs:19)
+
+(Filename: Assets/Editor/AuditAllPopulators.cs Line: 28)
+
+[PopulateBiomePropCatalog] Scanning 14513 prefabs (258 skipped via SkipPathFragments)
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace ()
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+PopulateBiomePropCatalog:Populate () (at Assets/Editor/PopulateBiomePropCatalog.cs:81)
+ForeverEngine.Editor.AuditAllPopulators/<>c:<Run>b__0_5 () (at Assets/Editor/AuditAllPopulators.cs:19)
+ForeverEngine.Editor.AuditAllPopulators:SafeRun (string,System.Action) (at Assets/Editor/AuditAllPopulators.cs:29)
+ForeverEngine.Editor.AuditAllPopulators:Run () (at Assets/Editor/AuditAllPopulators.cs:19)
+
+(Filename: Assets/Editor/PopulateBiomePropCatalog.cs Line: 81)
+
+[PopulateBiomePropCatalog]   TemperateForest <- 12 prefabs matching [Tree_, BroadleafTree, OakTree]
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace ()
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+PopulateBiomePropCatalog:Populate () (at Assets/Editor/PopulateBiomePropCatalog.cs:112)
+ForeverEngine.Editor.AuditAllPopulators/<>c:<Run>b__0_5 () (at Assets/Editor/AuditAllPopulators.cs:19)
+ForeverEngine.Editor.AuditAllPopulators:SafeRun (string,System.Action) (at Assets/Editor/AuditAllPopulators.cs:29)
+ForeverEngine.Editor.AuditAllPopulators:Run () (at Assets/Editor/AuditAllPopulators.cs:19)
+
+(Filename: Assets/Editor/PopulateBiomePropCatalog.cs Line: 112)
+
+[PopulateBiomePropCatalog]   TemperateForest <- 12 prefabs matching [Bush_, Shrub]
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace ()
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+PopulateBiomePropCatalog:Populate () (at Assets/Editor/PopulateBiomePropCatalog.cs:112)
+ForeverEngine.Editor.AuditAllPopulators/<>c:<Run>b__0_5 () (at Assets/Editor/AuditAllPopulators.cs:19)
+ForeverEngine.Editor.AuditAllPopulators:SafeRun (string,System.Action) (at Assets/Editor/AuditAllPopulators.cs:29)
+ForeverEngine.Editor.AuditAllPopulators:Run () (at Assets/Editor/AuditAllPopulators.cs:19)
+
+(Filename: Assets/Editor/PopulateBiomePropCatalog.cs Line: 112)
+
+[PopulateBiomePropCatalog]   TemperateForest <- 12 prefabs matching [Rock_, Stone_]
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace ()
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+PopulateBiomePropCatalog:Populate () (at Assets/Editor/PopulateBiomePropCatalog.cs:112)
+ForeverEngine.Editor.AuditAllPopulators/<>c:<Run>b__0_5 () (at Assets/Editor/AuditAllPopulators.cs:19)
+ForeverEngine.Editor.AuditAllPopulators:SafeRun (string,System.Action) (at Assets/Editor/AuditAllPopulators.cs:29)
+ForeverEngine.Editor.AuditAllPopulators:Run () (at Assets/Editor/AuditAllPopulators.cs:19)
+
+(Filename: Assets/Editor/PopulateBiomePropCatalog.cs Line: 112)
+
+[PopulateBiomePropCatalog]   BorealForest <- 12 prefabs matching [dwarf_pine, Prefab_pine, Pine_LOD]
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace ()
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+PopulateBiomePropCatalog:Populate () (at Assets/Editor/PopulateBiomePropCatalog.cs:112)
+ForeverEngine.Editor.AuditAllPopulators/<>c:<Run>b__0_5 () (at Assets/Editor/AuditAllPopulators.cs:19)
+ForeverEngine.Editor.AuditAllPopulators:SafeRun (string,System.Action) (at Assets/Editor/AuditAllPopulators.cs:29)
+ForeverEngine.Editor.AuditAllPopulators:Run () (at Assets/Editor/AuditAllPopulators.cs:19)
+
+(Filename: Assets/Editor/PopulateBiomePropCatalog.cs Line: 112)
+
+[PopulateBiomePropCatalog]   BorealForest <- 12 prefabs matching [Rock_, Stone_]
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace ()
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+PopulateBiomePropCatalog:Populate () (at Assets/Editor/PopulateBiomePropCatalog.cs:112)
+ForeverEngine.Editor.AuditAllPopulators/<>c:<Run>b__0_5 () (at Assets/Editor/AuditAllPopulators.cs:19)
+ForeverEngine.Editor.AuditAllPopulators:SafeRun (string,System.Action) (at Assets/Editor/AuditAllPopulators.cs:29)
+ForeverEngine.Editor.AuditAllPopulators:Run () (at Assets/Editor/AuditAllPopulators.cs:19)
+
+(Filename: Assets/Editor/PopulateBiomePropCatalog.cs Line: 112)
+
+[PopulateBiomePropCatalog]   Mountain <- 12 prefabs matching [Prefab_big_rock, Prefab_mountain_rock, Rock_, Boulder, Cliff_]
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace ()
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+PopulateBiomePropCatalog:Populate () (at Assets/Editor/PopulateBiomePropCatalog.cs:112)
+ForeverEngine.Editor.AuditAllPopulators/<>c:<Run>b__0_5 () (at Assets/Editor/AuditAllPopulators.cs:19)
+ForeverEngine.Editor.AuditAllPopulators:SafeRun (string,System.Action) (at Assets/Editor/AuditAllPopulators.cs:29)
+ForeverEngine.Editor.AuditAllPopulators:Run () (at Assets/Editor/AuditAllPopulators.cs:19)
+
+(Filename: Assets/Editor/PopulateBiomePropCatalog.cs Line: 112)
+
+[PopulateBiomePropCatalog]   Mountain <- 12 prefabs matching [dwarf_pine, Prefab_pine]
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace ()
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+PopulateBiomePropCatalog:Populate () (at Assets/Editor/PopulateBiomePropCatalog.cs:112)
+ForeverEngine.Editor.AuditAllPopulators/<>c:<Run>b__0_5 () (at Assets/Editor/AuditAllPopulators.cs:19)
+ForeverEngine.Editor.AuditAllPopulators:SafeRun (string,System.Action) (at Assets/Editor/AuditAllPopulators.cs:29)
+ForeverEngine.Editor.AuditAllPopulators:Run () (at Assets/Editor/AuditAllPopulators.cs:19)
+
+(Filename: Assets/Editor/PopulateBiomePropCatalog.cs Line: 112)
+
+[PopulateBiomePropCatalog]   Grassland <- 12 prefabs matching [Tree_, OakTree]
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace ()
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+PopulateBiomePropCatalog:Populate () (at Assets/Editor/PopulateBiomePropCatalog.cs:112)
+ForeverEngine.Editor.AuditAllPopulators/<>c:<Run>b__0_5 () (at Assets/Editor/AuditAllPopulators.cs:19)
+ForeverEngine.Editor.AuditAllPopulators:SafeRun (string,System.Action) (at Assets/Editor/AuditAllPopulators.cs:29)
+ForeverEngine.Editor.AuditAllPopulators:Run () (at Assets/Editor/AuditAllPopulators.cs:19)
+
+(Filename: Assets/Editor/PopulateBiomePropCatalog.cs Line: 112)
+
+[PopulateBiomePropCatalog]   Grassland <- 12 prefabs matching [Rock_, Stone_]
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace ()
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+PopulateBiomePropCatalog:Populate () (at Assets/Editor/PopulateBiomePropCatalog.cs:112)
+ForeverEngine.Editor.AuditAllPopulators/<>c:<Run>b__0_5 () (at Assets/Editor/AuditAllPopulators.cs:19)
+ForeverEngine.Editor.AuditAllPopulators:SafeRun (string,System.Action) (at Assets/Editor/AuditAllPopulators.cs:29)
+ForeverEngine.Editor.AuditAllPopulators:Run () (at Assets/Editor/AuditAllPopulators.cs:19)
+
+(Filename: Assets/Editor/PopulateBiomePropCatalog.cs Line: 112)
+
+[PopulateBiomePropCatalog]   Desert <- 12 prefabs matching [Prefab_flat_rock, Prefab_ground_rock, Prefab_big_rock, Boulder]
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace ()
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+PopulateBiomePropCatalog:Populate () (at Assets/Editor/PopulateBiomePropCatalog.cs:112)
+ForeverEngine.Editor.AuditAllPopulators/<>c:<Run>b__0_5 () (at Assets/Editor/AuditAllPopulators.cs:19)
+ForeverEngine.Editor.AuditAllPopulators:SafeRun (string,System.Action) (at Assets/Editor/AuditAllPopulators.cs:29)
+ForeverEngine.Editor.AuditAllPopulators:Run () (at Assets/Editor/AuditAllPopulators.cs:19)
+
+(Filename: Assets/Editor/PopulateBiomePropCatalog.cs Line: 112)
+
+[PopulateBiomePropCatalog]   Desert <- 12 prefabs matching [bonepile, Bone_Pile, Skeleton_lying, bone_skull]
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace ()
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+PopulateBiomePropCatalog:Populate () (at Assets/Editor/PopulateBiomePropCatalog.cs:112)
+ForeverEngine.Editor.AuditAllPopulators/<>c:<Run>b__0_5 () (at Assets/Editor/AuditAllPopulators.cs:19)
+ForeverEngine.Editor.AuditAllPopulators:SafeRun (string,System.Action) (at Assets/Editor/AuditAllPopulators.cs:29)
+ForeverEngine.Editor.AuditAllPopulators:Run () (at Assets/Editor/AuditAllPopulators.cs:19)
+
+(Filename: Assets/Editor/PopulateBiomePropCatalog.cs Line: 112)
+
+[PopulateBiomePropCatalog]   Savanna <- 12 prefabs matching [AcaciaTree, SavannaTree, Tree_]
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace ()
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+PopulateBiomePropCatalog:Populate () (at Assets/Editor/PopulateBiomePropCatalog.cs:112)
+ForeverEngine.Editor.AuditAllPopulators/<>c:<Run>b__0_5 () (at Assets/Editor/AuditAllPopulators.cs:19)
+ForeverEngine.Editor.AuditAllPopulators:SafeRun (string,System.Action) (at Assets/Editor/AuditAllPopulators.cs:29)
+ForeverEngine.Editor.AuditAllPopulators:Run () (at Assets/Editor/AuditAllPopulators.cs:19)
+
+(Filename: Assets/Editor/PopulateBiomePropCatalog.cs Line: 112)
+
+[PopulateBiomePropCatalog]   Savanna <- 12 prefabs matching [Prefab_flat_rock, Prefab_ground_rock, Rock_]
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace ()
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+PopulateBiomePropCatalog:Populate () (at Assets/Editor/PopulateBiomePropCatalog.cs:112)
+ForeverEngine.Editor.AuditAllPopulators/<>c:<Run>b__0_5 () (at Assets/Editor/AuditAllPopulators.cs:19)
+ForeverEngine.Editor.AuditAllPopulators:SafeRun (string,System.Action) (at Assets/Editor/AuditAllPopulators.cs:29)
+ForeverEngine.Editor.AuditAllPopulators:Run () (at Assets/Editor/AuditAllPopulators.cs:19)
+
+(Filename: Assets/Editor/PopulateBiomePropCatalog.cs Line: 112)
+
+[PopulateBiomePropCatalog]   TropicalRainforest <- 12 prefabs matching [Palm_, JungleTree, Tree_]
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace ()
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+PopulateBiomePropCatalog:Populate () (at Assets/Editor/PopulateBiomePropCatalog.cs:112)
+ForeverEngine.Editor.AuditAllPopulators/<>c:<Run>b__0_5 () (at Assets/Editor/AuditAllPopulators.cs:19)
+ForeverEngine.Editor.AuditAllPopulators:SafeRun (string,System.Action) (at Assets/Editor/AuditAllPopulators.cs:29)
+ForeverEngine.Editor.AuditAllPopulators:Run () (at Assets/Editor/AuditAllPopulators.cs:19)
+
+(Filename: Assets/Editor/PopulateBiomePropCatalog.cs Line: 112)
+
+[PopulateBiomePropCatalog]   Tundra <- 12 prefabs matching [dwarf_pine, Prefab_pine, Pine_LOD]
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace ()
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+PopulateBiomePropCatalog:Populate () (at Assets/Editor/PopulateBiomePropCatalog.cs:112)
+ForeverEngine.Editor.AuditAllPopulators/<>c:<Run>b__0_5 () (at Assets/Editor/AuditAllPopulators.cs:19)
+ForeverEngine.Editor.AuditAllPopulators:SafeRun (string,System.Action) (at Assets/Editor/AuditAllPopulators.cs:29)
+ForeverEngine.Editor.AuditAllPopulators:Run () (at Assets/Editor/AuditAllPopulators.cs:19)
+
+(Filename: Assets/Editor/PopulateBiomePropCatalog.cs Line: 112)
+
+[PopulateBiomePropCatalog]   Tundra <- 12 prefabs matching [Rock_, Stone_]
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace ()
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+PopulateBiomePropCatalog:Populate () (at Assets/Editor/PopulateBiomePropCatalog.cs:112)
+ForeverEngine.Editor.AuditAllPopulators/<>c:<Run>b__0_5 () (at Assets/Editor/AuditAllPopulators.cs:19)
+ForeverEngine.Editor.AuditAllPopulators:SafeRun (string,System.Action) (at Assets/Editor/AuditAllPopulators.cs:29)
+ForeverEngine.Editor.AuditAllPopulators:Run () (at Assets/Editor/AuditAllPopulators.cs:19)
+
+(Filename: Assets/Editor/PopulateBiomePropCatalog.cs Line: 112)
+
+Start importing Assets/Resources/BiomePropCatalog.asset using Guid(c2b99b9a1834cac4081a85f527b4c761) (NativeFormatImporter) -> (Import Result ID: '4e77256a80014db7d4f767d6eab08483') in 0.0014699 seconds [static dependencies only]. Details - ImportResultOutputID=4796ba97ddc3dcde602ffc9625750c48 DependenciesID=d57a4b67a8b0f222f0fd61bf6ec53fcf StaticDependenciesID=b75eebda2409c174d406c3f23847d2df 
+Refreshing native plugins compatible for Editor in 2.76 ms, found 9 plugins.
+(Values over 0.050ms)
+Asset Pipeline Refresh (id=845fe2160f9a1fd43bf56901085e4ba1): Total: 0.553 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+	Summary:
+		Imports: total=1 (actual=1, local cache=0, cache server=0)
+		Asset DB Process Time: managed=0 ms, native=120 ms
+		Asset DB Callback time: managed=415 ms, native=16 ms
+		Scripting: domain reloads=0, domain reload time=0 ms, compile time=0 ms, other=0 ms
+		Project Asset Count: scripts=6056, non-scripts=42873
+		Asset File Changes: new=0, changed=1, moved=0, deleted=0
+		Scan Filter Count: 3
+	ApplyChangesToAssetFolders: 0.100ms
+	Scan: 4.810ms
+	ProcessAssetsWithTransientArtifactChanges: 0.067ms
+	CategorizeAssets: 90.246ms
+	ImportOutOfDateAssets: 9.804ms (1.663ms without children)
+		ImportManagerImport: 2.923ms (1.248ms without children)
+		ReloadNativeAssets: 0.122ms
+		UnloadImportedAssets: 0.183ms
+		EnsureUptoDateAssetsAreRegisteredWithGuidPM: 3.676ms
+		OnDemandSchedulerStart: 1.229ms
+	PostProcessAllAssets: 416.118ms
+		XRBuildSystem.XRAssetImported 0.541ms
+		MonoPostProcessAllAssets: 415.496ms
+			CleanUpEditor.OnPostprocessAllAssets 224.393ms
+			SetupAutostart.OnPostprocessAllAssets 121.147ms
+			InputSystemDefineEditor.OnPostprocessAllAssets 67.944ms
+			GaiaManagerRefresh.OnPostprocessAllAssets 0.385ms
+			ModelAssetProcessor.OnPostprocessAllAssets 0.379ms
+			TMPro_TexturePostProcessor.OnPostprocessAllAssets 0.294ms
+			SyncVS.PostprocessSyncProject 0.271ms
+			SpriteEditorTexturePostprocessor.OnPostprocessAllAssets 0.175ms
+			RenderPipelineGlobalSettingsPostprocessor.OnPostprocessAllAssets 0.067ms
+	PostAssetChangesProfiler: 15.936ms
+	GatherAllCurrentPrimaryImportResultRevisions: 1.091ms
+	UnloadStreamsBegin: 1.288ms
+	PersistCurrentRevisions: 0.912ms
+	Untracked: 12.904ms
+
+[PopulateBiomePropCatalog] Populated 16/16 rules.
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace ()
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+PopulateBiomePropCatalog:Populate () (at Assets/Editor/PopulateBiomePropCatalog.cs:123)
+ForeverEngine.Editor.AuditAllPopulators/<>c:<Run>b__0_5 () (at Assets/Editor/AuditAllPopulators.cs:19)
+ForeverEngine.Editor.AuditAllPopulators:SafeRun (string,System.Action) (at Assets/Editor/AuditAllPopulators.cs:29)
+ForeverEngine.Editor.AuditAllPopulators:Run () (at Assets/Editor/AuditAllPopulators.cs:19)
+
+(Filename: Assets/Editor/PopulateBiomePropCatalog.cs Line: 123)
+
+[Audit] PopulateBiomePropCatalog.Populate OK
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace ()
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+ForeverEngine.Editor.AuditAllPopulators:SafeRun (string,System.Action) (at Assets/Editor/AuditAllPopulators.cs:29)
+ForeverEngine.Editor.AuditAllPopulators:Run () (at Assets/Editor/AuditAllPopulators.cs:19)
+
+(Filename: Assets/Editor/AuditAllPopulators.cs Line: 29)
+
+Asset Pipeline Refresh (id=bbe3443ec066b554a9d755d5d06b6b01): Total: 0.010 seconds - Initiated by RefreshV2(NoUpdateAssetOptions)
+[Audit] === All populators finished ===
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace ()
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+ForeverEngine.Editor.AuditAllPopulators:Run () (at Assets/Editor/AuditAllPopulators.cs:23)
+
+(Filename: Assets/Editor/AuditAllPopulators.cs Line: 23)
+
+Batchmode quit successfully invoked - shutting down!
+Unloading 0 Unused Serialized files (Serialized files now loaded: 0)
+Unloading 908992 unused Assets / (0.54 GB). Loaded Objects now: 15624.
+Memory consumption went from 2.06 GB to 1.52 GB.
+Total: 616.809200 ms (FindLiveObjects: 36.878500 ms CreateObjectMapping: 49.518500 ms MarkObjects: 6.243500 ms  DeleteObjects: 524.168100 ms)
+
+[Physics::Module] Cleanup current backend.
+[Physics::Module] Id: 0xf2b8ea05
+Input System module state changed to: ShutdownInProgress.
+Input Polling Thread exited.
+Input System module state changed to: Shutdown.
+[Licensing::IpcConnector] LicenseClient-bp303-6000.4.1-notifications channel disconnected successfully.
+[Licensing::IpcConnector] LicenseClient-bp303-6000.4.1 channel disconnected successfully.
+AcceleratorClientConnectionCallback - disconnected - :0
+Shut down.
+Cleanup mono
+CodeReloadManager destroyed
+abort_threads: Failed aborting id: 00000000000057F8, mono_thread_manage will ignore it
+
+abort_threads: Failed aborting id: 000000000000C674, mono_thread_manage will ignore it
+
+abort_threads: Failed aborting id: 00000000000057F8, mono_thread_manage will ignore it
+
+abort_threads: Failed aborting id: 000000000000C674, mono_thread_manage will ignore it
+
+debugger-agent: Unable to listen on 3120
+Exiting batchmode successfully now!
+Exiting without the bug reporter. Application will terminate with return code 0

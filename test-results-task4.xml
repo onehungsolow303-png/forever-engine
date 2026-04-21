@@ -1,0 +1,893 @@
+<?xml version="1.0" encoding="utf-8"?>
+<test-run id="2" testcasecount="122" result="Passed" total="122" passed="122" failed="0" inconclusive="0" skipped="0" asserts="0" engine-version="3.5.0.0" clr-version="4.0.30319.42000" start-time="2026-04-19 14:37:57Z" end-time="2026-04-19 14:37:58Z" duration="1.1933611">
+  <test-suite type="TestSuite" id="1000" name="Forever engin" fullname="Forever engin" runstate="Runnable" testcasecount="122" result="Passed" start-time="2026-04-19 14:37:57Z" end-time="2026-04-19 14:37:58Z" duration="1.193361" total="122" passed="122" failed="0" inconclusive="0" skipped="0" asserts="0">
+    <properties>
+      <property name="platform" value="EditMode" />
+    </properties>
+    <test-suite type="Assembly" id="1157" name="ForeverEngine.Tests.EditMode.dll" fullname="C:/Dev/Forever engine/Library/ScriptAssemblies/ForeverEngine.Tests.EditMode.dll" runstate="Runnable" testcasecount="122" result="Passed" start-time="2026-04-19 14:37:57Z" end-time="2026-04-19 14:37:58Z" duration="1.186128" total="122" passed="122" failed="0" inconclusive="0" skipped="0" asserts="0">
+      <properties>
+        <property name="_PID" value="15796" />
+        <property name="_APPDOMAIN" value="Unity Child Domain" />
+        <property name="platform" value="EditMode" />
+        <property name="EditorOnly" value="True" />
+      </properties>
+      <test-suite type="TestSuite" id="1158" name="ForeverEngine" fullname="ForeverEngine" runstate="Runnable" testcasecount="122" result="Passed" start-time="2026-04-19 14:37:57Z" end-time="2026-04-19 14:37:58Z" duration="1.185872" total="122" passed="122" failed="0" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <test-suite type="TestSuite" id="1159" name="Tests" fullname="ForeverEngine.Tests" runstate="Runnable" testcasecount="122" result="Passed" start-time="2026-04-19 14:37:57Z" end-time="2026-04-19 14:37:58Z" duration="1.185681" total="122" passed="122" failed="0" inconclusive="0" skipped="0" asserts="0">
+          <properties />
+          <test-suite type="TestFixture" id="1001" name="AIDecisionJobTests" fullname="ForeverEngine.Tests.AIDecisionJobTests" classname="ForeverEngine.Tests.AIDecisionJobTests" runstate="Runnable" testcasecount="4" result="Passed" start-time="2026-04-19 14:37:57Z" end-time="2026-04-19 14:37:57Z" duration="0.020225" total="4" passed="4" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <test-case id="1002" name="Chase_Adjacent_Attacks" fullname="ForeverEngine.Tests.AIDecisionJobTests.Chase_Adjacent_Attacks" methodname="Chase_Adjacent_Attacks" classname="ForeverEngine.Tests.AIDecisionJobTests" runstate="Runnable" seed="1140355623" result="Passed" start-time="2026-04-19 14:37:57Z" end-time="2026-04-19 14:37:57Z" duration="0.011276" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1003" name="Chase_FarAway_Moves" fullname="ForeverEngine.Tests.AIDecisionJobTests.Chase_FarAway_Moves" methodname="Chase_FarAway_Moves" classname="ForeverEngine.Tests.AIDecisionJobTests" runstate="Runnable" seed="926149213" result="Passed" start-time="2026-04-19 14:37:57Z" end-time="2026-04-19 14:37:57Z" duration="0.000447" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1005" name="Dead_DoesNothing" fullname="ForeverEngine.Tests.AIDecisionJobTests.Dead_DoesNothing" methodname="Dead_DoesNothing" classname="ForeverEngine.Tests.AIDecisionJobTests" runstate="Runnable" seed="844016685" result="Passed" start-time="2026-04-19 14:37:57Z" end-time="2026-04-19 14:37:57Z" duration="0.000375" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1004" name="Static_DoesNothing" fullname="ForeverEngine.Tests.AIDecisionJobTests.Static_DoesNothing" methodname="Static_DoesNothing" classname="ForeverEngine.Tests.AIDecisionJobTests" runstate="Runnable" seed="1016112610" result="Passed" start-time="2026-04-19 14:37:57Z" end-time="2026-04-19 14:37:57Z" duration="0.000374" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+          </test-suite>
+          <test-suite type="TestFixture" id="1006" name="AnimationTests" fullname="ForeverEngine.Tests.AnimationTests" classname="ForeverEngine.Tests.AnimationTests" runstate="Runnable" testcasecount="5" result="Passed" start-time="2026-04-19 14:37:57Z" end-time="2026-04-19 14:37:57Z" duration="0.002424" total="5" passed="5" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <test-case id="1008" name="Advance_ProgressesFrames" fullname="ForeverEngine.Tests.AnimationTests.Advance_ProgressesFrames" methodname="Advance_ProgressesFrames" classname="ForeverEngine.Tests.AnimationTests" runstate="Runnable" seed="851486473" result="Passed" start-time="2026-04-19 14:37:57Z" end-time="2026-04-19 14:37:57Z" duration="0.000731" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1009" name="Loop_WrapsAround" fullname="ForeverEngine.Tests.AnimationTests.Loop_WrapsAround" methodname="Loop_WrapsAround" classname="ForeverEngine.Tests.AnimationTests" runstate="Runnable" seed="1175641605" result="Passed" start-time="2026-04-19 14:37:57Z" end-time="2026-04-19 14:37:57Z" duration="0.000319" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1007" name="NewAnimation_StartsAtFrame0" fullname="ForeverEngine.Tests.AnimationTests.NewAnimation_StartsAtFrame0" methodname="NewAnimation_StartsAtFrame0" classname="ForeverEngine.Tests.AnimationTests" runstate="Runnable" seed="1781401340" result="Passed" start-time="2026-04-19 14:37:57Z" end-time="2026-04-19 14:37:57Z" duration="0.000116" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1010" name="NoLoop_StopsAtEnd" fullname="ForeverEngine.Tests.AnimationTests.NoLoop_StopsAtEnd" methodname="NoLoop_StopsAtEnd" classname="ForeverEngine.Tests.AnimationTests" runstate="Runnable" seed="1735147222" result="Passed" start-time="2026-04-19 14:37:57Z" end-time="2026-04-19 14:37:57Z" duration="0.000147" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1011" name="SpeedMultiplier_AffectsRate" fullname="ForeverEngine.Tests.AnimationTests.SpeedMultiplier_AffectsRate" methodname="SpeedMultiplier_AffectsRate" classname="ForeverEngine.Tests.AnimationTests" runstate="Runnable" seed="162664527" result="Passed" start-time="2026-04-19 14:37:57Z" end-time="2026-04-19 14:37:57Z" duration="0.000085" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+          </test-suite>
+          <test-suite type="TestSuite" id="1166" name="Bridges" fullname="ForeverEngine.Tests.Bridges" runstate="Runnable" testcasecount="4" result="Passed" start-time="2026-04-19 14:37:57Z" end-time="2026-04-19 14:37:57Z" duration="0.003356" total="4" passed="4" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <test-suite type="TestFixture" id="1150" name="AssetClientTests" fullname="ForeverEngine.Tests.Bridges.AssetClientTests" classname="ForeverEngine.Tests.Bridges.AssetClientTests" runstate="Runnable" testcasecount="2" result="Passed" start-time="2026-04-19 14:37:57Z" end-time="2026-04-19 14:37:57Z" duration="0.001036" total="2" passed="2" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1151" name="DefaultBaseUrlIsAssetManagerPort" fullname="ForeverEngine.Tests.Bridges.AssetClientTests.DefaultBaseUrlIsAssetManagerPort" methodname="DefaultBaseUrlIsAssetManagerPort" classname="ForeverEngine.Tests.Bridges.AssetClientTests" runstate="Runnable" seed="1121364422" result="Passed" start-time="2026-04-19 14:37:57Z" end-time="2026-04-19 14:37:57Z" duration="0.000299" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1152" name="TrailingSlashIsTrimmed" fullname="ForeverEngine.Tests.Bridges.AssetClientTests.TrailingSlashIsTrimmed" methodname="TrailingSlashIsTrimmed" classname="ForeverEngine.Tests.Bridges.AssetClientTests" runstate="Runnable" seed="920956017" result="Passed" start-time="2026-04-19 14:37:57Z" end-time="2026-04-19 14:37:57Z" duration="0.000112" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+            </test-suite>
+            <test-suite type="TestFixture" id="1153" name="DirectorClientTests" fullname="ForeverEngine.Tests.Bridges.DirectorClientTests" classname="ForeverEngine.Tests.Bridges.DirectorClientTests" runstate="Runnable" testcasecount="1" result="Passed" start-time="2026-04-19 14:37:57Z" end-time="2026-04-19 14:37:57Z" duration="0.000592" total="1" passed="1" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1154" name="DefaultBaseUrlIsDirectorHubPort" fullname="ForeverEngine.Tests.Bridges.DirectorClientTests.DefaultBaseUrlIsDirectorHubPort" methodname="DefaultBaseUrlIsDirectorHubPort" classname="ForeverEngine.Tests.Bridges.DirectorClientTests" runstate="Runnable" seed="1903902692" result="Passed" start-time="2026-04-19 14:37:57Z" end-time="2026-04-19 14:37:57Z" duration="0.000138" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+            </test-suite>
+            <test-suite type="TestFixture" id="1155" name="ServiceWatchdogTests" fullname="ForeverEngine.Tests.Bridges.ServiceWatchdogTests" classname="ForeverEngine.Tests.Bridges.ServiceWatchdogTests" runstate="Runnable" testcasecount="1" result="Passed" start-time="2026-04-19 14:37:57Z" end-time="2026-04-19 14:37:57Z" duration="0.001357" total="1" passed="1" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1156" name="StartsInUnknownState" fullname="ForeverEngine.Tests.Bridges.ServiceWatchdogTests.StartsInUnknownState" methodname="StartsInUnknownState" classname="ForeverEngine.Tests.Bridges.ServiceWatchdogTests" runstate="Runnable" seed="1762255634" result="Passed" start-time="2026-04-19 14:37:57Z" end-time="2026-04-19 14:37:57Z" duration="0.000947" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+            </test-suite>
+          </test-suite>
+          <test-suite type="TestFixture" id="1012" name="CombatJobTests" fullname="ForeverEngine.Tests.CombatJobTests" classname="ForeverEngine.Tests.CombatJobTests" runstate="Runnable" testcasecount="3" result="Passed" start-time="2026-04-19 14:37:57Z" end-time="2026-04-19 14:37:57Z" duration="0.009644" total="3" passed="3" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <test-case id="1013" name="Attack_HitAndDamage" fullname="ForeverEngine.Tests.CombatJobTests.Attack_HitAndDamage" methodname="Attack_HitAndDamage" classname="ForeverEngine.Tests.CombatJobTests" runstate="Runnable" seed="442114578" result="Passed" start-time="2026-04-19 14:37:57Z" end-time="2026-04-19 14:37:57Z" duration="0.004921" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1014" name="Attack_NatOne_AlwaysMisses" fullname="ForeverEngine.Tests.CombatJobTests.Attack_NatOne_AlwaysMisses" methodname="Attack_NatOne_AlwaysMisses" classname="ForeverEngine.Tests.CombatJobTests" runstate="Runnable" seed="1929993522" result="Passed" start-time="2026-04-19 14:37:57Z" end-time="2026-04-19 14:37:57Z" duration="0.000336" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1015" name="Attack_NatTwenty_AlwaysHits" fullname="ForeverEngine.Tests.CombatJobTests.Attack_NatTwenty_AlwaysHits" methodname="Attack_NatTwenty_AlwaysHits" classname="ForeverEngine.Tests.CombatJobTests" runstate="Runnable" seed="1925776032" result="Passed" start-time="2026-04-19 14:37:57Z" end-time="2026-04-19 14:37:57Z" duration="0.000378" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+          </test-suite>
+          <test-suite type="TestSuite" id="1165" name="Demo" fullname="ForeverEngine.Tests.Demo" runstate="Runnable" testcasecount="6" result="Passed" start-time="2026-04-19 14:37:57Z" end-time="2026-04-19 14:37:58Z" duration="0.319290" total="6" passed="6" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <test-suite type="TestFixture" id="1143" name="DialoguePanelTests" fullname="ForeverEngine.Tests.Demo.DialoguePanelTests" classname="ForeverEngine.Tests.Demo.DialoguePanelTests" runstate="Runnable" testcasecount="6" result="Passed" start-time="2026-04-19 14:37:57Z" end-time="2026-04-19 14:37:58Z" duration="0.319113" total="6" passed="6" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1146" name="CloseHidesPanel" fullname="ForeverEngine.Tests.Demo.DialoguePanelTests.CloseHidesPanel" methodname="CloseHidesPanel" classname="ForeverEngine.Tests.Demo.DialoguePanelTests" runstate="Runnable" seed="1095154946" result="Passed" start-time="2026-04-19 14:37:57Z" end-time="2026-04-19 14:37:58Z" duration="0.313767" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1144" name="NewPanelStartsClosed" fullname="ForeverEngine.Tests.Demo.DialoguePanelTests.NewPanelStartsClosed" methodname="NewPanelStartsClosed" classname="ForeverEngine.Tests.Demo.DialoguePanelTests" runstate="Runnable" seed="704269321" result="Passed" start-time="2026-04-19 14:37:58Z" end-time="2026-04-19 14:37:58Z" duration="0.000626" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1147" name="ShowAcceptsNullNpcId" fullname="ForeverEngine.Tests.Demo.DialoguePanelTests.ShowAcceptsNullNpcId" methodname="ShowAcceptsNullNpcId" classname="ForeverEngine.Tests.Demo.DialoguePanelTests" runstate="Runnable" seed="2143394389" result="Passed" start-time="2026-04-19 14:37:58Z" end-time="2026-04-19 14:37:58Z" duration="0.001384" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1148" name="ShowDoesNotThrowWithEmptyHistory" fullname="ForeverEngine.Tests.Demo.DialoguePanelTests.ShowDoesNotThrowWithEmptyHistory" methodname="ShowDoesNotThrowWithEmptyHistory" classname="ForeverEngine.Tests.Demo.DialoguePanelTests" runstate="Runnable" seed="2023621980" result="Passed" start-time="2026-04-19 14:37:58Z" end-time="2026-04-19 14:37:58Z" duration="0.001143" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1145" name="ShowOpensPanel" fullname="ForeverEngine.Tests.Demo.DialoguePanelTests.ShowOpensPanel" methodname="ShowOpensPanel" classname="ForeverEngine.Tests.Demo.DialoguePanelTests" runstate="Runnable" seed="889804240" result="Passed" start-time="2026-04-19 14:37:58Z" end-time="2026-04-19 14:37:58Z" duration="0.000542" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1149" name="UxmlAssetLoadsAndBindsAllNamedElements" fullname="ForeverEngine.Tests.Demo.DialoguePanelTests.UxmlAssetLoadsAndBindsAllNamedElements" methodname="UxmlAssetLoadsAndBindsAllNamedElements" classname="ForeverEngine.Tests.Demo.DialoguePanelTests" runstate="Runnable" seed="907576968" result="Passed" start-time="2026-04-19 14:37:58Z" end-time="2026-04-19 14:37:58Z" duration="0.000528" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+            </test-suite>
+          </test-suite>
+          <test-suite type="TestFixture" id="1016" name="DiceRollerTests" fullname="ForeverEngine.Tests.DiceRollerTests" classname="ForeverEngine.Tests.DiceRollerTests" runstate="Runnable" testcasecount="8" result="Passed" start-time="2026-04-19 14:37:58Z" end-time="2026-04-19 14:37:58Z" duration="0.354496" total="8" passed="8" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <test-case id="1024" name="AbilityModifier_Standard" fullname="ForeverEngine.Tests.DiceRollerTests.AbilityModifier_Standard" methodname="AbilityModifier_Standard" classname="ForeverEngine.Tests.DiceRollerTests" runstate="Runnable" seed="1128264951" result="Passed" start-time="2026-04-19 14:37:58Z" end-time="2026-04-19 14:37:58Z" duration="0.000741" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1021" name="ParseDice_Invalid_ReturnsDefaults" fullname="ForeverEngine.Tests.DiceRollerTests.ParseDice_Invalid_ReturnsDefaults" methodname="ParseDice_Invalid_ReturnsDefaults" classname="ForeverEngine.Tests.DiceRollerTests" runstate="Runnable" seed="1551363280" result="Passed" start-time="2026-04-19 14:37:58Z" end-time="2026-04-19 14:37:58Z" duration="0.000266" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1017" name="ParseDice_Simple_1d6" fullname="ForeverEngine.Tests.DiceRollerTests.ParseDice_Simple_1d6" methodname="ParseDice_Simple_1d6" classname="ForeverEngine.Tests.DiceRollerTests" runstate="Runnable" seed="1822764175" result="Passed" start-time="2026-04-19 14:37:58Z" end-time="2026-04-19 14:37:58Z" duration="0.000085" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1020" name="ParseDice_Uppercase_3D10Plus5" fullname="ForeverEngine.Tests.DiceRollerTests.ParseDice_Uppercase_3D10Plus5" methodname="ParseDice_Uppercase_3D10Plus5" classname="ForeverEngine.Tests.DiceRollerTests" runstate="Runnable" seed="1709904388" result="Passed" start-time="2026-04-19 14:37:58Z" end-time="2026-04-19 14:37:58Z" duration="0.000063" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1018" name="ParseDice_WithBonus_2d8Plus3" fullname="ForeverEngine.Tests.DiceRollerTests.ParseDice_WithBonus_2d8Plus3" methodname="ParseDice_WithBonus_2d8Plus3" classname="ForeverEngine.Tests.DiceRollerTests" runstate="Runnable" seed="529098682" result="Passed" start-time="2026-04-19 14:37:58Z" end-time="2026-04-19 14:37:58Z" duration="0.000056" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1019" name="ParseDice_WithPenalty_1d4Minus1" fullname="ForeverEngine.Tests.DiceRollerTests.ParseDice_WithPenalty_1d4Minus1" methodname="ParseDice_WithPenalty_1d4Minus1" classname="ForeverEngine.Tests.DiceRollerTests" runstate="Runnable" seed="1306548331" result="Passed" start-time="2026-04-19 14:37:58Z" end-time="2026-04-19 14:37:58Z" duration="0.000050" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1022" name="Roll_1d6_InRange" fullname="ForeverEngine.Tests.DiceRollerTests.Roll_1d6_InRange" methodname="Roll_1d6_InRange" classname="ForeverEngine.Tests.DiceRollerTests" runstate="Runnable" seed="1466232244" result="Passed" start-time="2026-04-19 14:37:58Z" end-time="2026-04-19 14:37:58Z" duration="0.000264" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1023" name="Roll_2d6Plus3_InRange" fullname="ForeverEngine.Tests.DiceRollerTests.Roll_2d6Plus3_InRange" methodname="Roll_2d6Plus3_InRange" classname="ForeverEngine.Tests.DiceRollerTests" runstate="Runnable" seed="1548368625" result="Passed" start-time="2026-04-19 14:37:58Z" end-time="2026-04-19 14:37:58Z" duration="0.000253" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+          </test-suite>
+          <test-suite type="TestSuite" id="1161" name="EditMode" fullname="ForeverEngine.Tests.EditMode" runstate="Runnable" testcasecount="19" result="Passed" start-time="2026-04-19 14:37:58Z" end-time="2026-04-19 14:37:58Z" duration="0.406637" total="19" passed="19" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <test-suite type="TestSuite" id="1164" name="Procedural" fullname="ForeverEngine.Tests.EditMode.Procedural" runstate="Runnable" testcasecount="1" result="Passed" start-time="2026-04-19 14:37:58Z" end-time="2026-04-19 14:37:58Z" duration="0.002655" total="1" passed="1" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-suite type="TestFixture" id="1141" name="ChunkManagerVoxelSuppressionTests" fullname="ForeverEngine.Tests.EditMode.Procedural.ChunkManagerVoxelSuppressionTests" classname="ForeverEngine.Tests.EditMode.Procedural.ChunkManagerVoxelSuppressionTests" runstate="Runnable" testcasecount="1" result="Passed" start-time="2026-04-19 14:37:58Z" end-time="2026-04-19 14:37:58Z" duration="0.002497" total="1" passed="1" failed="0" inconclusive="0" skipped="0" asserts="0">
+                <properties />
+                <test-case id="1142" name="VoxelTerrainActive_True_DisablesAllLoadedTerrainRenderers" fullname="ForeverEngine.Tests.EditMode.Procedural.ChunkManagerVoxelSuppressionTests.VoxelTerrainActive_True_DisablesAllLoadedTerrainRenderers" methodname="VoxelTerrainActive_True_DisablesAllLoadedTerrainRenderers" classname="ForeverEngine.Tests.EditMode.Procedural.ChunkManagerVoxelSuppressionTests" runstate="Runnable" seed="456969957" result="Passed" start-time="2026-04-19 14:37:58Z" end-time="2026-04-19 14:37:58Z" duration="0.002138" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                </test-case>
+              </test-suite>
+            </test-suite>
+            <test-suite type="TestSuite" id="1163" name="Voxel" fullname="ForeverEngine.Tests.EditMode.Voxel" runstate="Runnable" testcasecount="3" result="Passed" start-time="2026-04-19 14:37:58Z" end-time="2026-04-19 14:37:58Z" duration="0.001547" total="3" passed="3" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-suite type="TestFixture" id="1137" name="MeshPoolTests" fullname="ForeverEngine.Tests.EditMode.Voxel.MeshPoolTests" classname="ForeverEngine.Tests.EditMode.Voxel.MeshPoolTests" runstate="Runnable" testcasecount="3" result="Passed" start-time="2026-04-19 14:37:58Z" end-time="2026-04-19 14:37:58Z" duration="0.001264" total="3" passed="3" failed="0" inconclusive="0" skipped="0" asserts="0">
+                <properties />
+                <test-case id="1138" name="Rent_Then_Return_Then_Rent_Again_Returns_Same_Mesh_Instance" fullname="ForeverEngine.Tests.EditMode.Voxel.MeshPoolTests.Rent_Then_Return_Then_Rent_Again_Returns_Same_Mesh_Instance" methodname="Rent_Then_Return_Then_Rent_Again_Returns_Same_Mesh_Instance" classname="ForeverEngine.Tests.EditMode.Voxel.MeshPoolTests" runstate="Runnable" seed="979256320" result="Passed" start-time="2026-04-19 14:37:58Z" end-time="2026-04-19 14:37:58Z" duration="0.000668" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                </test-case>
+                <test-case id="1139" name="Rent_When_Pool_Empty_Allocates_Fresh" fullname="ForeverEngine.Tests.EditMode.Voxel.MeshPoolTests.Rent_When_Pool_Empty_Allocates_Fresh" methodname="Rent_When_Pool_Empty_Allocates_Fresh" classname="ForeverEngine.Tests.EditMode.Voxel.MeshPoolTests" runstate="Runnable" seed="850156064" result="Passed" start-time="2026-04-19 14:37:58Z" end-time="2026-04-19 14:37:58Z" duration="0.000128" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                </test-case>
+                <test-case id="1140" name="Return_When_Pool_Full_Destroys_The_Excess" fullname="ForeverEngine.Tests.EditMode.Voxel.MeshPoolTests.Return_When_Pool_Full_Destroys_The_Excess" methodname="Return_When_Pool_Full_Destroys_The_Excess" classname="ForeverEngine.Tests.EditMode.Voxel.MeshPoolTests" runstate="Runnable" seed="539907972" result="Passed" start-time="2026-04-19 14:37:58Z" end-time="2026-04-19 14:37:58Z" duration="0.000092" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                </test-case>
+              </test-suite>
+            </test-suite>
+            <test-suite type="TestSuite" id="1162" name="World" fullname="ForeverEngine.Tests.EditMode.World" runstate="Runnable" testcasecount="15" result="Passed" start-time="2026-04-19 14:37:58Z" end-time="2026-04-19 14:37:58Z" duration="0.402043" total="15" passed="15" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-suite type="TestFixture" id="1117" name="VoxelChunkRendererTests" fullname="ForeverEngine.Tests.EditMode.World.VoxelChunkRendererTests" classname="ForeverEngine.Tests.EditMode.World.VoxelChunkRendererTests" runstate="Runnable" testcasecount="4" result="Passed" start-time="2026-04-19 14:37:58Z" end-time="2026-04-19 14:37:58Z" duration="0.292565" total="4" passed="4" failed="0" inconclusive="0" skipped="0" asserts="0">
+                <properties />
+                <test-case id="1120" name="OnArrived_Then_OnDeparted_Then_OnArrived_Reuses_PooledMesh" fullname="ForeverEngine.Tests.EditMode.World.VoxelChunkRendererTests.OnArrived_Then_OnDeparted_Then_OnArrived_Reuses_PooledMesh" methodname="OnArrived_Then_OnDeparted_Then_OnArrived_Reuses_PooledMesh" classname="ForeverEngine.Tests.EditMode.World.VoxelChunkRendererTests" runstate="Runnable" seed="1262192413" result="Passed" start-time="2026-04-19 14:37:58Z" end-time="2026-04-19 14:37:58Z" duration="0.098219" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                </test-case>
+                <test-case id="1118" name="Render_AllSolidChunk_BuildsGameObject_WithMesh" fullname="ForeverEngine.Tests.EditMode.World.VoxelChunkRendererTests.Render_AllSolidChunk_BuildsGameObject_WithMesh" methodname="Render_AllSolidChunk_BuildsGameObject_WithMesh" classname="ForeverEngine.Tests.EditMode.World.VoxelChunkRendererTests" runstate="Runnable" seed="180422098" result="Passed" start-time="2026-04-19 14:37:58Z" end-time="2026-04-19 14:37:58Z" duration="0.049043" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                </test-case>
+                <test-case id="1119" name="Render_ArriveThenDepart_RemovesGameObject" fullname="ForeverEngine.Tests.EditMode.World.VoxelChunkRendererTests.Render_ArriveThenDepart_RemovesGameObject" methodname="Render_ArriveThenDepart_RemovesGameObject" classname="ForeverEngine.Tests.EditMode.World.VoxelChunkRendererTests" runstate="Runnable" seed="31774764" result="Passed" start-time="2026-04-19 14:37:58Z" end-time="2026-04-19 14:37:58Z" duration="0.049300" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                </test-case>
+                <test-case id="1121" name="Render_ArriveTwiceForSameCoord_ReplacesExistingGameObject" fullname="ForeverEngine.Tests.EditMode.World.VoxelChunkRendererTests.Render_ArriveTwiceForSameCoord_ReplacesExistingGameObject" methodname="Render_ArriveTwiceForSameCoord_ReplacesExistingGameObject" classname="ForeverEngine.Tests.EditMode.World.VoxelChunkRendererTests" runstate="Runnable" seed="304801134" result="Passed" start-time="2026-04-19 14:37:58Z" end-time="2026-04-19 14:37:58Z" duration="0.095346" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                </test-case>
+              </test-suite>
+              <test-suite type="TestFixture" id="1122" name="VoxelChunkStreamerTests" fullname="ForeverEngine.Tests.EditMode.World.VoxelChunkStreamerTests" classname="ForeverEngine.Tests.EditMode.World.VoxelChunkStreamerTests" runstate="Runnable" testcasecount="2" result="Passed" start-time="2026-04-19 14:37:58Z" end-time="2026-04-19 14:37:58Z" duration="0.003775" total="2" passed="2" failed="0" inconclusive="0" skipped="0" asserts="0">
+                <properties />
+                <test-case id="1123" name="OnVoxelChunkSync_Homogenous_AddsChunkToStore" fullname="ForeverEngine.Tests.EditMode.World.VoxelChunkStreamerTests.OnVoxelChunkSync_Homogenous_AddsChunkToStore" methodname="OnVoxelChunkSync_Homogenous_AddsChunkToStore" classname="ForeverEngine.Tests.EditMode.World.VoxelChunkStreamerTests" runstate="Runnable" seed="864887169" result="Passed" start-time="2026-04-19 14:37:58Z" end-time="2026-04-19 14:37:58Z" duration="0.001932" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                </test-case>
+                <test-case id="1124" name="OnVoxelChunkUnsubscribe_RemovesChunk" fullname="ForeverEngine.Tests.EditMode.World.VoxelChunkStreamerTests.OnVoxelChunkUnsubscribe_RemovesChunk" methodname="OnVoxelChunkUnsubscribe_RemovesChunk" classname="ForeverEngine.Tests.EditMode.World.VoxelChunkStreamerTests" runstate="Runnable" seed="1524392899" result="Passed" start-time="2026-04-19 14:37:58Z" end-time="2026-04-19 14:37:58Z" duration="0.000970" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                </test-case>
+              </test-suite>
+              <test-suite type="TestFixture" id="1125" name="VoxelLodBucketerTests" fullname="ForeverEngine.Tests.EditMode.World.VoxelLodBucketerTests" classname="ForeverEngine.Tests.EditMode.World.VoxelLodBucketerTests" runstate="Runnable" testcasecount="5" result="Passed" start-time="2026-04-19 14:37:58Z" end-time="2026-04-19 14:37:58Z" duration="0.001117" total="5" passed="5" failed="0" inconclusive="0" skipped="0" asserts="0">
+                <properties />
+                <test-case id="1126" name="CenterChunk_IsL0" fullname="ForeverEngine.Tests.EditMode.World.VoxelLodBucketerTests.CenterChunk_IsL0" methodname="CenterChunk_IsL0" classname="ForeverEngine.Tests.EditMode.World.VoxelLodBucketerTests" runstate="Runnable" seed="1244683736" result="Passed" start-time="2026-04-19 14:37:58Z" end-time="2026-04-19 14:37:58Z" duration="0.000280" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                </test-case>
+                <test-case id="1130" name="FarOutOfRange_IsHidden_EvenAtHighSpeed" fullname="ForeverEngine.Tests.EditMode.World.VoxelLodBucketerTests.FarOutOfRange_IsHidden_EvenAtHighSpeed" methodname="FarOutOfRange_IsHidden_EvenAtHighSpeed" classname="ForeverEngine.Tests.EditMode.World.VoxelLodBucketerTests" runstate="Runnable" seed="1960595545" result="Passed" start-time="2026-04-19 14:37:58Z" end-time="2026-04-19 14:37:58Z" duration="0.000113" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                </test-case>
+                <test-case id="1128" name="FarRange_IsL2" fullname="ForeverEngine.Tests.EditMode.World.VoxelLodBucketerTests.FarRange_IsL2" methodname="FarRange_IsL2" classname="ForeverEngine.Tests.EditMode.World.VoxelLodBucketerTests" runstate="Runnable" seed="1482386252" result="Passed" start-time="2026-04-19 14:37:58Z" end-time="2026-04-19 14:37:58Z" duration="0.000057" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                </test-case>
+                <test-case id="1129" name="FastMovement_DropsAllToL2" fullname="ForeverEngine.Tests.EditMode.World.VoxelLodBucketerTests.FastMovement_DropsAllToL2" methodname="FastMovement_DropsAllToL2" classname="ForeverEngine.Tests.EditMode.World.VoxelLodBucketerTests" runstate="Runnable" seed="1730187566" result="Passed" start-time="2026-04-19 14:37:58Z" end-time="2026-04-19 14:37:58Z" duration="0.000060" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                </test-case>
+                <test-case id="1127" name="MidRange_IsL1" fullname="ForeverEngine.Tests.EditMode.World.VoxelLodBucketerTests.MidRange_IsL1" methodname="MidRange_IsL1" classname="ForeverEngine.Tests.EditMode.World.VoxelLodBucketerTests" runstate="Runnable" seed="2068919145" result="Passed" start-time="2026-04-19 14:37:58Z" end-time="2026-04-19 14:37:58Z" duration="0.000047" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                </test-case>
+              </test-suite>
+              <test-suite type="TestFixture" id="1131" name="VoxelMeshBuilderTests" fullname="ForeverEngine.Tests.EditMode.World.VoxelMeshBuilderTests" classname="ForeverEngine.Tests.EditMode.World.VoxelMeshBuilderTests" runstate="Runnable" testcasecount="2" result="Passed" start-time="2026-04-19 14:37:58Z" end-time="2026-04-19 14:37:58Z" duration="0.095723" total="2" passed="2" failed="0" inconclusive="0" skipped="0" asserts="0">
+                <properties />
+                <test-case id="1132" name="Build_AllAirChunk_ReturnsEmptyMesh" fullname="ForeverEngine.Tests.EditMode.World.VoxelMeshBuilderTests.Build_AllAirChunk_ReturnsEmptyMesh" methodname="Build_AllAirChunk_ReturnsEmptyMesh" classname="ForeverEngine.Tests.EditMode.World.VoxelMeshBuilderTests" runstate="Runnable" seed="416113815" result="Passed" start-time="2026-04-19 14:37:58Z" end-time="2026-04-19 14:37:58Z" duration="0.045970" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                </test-case>
+                <test-case id="1133" name="Build_HalfFilledChunk_ReturnsMeshWithTriangles" fullname="ForeverEngine.Tests.EditMode.World.VoxelMeshBuilderTests.Build_HalfFilledChunk_ReturnsMeshWithTriangles" methodname="Build_HalfFilledChunk_ReturnsMeshWithTriangles" classname="ForeverEngine.Tests.EditMode.World.VoxelMeshBuilderTests" runstate="Runnable" seed="452311957" result="Passed" start-time="2026-04-19 14:37:58Z" end-time="2026-04-19 14:37:58Z" duration="0.049244" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                </test-case>
+              </test-suite>
+              <test-suite type="TestFixture" id="1134" name="VoxelWorldManagerQueueTests" fullname="ForeverEngine.Tests.EditMode.World.VoxelWorldManagerQueueTests" classname="ForeverEngine.Tests.EditMode.World.VoxelWorldManagerQueueTests" runstate="Runnable" testcasecount="2" result="Passed" start-time="2026-04-19 14:37:58Z" end-time="2026-04-19 14:37:58Z" duration="0.008322" total="2" passed="2" failed="0" inconclusive="0" skipped="0" asserts="0">
+                <properties />
+                <test-case id="1136" name="Depart_Cancels_PendingBuild" fullname="ForeverEngine.Tests.EditMode.World.VoxelWorldManagerQueueTests.Depart_Cancels_PendingBuild" methodname="Depart_Cancels_PendingBuild" classname="ForeverEngine.Tests.EditMode.World.VoxelWorldManagerQueueTests" runstate="Runnable" seed="1172584110" result="Passed" start-time="2026-04-19 14:37:58Z" end-time="2026-04-19 14:37:58Z" duration="0.002760" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                </test-case>
+                <test-case id="1135" name="PendingQueue_DrainsAtBoundedRate_PerUpdate" fullname="ForeverEngine.Tests.EditMode.World.VoxelWorldManagerQueueTests.PendingQueue_DrainsAtBoundedRate_PerUpdate" methodname="PendingQueue_DrainsAtBoundedRate_PerUpdate" classname="ForeverEngine.Tests.EditMode.World.VoxelWorldManagerQueueTests" runstate="Runnable" seed="1711880828" result="Passed" start-time="2026-04-19 14:37:58Z" end-time="2026-04-19 14:37:58Z" duration="0.004748" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                </test-case>
+              </test-suite>
+            </test-suite>
+          </test-suite>
+          <test-suite type="TestFixture" id="1025" name="FogRaycastJobTests" fullname="ForeverEngine.Tests.FogRaycastJobTests" classname="ForeverEngine.Tests.FogRaycastJobTests" runstate="Runnable" testcasecount="4" result="Passed" start-time="2026-04-19 14:37:58Z" end-time="2026-04-19 14:37:58Z" duration="0.006358" total="4" passed="4" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <test-case id="1028" name="DimJob_VisibleBecomesExplored" fullname="ForeverEngine.Tests.FogRaycastJobTests.DimJob_VisibleBecomesExplored" methodname="DimJob_VisibleBecomesExplored" classname="ForeverEngine.Tests.FogRaycastJobTests" runstate="Runnable" seed="50833392" result="Passed" start-time="2026-04-19 14:37:58Z" end-time="2026-04-19 14:37:58Z" duration="0.001329" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1026" name="OpenRoom_AllVisible" fullname="ForeverEngine.Tests.FogRaycastJobTests.OpenRoom_AllVisible" methodname="OpenRoom_AllVisible" classname="ForeverEngine.Tests.FogRaycastJobTests" runstate="Runnable" seed="728742068" result="Passed" start-time="2026-04-19 14:37:58Z" end-time="2026-04-19 14:37:58Z" duration="0.003422" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1029" name="OutOfBounds_DoesNotCrash" fullname="ForeverEngine.Tests.FogRaycastJobTests.OutOfBounds_DoesNotCrash" methodname="OutOfBounds_DoesNotCrash" classname="ForeverEngine.Tests.FogRaycastJobTests" runstate="Runnable" seed="1241777621" result="Passed" start-time="2026-04-19 14:37:58Z" end-time="2026-04-19 14:37:58Z" duration="0.000323" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1027" name="WallBlocks_BehindWall_NotVisible" fullname="ForeverEngine.Tests.FogRaycastJobTests.WallBlocks_BehindWall_NotVisible" methodname="WallBlocks_BehindWall_NotVisible" classname="ForeverEngine.Tests.FogRaycastJobTests" runstate="Runnable" seed="919982466" result="Passed" start-time="2026-04-19 14:37:58Z" end-time="2026-04-19 14:37:58Z" duration="0.000330" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+          </test-suite>
+          <test-suite type="TestFixture" id="1030" name="GenerationDataTests" fullname="ForeverEngine.Tests.GenerationDataTests" classname="ForeverEngine.Tests.GenerationDataTests" runstate="Runnable" testcasecount="6" result="Passed" start-time="2026-04-19 14:37:58Z" end-time="2026-04-19 14:37:58Z" duration="0.003524" total="6" passed="6" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <test-case id="1035" name="GameTables_XPBudget_Scales" fullname="ForeverEngine.Tests.GenerationDataTests.GameTables_XPBudget_Scales" methodname="GameTables_XPBudget_Scales" classname="ForeverEngine.Tests.GenerationDataTests" runstate="Runnable" seed="1250221069" result="Passed" start-time="2026-04-19 14:37:58Z" end-time="2026-04-19 14:37:58Z" duration="0.000954" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1032" name="MapGenerationRequest_InvalidWidth" fullname="ForeverEngine.Tests.GenerationDataTests.MapGenerationRequest_InvalidWidth" methodname="MapGenerationRequest_InvalidWidth" classname="ForeverEngine.Tests.GenerationDataTests" runstate="Runnable" seed="301622352" result="Passed" start-time="2026-04-19 14:37:58Z" end-time="2026-04-19 14:37:58Z" duration="0.000169" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1031" name="MapGenerationRequest_Valid" fullname="ForeverEngine.Tests.GenerationDataTests.MapGenerationRequest_Valid" methodname="MapGenerationRequest_Valid" classname="ForeverEngine.Tests.GenerationDataTests" runstate="Runnable" seed="1144099662" result="Passed" start-time="2026-04-19 14:37:58Z" end-time="2026-04-19 14:37:58Z" duration="0.000056" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1033" name="MapProfile_DungeonExists" fullname="ForeverEngine.Tests.GenerationDataTests.MapProfile_DungeonExists" methodname="MapProfile_DungeonExists" classname="ForeverEngine.Tests.GenerationDataTests" runstate="Runnable" seed="1191562064" result="Passed" start-time="2026-04-19 14:37:58Z" end-time="2026-04-19 14:37:58Z" duration="0.000609" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1034" name="MapProfile_UnknownReturnsDungeon" fullname="ForeverEngine.Tests.GenerationDataTests.MapProfile_UnknownReturnsDungeon" methodname="MapProfile_UnknownReturnsDungeon" classname="ForeverEngine.Tests.GenerationDataTests" runstate="Runnable" seed="1598802612" result="Passed" start-time="2026-04-19 14:37:58Z" end-time="2026-04-19 14:37:58Z" duration="0.000058" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1036" name="RoomGraph_IsConnected" fullname="ForeverEngine.Tests.GenerationDataTests.RoomGraph_IsConnected" methodname="RoomGraph_IsConnected" classname="ForeverEngine.Tests.GenerationDataTests" runstate="Runnable" seed="939213843" result="Passed" start-time="2026-04-19 14:37:58Z" end-time="2026-04-19 14:37:58Z" duration="0.001118" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+          </test-suite>
+          <test-suite type="TestFixture" id="1037" name="GenreTests" fullname="ForeverEngine.Tests.GenreTests" classname="ForeverEngine.Tests.GenreTests" runstate="Runnable" testcasecount="3" result="Passed" start-time="2026-04-19 14:37:58Z" end-time="2026-04-19 14:37:58Z" duration="0.001096" total="3" passed="3" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <test-case id="1040" name="HexGrid_DefenseBonus" fullname="ForeverEngine.Tests.GenreTests.HexGrid_DefenseBonus" methodname="HexGrid_DefenseBonus" classname="ForeverEngine.Tests.GenreTests" runstate="Runnable" seed="1697086644" result="Passed" start-time="2026-04-19 14:37:58Z" end-time="2026-04-19 14:37:58Z" duration="0.000439" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1038" name="HexGrid_Distance" fullname="ForeverEngine.Tests.GenreTests.HexGrid_Distance" methodname="HexGrid_Distance" classname="ForeverEngine.Tests.GenreTests" runstate="Runnable" seed="1248284318" result="Passed" start-time="2026-04-19 14:37:58Z" end-time="2026-04-19 14:37:58Z" duration="0.000167" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1039" name="HexGrid_MovementCost" fullname="ForeverEngine.Tests.GenreTests.HexGrid_MovementCost" methodname="HexGrid_MovementCost" classname="ForeverEngine.Tests.GenreTests" runstate="Runnable" seed="460407066" result="Passed" start-time="2026-04-19 14:37:58Z" end-time="2026-04-19 14:37:58Z" duration="0.000085" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+          </test-suite>
+          <test-suite type="TestFixture" id="1041" name="InferenceTests" fullname="ForeverEngine.Tests.InferenceTests" classname="ForeverEngine.Tests.InferenceTests" runstate="Runnable" testcasecount="1" result="Passed" start-time="2026-04-19 14:37:58Z" end-time="2026-04-19 14:37:58Z" duration="0.000425" total="1" passed="1" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <test-case id="1042" name="InferenceRequest_ExecutesCallback" fullname="ForeverEngine.Tests.InferenceTests.InferenceRequest_ExecutesCallback" methodname="InferenceRequest_ExecutesCallback" classname="ForeverEngine.Tests.InferenceTests" runstate="Runnable" seed="731633527" result="Passed" start-time="2026-04-19 14:37:58Z" end-time="2026-04-19 14:37:58Z" duration="0.000189" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+          </test-suite>
+          <test-suite type="TestFixture" id="1043" name="InventoryTests" fullname="ForeverEngine.Tests.InventoryTests" classname="ForeverEngine.Tests.InventoryTests" runstate="Runnable" testcasecount="11" result="Passed" start-time="2026-04-19 14:37:58Z" end-time="2026-04-19 14:37:58Z" duration="0.002159" total="11" passed="11" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <test-case id="1046" name="AddItem_FullInventory_Fails" fullname="ForeverEngine.Tests.InventoryTests.AddItem_FullInventory_Fails" methodname="AddItem_FullInventory_Fails" classname="ForeverEngine.Tests.InventoryTests" runstate="Runnable" seed="291037448" result="Passed" start-time="2026-04-19 14:37:58Z" end-time="2026-04-19 14:37:58Z" duration="0.000430" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1045" name="AddItem_IncreasesCount" fullname="ForeverEngine.Tests.InventoryTests.AddItem_IncreasesCount" methodname="AddItem_IncreasesCount" classname="ForeverEngine.Tests.InventoryTests" runstate="Runnable" seed="1205707558" result="Passed" start-time="2026-04-19 14:37:58Z" end-time="2026-04-19 14:37:58Z" duration="0.000095" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1047" name="AddItem_Stackable_MergesStack" fullname="ForeverEngine.Tests.InventoryTests.AddItem_Stackable_MergesStack" methodname="AddItem_Stackable_MergesStack" classname="ForeverEngine.Tests.InventoryTests" runstate="Runnable" seed="1932735344" result="Passed" start-time="2026-04-19 14:37:58Z" end-time="2026-04-19 14:37:58Z" duration="0.000258" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1051" name="Equip_SetsEquipped" fullname="ForeverEngine.Tests.InventoryTests.Equip_SetsEquipped" methodname="Equip_SetsEquipped" classname="ForeverEngine.Tests.InventoryTests" runstate="Runnable" seed="921888929" result="Passed" start-time="2026-04-19 14:37:58Z" end-time="2026-04-19 14:37:58Z" duration="0.000103" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1053" name="Gold_AddAndRemove" fullname="ForeverEngine.Tests.InventoryTests.Gold_AddAndRemove" methodname="Gold_AddAndRemove" classname="ForeverEngine.Tests.InventoryTests" runstate="Runnable" seed="1705018254" result="Passed" start-time="2026-04-19 14:37:58Z" end-time="2026-04-19 14:37:58Z" duration="0.000093" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1054" name="Gold_CantOverspend" fullname="ForeverEngine.Tests.InventoryTests.Gold_CantOverspend" methodname="Gold_CantOverspend" classname="ForeverEngine.Tests.InventoryTests" runstate="Runnable" seed="412342031" result="Passed" start-time="2026-04-19 14:37:58Z" end-time="2026-04-19 14:37:58Z" duration="0.000063" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1044" name="NewInventory_IsEmpty" fullname="ForeverEngine.Tests.InventoryTests.NewInventory_IsEmpty" methodname="NewInventory_IsEmpty" classname="ForeverEngine.Tests.InventoryTests" runstate="Runnable" seed="1325638247" result="Passed" start-time="2026-04-19 14:37:58Z" end-time="2026-04-19 14:37:58Z" duration="0.000066" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1048" name="RemoveItem_DecreasesCount" fullname="ForeverEngine.Tests.InventoryTests.RemoveItem_DecreasesCount" methodname="RemoveItem_DecreasesCount" classname="ForeverEngine.Tests.InventoryTests" runstate="Runnable" seed="1583829460" result="Passed" start-time="2026-04-19 14:37:58Z" end-time="2026-04-19 14:37:58Z" duration="0.000120" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1049" name="RemoveItem_EntireStack_RemovesSlot" fullname="ForeverEngine.Tests.InventoryTests.RemoveItem_EntireStack_RemovesSlot" methodname="RemoveItem_EntireStack_RemovesSlot" classname="ForeverEngine.Tests.InventoryTests" runstate="Runnable" seed="501022854" result="Passed" start-time="2026-04-19 14:37:58Z" end-time="2026-04-19 14:37:58Z" duration="0.000102" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1050" name="RemoveItem_NotPresent_Fails" fullname="ForeverEngine.Tests.InventoryTests.RemoveItem_NotPresent_Fails" methodname="RemoveItem_NotPresent_Fails" classname="ForeverEngine.Tests.InventoryTests" runstate="Runnable" seed="1056574564" result="Passed" start-time="2026-04-19 14:37:58Z" end-time="2026-04-19 14:37:58Z" duration="0.000046" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1052" name="Unequip_ClearsEquipped" fullname="ForeverEngine.Tests.InventoryTests.Unequip_ClearsEquipped" methodname="Unequip_ClearsEquipped" classname="ForeverEngine.Tests.InventoryTests" runstate="Runnable" seed="859707434" result="Passed" start-time="2026-04-19 14:37:58Z" end-time="2026-04-19 14:37:58Z" duration="0.000086" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+          </test-suite>
+          <test-suite type="TestFixture" id="1055" name="LayoutGenerationTests" fullname="ForeverEngine.Tests.LayoutGenerationTests" classname="ForeverEngine.Tests.LayoutGenerationTests" runstate="Runnable" testcasecount="4" result="Passed" start-time="2026-04-19 14:37:58Z" end-time="2026-04-19 14:37:58Z" duration="0.001673" total="4" passed="4" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <test-case id="1059" name="RoomPlacer_NoOverlapWithBorder" fullname="ForeverEngine.Tests.LayoutGenerationTests.RoomPlacer_NoOverlapWithBorder" methodname="RoomPlacer_NoOverlapWithBorder" classname="ForeverEngine.Tests.LayoutGenerationTests" runstate="Runnable" seed="1640881872" result="Passed" start-time="2026-04-19 14:37:58Z" end-time="2026-04-19 14:37:58Z" duration="0.000725" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1058" name="TopologyBuilder_Hub_Connected" fullname="ForeverEngine.Tests.LayoutGenerationTests.TopologyBuilder_Hub_Connected" methodname="TopologyBuilder_Hub_Connected" classname="ForeverEngine.Tests.LayoutGenerationTests" runstate="Runnable" seed="1531042359" result="Passed" start-time="2026-04-19 14:37:58Z" end-time="2026-04-19 14:37:58Z" duration="0.000262" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1056" name="TopologyBuilder_Linear_Connected" fullname="ForeverEngine.Tests.LayoutGenerationTests.TopologyBuilder_Linear_Connected" methodname="TopologyBuilder_Linear_Connected" classname="ForeverEngine.Tests.LayoutGenerationTests" runstate="Runnable" seed="975133432" result="Passed" start-time="2026-04-19 14:37:58Z" end-time="2026-04-19 14:37:58Z" duration="0.000128" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1057" name="TopologyBuilder_Loop_Connected" fullname="ForeverEngine.Tests.LayoutGenerationTests.TopologyBuilder_Loop_Connected" methodname="TopologyBuilder_Loop_Connected" classname="ForeverEngine.Tests.LayoutGenerationTests" runstate="Runnable" seed="225273412" result="Passed" start-time="2026-04-19 14:37:58Z" end-time="2026-04-19 14:37:58Z" duration="0.000147" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+          </test-suite>
+          <test-suite type="TestFixture" id="1060" name="MapDataStoreTests" fullname="ForeverEngine.Tests.MapDataStoreTests" classname="ForeverEngine.Tests.MapDataStoreTests" runstate="Runnable" testcasecount="5" result="Passed" start-time="2026-04-19 14:37:58Z" end-time="2026-04-19 14:37:58Z" duration="0.002833" total="5" passed="5" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <test-case id="1061" name="CreateStore_SetsWidthHeight" fullname="ForeverEngine.Tests.MapDataStoreTests.CreateStore_SetsWidthHeight" methodname="CreateStore_SetsWidthHeight" classname="ForeverEngine.Tests.MapDataStoreTests" runstate="Runnable" seed="662522996" result="Passed" start-time="2026-04-19 14:37:58Z" end-time="2026-04-19 14:37:58Z" duration="0.000836" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1063" name="FogGrid_InitializedUnexplored" fullname="ForeverEngine.Tests.MapDataStoreTests.FogGrid_InitializedUnexplored" methodname="FogGrid_InitializedUnexplored" classname="ForeverEngine.Tests.MapDataStoreTests" runstate="Runnable" seed="1734301353" result="Passed" start-time="2026-04-19 14:37:58Z" end-time="2026-04-19 14:37:58Z" duration="0.000388" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1065" name="LoadZLevel_ParsesWalkabilityArray" fullname="ForeverEngine.Tests.MapDataStoreTests.LoadZLevel_ParsesWalkabilityArray" methodname="LoadZLevel_ParsesWalkabilityArray" classname="ForeverEngine.Tests.MapDataStoreTests" runstate="Runnable" seed="626157606" result="Passed" start-time="2026-04-19 14:37:58Z" end-time="2026-04-19 14:37:58Z" duration="0.000753" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1064" name="SetWalkability_RoundTrips" fullname="ForeverEngine.Tests.MapDataStoreTests.SetWalkability_RoundTrips" methodname="SetWalkability_RoundTrips" classname="ForeverEngine.Tests.MapDataStoreTests" runstate="Runnable" seed="740550201" result="Passed" start-time="2026-04-19 14:37:58Z" end-time="2026-04-19 14:37:58Z" duration="0.000277" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1062" name="Walkability_CorrectSize" fullname="ForeverEngine.Tests.MapDataStoreTests.Walkability_CorrectSize" methodname="Walkability_CorrectSize" classname="ForeverEngine.Tests.MapDataStoreTests" runstate="Runnable" seed="1270667930" result="Passed" start-time="2026-04-19 14:37:58Z" end-time="2026-04-19 14:37:58Z" duration="0.000086" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+          </test-suite>
+          <test-suite type="TestFixture" id="1066" name="PathfindJobTests" fullname="ForeverEngine.Tests.PathfindJobTests" classname="ForeverEngine.Tests.PathfindJobTests" runstate="Runnable" testcasecount="4" result="Passed" start-time="2026-04-19 14:37:58Z" end-time="2026-04-19 14:37:58Z" duration="0.008584" total="4" passed="4" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <test-case id="1069" name="Adjacent_StaysPut" fullname="ForeverEngine.Tests.PathfindJobTests.Adjacent_StaysPut" methodname="Adjacent_StaysPut" classname="ForeverEngine.Tests.PathfindJobTests" runstate="Runnable" seed="1493696248" result="Passed" start-time="2026-04-19 14:37:58Z" end-time="2026-04-19 14:37:58Z" duration="0.002887" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1068" name="NavigatesAroundWall" fullname="ForeverEngine.Tests.PathfindJobTests.NavigatesAroundWall" methodname="NavigatesAroundWall" classname="ForeverEngine.Tests.PathfindJobTests" runstate="Runnable" seed="1406275264" result="Passed" start-time="2026-04-19 14:37:58Z" end-time="2026-04-19 14:37:58Z" duration="0.004202" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1070" name="NoPath_Blocked" fullname="ForeverEngine.Tests.PathfindJobTests.NoPath_Blocked" methodname="NoPath_Blocked" classname="ForeverEngine.Tests.PathfindJobTests" runstate="Runnable" seed="738857244" result="Passed" start-time="2026-04-19 14:37:58Z" end-time="2026-04-19 14:37:58Z" duration="0.000557" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1067" name="StraightLine_FindsPath" fullname="ForeverEngine.Tests.PathfindJobTests.StraightLine_FindsPath" methodname="StraightLine_FindsPath" classname="ForeverEngine.Tests.PathfindJobTests" runstate="Runnable" seed="1666731027" result="Passed" start-time="2026-04-19 14:37:58Z" end-time="2026-04-19 14:37:58Z" duration="0.000482" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+          </test-suite>
+          <test-suite type="TestFixture" id="1071" name="PipelineTests" fullname="ForeverEngine.Tests.PipelineTests" classname="ForeverEngine.Tests.PipelineTests" runstate="Runnable" testcasecount="2" result="Passed" start-time="2026-04-19 14:37:58Z" end-time="2026-04-19 14:37:58Z" duration="0.008236" total="2" passed="2" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <test-case id="1072" name="Pipeline_DungeonSucceeds" fullname="ForeverEngine.Tests.PipelineTests.Pipeline_DungeonSucceeds" methodname="Pipeline_DungeonSucceeds" classname="ForeverEngine.Tests.PipelineTests" runstate="Runnable" seed="1724180657" result="Passed" start-time="2026-04-19 14:37:58Z" end-time="2026-04-19 14:37:58Z" duration="0.007829" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[[Pipeline] Generation complete: dungeon 64x64, 14 rooms, 5 encounters
+]]></output>
+            </test-case>
+            <test-case id="1073" name="Pipeline_InvalidRequest_Fails" fullname="ForeverEngine.Tests.PipelineTests.Pipeline_InvalidRequest_Fails" methodname="Pipeline_InvalidRequest_Fails" classname="ForeverEngine.Tests.PipelineTests" runstate="Runnable" seed="763386363" result="Passed" start-time="2026-04-19 14:37:58Z" end-time="2026-04-19 14:37:58Z" duration="0.000094" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+          </test-suite>
+          <test-suite type="TestFixture" id="1074" name="PlayerProfileTests" fullname="ForeverEngine.Tests.PlayerProfileTests" classname="ForeverEngine.Tests.PlayerProfileTests" runstate="Runnable" testcasecount="3" result="Passed" start-time="2026-04-19 14:37:58Z" end-time="2026-04-19 14:37:58Z" duration="0.000798" total="3" passed="3" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <test-case id="1076" name="GetPrimaryArchetype_Aggressive" fullname="ForeverEngine.Tests.PlayerProfileTests.GetPrimaryArchetype_Aggressive" methodname="GetPrimaryArchetype_Aggressive" classname="ForeverEngine.Tests.PlayerProfileTests" runstate="Runnable" seed="1726336638" result="Passed" start-time="2026-04-19 14:37:58Z" end-time="2026-04-19 14:37:58Z" duration="0.000271" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1077" name="MatchesTag" fullname="ForeverEngine.Tests.PlayerProfileTests.MatchesTag" methodname="MatchesTag" classname="ForeverEngine.Tests.PlayerProfileTests" runstate="Runnable" seed="200247752" result="Passed" start-time="2026-04-19 14:37:58Z" end-time="2026-04-19 14:37:58Z" duration="0.000138" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1075" name="NewProfile_IsBalanced" fullname="ForeverEngine.Tests.PlayerProfileTests.NewProfile_IsBalanced" methodname="NewProfile_IsBalanced" classname="ForeverEngine.Tests.PlayerProfileTests" runstate="Runnable" seed="1024865260" result="Passed" start-time="2026-04-19 14:37:58Z" end-time="2026-04-19 14:37:58Z" duration="0.000054" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+          </test-suite>
+          <test-suite type="TestFixture" id="1078" name="PopulationTests" fullname="ForeverEngine.Tests.PopulationTests" classname="ForeverEngine.Tests.PopulationTests" runstate="Runnable" testcasecount="3" result="Passed" start-time="2026-04-19 14:37:58Z" end-time="2026-04-19 14:37:58Z" duration="0.002108" total="3" passed="3" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <test-case id="1081" name="Population_DressingAlwaysPresent" fullname="ForeverEngine.Tests.PopulationTests.Population_DressingAlwaysPresent" methodname="Population_DressingAlwaysPresent" classname="ForeverEngine.Tests.PopulationTests" runstate="Runnable" seed="1378314172" result="Passed" start-time="2026-04-19 14:37:58Z" end-time="2026-04-19 14:37:58Z" duration="0.000206" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1080" name="Population_EncountersScaleWithLevel" fullname="ForeverEngine.Tests.PopulationTests.Population_EncountersScaleWithLevel" methodname="Population_EncountersScaleWithLevel" classname="ForeverEngine.Tests.PopulationTests" runstate="Runnable" seed="1933817340" result="Passed" start-time="2026-04-19 14:37:58Z" end-time="2026-04-19 14:37:58Z" duration="0.000409" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1079" name="Population_HasPlayerSpawn" fullname="ForeverEngine.Tests.PopulationTests.Population_HasPlayerSpawn" methodname="Population_HasPlayerSpawn" classname="ForeverEngine.Tests.PopulationTests" runstate="Runnable" seed="105057345" result="Passed" start-time="2026-04-19 14:37:58Z" end-time="2026-04-19 14:37:58Z" duration="0.001128" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+          </test-suite>
+          <test-suite type="TestFixture" id="1082" name="QuestTests" fullname="ForeverEngine.Tests.QuestTests" classname="ForeverEngine.Tests.QuestTests" runstate="Runnable" testcasecount="6" result="Passed" start-time="2026-04-19 14:37:58Z" end-time="2026-04-19 14:37:58Z" duration="0.001222" total="6" passed="6" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <test-case id="1086" name="CompleteAllObjectives_CompletesQuest" fullname="ForeverEngine.Tests.QuestTests.CompleteAllObjectives_CompletesQuest" methodname="CompleteAllObjectives_CompletesQuest" classname="ForeverEngine.Tests.QuestTests" runstate="Runnable" seed="1186710058" result="Passed" start-time="2026-04-19 14:37:58Z" end-time="2026-04-19 14:37:58Z" duration="0.000355" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1087" name="MultipleObjectives_AllMustComplete" fullname="ForeverEngine.Tests.QuestTests.MultipleObjectives_AllMustComplete" methodname="MultipleObjectives_AllMustComplete" classname="ForeverEngine.Tests.QuestTests" runstate="Runnable" seed="2047415802" result="Passed" start-time="2026-04-19 14:37:58Z" end-time="2026-04-19 14:37:58Z" duration="0.000139" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1083" name="NewQuest_IsNotStarted" fullname="ForeverEngine.Tests.QuestTests.NewQuest_IsNotStarted" methodname="NewQuest_IsNotStarted" classname="ForeverEngine.Tests.QuestTests" runstate="Runnable" seed="1239384746" result="Passed" start-time="2026-04-19 14:37:58Z" end-time="2026-04-19 14:37:58Z" duration="0.000055" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1088" name="ProgressBeforeStart_DoesNothing" fullname="ForeverEngine.Tests.QuestTests.ProgressBeforeStart_DoesNothing" methodname="ProgressBeforeStart_DoesNothing" classname="ForeverEngine.Tests.QuestTests" runstate="Runnable" seed="660562749" result="Passed" start-time="2026-04-19 14:37:58Z" end-time="2026-04-19 14:37:58Z" duration="0.000058" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1085" name="ProgressObjective_TracksCount" fullname="ForeverEngine.Tests.QuestTests.ProgressObjective_TracksCount" methodname="ProgressObjective_TracksCount" classname="ForeverEngine.Tests.QuestTests" runstate="Runnable" seed="562503203" result="Passed" start-time="2026-04-19 14:37:58Z" end-time="2026-04-19 14:37:58Z" duration="0.000059" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1084" name="StartQuest_ChangesStatus" fullname="ForeverEngine.Tests.QuestTests.StartQuest_ChangesStatus" methodname="StartQuest_ChangesStatus" classname="ForeverEngine.Tests.QuestTests" runstate="Runnable" seed="27173941" result="Passed" start-time="2026-04-19 14:37:58Z" end-time="2026-04-19 14:37:58Z" duration="0.000046" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+          </test-suite>
+          <test-suite type="TestFixture" id="1089" name="SaveLoadTests" fullname="ForeverEngine.Tests.SaveLoadTests" classname="ForeverEngine.Tests.SaveLoadTests" runstate="Runnable" testcasecount="3" result="Passed" start-time="2026-04-19 14:37:58Z" end-time="2026-04-19 14:37:58Z" duration="0.001108" total="3" passed="3" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <test-case id="1091" name="SaveData_DeserializesFromJson" fullname="ForeverEngine.Tests.SaveLoadTests.SaveData_DeserializesFromJson" methodname="SaveData_DeserializesFromJson" classname="ForeverEngine.Tests.SaveLoadTests" runstate="Runnable" seed="982583529" result="Passed" start-time="2026-04-19 14:37:58Z" end-time="2026-04-19 14:37:58Z" duration="0.000495" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1092" name="SaveData_RoundTrip_Preserves" fullname="ForeverEngine.Tests.SaveLoadTests.SaveData_RoundTrip_Preserves" methodname="SaveData_RoundTrip_Preserves" classname="ForeverEngine.Tests.SaveLoadTests" runstate="Runnable" seed="2040357320" result="Passed" start-time="2026-04-19 14:37:58Z" end-time="2026-04-19 14:37:58Z" duration="0.000138" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1090" name="SaveData_SerializesToJson" fullname="ForeverEngine.Tests.SaveLoadTests.SaveData_SerializesToJson" methodname="SaveData_SerializesToJson" classname="ForeverEngine.Tests.SaveLoadTests" runstate="Runnable" seed="1914622864" result="Passed" start-time="2026-04-19 14:37:58Z" end-time="2026-04-19 14:37:58Z" duration="0.000150" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+          </test-suite>
+          <test-suite type="TestFixture" id="1093" name="SelfHealingTests" fullname="ForeverEngine.Tests.SelfHealingTests" classname="ForeverEngine.Tests.SelfHealingTests" runstate="Runnable" testcasecount="4" result="Passed" start-time="2026-04-19 14:37:58Z" end-time="2026-04-19 14:37:58Z" duration="0.016463" total="4" passed="4" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <test-case id="1097" name="FaultBoundary_DisabledSkips" fullname="ForeverEngine.Tests.SelfHealingTests.FaultBoundary_DisabledSkips" methodname="FaultBoundary_DisabledSkips" classname="ForeverEngine.Tests.SelfHealingTests" runstate="Runnable" seed="1227098474" result="Passed" start-time="2026-04-19 14:37:58Z" end-time="2026-04-19 14:37:58Z" duration="0.001741" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[[SelfHeal] test failed (1/1): Exception of type 'System.Exception' was thrown.
+[SelfHeal] test disabled
+]]></output>
+            </test-case>
+            <test-case id="1095" name="FaultBoundary_FailureDisables" fullname="ForeverEngine.Tests.SelfHealingTests.FaultBoundary_FailureDisables" methodname="FaultBoundary_FailureDisables" classname="ForeverEngine.Tests.SelfHealingTests" runstate="Runnable" seed="2039536140" result="Passed" start-time="2026-04-19 14:37:58Z" end-time="2026-04-19 14:37:58Z" duration="0.001004" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[[SelfHeal] test failed (1/2): Exception of type 'System.Exception' was thrown.
+[SelfHeal] test failed (2/2): Exception of type 'System.Exception' was thrown.
+[SelfHeal] test disabled
+]]></output>
+            </test-case>
+            <test-case id="1096" name="FaultBoundary_Recovery" fullname="ForeverEngine.Tests.SelfHealingTests.FaultBoundary_Recovery" methodname="FaultBoundary_Recovery" classname="ForeverEngine.Tests.SelfHealingTests" runstate="Runnable" seed="1386776580" result="Passed" start-time="2026-04-19 14:37:58Z" end-time="2026-04-19 14:37:58Z" duration="0.013146" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[[SelfHeal] test failed (1/2): Exception of type 'System.Exception' was thrown.
+[SelfHeal] test failed (2/2): Exception of type 'System.Exception' was thrown.
+[SelfHeal] test disabled
+[SelfHeal] Recovering test
+]]></output>
+            </test-case>
+            <test-case id="1094" name="FaultBoundary_SuccessResets" fullname="ForeverEngine.Tests.SelfHealingTests.FaultBoundary_SuccessResets" methodname="FaultBoundary_SuccessResets" classname="ForeverEngine.Tests.SelfHealingTests" runstate="Runnable" seed="1634942381" result="Passed" start-time="2026-04-19 14:37:58Z" end-time="2026-04-19 14:37:58Z" duration="0.000152" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+          </test-suite>
+          <test-suite type="TestFixture" id="1098" name="StatsComponentTests" fullname="ForeverEngine.Tests.StatsComponentTests" classname="ForeverEngine.Tests.StatsComponentTests" runstate="Runnable" testcasecount="5" result="Passed" start-time="2026-04-19 14:37:58Z" end-time="2026-04-19 14:37:58Z" duration="0.001465" total="5" passed="5" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <test-case id="1099" name="Default_AllScores10" fullname="ForeverEngine.Tests.StatsComponentTests.Default_AllScores10" methodname="Default_AllScores10" classname="ForeverEngine.Tests.StatsComponentTests" runstate="Runnable" seed="575659003" result="Passed" start-time="2026-04-19 14:37:58Z" end-time="2026-04-19 14:37:58Z" duration="0.000134" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1102" name="HPPercent_Dead" fullname="ForeverEngine.Tests.StatsComponentTests.HPPercent_Dead" methodname="HPPercent_Dead" classname="ForeverEngine.Tests.StatsComponentTests" runstate="Runnable" seed="49791133" result="Passed" start-time="2026-04-19 14:37:58Z" end-time="2026-04-19 14:37:58Z" duration="0.000553" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1101" name="HPPercent_HalfHealth" fullname="ForeverEngine.Tests.StatsComponentTests.HPPercent_HalfHealth" methodname="HPPercent_HalfHealth" classname="ForeverEngine.Tests.StatsComponentTests" runstate="Runnable" seed="11440001" result="Passed" start-time="2026-04-19 14:37:58Z" end-time="2026-04-19 14:37:58Z" duration="0.000078" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1103" name="HPPercent_ZeroMaxHP_ReturnsZero" fullname="ForeverEngine.Tests.StatsComponentTests.HPPercent_ZeroMaxHP_ReturnsZero" methodname="HPPercent_ZeroMaxHP_ReturnsZero" classname="ForeverEngine.Tests.StatsComponentTests" runstate="Runnable" seed="1621084767" result="Passed" start-time="2026-04-19 14:37:58Z" end-time="2026-04-19 14:37:58Z" duration="0.000044" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1100" name="Modifiers_Correct" fullname="ForeverEngine.Tests.StatsComponentTests.Modifiers_Correct" methodname="Modifiers_Correct" classname="ForeverEngine.Tests.StatsComponentTests" runstate="Runnable" seed="1168398497" result="Passed" start-time="2026-04-19 14:37:58Z" end-time="2026-04-19 14:37:58Z" duration="0.000083" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+          </test-suite>
+          <test-suite type="TestFixture" id="1104" name="TerrainGenerationTests" fullname="ForeverEngine.Tests.TerrainGenerationTests" classname="ForeverEngine.Tests.TerrainGenerationTests" runstate="Runnable" testcasecount="4" result="Passed" start-time="2026-04-19 14:37:58Z" end-time="2026-04-19 14:37:58Z" duration="0.003645" total="4" passed="4" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <test-case id="1108" name="CaveCarver_KeepsLargestRegion" fullname="ForeverEngine.Tests.TerrainGenerationTests.CaveCarver_KeepsLargestRegion" methodname="CaveCarver_KeepsLargestRegion" classname="ForeverEngine.Tests.TerrainGenerationTests" runstate="Runnable" seed="759858221" result="Passed" start-time="2026-04-19 14:37:58Z" end-time="2026-04-19 14:37:58Z" duration="0.000308" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1106" name="PerlinNoise_Deterministic" fullname="ForeverEngine.Tests.TerrainGenerationTests.PerlinNoise_Deterministic" methodname="PerlinNoise_Deterministic" classname="ForeverEngine.Tests.TerrainGenerationTests" runstate="Runnable" seed="520200378" result="Passed" start-time="2026-04-19 14:37:58Z" end-time="2026-04-19 14:37:58Z" duration="0.000072" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1105" name="PerlinNoise_InRange" fullname="ForeverEngine.Tests.TerrainGenerationTests.PerlinNoise_InRange" methodname="PerlinNoise_InRange" classname="ForeverEngine.Tests.TerrainGenerationTests" runstate="Runnable" seed="2133120239" result="Passed" start-time="2026-04-19 14:37:58Z" end-time="2026-04-19 14:37:58Z" duration="0.000478" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1107" name="TerrainGenerator_ProducesWalkable" fullname="ForeverEngine.Tests.TerrainGenerationTests.TerrainGenerator_ProducesWalkable" methodname="TerrainGenerator_ProducesWalkable" classname="ForeverEngine.Tests.TerrainGenerationTests" runstate="Runnable" seed="1689391899" result="Passed" start-time="2026-04-19 14:37:58Z" end-time="2026-04-19 14:37:58Z" duration="0.002404" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+          </test-suite>
+          <test-suite type="TestSuite" id="1160" name="World" fullname="ForeverEngine.Tests.World" runstate="Runnable" testcasecount="5" result="Passed" start-time="2026-04-19 14:37:58Z" end-time="2026-04-19 14:37:58Z" duration="0.004512" total="5" passed="5" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <test-suite type="TestFixture" id="1109" name="BiomeMaterialCatalogTests" fullname="ForeverEngine.Tests.World.BiomeMaterialCatalogTests" classname="ForeverEngine.Tests.World.BiomeMaterialCatalogTests" runstate="Runnable" testcasecount="2" result="Passed" start-time="2026-04-19 14:37:58Z" end-time="2026-04-19 14:37:58Z" duration="0.002676" total="2" passed="2" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1111" name="GetMaterial_AssignedBiome_ReturnsMaterial" fullname="ForeverEngine.Tests.World.BiomeMaterialCatalogTests.GetMaterial_AssignedBiome_ReturnsMaterial" methodname="GetMaterial_AssignedBiome_ReturnsMaterial" classname="ForeverEngine.Tests.World.BiomeMaterialCatalogTests" runstate="Runnable" seed="1627797631" result="Passed" start-time="2026-04-19 14:37:58Z" end-time="2026-04-19 14:37:58Z" duration="0.002304" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1110" name="GetMaterial_NoEntries_ReturnsNull" fullname="ForeverEngine.Tests.World.BiomeMaterialCatalogTests.GetMaterial_NoEntries_ReturnsNull" methodname="GetMaterial_NoEntries_ReturnsNull" classname="ForeverEngine.Tests.World.BiomeMaterialCatalogTests" runstate="Runnable" seed="2102613832" result="Passed" start-time="2026-04-19 14:37:58Z" end-time="2026-04-19 14:37:58Z" duration="0.000126" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+            </test-suite>
+            <test-suite type="TestFixture" id="1112" name="BiomePropCatalogTests" fullname="ForeverEngine.Tests.World.BiomePropCatalogTests" classname="ForeverEngine.Tests.World.BiomePropCatalogTests" runstate="Runnable" testcasecount="2" result="Passed" start-time="2026-04-19 14:37:58Z" end-time="2026-04-19 14:37:58Z" duration="0.000982" total="2" passed="2" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1114" name="GetRules_AssignedBiome_ReturnsMatchingRules" fullname="ForeverEngine.Tests.World.BiomePropCatalogTests.GetRules_AssignedBiome_ReturnsMatchingRules" methodname="GetRules_AssignedBiome_ReturnsMatchingRules" classname="ForeverEngine.Tests.World.BiomePropCatalogTests" runstate="Runnable" seed="539096779" result="Passed" start-time="2026-04-19 14:37:58Z" end-time="2026-04-19 14:37:58Z" duration="0.000549" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1113" name="GetRules_NoEntries_ReturnsEmpty" fullname="ForeverEngine.Tests.World.BiomePropCatalogTests.GetRules_NoEntries_ReturnsEmpty" methodname="GetRules_NoEntries_ReturnsEmpty" classname="ForeverEngine.Tests.World.BiomePropCatalogTests" runstate="Runnable" seed="1836524545" result="Passed" start-time="2026-04-19 14:37:58Z" end-time="2026-04-19 14:37:58Z" duration="0.000132" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+            </test-suite>
+            <test-suite type="TestFixture" id="1115" name="ChunkColliderRadiusTests" fullname="ForeverEngine.Tests.World.ChunkColliderRadiusTests" classname="ForeverEngine.Tests.World.ChunkColliderRadiusTests" runstate="Runnable" testcasecount="1" result="Passed" start-time="2026-04-19 14:37:58Z" end-time="2026-04-19 14:37:58Z" duration="0.000639" total="1" passed="1" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1116" name="ChebyshevDistance_MaxOfAxisDeltas" fullname="ForeverEngine.Tests.World.ChunkColliderRadiusTests.ChebyshevDistance_MaxOfAxisDeltas" methodname="ChebyshevDistance_MaxOfAxisDeltas" classname="ForeverEngine.Tests.World.ChunkColliderRadiusTests" runstate="Runnable" seed="34957448" result="Passed" start-time="2026-04-19 14:37:58Z" end-time="2026-04-19 14:37:58Z" duration="0.000214" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[Saving results to: C:/Users/bp303/AppData/LocalLow/DefaultCompany/Forever engin\TestResults.xml
+]]></output>
+              </test-case>
+            </test-suite>
+          </test-suite>
+        </test-suite>
+      </test-suite>
+    </test-suite>
+  </test-suite>
+</test-run>
