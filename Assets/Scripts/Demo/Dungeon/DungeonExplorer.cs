@@ -14,7 +14,7 @@ namespace ForeverEngine.Demo.Dungeon
     ///   - Receives a built DADungeonBuilder with room layout from DA Snap
     ///   - Spawns the player model (via ModelRegistry, with capsule fallback)
     ///   - Wires PerspectiveCameraController follow target
-    ///   - Handles WASD movement (camera-relative, same pattern as OverworldManager)
+    ///   - Handles WASD movement (camera-relative)
     ///   - Fog of war: enables room lights when the player enters a room
     ///   - EnterBattle(): saves DungeonState, hands off to GameManager.EnterBattle
     ///   - OnBattleWon(): checks boss defeat, completes or continues dungeon
@@ -63,18 +63,9 @@ namespace ForeverEngine.Demo.Dungeon
             // Escape is NOT used here — it is owned by PauseMenu.
             if (Input.GetKeyDown(KeyCode.F5))
             {
-                var cm = ForeverEngine.Network.ConnectionManager.Instance;
-                if (cm != null)
-                {
-                    cm.Send(new ForeverEngine.Core.Messages.ExitDungeonRequest());
-                    Debug.Log("[DungeonExplorer] ExitDungeonRequest sent (F5).");
-                }
-                else
-                {
-                    // Offline / editor path: fall back to local overworld return.
-                    Debug.Log("[DungeonExplorer] F5 pressed — no ConnectionManager, returning to overworld locally.");
-                    GameManager.Instance?.ReturnToOverworld();
-                }
+                ForeverEngine.Network.ConnectionManager.Instance.Send(
+                    new ForeverEngine.Core.Messages.ExitDungeonRequest());
+                Debug.Log("[DungeonExplorer] ExitDungeonRequest sent (F5).");
             }
 
             // Tab toggles full minimap overlay — but not when inventory is open
@@ -89,9 +80,6 @@ namespace ForeverEngine.Demo.Dungeon
                 {
                     restMgr.RequestLongRest();
                     Debug.Log("[DungeonExplorer] Long rest requested.");
-                    // Reset encounter suppression counter
-                    var overworldMgr = Overworld.OverworldManager.Instance;
-                    if (overworldMgr != null) overworldMgr.EncountersSinceRest = 0;
                 }
                 else
                 {
@@ -463,9 +451,11 @@ namespace ForeverEngine.Demo.Dungeon
         {
             var gm = GameManager.Instance;
             if (gm == null) return;
-            Debug.Log("[DungeonExplorer] Dungeon complete — returning to overworld.");
+            Debug.Log("[DungeonExplorer] Dungeon complete — awaiting server exit.");
             gm.PendingDungeonState = null;
-            gm.ReturnToOverworld();
+            // Server drives scene transition via DungeonExitedMessage → ConnectionManager.OnDungeonExited.
+            ForeverEngine.Network.ConnectionManager.Instance?.Send(
+                new ForeverEngine.Core.Messages.ExitDungeonRequest());
         }
     }
 }
