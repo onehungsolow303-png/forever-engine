@@ -8,7 +8,7 @@ using ForeverEngine.Core.World.Baked;
 
 namespace ForeverEngine.Tests.World.Baked
 {
-    public class MacroBakeEndToEndTests
+    public class MacroBakeWriterReaderE2ETests
     {
         [Test]
         public void FullBake_FromSyntheticTerrain_ProducesReadableOutput()
