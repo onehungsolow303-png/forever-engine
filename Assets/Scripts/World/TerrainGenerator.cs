@@ -54,6 +54,18 @@ namespace ForeverEngine.Procedural
         public static float SampleHeightAt(float worldX, float worldZ, BiomeType biomeHint,
                                             PlanetSkeleton skeleton, int worldSeed)
         {
+            // Phase 2: if a baked world is available, use it as the authoritative
+            // elevation source. Baked heights are absolute meters; the existing
+            // skeleton-noise path is the dev/test fallback when no bake exists.
+            var bakedSource = BakedChunkSourceRuntime.Get();
+            if (bakedSource != null)
+            {
+                var macro = bakedSource.Macro;
+                float meters = ForeverEngine.Core.World.Baked.BakedElevationSynth.Sample(
+                    worldX, worldZ, macro, macro.Header.LayerId);
+                return UnityEngine.Mathf.Clamp01(meters / MaxHeight);
+            }
+
             int chunkSize = ChunkCoord.ChunkSize;
             float skeletonX = (worldX / chunkSize + skeleton.Width / 2f) % skeleton.Width;
             float skeletonZ = (worldZ / chunkSize + skeleton.Height / 2f) % skeleton.Height;
