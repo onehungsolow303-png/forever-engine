@@ -3,6 +3,7 @@
   "rootNamespace": "ForeverEngine.Tests",
   "references": [
     "ForeverEngine",
+    "ForeverEngine.Editor.Baked",
     "Unity.Entities",
     "Unity.Burst",
     "Unity.Collections",

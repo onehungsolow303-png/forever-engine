@@ -1,0 +1,16 @@
+{
+  "name": "ForeverEngine.Editor.Baked",
+  "rootNamespace": "ForeverEngine.Procedural.Editor",
+  "references": [
+    "ForeverEngine"
+  ],
+  "includePlatforms": ["Editor"],
+  "excludePlatforms": [],
+  "allowUnsafeCode": false,
+  "overrideReferences": false,
+  "precompiledReferences": [],
+  "autoReferenced": true,
+  "defineConstraints": [],
+  "versionDefines": [],
+  "noEngineReferences": false
+}
