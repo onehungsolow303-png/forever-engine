@@ -551,7 +551,7 @@ namespace ForeverEngine.Network
             }
         }
 
-        private void ShowOverlay(string status, string detail = "")
+        public void ShowOverlay(string status, string detail = "")
         {
             var root = _uiDocument?.rootVisualElement;
             if (root == null) return;

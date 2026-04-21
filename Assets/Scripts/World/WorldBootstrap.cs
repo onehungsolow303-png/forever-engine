@@ -3,9 +3,9 @@ using UnityEngine;
 namespace ForeverEngine.Procedural
 {
     /// <summary>
-    /// Bootstrap for the new procedural World scene. In server mode, waits for the
-    /// server to stream the spawn chunk before spawning the player. In offline mode,
-    /// generates the spawn chunk locally using PlanetSkeleton + TerrainGenerator.
+    /// Bootstrap for the procedural World scene. Waits for the server to stream
+    /// the spawn chunk, then spawns the player on top of it. Multiplayer-only —
+    /// no offline fallback.
     /// </summary>
     public class WorldBootstrap : UnityEngine.MonoBehaviour
     {
@@ -101,23 +101,16 @@ namespace ForeverEngine.Procedural
             // Hitch detector for flicker correlation (logs [HITCH-DIAG] on long frames).
             new GameObject("HitchDetector").AddComponent<HitchDetector>();
 
-            // Detect server mode: ConnectionManager exists and is logged in (or connecting)
-            bool serverMode = Network.ConnectionManager.Instance != null;
-
-            if (serverMode)
+            // Multiplayer-only: ConnectionManager must exist (spawned by ClientBoot).
+            if (Network.ConnectionManager.Instance == null)
             {
-                // Server mode: initialize without skeleton, server will stream chunks
-                chunkManager.Initialize(null, serverMode: true);
-                Debug.Log("[WorldBootstrap] Server mode — waiting for server to stream spawn chunk.");
+                Debug.LogError("[WorldBootstrap] No ConnectionManager — ClientBoot should have spawned one. Aborting.");
+                return;
+            }
 
-                // Wait for server chunk before spawning player
-                StartCoroutine(WaitForServerChunkAndSpawn(chunkManager));
-            }
-            else
-            {
-                // Offline/fallback mode: generate spawn chunk locally
-                OfflineSpawn(chunkManager);
-            }
+            chunkManager.Initialize(null);
+            Debug.Log("[WorldBootstrap] Waiting for server to stream spawn chunk.");
+            StartCoroutine(WaitForServerChunkAndSpawn(chunkManager));
 
             // Atmosphere (post-processing)
             var atmosGO = new GameObject("Atmosphere");
@@ -146,8 +139,10 @@ namespace ForeverEngine.Procedural
                 elapsed += Time.deltaTime;
                 if (elapsed > timeout)
                 {
-                    Debug.LogWarning("[WorldBootstrap] Timed out waiting for server chunk — falling back to local generation.");
-                    OfflineSpawn(chunkManager);
+                    Debug.LogError("[WorldBootstrap] Server unreachable — spawn chunk never arrived. Giving up.");
+                    Network.ConnectionManager.Instance?.ShowOverlay(
+                        "Server unreachable",
+                        "Spawn chunk stream timed out");
                     yield break;
                 }
                 yield return null;
@@ -170,8 +165,10 @@ namespace ForeverEngine.Procedural
 
                 if (spawnData == null)
                 {
-                    Debug.LogWarning("[WorldBootstrap] Spawn chunk never received — falling back.");
-                    OfflineSpawn(chunkManager);
+                    Debug.LogError("[WorldBootstrap] Spawn chunk never received — giving up.");
+                    Network.ConnectionManager.Instance?.ShowOverlay(
+                        "Server unreachable",
+                        "Spawn chunk (0,0) never arrived");
                     yield break;
                 }
             }
@@ -196,36 +193,6 @@ namespace ForeverEngine.Procedural
             SpawnPlayer(spawnPos, chunkManager);
 
             Debug.Log($"[WorldBootstrap] Server-mode spawn complete. seed={WorldSeed}, spawn={spawnPos}, biome={spawnData.Biome}");
-        }
-
-        /// <summary>
-        /// Offline/fallback spawn: generate spawn chunk locally and spawn the player.
-        /// </summary>
-        private void OfflineSpawn(ChunkManager chunkManager)
-        {
-            // Generate the initial chunk FIRST so we can sample terrain height
-            var spawnChunk = new ChunkCoord(0, 0);
-            chunkManager.Initialize(null); // Initialize skeleton without player yet
-
-            // Force-generate the spawn chunk AND create terrain BEFORE spawning player
-            var spawnData = new ChunkData(spawnChunk.X, spawnChunk.Z);
-            TerrainGenerator.GenerateHeightmap(spawnData, chunkManager.Skeleton, WorldSeed);
-            ChunkPersistence.Save(WorldSeed, spawnChunk, spawnData);
-
-            // Create the terrain mesh so the collider exists before player spawns
-            var spawnTerrainGO = TerrainGenerator.CreateTerrain(spawnData);
-            Debug.Log($"[WorldBootstrap] Spawn terrain created: biome={spawnData.Biome}, elevation={spawnData.BaseElevation:F2}");
-
-            // Sample height from heightmap for spawn position
-            int hmRes = ChunkData.HeightmapRes;
-            int centerHm = hmRes / 2;
-            float terrainHeight = spawnData.Heightmap[centerHm * hmRes + centerHm] * TerrainGenerator.MaxHeight;
-            var spawnPos = spawnChunk.WorldCenter;
-            spawnPos.y = terrainHeight + 3f; // 3m above surface
-
-            SpawnPlayer(spawnPos, chunkManager);
-
-            Debug.Log($"[WorldBootstrap] World initialized (offline). Seed={WorldSeed}, spawn={spawnPos}, terrainH={terrainHeight:F1}m, biome={spawnData.Biome}");
         }
 
         /// <summary>
@@ -307,11 +274,7 @@ namespace ForeverEngine.Procedural
             Debug.Log($"[WorldBootstrap] FPS camera following {player.name}");
 
             // Spec 7 Phase 1: wire local player to network send loop.
-            // ConnectionManager.Instance is null in offline mode — send loop
-            // starts only if a connection exists.
-            var connMgr = Network.ConnectionManager.Instance;
-            if (connMgr != null)
-                connMgr.RegisterLocalPlayer(player);
+            Network.ConnectionManager.Instance.RegisterLocalPlayer(player);
 
             // Spec 7 Task 13: spawn RemotePlayerManager once (idempotent).
             if (UnityEngine.Object.FindFirstObjectByType<ForeverEngine.Network.RemotePlayerManager>() == null)
