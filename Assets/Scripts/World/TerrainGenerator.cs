@@ -13,8 +13,29 @@ namespace ForeverEngine.Procedural
         // into absolute meters. Baked data already ships as meters.
         private const float SkeletonSurfaceScaleMeters = 400f;
 
-        // Cached biome materials — shared across all chunks of same biome
-        private static readonly Material[] _biomeMaterials = new Material[System.Enum.GetValues(typeof(BiomeType)).Length];
+        // Single shared terrain material for all chunks (Phase 4B). Biome distinction
+        // is now conveyed via per-vertex colors written by BiomeVertexColorer.
+        private static Material _sharedTerrainMaterial;
+
+        /// <summary>Returns the shared TerrainBlendedMaterial, loading it on first
+        /// access from Resources. Falls back to a procedural URP Lit grey if the
+        /// asset is missing (populator hasn't been run).</summary>
+        private static Material GetSharedTerrainMaterial()
+        {
+            if (_sharedTerrainMaterial != null) return _sharedTerrainMaterial;
+
+            _sharedTerrainMaterial = Resources.Load<Material>("TerrainBlendedMaterial");
+            if (_sharedTerrainMaterial != null) return _sharedTerrainMaterial;
+
+            var shader = Shader.Find("Universal Render Pipeline/Lit") ?? Shader.Find("Standard");
+            _sharedTerrainMaterial = new Material(shader);
+            if (_sharedTerrainMaterial.HasProperty("_BaseColor"))
+                _sharedTerrainMaterial.SetColor("_BaseColor", new Color(0.5f, 0.5f, 0.5f));
+            else
+                _sharedTerrainMaterial.color = new Color(0.5f, 0.5f, 0.5f);
+            Debug.LogWarning("[TerrainGenerator] TerrainBlendedMaterial not found in Resources; falling back to procedural grey. Run 'Forever Engine → Create Terrain Blended Material'.");
+            return _sharedTerrainMaterial;
+        }
 
         /// <summary>
         /// Generate heightmap data for a chunk. Writes into chunkData.Heightmap.
@@ -131,7 +152,7 @@ namespace ForeverEngine.Procedural
             var root = new GameObject($"Chunk_{coord.X}_{coord.Z}");
             root.transform.position = coord.WorldOrigin;
 
-            var material = GetBiomeMaterial(chunkData.Biome);
+            var material = GetSharedTerrainMaterial();
 
             // Single-LOD build: LOD swaps between 33 / 17 / 9 vert meshes at
             // chunk level produced both visible cracks at neighbor boundaries
@@ -205,6 +226,17 @@ namespace ForeverEngine.Procedural
             mesh.RecalculateNormals(); // Server-mode: analytical normals removed; let Unity compute smooth normals from heightmap geometry.
             mesh.RecalculateBounds();
 
+            // Phase 4B: per-vertex biome color blend. The TerrainBlended shader
+            // (on GetSharedTerrainMaterial) multiplies albedo by mesh.colors so
+            // cross-biome seams gradient instead of hard-edging.
+            var bakedSource = ForeverEngine.Procedural.BakedChunkSourceRuntime.Get();
+            BiomeVertexColorer.WriteVertexColors(
+                mesh,
+                chunkOrigin: coord.WorldOrigin,
+                chunkSize: chunkSize,
+                res: res,
+                source: bakedSource);
+
             var go = new GameObject();
             var filter = go.AddComponent<MeshFilter>();
             filter.sharedMesh = mesh;
@@ -234,38 +266,6 @@ namespace ForeverEngine.Procedural
         public static void DestroyTerrain(Terrain terrain)
         {
             if (terrain != null) Object.Destroy(terrain.gameObject);
-        }
-
-        /// <summary>Get or create a cached material for a biome. Prefers BiomeMaterialCatalog;
-        /// falls back to a solid-color URP Lit material when the catalog is absent or has no
-        /// entry for the biome.</summary>
-        private static Material GetBiomeMaterial(BiomeType biome)
-        {
-            int idx = (int)biome;
-            if (idx < 0 || idx >= _biomeMaterials.Length) idx = 0;
-
-            if (_biomeMaterials[idx] != null)
-                return _biomeMaterials[idx];
-
-            // 1) Catalog hit — use the curated pack material.
-            var catalog = BiomeMaterialCatalog.Load();
-            var catalogMat = catalog != null ? catalog.GetMaterial(biome) : null;
-            if (catalogMat != null)
-            {
-                _biomeMaterials[idx] = catalogMat;
-                return catalogMat;
-            }
-
-            // 2) Fallback — build a solid-color URP Lit material.
-            var color = BiomeTable.BaseColor(biome);
-            var shader = Shader.Find("Universal Render Pipeline/Lit") ?? Shader.Find("Standard");
-            var mat = new Material(shader);
-            if (mat.HasProperty("_BaseColor"))
-                mat.SetColor("_BaseColor", color);
-            else
-                mat.color = color;
-            _biomeMaterials[idx] = mat;
-            return mat;
         }
 
         /// <summary>Bilinear sample from a flat heightmap array.</summary>
