@@ -21,8 +21,11 @@ namespace ForeverEngine.Tests.EditMode.World
             try
             {
                 var src = BakedChunkSource.Load(layerDir, layerId: 0);
+                // Mesh spans [64, 192] — entirely interior to tile [0, 256).
+                // Vertex at worldX=64 (cell 1's left rim under shifted formula) → u=0.5, samples cells 0+1, both Grassland.
+                // Interior vertices behave similarly — every sample lands within tile 0's cells.
                 var mesh = BuildFlatMesh(originX: 0f, originZ: 0f, size: 128f, res: 4);
-                BiomeVertexColorer.WriteVertexColors(mesh, new Vector3(0f, 0f, 0f), chunkSize: 128f, res: 4, source: src);
+                BiomeVertexColorer.WriteVertexColors(mesh, new Vector3(64f, 0f, 64f), chunkSize: 128f, res: 4, source: src);
 
                 var expected = BiomeTable.BaseColor(BiomeType.Grassland);
                 foreach (var c in mesh.colors)
@@ -43,24 +46,29 @@ namespace ForeverEngine.Tests.EditMode.World
             try
             {
                 var src = BakedChunkSource.Load(layerDir, layerId: 0);
-                // Mesh spanning both tiles. Chunk at world origin (0,0), size 512 (= 2 * TileSize).
+                // Mesh spanning [0, 512]. Chunk at world origin (0,0), size 512 (= 2 * TileSize).
+                // Vertex (x=2, z=?) on a 5x5 mesh lands at worldX = 256 — exactly at the tile boundary.
+                // Shifted bilinear: u = 256/64 - 0.5 = 3.5, cx0=3 (tile 0 cell 3, Grassland),
+                // cx1=4 (tile 1 cell 4, Desert), fx=0.5 → 50/50 Grassland+Desert.
                 var mesh = BuildFlatMesh(originX: 0f, originZ: 0f, size: TileSize * 2f, res: 4);
                 BiomeVertexColorer.WriteVertexColors(mesh, Vector3.zero, chunkSize: TileSize * 2f, res: 4, source: src);
 
-                // Vertex exactly at the tile boundary (worldX = TileSize = 256f) is at mesh x=2, z=any.
-                // res=4 means 5x5 vertices, step=128f. Vertex (x=2, z=0) is at worldX = 256f.
-                int idxOnSeam = 0 * (4 + 1) + 2;  // z=0, x=2
+                // Vertex at (x=2, z=2) → worldX=256, worldZ=256. Both axes at tile boundaries; should
+                // blend across all four surrounding cells: (3,3)=Grassland, (4,3)=Desert, (3,4)=Grassland(*),
+                // (4,4)=Desert(*). (*) Note tile (1,1) and (0,1) don't exist → ocean for those corners.
+                // To avoid the ocean complication, test the seam on x with z at cell 1 (interior),
+                // so z=1 means worldZ=128, inside tile 0 entirely.
+                int idxOnSeam = 1 * (4 + 1) + 2;  // z=1, x=2 → worldX=256, worldZ=128
                 var seamColor = mesh.colors[idxOnSeam];
 
-                // At worldX=256: u=4.0, samples cells 4,5 (both in Desert tile).
-                // Since fx=0, blends only cell 4 → pure Desert.
-                // But test expects 50/50 blend. To achieve this with standard bilinear,
-                // we'd need to adjust the test expectations OR adjust the algorithm.
-                // Expect mostly Desert (fx very close to 0).
-                var desert = BiomeTable.BaseColor(BiomeType.Desert);
-                Assert.That(seamColor.r, Is.EqualTo(desert.r).Within(0.1f), "seam close to desert R");
-                Assert.That(seamColor.g, Is.EqualTo(desert.g).Within(0.1f), "seam close to desert G");
-                Assert.That(seamColor.b, Is.EqualTo(desert.b).Within(0.1f), "seam close to desert B");
+                var expectedMid = Color.Lerp(
+                    BiomeTable.BaseColor(BiomeType.Grassland),
+                    BiomeTable.BaseColor(BiomeType.Desert),
+                    0.5f);
+
+                Assert.That(seamColor.r, Is.EqualTo(expectedMid.r).Within(0.02f), "seam R");
+                Assert.That(seamColor.g, Is.EqualTo(expectedMid.g).Within(0.02f), "seam G");
+                Assert.That(seamColor.b, Is.EqualTo(expectedMid.b).Within(0.02f), "seam B");
             }
             finally { try { Directory.Delete(layerDir, recursive: true); } catch { } }
         }
@@ -75,16 +83,22 @@ namespace ForeverEngine.Tests.EditMode.World
                 var mesh = BuildFlatMesh(originX: 0f, originZ: 0f, size: TileSize * 2f, res: 4);
                 BiomeVertexColorer.WriteVertexColors(mesh, Vector3.zero, chunkSize: TileSize * 2f, res: 4, source: src);
 
-                // Vertex at x=1, z=1 → worldX=128, worldZ=128: fully inside tile (0,0) → Grassland
-                int idxGrass = 1 * 5 + 1;  // z=1, x=1 (res+1 = 5)
-                // Vertex at x=3, z=1 → worldX=384, worldZ=128: fully inside tile (1,0) → Desert
+                // Vertex at x=1, z=1 → worldX=128, worldZ=128: both axes deep in tile 0.
+                // Shifted: u=1.5, cx0=1, cx1=2, fx=0.5. Both cells in tile 0 → pure Grassland.
+                int idxGrass = 1 * 5 + 1;
+                // Vertex at x=3, z=1 → worldX=384, worldZ=128: deep in tile 1 on x, deep in tile 0 on z.
+                // But z is worldZ=128, tile (1,0) covers z ∈ [0, 256), so vertex is in tile (1,0). Desert.
                 int idxDesert = 1 * 5 + 3;
 
                 var grass = BiomeTable.BaseColor(BiomeType.Grassland);
                 var desert = BiomeTable.BaseColor(BiomeType.Desert);
 
-                Assert.That(mesh.colors[idxGrass].r, Is.EqualTo(grass.r).Within(0.05f));
-                Assert.That(mesh.colors[idxDesert].r, Is.EqualTo(desert.r).Within(0.05f));
+                Assert.That(mesh.colors[idxGrass].r, Is.EqualTo(grass.r).Within(0.01f));
+                Assert.That(mesh.colors[idxGrass].g, Is.EqualTo(grass.g).Within(0.01f));
+                Assert.That(mesh.colors[idxGrass].b, Is.EqualTo(grass.b).Within(0.01f));
+                Assert.That(mesh.colors[idxDesert].r, Is.EqualTo(desert.r).Within(0.01f));
+                Assert.That(mesh.colors[idxDesert].g, Is.EqualTo(desert.g).Within(0.01f));
+                Assert.That(mesh.colors[idxDesert].b, Is.EqualTo(desert.b).Within(0.01f));
             }
             finally { try { Directory.Delete(layerDir, recursive: true); } catch { } }
         }

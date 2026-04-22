@@ -15,13 +15,19 @@ namespace ForeverEngine.Procedural
     {
         /// <summary>
         /// Populate <paramref name="mesh"/>.colors using biome colours sampled
-        /// from <paramref name="source"/> at each vertex's world position.
+        /// from <paramref name="source"/> at each vertex's world position via
+        /// bilinear interpolation of the 4 nearest macro cell CENTERS. Cell
+        /// centers are treated as lattice points; vertices between centers get
+        /// a smooth blend. At a tile boundary (worldX = tileSize × N) the
+        /// sampler straddles the last cell of tile N-1 and the first cell of
+        /// tile N, producing a 50/50 blend — seamless cross-tile transitions.
         ///
-        /// <paramref name="chunkOrigin"/> is the chunk's world-origin corner
-        /// (a vertex at mesh-local (0,0,0) corresponds to this world position).
+        /// <paramref name="chunkOrigin"/> is the chunk's world-origin corner.
         /// <paramref name="chunkSize"/> is the chunk's physical edge length.
         /// <paramref name="res"/> is the mesh subdivision count (mesh has
-        /// (res+1) × (res+1) vertices).
+        /// (res+1) × (res+1) vertices). When <paramref name="source"/> is null,
+        /// writes Color.white everywhere so the underlying material shows
+        /// through unchanged.
         /// </summary>
         public static void WriteVertexColors(
             Mesh mesh,
@@ -53,9 +59,12 @@ namespace ForeverEngine.Procedural
                     float worldX = chunkOrigin.x + x * step;
                     float worldZ = chunkOrigin.z + z * step;
 
-                    // Continuous cell coord relative to layer origin.
-                    float u = (worldX - originX) / cellSize;
-                    float v = (worldZ - originZ) / cellSize;
+                    // Continuous cell coord relative to layer origin, shifted so cell centers
+                    // map to integer indices. This produces smooth bilinear blending across
+                    // cell AND tile boundaries (cx0+cx1 straddle the tile boundary at the
+                    // exact midpoint → 50/50 blend at the seam).
+                    float u = (worldX - originX) / cellSize - 0.5f;
+                    float v = (worldZ - originZ) / cellSize - 0.5f;
 
                     int cx0 = Mathf.FloorToInt(u);
                     int cz0 = Mathf.FloorToInt(v);
