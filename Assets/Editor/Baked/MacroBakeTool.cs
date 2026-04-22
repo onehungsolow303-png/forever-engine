@@ -47,11 +47,25 @@ namespace ForeverEngine.Procedural.Editor
 
             Debug.Log($"[MacroBake] Sampling {w}x{h} cells @ {cellSizeMeters}m from terrain size {tSize}");
 
+            var layers = terrain.terrainData.terrainLayers;
+            for (int i = 0; i < layers.Length; i++)
+                Debug.Log($"[MacroBake] Splat layer {i}: {(layers[i] != null ? layers[i].name : "<null>")}");
+
             var heights = UnityTerrainSampler.SampleHeightmap(terrain, w, h, maxHeightMeters);
+            float minH = float.MaxValue, maxH = float.MinValue;
+            for (int i = 0; i < heights.Length; i++) { if (heights[i] < minH) minH = heights[i]; if (heights[i] > maxH) maxH = heights[i]; }
+            Debug.Log($"[MacroBake] Heightmap range: {minH:F1}m .. {maxH:F1}m");
+
             var splatLayerToBiome = new[] {
                 BiomeType.Grassland, BiomeType.TemperateForest, BiomeType.Mountain, BiomeType.Desert
             };
             var biome = UnityTerrainSampler.SampleBiome(terrain, w, h, splatLayerToBiome);
+
+            var biomeCounts = new int[14];
+            for (int i = 0; i < biome.Length; i++) if (biome[i] < 14) biomeCounts[biome[i]]++;
+            for (int b = 0; b < 14; b++)
+                if (biomeCounts[b] > 0)
+                    Debug.Log($"[MacroBake] Biome {(BiomeType)b} ({b}): {biomeCounts[b]} cells");
             var splat = UnityTerrainSampler.SampleSplat(terrain, w, h);
             var features = new byte[w * h];
 
