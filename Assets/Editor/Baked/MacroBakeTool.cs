@@ -33,7 +33,7 @@ namespace ForeverEngine.Procedural.Editor
                 EditorUtility.DisplayDialog("Macro Bake", "No active Terrain in scene.", "OK");
                 return;
             }
-            BakeTerrainsAsTiles(new[] { terrain }, fullRewrite: false);
+            BakeTerrainsAsTiles(new[] { terrain }, fullRewrite: false, allowDialogs: true);
         }
 
         [MenuItem("Forever Engine/Bake/All Tiles (Scene)")]
@@ -45,18 +45,34 @@ namespace ForeverEngine.Procedural.Editor
                 EditorUtility.DisplayDialog("Macro Bake", "No Terrains found in scene.", "OK");
                 return;
             }
-            BakeTerrainsAsTiles(terrains, fullRewrite: true);
+            BakeTerrainsAsTiles(terrains, fullRewrite: true, allowDialogs: true);
         }
 
-        private static void BakeTerrainsAsTiles(Terrain[] terrains, bool fullRewrite)
+        /// <summary>
+        /// Batchmode entry point. Throws InvalidOperationException on validation
+        /// failure (catalog missing, size mismatch, grid misalignment) so callers
+        /// like BatchBakeAll can fail loudly instead of swallowing the error.
+        /// </summary>
+        public static void BakeAllTilesInSceneOrThrow()
+        {
+            var terrains = UnityEngine.Object.FindObjectsByType<Terrain>(FindObjectsSortMode.None);
+            if (terrains == null || terrains.Length == 0)
+                throw new System.InvalidOperationException("[MacroBake] No Terrains found in scene.");
+            BakeTerrainsAsTiles(terrains, fullRewrite: true, allowDialogs: false);
+        }
+
+        private static void BakeTerrainsAsTiles(Terrain[] terrains, bool fullRewrite, bool allowDialogs = true)
         {
             var catalog = AssetPackBiomeCatalog.Load();
             if (catalog == null || catalog.Entries == null || catalog.Entries.Length == 0)
             {
-                EditorUtility.DisplayDialog("Macro Bake",
-                    "No AssetPackBiomeCatalog found. Run Forever Engine → Bake → Categorize Asset Packs first.",
-                    "OK");
-                return;
+                var errorMessage = "No AssetPackBiomeCatalog found. Run Forever Engine → Bake → Categorize Asset Packs first.";
+                if (allowDialogs)
+                {
+                    EditorUtility.DisplayDialog("Macro Bake", errorMessage, "OK");
+                    return;
+                }
+                throw new System.InvalidOperationException($"[MacroBake] {errorMessage}");
             }
 
             byte layerId = DefaultLayerId;
@@ -80,12 +96,15 @@ namespace ForeverEngine.Procedural.Editor
                 if (!Mathf.Approximately(existingIndex.Value.TileSize, tileSize) ||
                     !Mathf.Approximately(existingIndex.Value.CellSize, cellSizeMeters))
                 {
-                    EditorUtility.DisplayDialog("Macro Bake",
-                        $"Existing index.json tileSize/cellSize ({existingIndex.Value.TileSize}/{existingIndex.Value.CellSize}) " +
+                    var errorMessage = $"Existing index.json tileSize/cellSize ({existingIndex.Value.TileSize}/{existingIndex.Value.CellSize}) " +
                         $"disagrees with terrain size/cell ({tileSize}/{cellSizeMeters}). " +
-                        "Delete layer_0/ and re-run All Tiles to reset, or adjust the authoring.",
-                        "OK");
-                    return;
+                        "Delete layer_0/ and re-run All Tiles to reset, or adjust the authoring.";
+                    if (allowDialogs)
+                    {
+                        EditorUtility.DisplayDialog("Macro Bake", errorMessage, "OK");
+                        return;
+                    }
+                    throw new System.InvalidOperationException($"[MacroBake] {errorMessage}");
                 }
             }
             else
@@ -100,10 +119,14 @@ namespace ForeverEngine.Procedural.Editor
                 if (!Mathf.Approximately(t.terrainData.size.x, tileSize) ||
                     !Mathf.Approximately(t.terrainData.size.z, tileSize))
                 {
-                    EditorUtility.DisplayDialog("Macro Bake",
-                        $"Terrain '{t.name}' size {t.terrainData.size} != tile size {tileSize}. " +
-                        "All tiles must be the same size.", "OK");
-                    return;
+                    var errorMessage = $"Terrain '{t.name}' size {t.terrainData.size} != tile size {tileSize}. " +
+                        "All tiles must be the same size.";
+                    if (allowDialogs)
+                    {
+                        EditorUtility.DisplayDialog("Macro Bake", errorMessage, "OK");
+                        return;
+                    }
+                    throw new System.InvalidOperationException($"[MacroBake] {errorMessage}");
                 }
                 float dx = (t.transform.position.x - originX) / tileSize;
                 float dz = (t.transform.position.z - originZ) / tileSize;
@@ -112,11 +135,15 @@ namespace ForeverEngine.Procedural.Editor
                 if (Mathf.Abs(dx - tileX) * tileSize > GridAlignmentToleranceMeters ||
                     Mathf.Abs(dz - tileZ) * tileSize > GridAlignmentToleranceMeters)
                 {
-                    EditorUtility.DisplayDialog("Macro Bake",
-                        $"Terrain '{t.name}' position {t.transform.position} is not aligned to origin " +
+                    var errorMessage2 = $"Terrain '{t.name}' position {t.transform.position} is not aligned to origin " +
                         $"({originX},{originZ}) + (tileX,tileZ) * {tileSize}. Reposition or bake with " +
-                        "'All Tiles (Scene)' which resets the origin.", "OK");
-                    return;
+                        "'All Tiles (Scene)' which resets the origin.";
+                    if (allowDialogs)
+                    {
+                        EditorUtility.DisplayDialog("Macro Bake", errorMessage2, "OK");
+                        return;
+                    }
+                    throw new System.InvalidOperationException($"[MacroBake] {errorMessage2}");
                 }
             }
 
@@ -157,11 +184,16 @@ namespace ForeverEngine.Procedural.Editor
             Directory.CreateDirectory(layerDir);
             BakedWorldWriter.WriteLayerIndex(layerDir, index);
 
-            Debug.Log($"[MacroBake] Wrote {entriesArray.Length} tile(s) + index.json to {layerDir}");
-            EditorUtility.DisplayDialog("Macro Bake",
-                $"Baked {terrains.Length} terrain(s) into {entriesArray.Length} tile(s). " +
-                $"Grid: ({minX},{minZ})-({maxX},{maxZ}). Layer dir: {layerDir}",
-                "OK");
+            Debug.Log($"[MacroBake] Wrote {entriesArray.Length} tile(s) + index.json to {layerDir} (origin=({originX:F1},{originZ:F1}))");
+            if (allowDialogs)
+            {
+                EditorUtility.DisplayDialog("Macro Bake",
+                    $"Baked {terrains.Length} terrain(s) into {entriesArray.Length} tile(s).\n" +
+                    $"Origin locked to ({originX:F1}, {originZ:F1}). All future tiles in this " +
+                    $"layer must align to origin + (tileX,tileZ) * {tileSize:F0}m.\n" +
+                    $"Grid: ({minX},{minZ})-({maxX},{maxZ}). Layer dir: {layerDir}",
+                    "OK");
+            }
         }
 
         private static Terrain PickAnchor(Terrain[] terrains)

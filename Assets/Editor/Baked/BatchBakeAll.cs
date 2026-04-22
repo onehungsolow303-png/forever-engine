@@ -46,8 +46,8 @@ namespace ForeverEngine.Procedural.Editor
                 SeedCatalogFromHeuristics(L);
 
                 // 3. Macro bake all terrains in scene as multi-tile layout.
-                L("Phase 3: MacroBakeTool.BakeAllTilesInScene()");
-                MacroBakeTool.BakeAllTilesInScene();
+                L("Phase 3: MacroBakeTool.BakeAllTilesInSceneOrThrow()");
+                MacroBakeTool.BakeAllTilesInSceneOrThrow();
                 var indexPath = "C:/Dev/.shared/baked/planet/layer_0/index.json";
                 if (!File.Exists(indexPath))
                     throw new InvalidOperationException($"Macro bake produced no index.json at {indexPath}");
