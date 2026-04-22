@@ -3,6 +3,16 @@ using System.IO;
 using UnityEngine;
 using ForeverEngine.Core.World.Baked;
 
+// ============================================================================
+// MIRROR COPY. Canonical version lives at:
+//   C:/Dev/ForeverEngine.Core.Repo/ForeverEngine.Core.Tests/World/Baked/BakedTestFixtures.cs
+// A second mirror exists at:
+//   C:/Dev/ForeverEngine.Server.Repo/ForeverEngine.Server.Tests/BakedTestFixtures.cs
+// Any change here MUST be applied to the other two copies. The duplication
+// exists because the canonical copy is `internal` to a test-only project;
+// a shared test-helpers project is deferred work (tracked in Phase 4A memory).
+// ============================================================================
+
 namespace ForeverEngine.Tests.EditMode.World.Baked
 {
     /// <summary>
