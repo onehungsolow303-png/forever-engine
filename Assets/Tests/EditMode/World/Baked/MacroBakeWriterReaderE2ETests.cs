@@ -34,7 +34,7 @@ namespace ForeverEngine.Tests.World.Baked
                 var props = Array.Empty<BakedPropPlacement>();
 
                 var header = new BakedLayerHeader(
-                    Magic: "FEW1", FormatVersion: 0x0002,
+                    Magic: "FEW1", FormatVersion: BakedFormatConstants.FormatVersion,
                     LayerId: 0,
                     WorldMinX: 0f, WorldMinZ: 0f,
                     WorldMaxX: 4096f, WorldMaxZ: 4096f,
