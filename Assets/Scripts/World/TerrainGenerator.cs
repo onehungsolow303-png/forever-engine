@@ -62,9 +62,14 @@ namespace ForeverEngine.Procedural
             var bakedSource = BakedChunkSourceRuntime.Get();
             if (bakedSource != null)
             {
-                var macro = bakedSource.Macro;
-                return ForeverEngine.Core.World.Baked.BakedElevationSynth.Sample(
-                    worldX, worldZ, macro, macro.Header.LayerId);
+                if (bakedSource.TryGetTileForWorld(worldX, worldZ, out var macro))
+                {
+                    return ForeverEngine.Core.World.Baked.BakedElevationSynth.Sample(
+                        worldX, worldZ, macro, macro.Header.LayerId);
+                }
+                // No tile covers (worldX, worldZ) — ocean / void. Return 0f to match
+                // BakedChunkSource.SampleMacroElevation's missing-tile fallback.
+                return 0f;
             }
 
             int chunkSize = ChunkCoord.ChunkSize;

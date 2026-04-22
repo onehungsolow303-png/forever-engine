@@ -45,13 +45,13 @@ namespace ForeverEngine.Procedural.Editor
                 L("Phase 2: Seed AssetPackBiomeCatalog from heuristics.");
                 SeedCatalogFromHeuristics(L);
 
-                // 3. Macro bake on the active terrain.
-                L("Phase 3: MacroBakeTool.BakeActiveTerrain()");
-                MacroBakeTool.BakeActiveTerrain();
-                var macroDir = "C:/Dev/.shared/baked/planet/layer_0/macro";
-                if (!Directory.Exists(macroDir))
-                    throw new InvalidOperationException($"Macro bake produced no output at {macroDir}");
-                L($"  Macro bake output: {Directory.GetFiles(macroDir).Length} files in {macroDir}");
+                // 3. Macro bake all terrains in scene as multi-tile layout.
+                L("Phase 3: MacroBakeTool.BakeAllTilesInScene()");
+                MacroBakeTool.BakeAllTilesInScene();
+                var indexPath = "C:/Dev/.shared/baked/planet/layer_0/index.json";
+                if (!File.Exists(indexPath))
+                    throw new InvalidOperationException($"Macro bake produced no index.json at {indexPath}");
+                L($"  Macro bake index written: {indexPath}");
 
                 // 4. Create hero zone asset programmatically.
                 L("Phase 4: Create BakedHeroZoneAsset at Assets/TestHeroZone.asset");

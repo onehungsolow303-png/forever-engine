@@ -26,8 +26,8 @@ namespace ForeverEngine.Procedural
 
             foreach (var dir in candidates)
             {
-                var metaPath = Path.Combine(dir, "macro", "metadata.json");
-                if (!File.Exists(metaPath)) continue;
+                var indexPath = Path.Combine(dir, "index.json");
+                if (!File.Exists(indexPath)) continue;
                 try
                 {
                     _cached = BakedChunkSource.Load(dir, layerId: 0);
