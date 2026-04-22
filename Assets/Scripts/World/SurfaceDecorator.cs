@@ -104,7 +104,7 @@ namespace ForeverEngine.Procedural
                     float hmZ = pos.y / ChunkCoord.ChunkSize * (hmRes - 1);
                     int ix = Mathf.Clamp(Mathf.RoundToInt(hmX), 0, hmRes - 1);
                     int iz = Mathf.Clamp(Mathf.RoundToInt(hmZ), 0, hmRes - 1);
-                    float height = chunkData.Heightmap[iz * hmRes + ix] * TerrainGenerator.MaxHeight;
+                    float height = chunkData.Heightmap[iz * hmRes + ix];
 
                     var prop = CreateProp(rule.PropType, rng);
                     if (prop == null) continue;
@@ -149,7 +149,7 @@ namespace ForeverEngine.Procedural
                 float hmZ = pos.y / ChunkCoord.ChunkSize * (hmRes - 1);
                 int ix = Mathf.Clamp(Mathf.RoundToInt(hmX), 0, hmRes - 1);
                 int iz = Mathf.Clamp(Mathf.RoundToInt(hmZ), 0, hmRes - 1);
-                float height = chunkData.Heightmap[iz * hmRes + ix] * TerrainGenerator.MaxHeight;
+                float height = chunkData.Heightmap[iz * hmRes + ix];
 
                 float scale = cfg.BaseScale * (0.8f + (float)rng.NextDouble() * 0.4f);
                 float yaw = (float)rng.NextDouble() * 360f;
@@ -206,7 +206,7 @@ namespace ForeverEngine.Procedural
                     float hmZ = pos.y / ChunkCoord.ChunkSize * (hmRes - 1);
                     int ix = Mathf.Clamp(Mathf.RoundToInt(hmX), 0, hmRes - 1);
                     int iz = Mathf.Clamp(Mathf.RoundToInt(hmZ), 0, hmRes - 1);
-                    float height = chunkData.Heightmap[iz * hmRes + ix] * TerrainGenerator.MaxHeight;
+                    float height = chunkData.Heightmap[iz * hmRes + ix];
 
                     var prefab = rule.Prefabs[rng.Next(rule.Prefabs.Length)];
                     if (prefab == null) continue;

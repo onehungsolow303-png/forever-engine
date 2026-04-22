@@ -175,7 +175,7 @@ namespace ForeverEngine.Procedural
             // Sample height from heightmap for spawn position
             int hmRes = ChunkData.HeightmapRes;
             int centerHm = hmRes / 2;
-            float terrainHeight = spawnData.Heightmap[centerHm * hmRes + centerHm] * TerrainGenerator.MaxHeight;
+            float terrainHeight = spawnData.Heightmap[centerHm * hmRes + centerHm];
             var spawnPos = spawnCoord.WorldCenter;
 
             // Raycast down from well above the heightmap sample to find the true

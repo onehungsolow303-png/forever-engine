@@ -9,7 +9,9 @@ namespace ForeverEngine.Procedural
     /// </summary>
     public static class TerrainGenerator
     {
-        public const float MaxHeight = 200f;
+        // Only used by the skeleton fallback to scale its [0..1] noise output
+        // into absolute meters. Baked data already ships as meters.
+        private const float SkeletonSurfaceScaleMeters = 400f;
 
         // Cached biome materials — shared across all chunks of same biome
         private static readonly Material[] _biomeMaterials = new Material[System.Enum.GetValues(typeof(BiomeType)).Length];
@@ -61,9 +63,8 @@ namespace ForeverEngine.Procedural
             if (bakedSource != null)
             {
                 var macro = bakedSource.Macro;
-                float meters = ForeverEngine.Core.World.Baked.BakedElevationSynth.Sample(
+                return ForeverEngine.Core.World.Baked.BakedElevationSynth.Sample(
                     worldX, worldZ, macro, macro.Header.LayerId);
-                return UnityEngine.Mathf.Clamp01(meters / MaxHeight);
             }
 
             int chunkSize = ChunkCoord.ChunkSize;
@@ -108,7 +109,7 @@ namespace ForeverEngine.Procedural
             float seedZ = worldSeed * 3.1f;
             float noise = SimplexNoise.OctaveNoise(worldX * 0.01f, worldZ * 0.01f,
                                                    octaves, 0.5f, 2f, seedX, seedZ);
-            return Mathf.Clamp01(baseHeight + (noise - 0.5f) * amplitude);
+            return Mathf.Clamp01(baseHeight + (noise - 0.5f) * amplitude) * SkeletonSurfaceScaleMeters;
         }
 
         /// <summary>
@@ -162,7 +163,7 @@ namespace ForeverEngine.Procedural
                     float localZ = z * cellSize;
                     float hmX = (float)x / res * (hmRes - 1);
                     float hmZ = (float)z / res * (hmRes - 1);
-                    float height = SampleHeightmap(chunkData.Heightmap, hmRes, hmX, hmZ) * MaxHeight;
+                    float height = SampleHeightmap(chunkData.Heightmap, hmRes, hmX, hmZ);
                     vertices[idx] = new Vector3(localX, height, localZ);
                     // Tile the biome material 128x per chunk (one tile per 2m).
                     // 32x (8m/tile) read as a flat wash — ground textures lose

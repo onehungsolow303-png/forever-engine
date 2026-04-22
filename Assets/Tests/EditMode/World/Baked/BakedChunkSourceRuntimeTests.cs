@@ -37,13 +37,12 @@ namespace ForeverEngine.Tests.World.Baked
                 foreach (var (x, z) in points)
                 {
                     float coreHeight = BakedElevationSynth.Sample(x, z, coreSource.Macro, 3);
-                    float expectedNormalized = Mathf.Clamp01(coreHeight / TerrainGenerator.MaxHeight);
 
-                    float actualNormalized = TerrainGenerator.SampleHeightAt(
+                    float actualMeters = TerrainGenerator.SampleHeightAt(
                         x, z, BiomeType.Grassland, skeleton: null, worldSeed: 0);
 
-                    Assert.AreEqual(expectedNormalized, actualNormalized, 1e-5f,
-                        $"At ({x},{z}): core={coreHeight}m, expected norm={expectedNormalized}, got {actualNormalized}");
+                    Assert.AreEqual(coreHeight, actualMeters, 1e-3f,
+                        $"At ({x},{z}): core={coreHeight}m, got {actualMeters}m");
                 }
             }
             finally
