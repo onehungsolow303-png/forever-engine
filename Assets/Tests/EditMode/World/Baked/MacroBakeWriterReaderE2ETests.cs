@@ -41,7 +41,8 @@ namespace ForeverEngine.Tests.World.Baked
                     MacroCellSizeMeters: cellSizeMeters,
                     MacroWidthCells: w, MacroHeightCells: h,
                     BiomeTableChecksum: 0,
-                    BakedAtUnixSeconds: 1776_000_000);
+                    BakedAtUnixSeconds: 1776_000_000,
+                    TileX: 0, TileZ: 0);
 
                 BakedWorldWriter.WriteMacro(tmp, header, heights, biome, splat, features, props);
 

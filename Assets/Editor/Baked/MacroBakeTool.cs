@@ -85,7 +85,8 @@ namespace ForeverEngine.Procedural.Editor
                 MacroCellSizeMeters: cellSizeMeters,
                 MacroWidthCells: w, MacroHeightCells: h,
                 BiomeTableChecksum: 0,
-                BakedAtUnixSeconds: DateTimeOffset.UtcNow.ToUnixTimeSeconds());
+                BakedAtUnixSeconds: DateTimeOffset.UtcNow.ToUnixTimeSeconds(),
+                TileX: 0, TileZ: 0);
 
             var layerDir = Path.Combine(OutputRoot, $"layer_{layerId}");
             BakedWorldWriter.WriteMacro(layerDir, header, heights, biome, splat, features, props);

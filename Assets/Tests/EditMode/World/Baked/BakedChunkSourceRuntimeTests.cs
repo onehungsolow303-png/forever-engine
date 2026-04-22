@@ -24,7 +24,8 @@ namespace ForeverEngine.Tests.World.Baked
                     WorldMaxX: w * 64f, WorldMaxZ: h * 64f,
                     MacroCellSizeMeters: 64f,
                     MacroWidthCells: w, MacroHeightCells: h,
-                    BiomeTableChecksum: 0, BakedAtUnixSeconds: 0);
+                    BiomeTableChecksum: 0, BakedAtUnixSeconds: 0,
+                    TileX: 0, TileZ: 0);
                 BakedWorldWriter.WriteMacro(tmp, header,
                     heights, new byte[w*h], new byte[w*h*4], new byte[w*h],
                     System.Array.Empty<BakedPropPlacement>());
