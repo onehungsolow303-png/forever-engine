@@ -102,9 +102,7 @@ namespace ForeverEngine.Procedural
 
                     float hmX = pos.x / ChunkCoord.ChunkSize * (hmRes - 1);
                     float hmZ = pos.y / ChunkCoord.ChunkSize * (hmRes - 1);
-                    int ix = Mathf.Clamp(Mathf.RoundToInt(hmX), 0, hmRes - 1);
-                    int iz = Mathf.Clamp(Mathf.RoundToInt(hmZ), 0, hmRes - 1);
-                    float height = chunkData.Heightmap[iz * hmRes + ix];
+                    float height = SampleHeightmapBilinear(chunkData.Heightmap, hmRes, hmX, hmZ);
 
                     var prop = CreateProp(rule.PropType, rng);
                     if (prop == null) continue;
@@ -204,9 +202,7 @@ namespace ForeverEngine.Procedural
 
                     float hmX = pos.x / ChunkCoord.ChunkSize * (hmRes - 1);
                     float hmZ = pos.y / ChunkCoord.ChunkSize * (hmRes - 1);
-                    int ix = Mathf.Clamp(Mathf.RoundToInt(hmX), 0, hmRes - 1);
-                    int iz = Mathf.Clamp(Mathf.RoundToInt(hmZ), 0, hmRes - 1);
-                    float height = chunkData.Heightmap[iz * hmRes + ix];
+                    float height = SampleHeightmapBilinear(chunkData.Heightmap, hmRes, hmX, hmZ);
 
                     var prefab = rule.Prefabs[rng.Next(rule.Prefabs.Length)];
                     if (prefab == null) continue;
@@ -564,6 +560,31 @@ namespace ForeverEngine.Procedural
             }
 
             return points;
+        }
+
+        /// <summary>
+        /// Bilinear-sample the chunk heightmap at fractional cell coord (hmX, hmZ).
+        /// Matches the interpolation used by TerrainGenerator.BuildLodMesh, so props
+        /// placed at arbitrary sub-cell positions land on the actual mesh surface
+        /// instead of floating/sinking by up to one heightmap cell's delta.
+        /// </summary>
+        private static float SampleHeightmapBilinear(float[] heightmap, int hmRes, float hmX, float hmZ)
+        {
+            int x0 = Mathf.Clamp(Mathf.FloorToInt(hmX), 0, hmRes - 1);
+            int z0 = Mathf.Clamp(Mathf.FloorToInt(hmZ), 0, hmRes - 1);
+            int x1 = Mathf.Clamp(x0 + 1, 0, hmRes - 1);
+            int z1 = Mathf.Clamp(z0 + 1, 0, hmRes - 1);
+            float fx = Mathf.Clamp01(hmX - x0);
+            float fz = Mathf.Clamp01(hmZ - z0);
+
+            float h00 = heightmap[z0 * hmRes + x0];
+            float h10 = heightmap[z0 * hmRes + x1];
+            float h01 = heightmap[z1 * hmRes + x0];
+            float h11 = heightmap[z1 * hmRes + x1];
+
+            float a = h00 + (h10 - h00) * fx;
+            float b = h01 + (h11 - h01) * fx;
+            return a + (b - a) * fz;
         }
     }
 }
