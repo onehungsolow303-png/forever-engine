@@ -255,18 +255,36 @@ namespace ForeverEngine.Procedural
             var filters = go.GetComponentsInChildren<MeshFilter>(includeInactive: false);
             if (filters.Length == 0) return 0f;
 
-            bool any = false;
+            // First pass: only enabled MeshRenderers. This is the good path for
+            // well-formed prefabs — LODGroup-hidden children, collider proxies,
+            // and hidden decoration meshes are all correctly excluded because
+            // their renderers are disabled. Using them would contaminate the
+            // min-Y with geometry that isn't the primary visual (LOD1/LOD2
+            // meshes can have subtly different bounds; some packs park reference
+            // meshes far below pivot).
+            float minWorldY = ScanFiltersForMinY(filters, requireEnabledRenderer: true, out bool anyEnabled);
+            if (anyEnabled) return minWorldY - go.transform.position.y;
+
+            // Fallback: every renderer on this prefab is disabled (URP-conversion
+            // leaves mr.enabled=false when the material fails to convert). The
+            // mesh geometry is still valid and must inform placement — otherwise
+            // the prop plants its pivot at ground and floats by pivot-to-bottom.
+            minWorldY = ScanFiltersForMinY(filters, requireEnabledRenderer: false, out bool anyAtAll);
+            if (!anyAtAll) return 0f;
+            return minWorldY - go.transform.position.y;
+        }
+
+        private static float ScanFiltersForMinY(MeshFilter[] filters, bool requireEnabledRenderer, out bool anyFound)
+        {
+            anyFound = false;
             float minWorldY = float.PositiveInfinity;
             for (int i = 0; i < filters.Length; i++)
             {
                 var mf = filters[i];
                 if (mf.sharedMesh == null) continue;
                 var mr = mf.GetComponent<MeshRenderer>();
-                // Accept filters whose MeshRenderer exists but may be disabled —
-                // URP-conversion or LODGroup can leave mr.enabled=false at Instantiate
-                // time, yet the mesh geometry still defines where the prop should sit.
-                // Skip only if there's no renderer at all (collider-proxy meshes).
                 if (mr == null) continue;
+                if (requireEnabledRenderer && !mr.enabled) continue;
 
                 var b = mf.sharedMesh.bounds; // local AABB
                 // Transform all 8 corners into world space to account for
@@ -280,12 +298,10 @@ namespace ForeverEngine.Procedural
                     var local = c + new Vector3(sx * e.x, sy * e.y, sz * e.z);
                     var world = mf.transform.TransformPoint(local);
                     if (world.y < minWorldY) minWorldY = world.y;
-                    any = true;
+                    anyFound = true;
                 }
             }
-
-            if (!any) return 0f;
-            return minWorldY - go.transform.position.y;
+            return minWorldY;
         }
 
         // Public for EditMode tests — no other production caller should need this.
