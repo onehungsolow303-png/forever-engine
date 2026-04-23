@@ -101,9 +101,13 @@ namespace ForeverEngine.Procedural
                     float worldX = coord.WorldOrigin.x + pos.x;
                     float worldZ = coord.WorldOrigin.z + pos.y;
 
-                    float hmX = pos.x / ChunkCoord.ChunkSize * (hmRes - 1);
-                    float hmZ = pos.y / ChunkCoord.ChunkSize * (hmRes - 1);
-                    float height = SampleHeightmapBilinear(chunkData.Heightmap, hmRes, hmX, hmZ);
+                    float height = ForeverEngine.Core.World.TerrainTriangleSampler.SampleMeshTriangleY(
+                        chunkData.Heightmap,
+                        heightmapRes: hmRes,
+                        chunkSizeMeters: ChunkCoord.ChunkSize,
+                        meshResolution: ForeverEngine.Core.World.TerrainTriangleSampler.DefaultMeshResolution,
+                        localX: pos.x,
+                        localZ: pos.y);
 
                     var prop = CreateProp(rule.PropType, rng);
                     if (prop == null) continue;
@@ -149,6 +153,7 @@ namespace ForeverEngine.Procedural
                 float hmZ = pos.y / ChunkCoord.ChunkSize * (hmRes - 1);
                 int ix = Mathf.Clamp(Mathf.RoundToInt(hmX), 0, hmRes - 1);
                 int iz = Mathf.Clamp(Mathf.RoundToInt(hmZ), 0, hmRes - 1);
+                // Grass uses nearest-neighbor heightmap lookup (cheaper, visually indistinguishable at blade density). Props use mesh-triangle.
                 float height = chunkData.Heightmap[iz * hmRes + ix];
 
                 float scale = cfg.BaseScale * (0.8f + (float)rng.NextDouble() * 0.4f);
@@ -202,9 +207,13 @@ namespace ForeverEngine.Procedural
                     float worldX = coord.WorldOrigin.x + pos.x;
                     float worldZ = coord.WorldOrigin.z + pos.y;
 
-                    float hmX = pos.x / ChunkCoord.ChunkSize * (hmRes - 1);
-                    float hmZ = pos.y / ChunkCoord.ChunkSize * (hmRes - 1);
-                    float height = SampleHeightmapBilinear(chunkData.Heightmap, hmRes, hmX, hmZ);
+                    float height = ForeverEngine.Core.World.TerrainTriangleSampler.SampleMeshTriangleY(
+                        chunkData.Heightmap,
+                        heightmapRes: hmRes,
+                        chunkSizeMeters: ChunkCoord.ChunkSize,
+                        meshResolution: ForeverEngine.Core.World.TerrainTriangleSampler.DefaultMeshResolution,
+                        localX: pos.x,
+                        localZ: pos.y);
 
                     var prefab = rule.Prefabs[rng.Next(rule.Prefabs.Length)];
                     if (prefab == null) continue;
@@ -591,6 +600,22 @@ namespace ForeverEngine.Procedural
             }
 
             return points;
+        }
+
+        // Internal for tests. Samples the rendered mesh surface at (localX, localZ) using the
+        // shared TerrainTriangleSampler, matching the 33-cell mesh topology built by
+        // TerrainGenerator.BuildLodMesh. Client heightmap is 64×64 post-upsample; the sampler
+        // works identically at either 16 or 64 res since 64×64 IS bilinear-of-16×16.
+        public static float SampleGroundY_ForTest(
+            float[] heightmap, int hmRes, float chunkSizeM, float localX, float localZ)
+        {
+            return ForeverEngine.Core.World.TerrainTriangleSampler.SampleMeshTriangleY(
+                heightmap,
+                heightmapRes: hmRes,
+                chunkSizeMeters: chunkSizeM,
+                meshResolution: ForeverEngine.Core.World.TerrainTriangleSampler.DefaultMeshResolution,
+                localX: localX,
+                localZ: localZ);
         }
 
         /// <summary>
