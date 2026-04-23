@@ -237,14 +237,42 @@ namespace ForeverEngine.Procedural
         /// </summary>
         private static float ComputeBaseOffset(GameObject go)
         {
-            var renderers = go.GetComponentsInChildren<Renderer>(includeInactive: false);
-            if (renderers.Length == 0) return 0f;
+            // Use MeshFilter local bounds transformed into world space rather
+            // than Renderer.bounds. Renderer.bounds can be stale or wrong
+            // right after Instantiate (cached from prefab or influenced by
+            // disabled LOD children), and includes ParticleSystemRenderers
+            // whose simulation volume dwarfs the visual mesh. Mesh.bounds is
+            // the local AABB of the baked mesh geometry — stable, deterministic.
+            var filters = go.GetComponentsInChildren<MeshFilter>(includeInactive: false);
+            if (filters.Length == 0) return 0f;
 
-            var combined = renderers[0].bounds;
-            for (int i = 1; i < renderers.Length; i++)
-                combined.Encapsulate(renderers[i].bounds);
+            bool any = false;
+            float minWorldY = float.PositiveInfinity;
+            for (int i = 0; i < filters.Length; i++)
+            {
+                var mf = filters[i];
+                if (mf.sharedMesh == null) continue;
+                var mr = mf.GetComponent<MeshRenderer>();
+                if (mr == null || !mr.enabled) continue;
 
-            return combined.min.y - go.transform.position.y;
+                var b = mf.sharedMesh.bounds; // local AABB
+                // Transform all 8 corners into world space to account for
+                // non-axis-aligned rotations applied to the MeshFilter's
+                // transform hierarchy.
+                Vector3 c = b.center, e = b.extents;
+                for (int sx = -1; sx <= 1; sx += 2)
+                for (int sy = -1; sy <= 1; sy += 2)
+                for (int sz = -1; sz <= 1; sz += 2)
+                {
+                    var local = c + new Vector3(sx * e.x, sy * e.y, sz * e.z);
+                    var world = mf.transform.TransformPoint(local);
+                    if (world.y < minWorldY) minWorldY = world.y;
+                    any = true;
+                }
+            }
+
+            if (!any) return 0f;
+            return minWorldY - go.transform.position.y;
         }
 
         /// <summary>Remove all decoration from a chunk.</summary>
