@@ -49,8 +49,13 @@ namespace ForeverEngine.Procedural
 
                     prop.transform.localScale = Vector3.one * scale;
                     prop.transform.rotation = Quaternion.Euler(0f, rotation, 0f);
-                    float baseOffset = ComputeBaseOffset(prop);
-                    prop.transform.position = new Vector3(worldX, terrainY - baseOffset, worldZ);
+                    // Place pivot at terrain Y. Well-authored prefabs anchor pivot at the
+                    // desired ground-contact point; we no longer try to compute a per-prefab
+                    // offset from mesh bounds (those pivot conventions differ by asset pack,
+                    // and bounds-min often points at a sub-pivot mesh feature that's not the
+                    // visual base). Mesh-triangle sampler gives the exact mesh surface Y,
+                    // so pivot = terrainY anchors the visible prop on the rendered terrain.
+                    prop.transform.position = new Vector3(worldX, terrainY, worldZ);
                     prop.transform.SetParent(parent.transform, worldPositionStays: true);
                 }
             }
@@ -117,8 +122,8 @@ namespace ForeverEngine.Procedural
 
                     prop.transform.localScale = Vector3.one * scale;
                     prop.transform.rotation = Quaternion.Euler(0f, rotation, 0f);
-                    float baseOffset = ComputeBaseOffset(prop);
-                    prop.transform.position = new Vector3(worldX, height - baseOffset, worldZ);
+                    // Pivot-at-ground placement (see Decorate() above for rationale).
+                    prop.transform.position = new Vector3(worldX, height, worldZ);
                     prop.transform.SetParent(parent.transform, worldPositionStays: true);
                 }
             }
@@ -223,8 +228,8 @@ namespace ForeverEngine.Procedural
                     float rotation = (float)rng.NextDouble() * 360f;
                     go.transform.localScale = Vector3.one * scale;
                     go.transform.rotation = Quaternion.Euler(0f, rotation, 0f);
-                    float baseOffset = ComputeBaseOffset(go);
-                    go.transform.position = new Vector3(worldX, height - baseOffset, worldZ);
+                    // Pivot-at-ground placement (see Decorate() above for rationale).
+                    go.transform.position = new Vector3(worldX, height, worldZ);
                     go.transform.SetParent(parent, worldPositionStays: true);
 
                     // Props are pass-through — strip EVERY collider (root + children).
@@ -237,75 +242,6 @@ namespace ForeverEngine.Procedural
                 }
             }
         }
-
-        /// <summary>
-        /// Return the world-space min.y of the instantiated prefab's combined
-        /// Renderer bounds, assuming the prefab is currently at origin. Used to
-        /// anchor imported mesh props on the ground regardless of pivot position.
-        /// Returns 0 if no renderers are found (safe fallback = pivot-at-base).
-        /// </summary>
-        private static float ComputeBaseOffset(GameObject go)
-        {
-            // Use MeshFilter local bounds transformed into world space rather
-            // than Renderer.bounds. Renderer.bounds can be stale or wrong
-            // right after Instantiate (cached from prefab or influenced by
-            // disabled LOD children), and includes ParticleSystemRenderers
-            // whose simulation volume dwarfs the visual mesh. Mesh.bounds is
-            // the local AABB of the baked mesh geometry — stable, deterministic.
-            var filters = go.GetComponentsInChildren<MeshFilter>(includeInactive: false);
-            if (filters.Length == 0) return 0f;
-
-            // First pass: only enabled MeshRenderers. This is the good path for
-            // well-formed prefabs — LODGroup-hidden children, collider proxies,
-            // and hidden decoration meshes are all correctly excluded because
-            // their renderers are disabled. Using them would contaminate the
-            // min-Y with geometry that isn't the primary visual (LOD1/LOD2
-            // meshes can have subtly different bounds; some packs park reference
-            // meshes far below pivot).
-            float minWorldY = ScanFiltersForMinY(filters, requireEnabledRenderer: true, out bool anyEnabled);
-            if (anyEnabled) return minWorldY - go.transform.position.y;
-
-            // Fallback: every renderer on this prefab is disabled (URP-conversion
-            // leaves mr.enabled=false when the material fails to convert). The
-            // mesh geometry is still valid and must inform placement — otherwise
-            // the prop plants its pivot at ground and floats by pivot-to-bottom.
-            minWorldY = ScanFiltersForMinY(filters, requireEnabledRenderer: false, out bool anyAtAll);
-            if (!anyAtAll) return 0f;
-            return minWorldY - go.transform.position.y;
-        }
-
-        private static float ScanFiltersForMinY(MeshFilter[] filters, bool requireEnabledRenderer, out bool anyFound)
-        {
-            anyFound = false;
-            float minWorldY = float.PositiveInfinity;
-            for (int i = 0; i < filters.Length; i++)
-            {
-                var mf = filters[i];
-                if (mf.sharedMesh == null) continue;
-                var mr = mf.GetComponent<MeshRenderer>();
-                if (mr == null) continue;
-                if (requireEnabledRenderer && !mr.enabled) continue;
-
-                var b = mf.sharedMesh.bounds; // local AABB
-                // Transform all 8 corners into world space to account for
-                // non-axis-aligned rotations applied to the MeshFilter's
-                // transform hierarchy.
-                Vector3 c = b.center, e = b.extents;
-                for (int sx = -1; sx <= 1; sx += 2)
-                for (int sy = -1; sy <= 1; sy += 2)
-                for (int sz = -1; sz <= 1; sz += 2)
-                {
-                    var local = c + new Vector3(sx * e.x, sy * e.y, sz * e.z);
-                    var world = mf.transform.TransformPoint(local);
-                    if (world.y < minWorldY) minWorldY = world.y;
-                    anyFound = true;
-                }
-            }
-            return minWorldY;
-        }
-
-        // Public for EditMode tests — no other production caller should need this.
-        public static float ComputeBaseOffset_ForTest(GameObject go) => ComputeBaseOffset(go);
 
         /// <summary>Remove all decoration from a chunk.</summary>
         public static void RemoveDecoration(GameObject propsParent)
