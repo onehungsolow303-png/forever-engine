@@ -4,6 +4,7 @@ using ForeverEngine.Procedural;
 
 namespace ForeverEngine.Tests.World.Baked
 {
+    [TestFixture]
     public class PackBiomeHeuristicsTests
     {
         [Test]
@@ -34,6 +35,62 @@ namespace ForeverEngine.Tests.World.Baked
         {
             var biomes = PackBiomeHeuristics.SuggestBiomes("RandomPackName42");
             Assert.AreEqual(0, biomes.Length);
+        }
+
+        [Test]
+        public void Classify_NatureManufactureMountain_IsOutdoorMountainBiomes()
+        {
+            var r = PackBiomeHeuristics.Classify("NatureManufacture Assets");
+            Assert.That(r.Role, Is.EqualTo(PackRole.OutdoorBiomeContent));
+            CollectionAssert.Contains(r.SuggestedBiomes, BiomeType.Mountain);
+            // AlpineMeadow is a Gaia spawner preset, not an engine BiomeType —
+            // closest analog for NatureManufacture is Taiga (cold-temperate forest).
+            CollectionAssert.Contains(r.SuggestedBiomes, BiomeType.Taiga);
+        }
+
+        [Test]
+        public void Classify_Lordenfel_IsIndoorExcluded()
+        {
+            var r = PackBiomeHeuristics.Classify("Lordenfel");
+            Assert.That(r.Role, Is.EqualTo(PackRole.IndoorExcluded));
+            Assert.That(r.SuggestedBiomes.Length, Is.EqualTo(0));
+        }
+
+        [Test]
+        public void Classify_ThreeDForge_IsIndoorExcluded()
+        {
+            var r = PackBiomeHeuristics.Classify("3DForge");
+            Assert.That(r.Role, Is.EqualTo(PackRole.IndoorExcluded));
+        }
+
+        [Test]
+        public void Classify_MegaStampBundle_IsStamperOnly()
+        {
+            var r = PackBiomeHeuristics.Classify("Procedural Worlds Mega Stamp Bundle");
+            Assert.That(r.Role, Is.EqualTo(PackRole.StamperOnly));
+            Assert.That(r.SuggestedBiomes.Length, Is.EqualTo(0));
+        }
+
+        [Test]
+        public void Classify_EternalTemple_OutdoorFlora()
+        {
+            var r = PackBiomeHeuristics.Classify("Eternal Temple");
+            Assert.That(r.Role, Is.EqualTo(PackRole.OutdoorBiomeContent));
+            CollectionAssert.Contains(r.SuggestedBiomes, BiomeType.TemperateForest);
+        }
+
+        [Test]
+        public void Classify_UnknownPack_DefaultsToUnknown()
+        {
+            var r = PackBiomeHeuristics.Classify("Some-Random-Pack-We-Havent-Seen");
+            Assert.That(r.Role, Is.EqualTo(PackRole.Unknown));
+        }
+
+        [Test]
+        public void Classify_DungeonArchitect_IsTool()
+        {
+            var r = PackBiomeHeuristics.Classify("CodeRespawn DungeonArchitect");
+            Assert.That(r.Role, Is.EqualTo(PackRole.Tool));
         }
     }
 }
