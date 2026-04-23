@@ -47,9 +47,10 @@ namespace ForeverEngine.Procedural
                     float scale = rule.BaseScale * (0.8f + (float)rng.NextDouble() * 0.4f);
                     float rotation = (float)rng.NextDouble() * 360f;
 
-                    prop.transform.position = new Vector3(worldX, terrainY, worldZ);
                     prop.transform.localScale = Vector3.one * scale;
                     prop.transform.rotation = Quaternion.Euler(0f, rotation, 0f);
+                    float baseOffset = ComputeBaseOffset(prop);
+                    prop.transform.position = new Vector3(worldX, terrainY - baseOffset, worldZ);
                     prop.transform.SetParent(parent.transform, worldPositionStays: true);
                 }
             }
@@ -110,9 +111,10 @@ namespace ForeverEngine.Procedural
                     float scale = rule.BaseScale * (0.8f + (float)rng.NextDouble() * 0.4f);
                     float rotation = (float)rng.NextDouble() * 360f;
 
-                    prop.transform.position = new Vector3(worldX, height, worldZ);
                     prop.transform.localScale = Vector3.one * scale;
                     prop.transform.rotation = Quaternion.Euler(0f, rotation, 0f);
+                    float baseOffset = ComputeBaseOffset(prop);
+                    prop.transform.position = new Vector3(worldX, height - baseOffset, worldZ);
                     prop.transform.SetParent(parent.transform, worldPositionStays: true);
                 }
             }
@@ -210,9 +212,10 @@ namespace ForeverEngine.Procedural
                     var go = Object.Instantiate(prefab);
                     float scale = rule.BaseScale * (0.8f + (float)rng.NextDouble() * 0.4f);
                     float rotation = (float)rng.NextDouble() * 360f;
-                    go.transform.position = new Vector3(worldX, height, worldZ);
                     go.transform.localScale = Vector3.one * scale;
                     go.transform.rotation = Quaternion.Euler(0f, rotation, 0f);
+                    float baseOffset = ComputeBaseOffset(go);
+                    go.transform.position = new Vector3(worldX, height - baseOffset, worldZ);
                     go.transform.SetParent(parent, worldPositionStays: true);
 
                     // Props are pass-through — strip EVERY collider (root + children).
