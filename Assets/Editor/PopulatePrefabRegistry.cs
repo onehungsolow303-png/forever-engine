@@ -30,6 +30,8 @@ public static class PopulatePrefabRegistry
 
         var entries = new List<PrefabRegistry.Entry>();
         var seenGuids = new HashSet<string>();
+        var blocklist = AssetDatabase.LoadAssetAtPath<PrefabBlocklist>("Assets/Resources/PrefabBlocklist.asset");
+        int skippedByBlocklist = 0;
 
         foreach (var rule in catalog.GetAllRules())
         {
@@ -41,6 +43,7 @@ public static class PopulatePrefabRegistry
                 string guid = AssetDatabase.AssetPathToGUID(path);
                 if (string.IsNullOrEmpty(guid)) continue;
                 if (!seenGuids.Add(guid)) continue;
+                if (blocklist != null && blocklist.Contains(guid)) { skippedByBlocklist++; continue; }
                 entries.Add(new PrefabRegistry.Entry { Guid = guid, Prefab = prefab });
             }
         }
@@ -56,6 +59,6 @@ public static class PopulatePrefabRegistry
         EditorUtility.SetDirty(registry);
         AssetDatabase.SaveAssets();
 
-        Debug.Log($"[PopulatePrefabRegistry] Wrote {entries.Count} entries to {RegistryAssetPath}.");
+        Debug.Log($"[PopulatePrefabRegistry] Wrote {entries.Count} entries to {RegistryAssetPath} (skipped {skippedByBlocklist} by PrefabBlocklist).");
     }
 }

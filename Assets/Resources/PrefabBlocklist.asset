@@ -1,0 +1,19 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c9259aca279ccea43a9df21d2289334d, type: 3}
+  m_Name: PrefabBlocklist
+  m_EditorClassIdentifier: Assembly-CSharp-Editor::ForeverEngine.Procedural.PrefabBlocklist
+  Excluded:
+  - Guid: 184dc07ae72994f318937d9eaa00ea70
+    Reason: "Magic Pig FirewoodSingle uses Resources/unity_builtin_extra Standard material that can't be converted (built-in asset, not in project)"
+  - Guid: 0cd0d638120d5434094e5b7d72fae2af
+    Reason: "DungeonArchitect sample Rock_1_01 uses Standard shader; DungeonArchitect sample content should not be in outdoor biome catalog (Phase A cleanup gap)"
