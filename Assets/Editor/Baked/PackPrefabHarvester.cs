@@ -32,11 +32,14 @@ namespace ForeverEngine.Procedural.Editor
             var mats    = new List<Material>();
             var audio   = new List<AudioClip>();
 
+            int kept = 0;
+            int excluded = 0;
             var prefabPaths = Directory.GetFiles(packAbsPath, "*.prefab", SearchOption.AllDirectories);
             System.Array.Sort(prefabPaths, System.StringComparer.Ordinal);
             foreach (var prefabPath in prefabPaths)
             {
                 var rel = "Assets" + prefabPath.Replace(Application.dataPath, "").Replace('\\', '/');
+                if (PrefabPathExcluder.ShouldExclude(rel)) { excluded++; continue; }
                 var go = AssetDatabase.LoadAssetAtPath<GameObject>(rel);
                 if (go == null) continue;
                 switch (Classify(Path.GetFileName(prefabPath)))
@@ -46,7 +49,11 @@ namespace ForeverEngine.Procedural.Editor
                     case PrefabCategory.Bush: bushes.Add(go); break;
                     case PrefabCategory.Structure: structs.Add(go); break;
                 }
+                kept++;
             }
+
+            var packName = Path.GetFileName(packAbsPath.TrimEnd('/', '\\'));
+            Debug.Log($"[PackPrefabHarvester] {packName}: harvested {kept}, excluded {excluded} by PrefabPathExcluder.");
 
             var matPaths = Directory.GetFiles(packAbsPath, "*.mat", SearchOption.AllDirectories);
             System.Array.Sort(matPaths, System.StringComparer.Ordinal);
