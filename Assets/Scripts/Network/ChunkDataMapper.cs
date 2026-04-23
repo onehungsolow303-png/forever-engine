@@ -89,6 +89,13 @@ namespace ForeverEngine.Network
                 }
             }
 
+            // Map baked props (record structs copy by value)
+            if (src.Props != null)
+            {
+                foreach (var p in src.Props)
+                    dst.Props.Add(p);
+            }
+
             return dst;
         }
 

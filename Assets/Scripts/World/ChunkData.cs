@@ -1,6 +1,7 @@
 // Assets/Scripts/World/ChunkData.cs
 using System;
 using System.Collections.Generic;
+using ForeverEngine.Core.World.Baked;
 
 namespace ForeverEngine.Procedural
 {
@@ -38,6 +39,9 @@ namespace ForeverEngine.Procedural
 
         /// <summary>Dungeon entrances.</summary>
         public List<DungeonEntrance> DungeonEntrances = new();
+
+        /// <summary>Baked prop placements loaded from the macro-bake file.</summary>
+        public List<BakedPropPlacement> Props = new();
 
         public ChunkData(int chunkX, int chunkZ)
         {

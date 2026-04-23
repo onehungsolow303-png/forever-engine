@@ -24,6 +24,9 @@ namespace ForeverEngine.Procedural
     {
         public BiomePropRule[] Rules = Array.Empty<BiomePropRule>();
 
+        /// <summary>Returns every rule across all biomes. Used by editor populators.</summary>
+        public IEnumerable<BiomePropRule> GetAllRules() => Rules ?? Array.Empty<BiomePropRule>();
+
         /// <summary>Returns all rules for the given biome (may be empty).</summary>
         public BiomePropRule[] GetRules(BiomeType biome)
         {

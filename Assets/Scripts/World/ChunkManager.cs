@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using ForeverEngine.Core.World.Baked;
 using UnityEngine;
 
 namespace ForeverEngine.Procedural
@@ -167,7 +168,24 @@ namespace ForeverEngine.Procedural
 
                 // Instantiate biome props (trees, rocks, foliage). Spreads the
                 // hit for prop-heavy chunks across two frames total.
-                var props = SurfaceDecorator.DecorateMesh(data, terrainGO);
+                // Baked path: use exact authored placements when the server
+                // sent Props[]; fall back to procedural decoration otherwise.
+                GameObject props;
+                if (data.Props != null && data.Props.Count > 0)
+                {
+                    // Baked path: instantiate Gaia/authored placements exactly.
+                    var propsParent = new GameObject($"Props_{data.ChunkX}_{data.ChunkZ}");
+                    propsParent.transform.position = new ChunkCoord(data.ChunkX, data.ChunkZ).WorldOrigin;
+                    var placements = new BakedPropPlacement[data.Props.Count];
+                    for (int i = 0; i < data.Props.Count; i++) placements[i] = data.Props[i];
+                    BakedPropRenderer.Render(placements, propsParent.transform);
+                    props = propsParent;
+                }
+                else
+                {
+                    // Fallback: procedural biome decoration for chunks without a bake.
+                    props = SurfaceDecorator.DecorateMesh(data, terrainGO);
+                }
                 _loaded[coord] = new LoadedChunk
                 {
                     Data = data,
