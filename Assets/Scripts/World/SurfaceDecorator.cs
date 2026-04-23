@@ -262,7 +262,11 @@ namespace ForeverEngine.Procedural
                 var mf = filters[i];
                 if (mf.sharedMesh == null) continue;
                 var mr = mf.GetComponent<MeshRenderer>();
-                if (mr == null || !mr.enabled) continue;
+                // Accept filters whose MeshRenderer exists but may be disabled —
+                // URP-conversion or LODGroup can leave mr.enabled=false at Instantiate
+                // time, yet the mesh geometry still defines where the prop should sit.
+                // Skip only if there's no renderer at all (collider-proxy meshes).
+                if (mr == null) continue;
 
                 var b = mf.sharedMesh.bounds; // local AABB
                 // Transform all 8 corners into world space to account for
@@ -283,6 +287,9 @@ namespace ForeverEngine.Procedural
             if (!any) return 0f;
             return minWorldY - go.transform.position.y;
         }
+
+        // Public for EditMode tests — no other production caller should need this.
+        public static float ComputeBaseOffset_ForTest(GameObject go) => ComputeBaseOffset(go);
 
         /// <summary>Remove all decoration from a chunk.</summary>
         public static void RemoveDecoration(GameObject propsParent)
