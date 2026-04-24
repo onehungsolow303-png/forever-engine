@@ -114,13 +114,20 @@ namespace ForeverEngine.Editor.Gaia
                 Log("  world-creation coroutine started. Driving it to completion...");
                 DriveGaiaCoroutineToCompletion();
 
-                Log("=== Step 4/5: post-processing (URP convert + matfixer + respawn) ===");
+                // Step 3 only creates the terrain tiles + runs stamper-active
+                // spawners (texture splats). The full biome (trees/rocks/grass)
+                // needs BiomePreset.CreateBiome which instantiates all
+                // BiomeController child Spawner objects; then Spawner.Spawn
+                // actually paints each prefab onto the terrain.
+                Log("=== Step 4/6: instantiate biome spawners + spawn all ===");
+                InstantiateAndSpawnBiome(biome);
+
+                Log("=== Step 5/6: post-processing (URP convert + matfixer) ===");
                 CleanBrokenTerrains();
                 RunBuiltInToUrpConverter();
                 RunNatureManufactureMatFixer();
-                RespawnAll();
 
-                Log("=== Step 5/5: save scene ===");
+                Log("=== Step 6/6: save scene ===");
                 EditorSceneManager.SaveOpenScenes();
 
                 Log($"=== DONE in {(DateTime.UtcNow - _startedAt).TotalSeconds:F1}s. Scene: {_scenePath} ===");
@@ -279,18 +286,48 @@ namespace ForeverEngine.Editor.Gaia
             }
         }
 
-        private static void RespawnAll()
+        /// <summary>
+        /// Instantiates the full biome (BiomeController + every Spawner child)
+        /// and triggers each active spawner to paint its prefabs onto the
+        /// terrain. Each Spawn.Spawn() call kicks off its own coroutine which
+        /// we drive to completion before moving to the next.
+        /// </summary>
+        private static void InstantiateAndSpawnBiome(BiomePreset biome)
         {
-            var spawners = UnityEngine.Object.FindObjectsByType<Spawner>(
-                FindObjectsInactive.Include, FindObjectsSortMode.None);
-            int ok = 0, fail = 0;
-            foreach (var s in spawners)
+            // Build the biome GO tree (<Biome> Biome + child Spawner GameObjects).
+            var biomeController = biome.CreateBiome(autoAssignPrototypes: true);
+            if (biomeController == null)
+                throw new Exception("BiomePreset.CreateBiome returned null.");
+            Log($"  instantiated biome '{biomeController.name}' with {biomeController.m_autoSpawners?.Count ?? 0} auto-spawners.");
+
+            if (biomeController.m_autoSpawners == null || biomeController.m_autoSpawners.Count == 0)
             {
-                if (s == null) continue;
-                try { s.Spawn(allTerrains: true); ok++; }
-                catch (Exception ex) { fail++; Debug.LogWarning($"[GaiaHeadless] respawn {s.name}: {ex.Message}"); }
+                Log("  (no auto-spawners on this biome — skipping spawn step.)");
+                return;
             }
-            Log($"  respawned {ok} spawner(s), {fail} failure(s).");
+
+            int ok = 0, skipped = 0, fail = 0;
+            for (int i = 0; i < biomeController.m_autoSpawners.Count; i++)
+            {
+                var auto = biomeController.m_autoSpawners[i];
+                if (auto == null || auto.spawner == null) { skipped++; continue; }
+                if (!auto.isActive) { skipped++; continue; }
+
+                var name = auto.spawner.name;
+                Log($"    [{i + 1}/{biomeController.m_autoSpawners.Count}] spawning '{name}'...");
+                try
+                {
+                    auto.spawner.Spawn(allTerrains: true);
+                    DriveGaiaCoroutineToCompletion();
+                    ok++;
+                }
+                catch (Exception ex)
+                {
+                    fail++;
+                    Debug.LogWarning($"[GaiaHeadless]    '{name}' failed: {ex.Message}");
+                }
+            }
+            Log($"  biome spawn complete. ok={ok} skipped={skipped} fail={fail}");
         }
 
         private static void Log(string msg) => Debug.Log($"[GaiaHeadless] {msg}");
