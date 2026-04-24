@@ -37,6 +37,7 @@ namespace ForeverEngine.Procedural
             {
                 var p = placements[i];
                 var prefab = registry.Resolve(p.PrefabGuid);
+                PrefabRegistryValidator.RecordLookup(p.PrefabGuid, prefab != null);
                 if (prefab == null)
                 {
                     if (_loggedMissingGuids.Add(p.PrefabGuid))
