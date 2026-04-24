@@ -72,11 +72,47 @@ namespace ForeverEngine.Tests.World.Baked
         }
 
         [Test]
-        public void Classify_EternalTemple_OutdoorFlora()
+        public void Classify_EternalTemple_IsIndoorExcluded()
         {
             var r = PackBiomeHeuristics.Classify("Eternal Temple");
-            Assert.That(r.Role, Is.EqualTo(PackRole.OutdoorBiomeContent));
-            CollectionAssert.Contains(r.SuggestedBiomes, BiomeType.TemperateForest);
+            Assert.That(r.Role, Is.EqualTo(PackRole.IndoorExcluded));
+            Assert.That(r.SuggestedBiomes.Length, Is.EqualTo(0));
+        }
+
+        [Test]
+        public void Classify_EternalTempleNoSpace_IsIndoorExcluded()
+        {
+            var r = PackBiomeHeuristics.Classify("EternalTemple");
+            Assert.That(r.Role, Is.EqualTo(PackRole.IndoorExcluded));
+        }
+
+        [Test]
+        public void Classify_MagicPig_IsCreatures()
+        {
+            var r = PackBiomeHeuristics.Classify("Magic Pig Games (Infinity PBR)");
+            Assert.That(r.Role, Is.EqualTo(PackRole.Creatures));
+            Assert.That(r.SuggestedBiomes.Length, Is.EqualTo(0));
+        }
+
+        [Test]
+        public void Classify_GeneratedModels_IsCreatures()
+        {
+            var r = PackBiomeHeuristics.Classify("GeneratedModels");
+            Assert.That(r.Role, Is.EqualTo(PackRole.Creatures));
+        }
+
+        [Test]
+        public void Classify_GaiaUserData_IsStamperOnly()
+        {
+            var r = PackBiomeHeuristics.Classify("Gaia User Data");
+            Assert.That(r.Role, Is.EqualTo(PackRole.StamperOnly));
+        }
+
+        [Test]
+        public void Classify_ProceduralWorlds_IsStamperOnly()
+        {
+            var r = PackBiomeHeuristics.Classify("Procedural Worlds");
+            Assert.That(r.Role, Is.EqualTo(PackRole.StamperOnly));
         }
 
         [Test]
@@ -91,6 +127,26 @@ namespace ForeverEngine.Tests.World.Baked
         {
             var r = PackBiomeHeuristics.Classify("CodeRespawn DungeonArchitect");
             Assert.That(r.Role, Is.EqualTo(PackRole.Tool));
+        }
+
+        [Test]
+        public void Classify_Hivemind_IsTool()
+        {
+            var r = PackBiomeHeuristics.Classify("Hivemind");
+            Assert.That(r.Role, Is.EqualTo(PackRole.Tool));
+        }
+
+        [Test]
+        public void Classify_NatureManufacture_HasBroadBiomeCoverage()
+        {
+            // NatureManufacture ships Meadow/Winter Forest/Summer Forest/Mountain —
+            // the one outdoor pack should cover the common biomes so at least
+            // one matches whatever tile biome the sampler picks.
+            var r = PackBiomeHeuristics.Classify("NatureManufacture Assets");
+            Assert.That(r.Role, Is.EqualTo(PackRole.OutdoorBiomeContent));
+            CollectionAssert.Contains(r.SuggestedBiomes, BiomeType.Grassland);
+            CollectionAssert.Contains(r.SuggestedBiomes, BiomeType.TemperateForest);
+            CollectionAssert.Contains(r.SuggestedBiomes, BiomeType.BorealForest);
         }
     }
 }

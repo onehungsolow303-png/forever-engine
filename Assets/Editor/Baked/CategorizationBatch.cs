@@ -37,7 +37,12 @@ namespace ForeverEngine.Procedural.Editor
             Directory.CreateDirectory(Path.GetDirectoryName(CatalogPath)!);
             AssetDatabase.CreateAsset(catalog, CatalogPath);
 
-            int outdoor = 0, unknown = 0, excluded = 0, stamper = 0, tool = 0, emptyBiomes = 0;
+            // Default-deny: ONLY PackRole.OutdoorBiomeContent feeds the catalog.
+            // Unknown packs must be explicitly curated via the
+            // AssetPackCategorizationWindow before they can contribute — batch
+            // ingest refuses them to prevent dungeon/creature/tool packs from
+            // leaking in on unfortunate keyword matches.
+            int outdoor = 0, indoor = 0, stamper = 0, tool = 0, creatures = 0, unknownRejected = 0;
             var entries = new List<AssetPackBiomeEntry>();
 
             foreach (var p in packs)
@@ -45,20 +50,21 @@ namespace ForeverEngine.Procedural.Editor
                 var classification = PackBiomeHeuristics.Classify(p.Name);
                 switch (classification.Role)
                 {
-                    case PackRole.IndoorExcluded: excluded++; continue;
-                    case PackRole.StamperOnly:    stamper++;  continue;
-                    case PackRole.Tool:           tool++;     continue;
+                    case PackRole.IndoorExcluded: indoor++;          continue;
+                    case PackRole.StamperOnly:    stamper++;         continue;
+                    case PackRole.Tool:           tool++;            continue;
+                    case PackRole.Creatures:      creatures++;       continue;
+                    case PackRole.Unknown:
+                        Debug.LogWarning($"[CategorizationBatch] Unknown pack '{p.Name}' — rejected from auto-ingest. Curate via Forever Engine/Bake/Categorize Asset Packs.");
+                        unknownRejected++;
+                        continue;
                 }
 
-                // Outdoor + Unknown both get cataloged, using Classify's biome
-                // suggestions. Unknown packs with no matching biome keywords
-                // produce empty assignments — log and skip them rather than
-                // adding a useless empty entry.
+                // OutdoorBiomeContent only.
                 var biomes = classification.SuggestedBiomes;
                 if (biomes == null || biomes.Length == 0)
                 {
-                    Debug.LogWarning($"[CategorizationBatch] Pack '{p.Name}' ({classification.Role}) has no biome suggestions — skipping.");
-                    emptyBiomes++;
+                    Debug.LogWarning($"[CategorizationBatch] Outdoor pack '{p.Name}' has no biome suggestions — skipping. Add biome hints to PackBiomeHeuristics table.");
                     continue;
                 }
 
@@ -69,9 +75,7 @@ namespace ForeverEngine.Procedural.Editor
                 };
                 PackPrefabHarvester.Harvest(p.AbsolutePath, entry);
                 entries.Add(entry);
-
-                if (classification.Role == PackRole.OutdoorBiomeContent) outdoor++;
-                else unknown++;
+                outdoor++;
             }
 
             catalog.Entries = entries.ToArray();
@@ -81,8 +85,8 @@ namespace ForeverEngine.Procedural.Editor
 
             Debug.Log(
                 $"[CategorizationBatch] Wrote {entries.Count} entries to {CatalogPath}. " +
-                $"Outdoor={outdoor}, Unknown(auto)={unknown}, Excluded={excluded}, " +
-                $"StamperOnly={stamper}, Tool={tool}, EmptyBiomes(skipped)={emptyBiomes}."
+                $"Outdoor={outdoor}, Indoor={indoor}, StamperOnly={stamper}, " +
+                $"Tool={tool}, Creatures={creatures}, UnknownRejected={unknownRejected}."
             );
         }
     }

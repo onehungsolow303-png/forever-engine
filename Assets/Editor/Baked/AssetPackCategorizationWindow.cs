@@ -117,6 +117,10 @@ namespace ForeverEngine.Procedural.Editor
                     GUI.color = new Color(0.7f, 0.7f, 0.7f);
                     text = "Tool (not content)";
                     break;
+                case PackRole.Creatures:
+                    GUI.color = new Color(1f, 0.7f, 1f);
+                    text = "Creatures — monsters/NPCs, not world props";
+                    break;
                 default:
                     text = "Unknown — please curate manually";
                     break;
@@ -142,7 +146,8 @@ namespace ForeverEngine.Procedural.Editor
                 var classification = _classifications[p.Name];
                 if (classification.Role == PackRole.IndoorExcluded ||
                     classification.Role == PackRole.StamperOnly ||
-                    classification.Role == PackRole.Tool)
+                    classification.Role == PackRole.Tool ||
+                    classification.Role == PackRole.Creatures)
                 {
                     skippedByRole++;
                     continue;
