@@ -32,13 +32,16 @@ namespace ForeverEngine.Editor.Gaia
         {
             try
             {
-                EditorUtility.DisplayProgressBar("Gaia Fixup", "Step 1/3 — Built-In to URP material convert...", 0.05f);
+                EditorUtility.DisplayProgressBar("Gaia Fixup", "Step 1/4 — Clean broken terrains...", 0.02f);
+                CleanBrokenTerrains();
+
+                EditorUtility.DisplayProgressBar("Gaia Fixup", "Step 2/4 — Built-In to URP material convert...", 0.10f);
                 RunBuiltInToUrpConverter();
 
-                EditorUtility.DisplayProgressBar("Gaia Fixup", "Step 2/3 — NatureManufactureMatFixer...", 0.45f);
+                EditorUtility.DisplayProgressBar("Gaia Fixup", "Step 3/4 — NatureManufactureMatFixer...", 0.50f);
                 RunNatureManufactureMatFixer();
 
-                EditorUtility.DisplayProgressBar("Gaia Fixup", "Step 3/3 — Respawn all Gaia spawners in scene...", 0.70f);
+                EditorUtility.DisplayProgressBar("Gaia Fixup", "Step 4/4 — Respawn all Gaia spawners in scene...", 0.75f);
                 RespawnAll();
 
                 EditorUtility.DisplayProgressBar("Gaia Fixup", "Saving scene...", 0.95f);
@@ -54,6 +57,46 @@ namespace ForeverEngine.Editor.Gaia
             {
                 EditorUtility.ClearProgressBar();
             }
+        }
+
+        /// <summary>
+        /// Finds every Terrain component in the open scene whose terrainData is null
+        /// and destroys its GameObject. A Terrain with null terrainData throws
+        /// NullReferenceException from Gaia's ProceduralWorldsGlobalWeather every
+        /// update tick, spamming the console and blocking other diagnostics.
+        ///
+        /// Root cause seen 2026-04-24: the old TestBakeTerrain GameObject survived
+        /// Gaia's world-creation coroutine even though its terrainData had been
+        /// wiped, leaving a broken Terrain that the weather controller kept hitting.
+        /// </summary>
+        [MenuItem("Forever Engine/Gaia/Only: Clean Broken Terrains")]
+        public static void CleanBrokenTerrains()
+        {
+            var terrains = UnityEngine.Object.FindObjectsByType<Terrain>(
+                FindObjectsInactive.Include, FindObjectsSortMode.None);
+
+            int killed = 0;
+            var toDestroy = new List<GameObject>();
+            foreach (var t in terrains)
+            {
+                if (t == null) continue;
+                if (t.terrainData == null)
+                {
+                    Debug.LogWarning(
+                        $"[GaiaFixup] Removing Terrain '{t.name}' — terrainData is null. " +
+                        "This is what was spamming ProceduralWorldsGlobalWeather errors.");
+                    toDestroy.Add(t.gameObject);
+                }
+            }
+            foreach (var go in toDestroy)
+            {
+                UnityEngine.Object.DestroyImmediate(go);
+                killed++;
+            }
+            if (killed > 0)
+                UnityEditor.SceneManagement.EditorSceneManager.MarkSceneDirty(
+                    SceneManager.GetActiveScene());
+            Debug.Log($"[GaiaFixup] Scanned {terrains.Length} terrain(s); removed {killed} broken.");
         }
 
         [MenuItem("Forever Engine/Gaia/Only: Built-In to URP Convert")]
