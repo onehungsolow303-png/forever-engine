@@ -96,46 +96,16 @@ namespace ForeverEngine.Editor.Gaia
                 if (!GaiaSessionManager.CreateOrUpdateWorld(settings, executeNow: true, isUpdate: false))
                     throw new Exception("GaiaSessionManager.CreateOrUpdateWorld returned false");
 
-                Log("  world-creation coroutine started. Polling m_worldCreationRunning...");
-                // The coroutine needs editor update ticks to progress. Hook the
-                // update loop and let Unity run until it flips the flag back to
-                // false. Do NOT call Exit here — Unity needs to stay alive.
-                EditorApplication.update += PollCompletion;
-            }
-            catch (Exception ex)
-            {
-                Debug.LogError($"[GaiaHeadless] FAIL during kickoff: {ex}");
-                EditorApplication.Exit(1);
-            }
-        }
+                // Gaia drives its coroutine via EditorApplication.update —
+                // unreliable in batchmode (ticks are sparse / non-existent
+                // between -executeMethod calls). Instead, synchronously drive
+                // m_updateOperationCoroutine.MoveNext() ourselves in a blocking
+                // loop until Gaia clears the coroutine reference. This matches
+                // what Gaia's own EditorUpdate does, just without the frame
+                // dependency.
+                Log("  world-creation coroutine started. Driving it to completion...");
+                DriveGaiaCoroutineToCompletion();
 
-        private static void PollCompletion()
-        {
-            var sm = GaiaSessionManager.GetSessionManager(pickUp: false, createIfMissing: false);
-            var elapsed = (DateTime.UtcNow - _startedAt).TotalSeconds;
-
-            // Initial frames: session manager may not exist yet / may not have
-            // started the coroutine. Give it up to 5 seconds before we even
-            // consider "not running" to mean "done".
-            bool flagBusy = sm != null && sm.m_worldCreationRunning;
-            bool earlyGrace = elapsed < 5.0;
-
-            if (flagBusy || earlyGrace)
-            {
-                if (elapsed > TimeoutSeconds)
-                {
-                    Debug.LogError($"[GaiaHeadless] TIMEOUT after {TimeoutSeconds}s. Aborting.");
-                    EditorApplication.update -= PollCompletion;
-                    EditorApplication.Exit(2);
-                }
-                return;
-            }
-
-            // Creation is done — unhook and do post-processing.
-            EditorApplication.update -= PollCompletion;
-            try
-            {
-                Log($"  world creation finished in {elapsed:F1}s. Running post-processing.");
                 Log("=== Step 4/5: post-processing (URP convert + matfixer + respawn) ===");
                 CleanBrokenTerrains();
                 RunBuiltInToUrpConverter();
@@ -150,9 +120,63 @@ namespace ForeverEngine.Editor.Gaia
             }
             catch (Exception ex)
             {
-                Debug.LogError($"[GaiaHeadless] FAIL during post-processing: {ex}");
+                Debug.LogError($"[GaiaHeadless] FAIL: {ex}");
                 EditorApplication.Exit(1);
             }
+        }
+
+        /// <summary>
+        /// Drives GaiaSessionManager.m_updateOperationCoroutine to completion
+        /// synchronously. In batchmode Gaia's own EditorUpdate tick rate is
+        /// too slow / irregular to progress the coroutine, so we MoveNext()
+        /// ourselves. Matches Gaia's internal EditorUpdate behavior at
+        /// GaiaSessionManager.cs:908–914 minus the 100-tick debounce.
+        /// </summary>
+        private static void DriveGaiaCoroutineToCompletion()
+        {
+            var sm = GaiaSessionManager.GetSessionManager(
+                pickupExistingTerrain: false, createSession: false);
+            if (sm == null)
+                throw new Exception("No GaiaSessionManager in scene after CreateOrUpdateWorld.");
+
+            var maxSteps = 10_000_000;   // safety limit; a world takes ~1e5 ticks
+            int steps = 0;
+            int lastLogPct = -1;
+            while (sm.m_updateOperationCoroutine != null)
+            {
+                steps++;
+                if ((DateTime.UtcNow - _startedAt).TotalSeconds > TimeoutSeconds)
+                    throw new Exception($"TIMEOUT after {TimeoutSeconds}s.");
+
+                try
+                {
+                    if (!sm.m_updateOperationCoroutine.MoveNext())
+                    {
+                        // Coroutine finished.
+                        sm.m_updateOperationCoroutine = null;
+                        break;
+                    }
+                }
+                catch (Exception ex)
+                {
+                    throw new Exception(
+                        $"Gaia coroutine threw at step {steps}: {ex.Message}", ex);
+                }
+
+                // Progress log every ~1% of max to show liveness.
+                int pct = (int)(100L * steps / maxSteps);
+                if (pct != lastLogPct && pct % 1 == 0 && steps % 50_000 == 0)
+                {
+                    lastLogPct = pct;
+                    Log($"  ... driving coroutine step {steps:N0} (busyFlag={sm.m_worldCreationRunning})");
+                }
+
+                if (steps > maxSteps)
+                    throw new Exception($"Coroutine exceeded {maxSteps:N0} MoveNext() calls without completing.");
+            }
+
+            var elapsed = (DateTime.UtcNow - _startedAt).TotalSeconds;
+            Log($"  coroutine complete in {elapsed:F1}s after {steps:N0} MoveNext calls.");
         }
 
         // ── Helpers (duplicated intentionally so this script has no runtime
