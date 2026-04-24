@@ -25,20 +25,23 @@ namespace ForeverEngine.Procedural.Editor
     /// </summary>
     public static class PropPlacementSampler
     {
-        // Props per km² per biome. Unchanged from prior revision.
+        // Props per km². Bumped ~4× from prior revision (2026-04-23 playtest showed
+        // 1 tile at old densities was visibly barren). Stay below 1000/km² to avoid
+        // the prop-Instantiate-on-main-thread spikes documented in
+        // feedback_prop_density_performance_budget.md (tanked playtest to 3 FPS twice).
         private static readonly Dictionary<BiomeType, int> PropsPerKm2 = new()
         {
-            { BiomeType.Grassland, 30 },
-            { BiomeType.TemperateForest, 200 },
-            { BiomeType.BorealForest, 180 },
-            { BiomeType.Taiga, 150 },
-            { BiomeType.TropicalRainforest, 280 },
-            { BiomeType.Savanna, 40 },
-            { BiomeType.Desert, 15 },
-            { BiomeType.AridSteppe, 25 },
-            { BiomeType.Tundra, 10 },
-            { BiomeType.Mountain, 60 },
-            { BiomeType.Beach, 5 },
+            { BiomeType.Grassland, 120 },
+            { BiomeType.TemperateForest, 800 },
+            { BiomeType.BorealForest, 720 },
+            { BiomeType.Taiga, 600 },
+            { BiomeType.TropicalRainforest, 900 },
+            { BiomeType.Savanna, 160 },
+            { BiomeType.Desert, 60 },
+            { BiomeType.AridSteppe, 100 },
+            { BiomeType.Tundra, 40 },
+            { BiomeType.Mountain, 240 },
+            { BiomeType.Beach, 20 },
             { BiomeType.Ocean, 0 },
             { BiomeType.IceSheet, 0 },
         };
