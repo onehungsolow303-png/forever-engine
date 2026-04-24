@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
@@ -8,23 +9,27 @@ namespace ForeverEngine.Procedural.Editor
     /// <summary>
     /// Deterministic prop placer for the macro bake with slope/height fitness filtering.
     ///
-    /// For each cell a density-driven count of candidates is generated. Each candidate:
-    ///   1. Random (offsetX, offsetZ) within the cell
-    ///   2. Y sampled via bilinear interpolation of the tile heightmap at exact world (x,z)
-    ///      — NOT the cell-center height, which misses fine-scale terrain variation
-    ///   3. Slope computed via central-difference gradient on the heightmap
-    ///   4. Prefab category chosen by slope band (trees on flat, rocks on moderate)
-    ///      — a candidate on slope > 45° is dropped entirely, no prefab can stand vertically
-    ///        there without pivot visibly clipping the surface
-    ///   5. Per-biome category weights multiplex onto the slope weights
+    /// Y and slope both come from <see cref="BakedElevationSynth.Sample"/> — the SAME
+    /// function the runtime uses to compute terrain height at a world position. This is
+    /// the non-negotiable invariant: bake-time and runtime must agree on ground Y or
+    /// props float / sink. Don't replace with a local sampler that "looks equivalent";
+    /// every past "floating props" bug in this codebase traces back to two samplers
+    /// disagreeing by half a cell + missing detail noise.
     ///
-    /// BakedPropPlacement has only Yaw (no pitch/roll), so all props are placed vertical.
-    /// Slope filtering keeps placements on terrain where vertical orientation is visually
-    /// acceptable. If pitch/roll support is added to the wire protocol later, this can be
-    /// extended with align-to-normal for rocks.
+    /// Per candidate:
+    ///   1. Random (offsetX, offsetZ) within the cell
+    ///   2. World Y  = BakedElevationSynth.Sample(wx, wz, macro, layerId)
+    ///   3. Slope    = central-difference of BakedElevationSynth at (wx, wz) +/- dx
+    ///   4. Candidates on slope > 45° are dropped (no pitch/roll in wire protocol,
+    ///      so props can't lie flat on steep terrain)
+    ///   5. Prefab category chosen by biome + slope band; mixed Tree/Rock/Bush pools.
     /// </summary>
     public static class PropPlacementSampler
     {
+        /// <summary>Half-cell step used to compute slope via central-difference on the
+        /// elevation-synth surface. Must be much smaller than a macro cell (64m) to
+        /// keep the slope estimate local.</summary>
+        private const float SlopeSampleDeltaMeters = 1f;
         // Props per km². Bumped ~4× from prior revision (2026-04-23 playtest showed
         // 1 tile at old densities was visibly barren). Stay below 1000/km² to avoid
         // the prop-Instantiate-on-main-thread spikes documented in
@@ -55,9 +60,31 @@ namespace ForeverEngine.Procedural.Editor
             AssetPackBiomeCatalog catalog,
             int seed, byte layerId)
         {
+            // Build a transient BakedMacroData exactly as it will live on disk after
+            // this bake, so SampleGroundY / ComputeSlopeDegrees use the same function
+            // runtime uses. The Props/Splat/Features fields are unused by
+            // BakedElevationSynth — pass empty arrays.
+            var header = new BakedLayerHeader(
+                Magic: "FEW1",
+                FormatVersion: BakedFormatConstants.FormatVersion,
+                LayerId: layerId,
+                WorldMinX: worldMinX, WorldMinZ: worldMinZ,
+                WorldMaxX: worldMinX + widthCells * cellSizeMeters,
+                WorldMaxZ: worldMinZ + heightCells * cellSizeMeters,
+                MacroCellSizeMeters: cellSizeMeters,
+                MacroWidthCells: widthCells, MacroHeightCells: heightCells,
+                BiomeTableChecksum: 0,
+                BakedAtUnixSeconds: 0,
+                TileX: 0, TileZ: 0);
+            var macro = new BakedMacroData(
+                Header: header,
+                Heightmap: heightmap,
+                Biome: biome,
+                Splat: Array.Empty<byte>(),
+                Features: Array.Empty<byte>(),
+                Props: Array.Empty<BakedPropPlacement>());
+
             var placements = new List<BakedPropPlacement>();
-            float tileSizeX = widthCells * cellSizeMeters;
-            float tileSizeZ = heightCells * cellSizeMeters;
 
             for (int z = 0; z < heightCells; z++)
             {
@@ -85,13 +112,11 @@ namespace ForeverEngine.Procedural.Editor
 
                         float cellOffX = (float)rng.NextDouble() * cellSizeMeters;
                         float cellOffZ = (float)rng.NextDouble() * cellSizeMeters;
-                        float localX = x * cellSizeMeters + cellOffX;
-                        float localZ = z * cellSizeMeters + cellOffZ;
-                        float wx = worldMinX + localX;
-                        float wz = worldMinZ + localZ;
+                        float wx = worldMinX + x * cellSizeMeters + cellOffX;
+                        float wz = worldMinZ + z * cellSizeMeters + cellOffZ;
 
-                        float wy = SampleBilinear(heightmap, widthCells, heightCells, cellSizeMeters, localX, localZ);
-                        float slopeDeg = ComputeSlopeDegrees(heightmap, widthCells, heightCells, cellSizeMeters, localX, localZ);
+                        float wy = BakedElevationSynth.Sample(wx, wz, macro, layerId);
+                        float slopeDeg = ComputeSlopeDegrees(wx, wz, macro, layerId);
 
                         if (slopeDeg > MaxSlopeDegrees) continue;
 
@@ -113,6 +138,26 @@ namespace ForeverEngine.Procedural.Editor
                 }
             }
             return placements.ToArray();
+        }
+
+        /// <summary>
+        /// Slope in degrees at (worldX, worldZ) computed as the central difference of
+        /// <see cref="BakedElevationSynth.Sample"/> over <see cref="SlopeSampleDeltaMeters"/>.
+        /// Uses the same elevation function as the runtime so rejected-as-too-steep
+        /// candidates are rejected based on the actual rendered terrain, not an
+        /// approximation that happens to be cheaper to compute.
+        /// </summary>
+        public static float ComputeSlopeDegrees(float worldX, float worldZ, BakedMacroData macro, int layerId)
+        {
+            float d = SlopeSampleDeltaMeters;
+            float hxp = BakedElevationSynth.Sample(worldX + d, worldZ, macro, layerId);
+            float hxm = BakedElevationSynth.Sample(worldX - d, worldZ, macro, layerId);
+            float hzp = BakedElevationSynth.Sample(worldX, worldZ + d, macro, layerId);
+            float hzm = BakedElevationSynth.Sample(worldX, worldZ - d, macro, layerId);
+            float dhdx = (hxp - hxm) / (2f * d);
+            float dhdz = (hzp - hzm) / (2f * d);
+            float gradMag = Mathf.Sqrt(dhdx * dhdx + dhdz * dhdz);
+            return Mathf.Atan(gradMag) * Mathf.Rad2Deg;
         }
 
         /// <summary>
@@ -160,49 +205,6 @@ namespace ForeverEngine.Procedural.Editor
             else
                 return null;
             return pool[rng.Next(pool.Length)];
-        }
-
-        /// <summary>
-        /// Bilinear sample of the tile heightmap at (localX, localZ) in meters.
-        /// Cell centers are at (x * cellSize + cellSize/2, z * cellSize + cellSize/2).
-        /// </summary>
-        private static float SampleBilinear(float[] heightmap, int widthCells, int heightCells, float cellSize, float localX, float localZ)
-        {
-            if (heightmap == null || heightmap.Length != widthCells * heightCells) return 0f;
-            // Convert to cell-index space; cell i's value is stored at center of cell i.
-            float u = localX / cellSize - 0.5f;
-            float v = localZ / cellSize - 0.5f;
-            int u0 = Mathf.Clamp(Mathf.FloorToInt(u), 0, widthCells - 1);
-            int v0 = Mathf.Clamp(Mathf.FloorToInt(v), 0, heightCells - 1);
-            int u1 = Mathf.Min(u0 + 1, widthCells - 1);
-            int v1 = Mathf.Min(v0 + 1, heightCells - 1);
-            float fu = Mathf.Clamp01(u - u0);
-            float fv = Mathf.Clamp01(v - v0);
-            float h00 = heightmap[v0 * widthCells + u0];
-            float h10 = heightmap[v0 * widthCells + u1];
-            float h01 = heightmap[v1 * widthCells + u0];
-            float h11 = heightmap[v1 * widthCells + u1];
-            float a = h00 + (h10 - h00) * fu;
-            float b = h01 + (h11 - h01) * fu;
-            return a + (b - a) * fv;
-        }
-
-        /// <summary>
-        /// Slope in degrees via central-difference gradient on the heightmap at (localX, localZ).
-        /// </summary>
-        private static float ComputeSlopeDegrees(float[] heightmap, int widthCells, int heightCells, float cellSize, float localX, float localZ)
-        {
-            if (heightmap == null || heightmap.Length != widthCells * heightCells) return 0f;
-            int xi = Mathf.Clamp(Mathf.FloorToInt(localX / cellSize), 0, widthCells - 1);
-            int zi = Mathf.Clamp(Mathf.FloorToInt(localZ / cellSize), 0, heightCells - 1);
-            int xm = Mathf.Max(0, xi - 1);
-            int xp = Mathf.Min(widthCells - 1, xi + 1);
-            int zm = Mathf.Max(0, zi - 1);
-            int zp = Mathf.Min(heightCells - 1, zi + 1);
-            float dhdx = (heightmap[zi * widthCells + xp] - heightmap[zi * widthCells + xm]) / ((xp - xm) * cellSize);
-            float dhdz = (heightmap[zp * widthCells + xi] - heightmap[zm * widthCells + xi]) / ((zp - zm) * cellSize);
-            float gradMag = Mathf.Sqrt(dhdx * dhdx + dhdz * dhdz);
-            return Mathf.Atan(gradMag) * Mathf.Rad2Deg;
         }
 
         private static int Hash3(byte layer, int x, int z, int seed)
