@@ -92,6 +92,14 @@ namespace ForeverEngine.Editor.Gaia
                 if (biome == null)
                     throw new Exception($"Missing BiomePreset {biomeName} under {BiomesDir}");
 
+                // In batchmode there is no SceneView; Gaia's ExecuteCreateWorld
+                // calls SceneView.lastActiveSceneView.camera to position the
+                // editor view on the new world and NREs when null, killing the
+                // coroutine BEFORE it saves the scene / flips
+                // m_worldCreationRunning. Spawning a hidden SceneView here
+                // satisfies that call site.
+                EnsureSceneViewExists();
+
                 var settings = BuildSettings(biome, size);
                 if (!GaiaSessionManager.CreateOrUpdateWorld(settings, executeNow: true, isUpdate: false))
                     throw new Exception("GaiaSessionManager.CreateOrUpdateWorld returned false");
@@ -286,6 +294,31 @@ namespace ForeverEngine.Editor.Gaia
         }
 
         private static void Log(string msg) => Debug.Log($"[GaiaHeadless] {msg}");
+
+        /// <summary>
+        /// Batchmode has no SceneView by default, and Gaia's ExecuteCreateWorld
+        /// dereferences <c>SceneView.lastActiveSceneView.camera</c>. Create a
+        /// hidden one so the NRE doesn't kill the coroutine.
+        /// </summary>
+        private static void EnsureSceneViewExists()
+        {
+            if (SceneView.lastActiveSceneView != null) return;
+
+            // GetWindow constructs a SceneView without showing it in batchmode.
+            // The window object is enough to make `lastActiveSceneView` non-null.
+            try
+            {
+                var sv = EditorWindow.GetWindow<SceneView>(utility: false, title: "Scene", focus: false);
+                if (sv != null)
+                {
+                    Log("  spawned hidden SceneView for batchmode coroutine.");
+                }
+            }
+            catch (Exception ex)
+            {
+                Debug.LogWarning($"[GaiaHeadless] Could not spawn SceneView: {ex.Message}");
+            }
+        }
     }
 }
 #endif
