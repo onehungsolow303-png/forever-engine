@@ -271,7 +271,7 @@ namespace ForeverEngine.Procedural
         // Category selection mirrors PropPlacementSampler's biome weights minus slope
         // shaping (fallback path has no per-cell slope). Coarse-on-purpose — the baked
         // pipeline handles the authoritative placement.
-        internal static GameObject PickPrefabFromEntry(AssetPackBiomeEntry entry, BiomeType biome, System.Random rng)
+        public static GameObject PickPrefabFromEntry(AssetPackBiomeEntry entry, BiomeType biome, System.Random rng)
         {
             if (entry == null) return null;
 

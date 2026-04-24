@@ -7,7 +7,7 @@ namespace ForeverEngine.Procedural
     /// miss rate exceeds threshold. Installed lazily on a hidden DontDestroyOnLoad
     /// GameObject so existing bootstrap code doesn't need to know about it.
     /// </summary>
-    public class RegistryMissBanner : MonoBehaviour
+    public class RegistryMissBanner : UnityEngine.MonoBehaviour
     {
         private static RegistryMissBanner _instance;
 
