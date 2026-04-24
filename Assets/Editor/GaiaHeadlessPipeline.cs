@@ -194,6 +194,55 @@ namespace ForeverEngine.Editor.Gaia
             Log($"  coroutine complete in {elapsed:F1}s after {steps:N0} MoveNext calls.");
         }
 
+        /// <summary>
+        /// Drives a Spawner's coroutines to completion. Unlike world creation,
+        /// spawning stores the active coroutine on the Spawner itself
+        /// (m_updateCoroutine + m_updateCoroutine2 at Spawner.cs:578/582), not
+        /// on GaiaSessionManager. Mirrors Spawner.EditorUpdate (line 1011) minus
+        /// the frame-rate throttling.
+        /// </summary>
+        private static void DriveSpawnerToCompletion(Spawner spawner)
+        {
+            if (spawner == null) return;
+
+            var maxSteps = 10_000_000;
+            int steps = 0;
+            var spawnerStart = DateTime.UtcNow;
+
+            while (spawner.m_updateCoroutine != null)
+            {
+                steps++;
+                if ((DateTime.UtcNow - _startedAt).TotalSeconds > TimeoutSeconds)
+                    throw new Exception($"TIMEOUT after {TimeoutSeconds}s driving '{spawner.name}'.");
+
+                try
+                {
+                    if (spawner.m_updateCoroutine2 != null)
+                        spawner.m_updateCoroutine2.MoveNext();
+
+                    if (!spawner.m_updateCoroutine.MoveNext())
+                    {
+                        spawner.m_updateCoroutine = null;
+                        break;
+                    }
+                }
+                catch (Exception ex)
+                {
+                    // Mirror Spawner.EditorUpdate: it swallows exceptions too.
+                    // Null the coroutine so we exit cleanly rather than spin.
+                    spawner.m_updateCoroutine = null;
+                    throw new Exception(
+                        $"Spawner '{spawner.name}' threw at step {steps}: {ex.Message}", ex);
+                }
+
+                if (steps > maxSteps)
+                    throw new Exception($"Spawner '{spawner.name}' exceeded {maxSteps:N0} MoveNext() calls.");
+            }
+
+            var spawnerElapsed = (DateTime.UtcNow - spawnerStart).TotalSeconds;
+            Log($"      '{spawner.name}' finished in {spawnerElapsed:F1}s after {steps:N0} MoveNext calls.");
+        }
+
         // ── Helpers (duplicated intentionally so this script has no runtime
         //    dependency on the interactive GaiaFixup menu) ─────────────────
 
@@ -318,7 +367,7 @@ namespace ForeverEngine.Editor.Gaia
                 try
                 {
                     auto.spawner.Spawn(allTerrains: true);
-                    DriveGaiaCoroutineToCompletion();
+                    DriveSpawnerToCompletion(auto.spawner);
                     ok++;
                 }
                 catch (Exception ex)
