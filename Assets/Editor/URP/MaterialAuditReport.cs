@@ -12,8 +12,8 @@ namespace ForeverEngine.Editor.URP
     /// <summary>
     /// Menu: Forever Engine → URP → Material Audit Report.
     /// Walks every material referenced by AssetPackBiomeCatalog (via prefabs in
-    /// Tree/Rock/Bush/Structure arrays) plus PrefabRegistry, buckets by shader
-    /// name, writes Assets/Editor/URP/MaterialAuditReport.md.
+    /// Tree/Rock/Bush/Structure arrays), buckets by shader name, writes
+    /// Assets/Editor/URP/MaterialAuditReport.md.
     ///
     /// Used as pre/post-conversion diagnostic for Phase B URP migration.
     /// Batchmode: Unity.exe -batchmode -nographics -quit
@@ -23,7 +23,6 @@ namespace ForeverEngine.Editor.URP
     {
         private const string ReportPath = "Assets/Editor/URP/MaterialAuditReport.md";
         private const string CatalogPath = "Assets/Resources/AssetPackBiomeCatalog.asset";
-        private const string BiomePropCatalogPath = "Assets/Resources/BiomePropCatalog.asset";
 
         private struct MatRef
         {
@@ -87,20 +86,6 @@ namespace ForeverEngine.Editor.URP
             else
             {
                 Debug.LogWarning($"[MaterialAuditReport] AssetPackBiomeCatalog not found at {CatalogPath}.");
-            }
-
-            var bpc = AssetDatabase.LoadAssetAtPath<BiomePropCatalog>(BiomePropCatalogPath);
-            if (bpc != null)
-            {
-                foreach (var rule in bpc.GetAllRules())
-                {
-                    if (rule.Prefabs == null) continue;
-                    foreach (var p in rule.Prefabs)
-                    {
-                        if (p == null) continue;
-                        CollectFromPrefab(result, seen, p, "(BiomePropCatalog)");
-                    }
-                }
             }
 
             return result;

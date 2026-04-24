@@ -70,8 +70,10 @@ namespace ForeverEngine.Procedural
         /// <summary>
         /// Decorate a mesh-based terrain chunk (no Unity Terrain required).
         /// Samples height from the stored heightmap directly.
-        /// Catalog path: if a BiomePropCatalog is loaded and has rules for this biome,
-        /// instantiates real pack prefabs. Falls back to procedural primitives otherwise.
+        /// Catalog path: if an AssetPackBiomeCatalog is loaded and has entries for
+        /// this biome, instantiates real pack prefabs. Falls back to procedural
+        /// primitives otherwise. The AssetPackBiomeCatalog is the single source of
+        /// truth — the baked pipeline consumes the same catalog at bake time.
         /// </summary>
         public static GameObject DecorateMesh(ChunkData chunkData, GameObject terrainGO)
         {
@@ -82,12 +84,14 @@ namespace ForeverEngine.Procedural
             int seed = chunkData.ChunkX * 73856093 ^ chunkData.ChunkZ * 19349663;
             var rng = new System.Random(seed);
 
-            // 1) Catalog path: if configured, instantiate real prefabs.
-            var catalog = BiomePropCatalog.Load();
-            var catalogRules = catalog != null ? catalog.GetRules(chunkData.Biome) : System.Array.Empty<BiomePropRule>();
-            if (catalogRules.Length > 0)
+            // 1) Catalog path: if AssetPackBiomeCatalog has entries for this biome,
+            // instantiate real pack prefabs. Single source of truth — same catalog
+            // the baked pipeline reads at bake time (see PropPlacementSampler).
+            var catalog = AssetPackBiomeCatalog.Load();
+            var entries = catalog != null ? catalog.GetEntriesForBiome(chunkData.Biome) : System.Array.Empty<AssetPackBiomeEntry>();
+            if (entries.Length > 0)
             {
-                DecorateFromCatalog(chunkData, parent.transform, rng, catalogRules);
+                DecorateFromCatalog(chunkData, parent.transform, rng, chunkData.Biome, entries);
                 ScatterGrass(chunkData, parent, rng);
                 return parent;
             }
@@ -191,57 +195,109 @@ namespace ForeverEngine.Procedural
         // the prop-cost hypothesis ever needs revisiting.
         public static bool PropsEnabled = true;
 
+        // Per-biome fallback density. Baked tiles are authoritative — this path only
+        // runs when a chunk has no baked props. Values keep the fallback visually
+        // consistent with the primitive path in GetBiomeRules (same total count ±).
+        private struct FallbackDensity { public int Count; public float MinSpacing; public float BaseScale; }
+
+        private static FallbackDensity GetFallbackDensity(BiomeType biome) => biome switch
+        {
+            BiomeType.Grassland           => new FallbackDensity { Count = 6,  MinSpacing = 40f, BaseScale = 1.0f },
+            BiomeType.TemperateForest     => new FallbackDensity { Count = 35, MinSpacing = 16f, BaseScale = 1.0f },
+            BiomeType.BorealForest        => new FallbackDensity { Count = 35, MinSpacing = 16f, BaseScale = 1.0f },
+            BiomeType.Taiga               => new FallbackDensity { Count = 25, MinSpacing = 20f, BaseScale = 1.0f },
+            BiomeType.Mountain            => new FallbackDensity { Count = 25, MinSpacing = 20f, BaseScale = 1.0f },
+            BiomeType.Desert              => new FallbackDensity { Count = 12, MinSpacing = 35f, BaseScale = 1.0f },
+            BiomeType.AridSteppe          => new FallbackDensity { Count = 15, MinSpacing = 28f, BaseScale = 1.0f },
+            BiomeType.Tundra              => new FallbackDensity { Count = 12, MinSpacing = 22f, BaseScale = 1.0f },
+            BiomeType.Savanna             => new FallbackDensity { Count = 15, MinSpacing = 30f, BaseScale = 1.0f },
+            BiomeType.TropicalRainforest  => new FallbackDensity { Count = 45, MinSpacing = 12f, BaseScale = 1.0f },
+            _ => new FallbackDensity { Count = 0, MinSpacing = 30f, BaseScale = 1.0f },
+        };
+
         private static void DecorateFromCatalog(
             ChunkData chunkData,
             Transform parent,
             System.Random rng,
-            BiomePropRule[] rules)
+            BiomeType biome,
+            AssetPackBiomeEntry[] entries)
         {
             if (!PropsEnabled) return;
+            if (entries == null || entries.Length == 0) return;
+
+            var density = GetFallbackDensity(biome);
+            if (density.Count == 0) return;
 
             var coord = new ChunkCoord(chunkData.ChunkX, chunkData.ChunkZ);
             int hmRes = ChunkData.HeightmapRes;
 
-            foreach (var rule in rules)
+            var positions = PoissonDisk(ChunkCoord.ChunkSize, density.MinSpacing, density.Count, rng);
+            foreach (var pos in positions)
             {
-                if (rule.Prefabs == null || rule.Prefabs.Length == 0) continue;
+                float worldX = coord.WorldOrigin.x + pos.x;
+                float worldZ = coord.WorldOrigin.z + pos.y;
 
-                var positions = PoissonDisk(ChunkCoord.ChunkSize, rule.MinSpacing, rule.Count, rng);
-                foreach (var pos in positions)
-                {
-                    float worldX = coord.WorldOrigin.x + pos.x;
-                    float worldZ = coord.WorldOrigin.z + pos.y;
+                float height = ForeverEngine.Core.World.TerrainTriangleSampler.SampleMeshTriangleY(
+                    chunkData.Heightmap,
+                    heightmapRes: hmRes,
+                    chunkSizeMeters: ChunkCoord.ChunkSize,
+                    meshResolution: ForeverEngine.Core.World.TerrainTriangleSampler.DefaultMeshResolution,
+                    localX: pos.x,
+                    localZ: pos.y);
 
-                    float height = ForeverEngine.Core.World.TerrainTriangleSampler.SampleMeshTriangleY(
-                        chunkData.Heightmap,
-                        heightmapRes: hmRes,
-                        chunkSizeMeters: ChunkCoord.ChunkSize,
-                        meshResolution: ForeverEngine.Core.World.TerrainTriangleSampler.DefaultMeshResolution,
-                        localX: pos.x,
-                        localZ: pos.y);
+                var entry = entries[rng.Next(entries.Length)];
+                var prefab = PickPrefabFromEntry(entry, biome, rng);
+                if (prefab == null) continue;
 
-                    var prefab = rule.Prefabs[rng.Next(rule.Prefabs.Length)];
-                    if (prefab == null) continue;
+                var go = Object.Instantiate(prefab);
+                float scale = density.BaseScale * (0.8f + (float)rng.NextDouble() * 0.4f);
+                float rotation = (float)rng.NextDouble() * 360f;
+                go.transform.localScale = Vector3.one * scale;
+                go.transform.rotation = Quaternion.Euler(0f, rotation, 0f);
+                // Pivot-at-ground placement (see Decorate() above for rationale).
+                go.transform.position = new Vector3(worldX, height, worldZ);
+                go.transform.SetParent(parent, worldPositionStays: true);
 
-                    var go = Object.Instantiate(prefab);
-                    float scale = rule.BaseScale * (0.8f + (float)rng.NextDouble() * 0.4f);
-                    float rotation = (float)rng.NextDouble() * 360f;
-                    go.transform.localScale = Vector3.one * scale;
-                    go.transform.rotation = Quaternion.Euler(0f, rotation, 0f);
-                    // Pivot-at-ground placement (see Decorate() above for rationale).
-                    go.transform.position = new Vector3(worldX, height, worldZ);
-                    go.transform.SetParent(parent, worldPositionStays: true);
-
-                    // Props are pass-through — strip EVERY collider (root + children).
-                    // Imported mesh prefabs often have MeshColliders on child trunk/
-                    // branch/leaf objects; leaving them in place (a) blocks player
-                    // movement and (b) misleads spawn raycast into hitting props
-                    // instead of terrain, causing fall-through-ground bugs.
-                    foreach (var col in go.GetComponentsInChildren<Collider>(includeInactive: true))
-                        Object.Destroy(col);
-                }
+                // Props are pass-through — strip EVERY collider (root + children).
+                // Imported mesh prefabs often have MeshColliders on child trunk/
+                // branch/leaf objects; leaving them in place (a) blocks player
+                // movement and (b) misleads spawn raycast into hitting props
+                // instead of terrain, causing fall-through-ground bugs.
+                foreach (var col in go.GetComponentsInChildren<Collider>(includeInactive: true))
+                    Object.Destroy(col);
             }
         }
+
+        // Category selection mirrors PropPlacementSampler's biome weights minus slope
+        // shaping (fallback path has no per-cell slope). Coarse-on-purpose — the baked
+        // pipeline handles the authoritative placement.
+        internal static GameObject PickPrefabFromEntry(AssetPackBiomeEntry entry, BiomeType biome, System.Random rng)
+        {
+            if (entry == null) return null;
+
+            float[] w = biome switch
+            {
+                BiomeType.TemperateForest or BiomeType.BorealForest or BiomeType.Taiga or BiomeType.TropicalRainforest
+                    => new[] { 0.80f, 0.10f, 0.10f },
+                BiomeType.Desert or BiomeType.AridSteppe
+                    => new[] { 0.20f, 0.60f, 0.20f },
+                BiomeType.Mountain
+                    => new[] { 0.10f, 0.80f, 0.10f },
+                _ => new[] { 0.40f, 0.30f, 0.30f },
+            };
+
+            double r = rng.NextDouble();
+            GameObject[] pool;
+            if (r < w[0] && HasAny(entry.TreePrefabs)) pool = entry.TreePrefabs;
+            else if (r < w[0] + w[1] && HasAny(entry.RockPrefabs)) pool = entry.RockPrefabs;
+            else if (HasAny(entry.BushPrefabs)) pool = entry.BushPrefabs;
+            else if (HasAny(entry.RockPrefabs)) pool = entry.RockPrefabs;
+            else if (HasAny(entry.TreePrefabs)) pool = entry.TreePrefabs;
+            else return null;
+            return pool[rng.Next(pool.Length)];
+        }
+
+        private static bool HasAny(GameObject[] arr) => arr != null && arr.Length > 0;
 
         /// <summary>Remove all decoration from a chunk.</summary>
         public static void RemoveDecoration(GameObject propsParent)

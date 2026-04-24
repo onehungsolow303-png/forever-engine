@@ -15,7 +15,6 @@ namespace ForeverEngine.Editor
             SafeRun("OverworldPrefabPopulator.Populate",   () => OverworldPrefabPopulator.Populate());
             SafeRun("RoomCatalogPopulator.Populate",       () => RoomCatalogPopulator.Populate());
             SafeRun("AudioPopulator.Populate",             () => AudioPopulator.Populate());
-            SafeRun("PopulateBiomePropCatalog.Populate",   () => PopulateBiomePropCatalog.Populate());
 
             AssetDatabase.SaveAssets();
             AssetDatabase.Refresh();
