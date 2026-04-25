@@ -1,4 +1,7 @@
+using System.Collections.Generic;
+using UnityEditor;
 using UnityEngine;
+using ForeverEngine.Core.World.Baked;
 
 namespace ForeverEngine.Procedural.Editor
 {
@@ -50,6 +53,115 @@ namespace ForeverEngine.Procedural.Editor
                 }
             }
             return result;
+        }
+
+        /// <summary>
+        /// High-res splat for the wire path. Box-filter downsamples the
+        /// terrain's alphamapTextures from native resolution (typically 1024)
+        /// to gridSize × gridSize. Each layer in the union tree is read via
+        /// perTerrainLayerToUnionIndex; tile layers that don't appear in the
+        /// union are dropped, union layers absent on this tile contribute zero.
+        ///
+        /// Output packed as [layer * grid * grid + z * grid + x], byte weights
+        /// 0-255. Layer count = unionLayerCount (the layer-level union size).
+        /// </summary>
+        public static byte[] SampleHighResSplat(
+            Terrain terrain,
+            int gridSize,
+            int unionLayerCount,
+            int[] perTerrainLayerToUnionIndex)
+        {
+            var td = terrain.terrainData;
+            int am = td.alphamapResolution;
+            int tileLayerCount = td.terrainLayers != null ? td.terrainLayers.Length : 0;
+            if (tileLayerCount == 0 || unionLayerCount == 0)
+                return System.Array.Empty<byte>();
+
+            var raw = td.GetAlphamaps(0, 0, am, am);
+            int srcLayerCount = System.Math.Min(tileLayerCount, raw.GetLength(2));
+            int cells = gridSize * gridSize;
+            var result = new byte[unionLayerCount * cells];
+
+            // Box-filter: each output cell averages the source pixels under it.
+            // Source span per output cell = am / gridSize (e.g. 1024/256 = 4).
+            float spanF = (float)am / gridSize;
+            for (int z = 0; z < gridSize; z++)
+            {
+                int srcZ0 = (int)(z * spanF);
+                int srcZ1 = System.Math.Min(am, (int)((z + 1) * spanF));
+                if (srcZ1 <= srcZ0) srcZ1 = srcZ0 + 1;
+                for (int x = 0; x < gridSize; x++)
+                {
+                    int srcX0 = (int)(x * spanF);
+                    int srcX1 = System.Math.Min(am, (int)((x + 1) * spanF));
+                    if (srcX1 <= srcX0) srcX1 = srcX0 + 1;
+                    int sampleCount = (srcZ1 - srcZ0) * (srcX1 - srcX0);
+
+                    for (int srcL = 0; srcL < srcLayerCount; srcL++)
+                    {
+                        int unionIdx = perTerrainLayerToUnionIndex[srcL];
+                        if (unionIdx < 0 || unionIdx >= unionLayerCount) continue;
+                        float sum = 0f;
+                        for (int sz = srcZ0; sz < srcZ1; sz++)
+                            for (int sx = srcX0; sx < srcX1; sx++)
+                                sum += raw[sz, sx, srcL];
+                        float avg = sum / sampleCount;
+                        result[unionIdx * cells + z * gridSize + x] =
+                            (byte)Mathf.Clamp(Mathf.RoundToInt(Mathf.Clamp01(avg) * 255f), 0, 255);
+                    }
+                }
+            }
+            return result;
+        }
+
+        /// <summary>
+        /// Reads terrain.terrainData.treeInstances → BakedTreeInstance[] in
+        /// world coordinates. PrototypeIndex is the union-table index resolved
+        /// via perTerrainProtoToUnionIndex (-1 entries skip — prototype not in
+        /// union, e.g. its prefab GUID couldn't be resolved).
+        /// </summary>
+        public static BakedTreeInstance[] SampleTreeInstances(
+            Terrain terrain,
+            int[] perTerrainProtoToUnionIndex)
+        {
+            var td = terrain.terrainData;
+            var src = td.treeInstances;
+            if (src == null || src.Length == 0) return System.Array.Empty<BakedTreeInstance>();
+
+            var origin = terrain.transform.position;
+            var size = td.size;
+            var result = new List<BakedTreeInstance>(src.Length);
+            for (int i = 0; i < src.Length; i++)
+            {
+                var t = src[i];
+                if (t.prototypeIndex < 0 || t.prototypeIndex >= perTerrainProtoToUnionIndex.Length) continue;
+                int union = perTerrainProtoToUnionIndex[t.prototypeIndex];
+                if (union < 0 || union > ushort.MaxValue) continue;
+
+                float worldX = origin.x + t.position.x * size.x;
+                float worldY = origin.y + t.position.y * size.y;
+                float worldZ = origin.z + t.position.z * size.z;
+                float yawDeg = t.rotation * Mathf.Rad2Deg;
+                result.Add(new BakedTreeInstance(
+                    PrototypeIndex: (ushort)union,
+                    WorldX: worldX, WorldY: worldY, WorldZ: worldZ,
+                    YawDegrees: yawDeg,
+                    WidthScale: t.widthScale, HeightScale: t.heightScale));
+            }
+            return result.ToArray();
+        }
+
+        /// <summary>
+        /// Returns the Unity Asset GUID for a UnityEngine.Object (TerrainLayer,
+        /// prefab GameObject, etc.). Empty string if the object isn't an asset
+        /// or AssetDatabase can't resolve a path.
+        /// </summary>
+        public static string AssetGuidOf(Object asset)
+        {
+            if (asset == null) return string.Empty;
+            var path = AssetDatabase.GetAssetPath(asset);
+            if (string.IsNullOrEmpty(path)) return string.Empty;
+            return AssetDatabase.AssetPathToGUID(path) ?? string.Empty;
         }
 
         public static byte[] SampleBiome(Terrain terrain, int widthCells, int heightCells, BiomeType[] splatLayerToBiome)

@@ -24,6 +24,10 @@ namespace ForeverEngine.Procedural.Editor
         private const byte DefaultLayerId = 0;
         private const float GridAlignmentToleranceMeters = 0.01f;
 
+        // Sub B: high-res splat density (4 m / cell). For a 1024 m tile this
+        // produces a 256×256 grid; chunks (256 m, 64×64 wire grid) line up 1:1.
+        private const float HighResSplatCellSizeMeters = 4f;
+
         [MenuItem("Forever Engine/Bake/Tile (Active Terrain)")]
         public static void BakeTileFromActiveTerrain()
         {
@@ -154,11 +158,58 @@ namespace ForeverEngine.Procedural.Editor
                     tileEntries[(e.TileX, e.TileZ)] = e;
             }
 
+            // Sub B pre-pass: union splat-layer GUIDs + tree-prototype GUIDs across
+            // all terrains so per-chunk wire payload references a single layer-level
+            // table, not per-tile tables. -1 entries in the per-terrain remaps mean
+            // "this slot's asset has no resolvable GUID; drop on bake."
+            var splatGuidUnion = new List<string>();
+            var treeGuidUnion  = new List<string>();
+            var splatRemapByTerrain = new Dictionary<Terrain, int[]>();
+            var treeRemapByTerrain  = new Dictionary<Terrain, int[]>();
+            foreach (var t in terrains)
+            {
+                var layers = t.terrainData.terrainLayers ?? System.Array.Empty<TerrainLayer>();
+                var splatRemap = new int[layers.Length];
+                for (int i = 0; i < layers.Length; i++)
+                {
+                    var guid = UnityTerrainSampler.AssetGuidOf(layers[i]);
+                    if (string.IsNullOrEmpty(guid)) { splatRemap[i] = -1; continue; }
+                    int idx = splatGuidUnion.IndexOf(guid);
+                    if (idx < 0) { idx = splatGuidUnion.Count; splatGuidUnion.Add(guid); }
+                    splatRemap[i] = idx;
+                }
+                splatRemapByTerrain[t] = splatRemap;
+
+                var protos = t.terrainData.treePrototypes ?? System.Array.Empty<TreePrototype>();
+                var treeRemap = new int[protos.Length];
+                for (int i = 0; i < protos.Length; i++)
+                {
+                    var guid = UnityTerrainSampler.AssetGuidOf(protos[i].prefab);
+                    if (string.IsNullOrEmpty(guid)) { treeRemap[i] = -1; continue; }
+                    int idx = treeGuidUnion.IndexOf(guid);
+                    if (idx < 0) { idx = treeGuidUnion.Count; treeGuidUnion.Add(guid); }
+                    treeRemap[i] = idx;
+                }
+                treeRemapByTerrain[t] = treeRemap;
+            }
+            int unionLayerCount = splatGuidUnion.Count;
+            if (unionLayerCount > 8)
+            {
+                Debug.LogWarning($"[MacroBake] Splat layer union has {unionLayerCount} entries — capping at 8 (Sub A wire limit). " +
+                                 "Layers beyond the first 8 will be dropped on bake.");
+                unionLayerCount = 8;
+            }
+            int hiResGridSize = Mathf.Max(1, Mathf.RoundToInt(tileSize / HighResSplatCellSizeMeters));
+            Debug.Log($"[MacroBake] Sub B union: splat layers={splatGuidUnion.Count} (using {unionLayerCount}), " +
+                      $"tree prototypes={treeGuidUnion.Count}, hiResGrid={hiResGridSize}x{hiResGridSize} ({HighResSplatCellSizeMeters}m/cell)");
+
             foreach (var terrain in terrains)
             {
                 int tileX = Mathf.RoundToInt((terrain.transform.position.x - originX) / tileSize);
                 int tileZ = Mathf.RoundToInt((terrain.transform.position.z - originZ) / tileSize);
-                BakeOneTerrainAsTile(terrain, layerId, layerDir, originX, originZ, tileSize, cellSizeMeters, tileX, tileZ, catalog);
+                BakeOneTerrainAsTile(terrain, layerId, layerDir, originX, originZ, tileSize, cellSizeMeters, tileX, tileZ, catalog,
+                    splatRemapByTerrain[terrain], unionLayerCount, hiResGridSize,
+                    treeRemapByTerrain[terrain]);
                 tileEntries[(tileX, tileZ)] = new BakedLayerTileEntry(tileX, tileZ, $"tile_{tileX}_{tileZ}");
             }
 
@@ -173,13 +224,23 @@ namespace ForeverEngine.Procedural.Editor
             var entriesArray = new BakedLayerTileEntry[tileEntries.Count];
             tileEntries.Values.CopyTo(entriesArray, 0);
 
+            // Cap union splat-layer-guid array to the 8-layer wire limit so the
+            // table the client loads matches what bake actually wrote per tile.
+            var splatGuidArray = unionLayerCount < splatGuidUnion.Count
+                ? splatGuidUnion.GetRange(0, unionLayerCount).ToArray()
+                : splatGuidUnion.ToArray();
+
             var index = new BakedLayerIndex(
                 LayerId: layerId,
                 TileSize: tileSize,
                 CellSize: cellSizeMeters,
                 Origin: new BakedLayerOrigin(originX, originZ),
                 Grid: new BakedLayerGrid(minX, minZ, maxX, maxZ),
-                Tiles: entriesArray);
+                Tiles: entriesArray)
+            {
+                SplatLayerGuids    = splatGuidArray,
+                TreePrototypeGuids = treeGuidUnion.ToArray(),
+            };
 
             Directory.CreateDirectory(layerDir);
             BakedWorldWriter.WriteLayerIndex(layerDir, index);
@@ -214,7 +275,9 @@ namespace ForeverEngine.Procedural.Editor
         private static void BakeOneTerrainAsTile(
             Terrain terrain, byte layerId, string layerDir,
             float originX, float originZ, float tileSize, float cellSizeMeters,
-            int tileX, int tileZ, AssetPackBiomeCatalog catalog)
+            int tileX, int tileZ, AssetPackBiomeCatalog catalog,
+            int[] splatLayerRemap, int unionLayerCount, int hiResGridSize,
+            int[] treeProtoRemap)
         {
             int w = Mathf.Max(1, Mathf.RoundToInt(tileSize / cellSizeMeters));
             int h = w;
@@ -247,11 +310,12 @@ namespace ForeverEngine.Procedural.Editor
             var splat = UnityTerrainSampler.SampleSplat(terrain, w, h);
             var features = new byte[w * h];
 
-            var props = PropPlacementSampler.Sample(
+            var props = PropSourceSelector.Sample(
+                terrain,
                 worldMinX: worldMinX, worldMinZ: worldMinZ,
                 cellSizeMeters: cellSizeMeters,
                 widthCells: w, heightCells: h,
-                heightmap: heights, biome: biome,
+                heights: heights, biome: biome,
                 catalog: catalog,
                 seed: DefaultSeed, layerId: layerId);
 
@@ -267,8 +331,23 @@ namespace ForeverEngine.Procedural.Editor
                 BakedAtUnixSeconds: DateTimeOffset.UtcNow.ToUnixTimeSeconds(),
                 TileX: tileX, TileZ: tileZ);
 
+            // Sub B: high-res splat + tree instances. Both passed through the
+            // layer-level union remaps built in the pre-pass so per-chunk wire
+            // indices stay tiny.
+            var hiResSplat = UnityTerrainSampler.SampleHighResSplat(
+                terrain, hiResGridSize, unionLayerCount, splatLayerRemap);
+            var treeInstances = UnityTerrainSampler.SampleTreeInstances(
+                terrain, treeProtoRemap);
+            Debug.Log($"[MacroBake]   hiResSplat: {hiResGridSize}×{hiResGridSize} × {unionLayerCount} layers " +
+                      $"({hiResSplat.Length} bytes); treeInstances: {treeInstances.Length}");
+
             var tileDir = Path.Combine(layerDir, $"tile_{tileX}_{tileZ}");
-            BakedWorldWriter.WriteMacro(tileDir, header, heights, biome, splat, features, props);
+            BakedWorldWriter.WriteMacro(
+                tileDir, header, heights, biome, splat, features, props,
+                highResSplat: hiResSplat,
+                highResSplatLayerCount: (byte)unionLayerCount,
+                highResSplatGridSize: hiResGridSize,
+                treeInstances: treeInstances);
         }
     }
 }
