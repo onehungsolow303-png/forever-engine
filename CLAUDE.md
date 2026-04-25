@@ -15,8 +15,9 @@ A Unity 6+ game runtime: hybrid DOTS/MonoBehaviour engine that hosts the playabl
   - `SmokeTestRunner.cs` — batchmode-friendly cross-module integration test
 - **Demo/:** the playable RPG demo
   - `GameManager.cs` — singleton; constructs the bridge clients + watchdog + state server
-  - `Demo/AI/DirectorEvents.cs` — fire-and-forget bridge from gameplay events to Director Hub
   - `Demo/UI/DialoguePanel.cs` — UI Toolkit overlay routing player text through DirectorClient
+
+  Note: client-side `DirectorEvents.cs` was deleted 2026-04-25; all gameplay → Director routing now goes through the server (`ForeverEngine.Server.DirectorBridge`) per Spec 3B.
 
 ## Repo Ecosystem (post-pivot)
 - **Forever engine** (`C:\Dev\Forever engine`) — this repo. Game runtime.
@@ -55,7 +56,6 @@ Pre-pivot brain code (archived): `C:\Dev\_archive\forever-engine-pre-pivot\`
 - `Assets/Scripts/Shared/SchemaValidator.cs` — Cross-project contract enforcement
 - `Assets/Scripts/Bridges/` — All HTTP clients + state server (see Architecture section above)
 - `Assets/Scripts/Demo/GameManager.cs` — Singleton wiring the bridge clients into the demo
-- `Assets/Scripts/Demo/AI/DirectorEvents.cs` — Fire-and-forget event helper for gameplay → Director
 - `Assets/Scripts/AI/Inference/InferenceEngine.cs` — Sentis ONNX wrapper (per-frame, in-engine)
 - `Assets/Scripts/AI/Inference/InferenceScheduler.cs` — Per-frame ms-budget batched inference with PerformanceRegulator feedback
 - `Assets/Scripts/AI/Learning/QLearner.cs` — Pure Q-learning algorithm (per-decision, in-engine)
@@ -71,7 +71,17 @@ Key components added for 3D:
 - `Packages/Tripo3d_Unity_Bridge/` — DCC Bridge for AI 3D model import (Tools → Tripo Bridge)
 - 7 purchased Unity Asset Store 3D environment packs (34 GB in Assets/, all gitignored for license protection)
 
-The existing 2D systems (DialoguePanel, BattleHUD, OverworldHUD, ECS game logic) are renderer-independent and do NOT need to change for 3D.
+UI Toolkit / IMGUI panels (DialoguePanel, BattleHUD, etc.) and ECS game logic are renderer-independent and do NOT need to change for 3D.
+
+The legacy 2D demo scene (`Game.unity`) and its renderers (`TileRenderer`, `FogRenderer`, `EntityRenderer`) were deleted 2026-04-25 — pre-3D-pivot artifacts that nothing loaded. The 3D world is delivered via `World.unity` / `GaiaWorld_*.unity` + Gaia + asset packs.
+
+## Voxel layer (`Assets/Scripts/World/Voxel/`)
+
+The voxel infrastructure (VoxelWorldManager + VoxelChunkStreamer + VoxelChunkRenderer + VoxelMeshBuilder + VoxelLodBucketer + MeshPool) is the **server→client transport for baked planet geometry** under the static-planet-mmo design (2026-04-20 GDT pivot). It is read-only — the planet is bake-once, NOT player-diggable in the current scope.
+
+`VoxelWorldManager.RenderMeshes` defaults to **`false`** intentionally: visual scenes use 3D mesh assets from purchased Unity Asset Store packs, not voxel-generated meshes. Building voxel meshes would cost ~15 ms/chunk × 2205 worst-case = ~3-5 FPS for zero visible benefit. Voxel data still **streams + caches** in case future features (collision queries, line-of-sight) need it.
+
+**Future-load-bearing:** the long-term game vision (per `outcome_objective.md` in the game-development-tracker) includes diggable layers below the surface — Underdark, the 9 Hells, the Abyss. The voxel data layer is the substrate for that future work; carving / mutation paths are deferred until after the planet exists. Do not extend voxel for diggability now. See `~/.claude/projects/C--Dev/game_dev_tracker/`.
 
 ### Systems Added 2026-04-13
 
@@ -80,7 +90,6 @@ The existing 2D systems (DialoguePanel, BattleHUD, OverworldHUD, ECS game logic)
 - **Room Decoration** (`RoomDecorator.cs` + `RoomCatalog.cs`) — Post-build prop placement from asset packs
 - **Atmosphere System** (`AtmosphereSetup.cs`) — URP post-processing (bloom, tonemapping, color grading, vignette, fog)
 - **UI Theme** (`UITheme.cs`) — Shared dark-fantasy IMGUI styling across all HUD panels
-- **Overworld Prefab System** (`OverworldPrefabMapper.cs` + `OverworldPrefabPopulator.cs`) — Maps biome types to real asset pack prefabs
 - **61 GLB Models** in `Resources/Models/` — 39 monsters + 22 NPCs, all registered in `ModelRegistry.cs`
 
 ### Systems Added 2026-04-14
@@ -101,7 +110,6 @@ The existing 2D systems (DialoguePanel, BattleHUD, OverworldHUD, ECS game logic)
 
 ### Editor Menu Items
 - **Forever Engine → Setup URP & Convert Materials** — converts all pack materials to URP
-- **Forever Engine → Populate Overworld Prefabs** — discovers and assigns pack prefabs to mapper
 - **Forever Engine → Populate Room Catalog** — discovers dungeon prop prefabs
 - **Forever Engine → Create Missing Assets** — creates GameConfig, RoomCatalog, DungeonNPCConfig SOs
 - **Forever Engine → Create Dungeon Exploration Scene** — generates the dungeon scene

@@ -113,7 +113,7 @@ namespace ForeverEngine.Procedural
 
             // Atmosphere (post-processing)
             var atmosGO = new GameObject("Atmosphere");
-            atmosGO.AddComponent<Demo.Overworld.AtmosphereSetup>();
+            atmosGO.AddComponent<Demo.Atmosphere.AtmosphereSetup>();
 
             // Skybox
             if (RenderSettings.skybox == null)

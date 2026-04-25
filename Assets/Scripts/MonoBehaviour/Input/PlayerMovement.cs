@@ -5,7 +5,6 @@ using Unity.Mathematics;
 using ForeverEngine.ECS.Components;
 using ForeverEngine.ECS.Data;
 using ForeverEngine.ECS.Systems;
-using ForeverEngine.MonoBehaviour.Rendering;
 
 namespace ForeverEngine.MonoBehaviour.Input
 {
@@ -107,12 +106,8 @@ namespace ForeverEngine.MonoBehaviour.Input
                         _mapSingletonQuery.SetSingleton(mapSingleton);
                     }
 
-                    // Re-render tiles and fog
-                    var tileRenderer = UnityEngine.Object.FindAnyObjectByType<TileRenderer>();
-                    if (tileRenderer != null) tileRenderer.RenderLevel(tComp.ToZ);
-
-                    var fogRenderer = UnityEngine.Object.FindAnyObjectByType<FogRenderer>();
-                    if (fogRenderer != null) fogRenderer.Initialize(store.Width, store.Height);
+                    // Z-level transition (legacy 2D rendering removed 2026-04-25 with Game.unity).
+                    // 3D scenes don't use TransitionComponent so this branch is effectively dead.
 
                     string dir = tComp.TransitionType == 1 ? "up" : "down";
                     UnityEngine.Debug.Log($"[PlayerMovement] Transitioned {dir} to z={tComp.ToZ}");

@@ -4,7 +4,7 @@ namespace ForeverEngine.Demo.UI
 {
     /// <summary>
     /// Shared dark-fantasy UI theme for all IMGUI panels. Provides consistent
-    /// colors, styles, and drawing helpers across BattleHUD, OverworldHUD,
+    /// colors, styles, and drawing helpers across BattleHUD,
     /// LootScreen, DemoMainMenu, and DungeonMinimap.
     /// </summary>
     public static class UITheme

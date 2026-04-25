@@ -17,8 +17,5 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/DungeonExploration.unity
     guid: 046a0b6141b3ddf4b8c35a66933fa4ad
-  - enabled: 1
-    path: Assets/Scenes/Game.unity
-    guid: 63f2b5feaba0ced4c999f4c4752c3b84
   m_configObjects:
     com.unity.dt.app-ui: {fileID: 11400000, guid: 1b1c20d82303e4b5781c3ef50ac1449f, type: 2}

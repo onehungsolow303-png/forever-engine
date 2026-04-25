@@ -2,7 +2,6 @@ using System.Collections.Generic;
 using System.Text;
 using UnityEngine;
 using ForeverEngine.Demo.Battle;
-using ForeverEngine.Demo.AI;
 
 namespace ForeverEngine.Demo.Dungeon
 {
@@ -331,8 +330,8 @@ namespace ForeverEngine.Demo.Dungeon
 
             sb.Append(']');
 
-            // DirectorEvents.Send is fire-and-forget — no response handler needed
-            DirectorEvents.Send("dungeon_npcs_placed: " + sb);
+            // TODO: notify Director Hub of NPC placement via server-side bridge.
+            // Was DirectorEvents.Send("dungeon_npcs_placed: " + sb) — no-op since Spec 3B.
         }
 
         // ── Utility ───────────────────────────────────────────────────────────

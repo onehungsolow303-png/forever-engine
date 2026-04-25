@@ -12,7 +12,6 @@ namespace ForeverEngine.Editor
             Debug.Log("[Audit] === Running all populators ===");
 
             SafeRun("CreateMissingAssets.Create",          () => CreateMissingAssets.Create());
-            SafeRun("OverworldPrefabPopulator.Populate",   () => OverworldPrefabPopulator.Populate());
             SafeRun("RoomCatalogPopulator.Populate",       () => RoomCatalogPopulator.Populate());
             SafeRun("AudioPopulator.Populate",             () => AudioPopulator.Populate());
 

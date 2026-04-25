@@ -1,11 +1,9 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using UnityEngine.Tilemaps;
 using Unity.Entities;
 using ECSWorld = Unity.Entities.World;
 using ForeverEngine.Demo;
 using ForeverEngine.ECS.Data;
-using ForeverEngine.MonoBehaviour.Rendering;
 using ForeverEngine.MonoBehaviour.Input;
 using ForeverEngine.MonoBehaviour.Camera;
 
@@ -19,9 +17,8 @@ namespace ForeverEngine.MonoBehaviour.Bootstrap
 
         [Header("References (auto-created if null)")]
         public CameraController CameraController;
-        public TileRenderer TileRenderer;
-        public EntityRenderer EntityRenderer;
-        public FogRenderer FogRenderer;
+        // Legacy 2D renderer fields (TileRenderer, EntityRenderer, FogRenderer) removed
+        // 2026-04-25 with Game.unity. 3D scenes use WorldBootstrap + Gaia + asset packs.
 
         private EntityManager _entityManager;
         private MapDataStore _mapDataStore;
@@ -72,37 +69,7 @@ namespace ForeverEngine.MonoBehaviour.Bootstrap
                     CameraController = camGO.AddComponent<CameraController>();
             }
 
-            // TileRenderer (needs Grid + Tilemap)
-            if (TileRenderer == null)
-            {
-                TileRenderer = FindAnyObjectByType<TileRenderer>();
-                if (TileRenderer == null)
-                {
-                    var gridGO = new GameObject("Grid");
-                    gridGO.AddComponent<Grid>();
-                    var tmGO = new GameObject("Tilemap");
-                    tmGO.transform.SetParent(gridGO.transform);
-                    tmGO.AddComponent<Tilemap>();
-                    tmGO.AddComponent<TilemapRenderer>();
-                    TileRenderer = tmGO.AddComponent<TileRenderer>();
-                }
-            }
-
-            // EntityRenderer
-            if (EntityRenderer == null)
-            {
-                EntityRenderer = FindAnyObjectByType<EntityRenderer>();
-                if (EntityRenderer == null)
-                    EntityRenderer = new GameObject("EntityRenderer").AddComponent<EntityRenderer>();
-            }
-
-            // FogRenderer
-            if (FogRenderer == null)
-            {
-                FogRenderer = FindAnyObjectByType<FogRenderer>();
-                if (FogRenderer == null)
-                    FogRenderer = new GameObject("FogRenderer").AddComponent<FogRenderer>();
-            }
+            // (Legacy 2D renderer init removed 2026-04-25 with Game.unity.)
 
             // InputManager
             if (FindAnyObjectByType<InputManager>() == null)
@@ -125,11 +92,7 @@ namespace ForeverEngine.MonoBehaviour.Bootstrap
 
             _mapDataStore = MapDataStore.Instance;
 
-            if (TileRenderer != null)
-                TileRenderer.RenderLevel(_mapDataStore.CurrentZ);
-
-            if (FogRenderer != null)
-                FogRenderer.Initialize(_mapDataStore.Width, _mapDataStore.Height);
+            // (Legacy 2D tile/fog rendering calls removed 2026-04-25 with Game.unity.)
 
             // Center camera on player spawn
             var playerSpawn = importer.GetPlayerSpawnPosition();
@@ -147,12 +110,9 @@ namespace ForeverEngine.MonoBehaviour.Bootstrap
             yield return null;
             yield return null;
 
-            if (EntityRenderer != null)
-            {
-                var playerGO = GameObject.FindWithTag("Player");
-                if (playerGO != null && CameraController != null)
-                    CameraController.SetTarget(playerGO.transform);
-            }
+            var playerGO = GameObject.FindWithTag("Player");
+            if (playerGO != null && CameraController != null)
+                CameraController.SetTarget(playerGO.transform);
         }
 
         private void OnDestroy()

@@ -12,8 +12,8 @@ namespace ForeverEngine.Demo
     /// world's lore instead of inventing everyone fresh each time.
     ///
     /// To add a new NPC: add an entry to Init() keyed by the location
-    /// ID (matching LocationData). The DialoguePanel + DirectorEvents
-    /// look up by location_id, so make sure the keys line up.
+    /// ID (matching LocationData). The DialoguePanel + server-side
+    /// DirectorBridge look up by location_id, so make sure the keys line up.
     ///
     /// Persona is the "who they are" — voice, attitude, speech patterns.
     /// Knowledge is the "what they know" — facts the LLM can reference

@@ -1,6 +1,5 @@
 using System.Collections;
 using UnityEngine;
-using ForeverEngine.Demo.AI;
 using ForeverEngine.Demo.UI;
 
 namespace ForeverEngine.Demo.Dungeon
@@ -215,27 +214,13 @@ namespace ForeverEngine.Demo.Dungeon
         }
 
         /// <summary>
-        /// QuestGiver: routes to Director Hub via DirectorEvents.SendDialogue.
+        /// QuestGiver: server handles quest parsing via QuestHandler.
         /// </summary>
         private void OnQuestGiverInteract()
         {
-            string locationId = DungeonExplorer.Instance != null
-                ? $"dungeon_room_{RoomIndex}"
-                : null;
-
-            // Server handles quest parsing via QuestHandler now.
-            // Still send the dialogue event so the Director can respond.
-            DirectorEvents.SendDialogue(
-                $"Hello {NPCName}, what quest do you have for me?",
-                npcId: NPCName,
-                onResponse: response =>
-                {
-                    if (!string.IsNullOrEmpty(response))
-                    {
-                        Debug.Log($"[DungeonNPC] QuestGiver '{NPCName}': {response}");
-                    }
-                },
-                locationId: locationId);
+            // TODO: notify Director Hub of quest-giver dialogue via server-side bridge.
+            // Was DirectorEvents.SendDialogue(...) — no-op since Spec 3B.
+            // Quest functionality already works via server-side QuestHandler.
         }
 
         // ── Prompt mesh ────────────────────────────────────────────────────────

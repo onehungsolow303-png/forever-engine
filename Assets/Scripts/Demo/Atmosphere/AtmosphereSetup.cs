@@ -2,12 +2,12 @@ using UnityEngine;
 using UnityEngine.Rendering;
 using UnityEngine.Rendering.Universal;
 
-namespace ForeverEngine.Demo.Overworld
+namespace ForeverEngine.Demo.Atmosphere
 {
     /// <summary>
     /// Bootstraps cinematic atmosphere on scene load: URP post-processing volume,
     /// procedural skybox, exponential fog, and directional light upgrade.
-    /// Attach to any persistent GameObject or let Overworld3DSetup add it.
+    /// Attach to any persistent GameObject (e.g. via WorldBootstrap).
     /// </summary>
     public class AtmosphereSetup : UnityEngine.MonoBehaviour
     {
@@ -156,7 +156,7 @@ namespace ForeverEngine.Demo.Overworld
         }
 
         /// <summary>
-        /// Switch to night atmosphere. Called by OverworldManager when isNight changes.
+        /// Switch to night atmosphere. Caller can be any day/night driver.
         /// </summary>
         public void SetNightMode(bool night)
         {

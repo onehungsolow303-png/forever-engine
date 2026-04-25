@@ -170,7 +170,7 @@ namespace ForeverEngine.Demo
             Player.Thirst = Player.MaxThirst;
         }
 
-        /// <summary>Load a saved PlayerData and return to the overworld.</summary>
+        /// <summary>Load a saved PlayerData and resume world exploration.</summary>
         public void LoadFromSave(PlayerData player)
         {
             Player = player;

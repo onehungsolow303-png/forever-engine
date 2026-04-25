@@ -3,7 +3,7 @@ using UnityEngine;
 namespace ForeverEngine.Demo.Battle
 {
     /// <summary>DEPRECATED: Replaced by seamless BattleZone system.</summary>
-    public enum ArenaType { Dungeon, Boss, Overworld }
+    public enum ArenaType { Dungeon, Boss }
 
     [CreateAssetMenu(fileName = "BattleTemplate", menuName = "Forever/Battle Scene Template")]
     public class BattleSceneTemplate : ScriptableObject
