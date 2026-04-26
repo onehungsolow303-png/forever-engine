@@ -103,3 +103,8 @@ Assets/Hivemind.meta
 Assets/Gaia User Data/
 Assets/Gaia User Data.meta
 Packages/com.waveharmonic.crest/
+
+# Build/test artifacts at repo root (added 2026-04-26)
+/TestResults*.xml
+/proptest*.xml
+/*.log
