@@ -110,10 +110,23 @@ namespace ForeverEngine.World.Voxel
 
             // Production path: distance-based tile retention via the tracker.
             // Decoupled from VoxelChunkStreamer so baked terrain renders even
-            // without a server connection. Auto-attached so existing scenes
-            // (which only have VoxelWorldManager) work without an editor pass.
-            _bakedRegionTracker = gameObject.GetComponent<BakedRegionTracker>()
-                                  ?? gameObject.AddComponent<BakedRegionTracker>();
+            // without a server connection.
+            //
+            // Per feedback_world_is_bake_once_not_diggable.md + feedback_gaia_authoring_no_voxel_scene.md:
+            // Phase 1 world-gen is voxel-FREE. The tracker lives on its own sibling
+            // GameObject so the baked tile rendering pipeline isn't co-resident
+            // with the voxel infrastructure (which is dormant in Phase 1, becomes
+            // load-bearing in Phase 2+ as the delivery format / digging substrate).
+            // TODO Phase 2 transition: extract a BakedWorldManager MonoBehaviour
+            // that owns BakedTerrainTileRenderer/BakedTreeInstanceRenderer/
+            // BakedPropTileRenderer/BakedRegionTracker construction. Then
+            // VoxelWorldManager goes back to owning ONLY the voxel chunk streamer +
+            // renderer for Phase 2 delivery. For now this minimal split accomplishes
+            // the architectural intent without a scene-asset migration.
+            var bakedRoot = GameObject.Find("BakedWorldRoot");
+            if (bakedRoot == null) bakedRoot = new GameObject("BakedWorldRoot");
+            _bakedRegionTracker = bakedRoot.GetComponent<BakedRegionTracker>()
+                                  ?? bakedRoot.AddComponent<BakedRegionTracker>();
             _bakedRegionTracker.RetainRadiusMeters = BakedTileRetainRadius;
             _bakedRegionTracker.Init(_bakedTileRenderer, _bakedTreeRenderer, _bakedPropRenderer, _bakedIndex, _bakedTileSet);
         }

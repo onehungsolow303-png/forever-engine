@@ -146,8 +146,9 @@ namespace ForeverEngine.Editor.Gaia
                 Log("=== Step 4/6: instantiate biome spawners + spawn all ===");
                 InstantiateAndSpawnBiome(biome);
 
-                Log("=== Step 5/7: post-processing (clean broken terrains) ===");
+                Log("=== Step 5/7: post-processing (clean + culling settings) ===");
                 CleanBrokenTerrains();
+                ApplyTerrainCullingSettings();
 
                 // The macro bake must run BEFORE saving + exit. Gaia is configured
                 // with m_autoUnloadScenes=true (so the parent scene stays small)
@@ -485,6 +486,33 @@ namespace ForeverEngine.Editor.Gaia
             }
         }
 
+        // Per gaia-architecture skill Bug #12: Unity 6 changed terrain culling.
+        // Gaia's 2021-era defaults (PixelError=5, basemapDistance=1024) cause
+        // terrain to disappear when camera is within ~1000-1500 units. Our
+        // 4000 km static planet plan would see literal floor-of-the-world holes
+        // at every step. PixelError 10 = safer mip-LOD threshold for distant
+        // terrain. basemapDistance 4096 = 4 tile-widths; splat fidelity holds
+        // for the entire 2x2 grid even when standing at a corner.
+        private const int CullingPixelError = 10;
+        private const float CullingBasemapDistance = 4096f;
+
+        private static void ApplyTerrainCullingSettings()
+        {
+            var terrains = UnityEngine.Object.FindObjectsByType<Terrain>(
+                FindObjectsInactive.Include, FindObjectsSortMode.None);
+            int n = 0;
+            foreach (var t in terrains)
+            {
+                if (t == null || t.terrainData == null) continue;
+                t.heightmapPixelError = CullingPixelError;
+                t.basemapDistance = CullingBasemapDistance;
+                n++;
+            }
+            if (n > 0)
+                EditorSceneManager.MarkSceneDirty(SceneManager.GetActiveScene());
+            Log($"  applied culling overrides to {n} terrain(s) (PixelError={CullingPixelError}, BasemapDistance={CullingBasemapDistance}).");
+        }
+
         private static void RunBuiltInToUrpConverter()
         {
 #if UNITY_2022_2_OR_NEWER
@@ -607,11 +635,17 @@ namespace ForeverEngine.Editor.Gaia
 
                 var name = auto.spawner.name;
                 // Skip spawners with known broken assets (PW Spruce trees crash
-                // TreeDatabase::ValidateTrees in Unity 6 due to missing materials).
-                // See project_pw_spruce_deferred.md.
+                // TreeDatabase::ValidateTrees in Unity 6). Option A attempted
+                // 2026-04-26 PM (replaced empty stubs with full URP/Lit content
+                // copied from PW_Tree_Spruce_01_Needles template) — DID NOT FIX
+                // the crash. The validator failure is deeper than material
+                // content, likely in the FBX geometry or LOD chain. See
+                // project_pw_spruce_deferred.md for repair history; needs
+                // a different angle (re-import FBXs, replace with Asset Store
+                // spruces, or skip indefinitely).
                 if (name != null && name.Contains("Tree Spruce"))
                 {
-                    Log($"    [{i + 1}/{biomeController.m_autoSpawners.Count}] SKIPPING '{name}' (PW Spruce material repair pending)");
+                    Log($"    [{i + 1}/{biomeController.m_autoSpawners.Count}] SKIPPING '{name}' (TreeDatabase::ValidateTrees crash; Option A failed)");
                     skipped++;
                     continue;
                 }

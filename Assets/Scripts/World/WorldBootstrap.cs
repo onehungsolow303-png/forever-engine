@@ -115,6 +115,11 @@ namespace ForeverEngine.Procedural
             var atmosGO = new GameObject("Atmosphere");
             atmosGO.AddComponent<Demo.Atmosphere.AtmosphereSetup>();
 
+            // Director Hub atmospherics bridge: GaiaRuntimeBridge self-spawns via
+            // [RuntimeInitializeOnLoadMethod(AfterSceneLoad)] in its own asmdef.
+            // No explicit spawn needed here — ConnectionManager will reach it via
+            // AtmosphericsBridge.Instance once the bridge's Awake fires.
+
             // Skybox
             if (RenderSettings.skybox == null)
             {

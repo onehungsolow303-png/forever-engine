@@ -27,11 +27,29 @@ namespace ForeverEngine.Bridges
     {
         public static GaiaRuntimeBridge Instance { get; private set; }
 
+        // GameObject name used by callers in Assembly-CSharp (which can't take an
+        // asmdef reference on this Gaia-isolated assembly) to find us via
+        // GameObject.Find and dispatch via SendMessage("Apply", dict).
+        public const string GameObjectName = "GaiaRuntimeBridge";
+
         [Tooltip("Optional explicit sun light. If null, GaiaAPI uses RenderSettings.sun or first directional light.")]
         public Light SunLight;
 
         [Tooltip("Default transition time for atmospherics changes if the payload doesn't specify one.")]
         public float DefaultTransitionSeconds = 2.0f;
+
+        // Auto-spawn so consumers (ConnectionManager, gameplay code) don't have to
+        // explicitly drop a GameObject into every scene. Fires after the first scene
+        // load; subsequent loads find the existing instance via Awake's singleton guard.
+        // Marked DontDestroyOnLoad so it persists across scene transitions.
+        [UnityEngine.RuntimeInitializeOnLoadMethod(UnityEngine.RuntimeInitializeLoadType.AfterSceneLoad)]
+        private static void EnsureSpawned()
+        {
+            if (Instance != null) return;
+            var go = new GameObject(GameObjectName);
+            go.AddComponent<GaiaRuntimeBridge>();
+            UnityEngine.Object.DontDestroyOnLoad(go);
+        }
 
         private void Awake()
         {
@@ -41,6 +59,11 @@ namespace ForeverEngine.Bridges
                 return;
             }
             Instance = this;
+        }
+
+        private void OnDestroy()
+        {
+            if (Instance == this) Instance = null;
         }
 
         /// <summary>

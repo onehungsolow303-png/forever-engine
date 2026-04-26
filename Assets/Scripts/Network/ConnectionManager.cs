@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using ForeverEngine.Core.Messages;
 using ForeverEngine.Demo.Battle;
 using ForeverEngine.Demo.UI;
@@ -116,6 +117,7 @@ namespace ForeverEngine.Network
             _client.RegisterHandler<DungeonExitedMessage>(OnDungeonExited);
             _client.RegisterHandler<VoxelChunkSync>(OnVoxelChunkSync);
             _client.RegisterHandler<VoxelChunkUnsubscribe>(OnVoxelChunkUnsubscribe);
+            _client.RegisterHandler<AtmosphericsUpdateMessage>(OnAtmosphericsUpdate);
 
             // Begin connecting
             _client.Connect(Host, Port);
@@ -259,6 +261,46 @@ namespace ForeverEngine.Network
         // below the server's authoritative Y (ground + capsule half-height),
         // assume we've tunneled through un-cooked terrain and snap back up.
         private const float VerticalRescueMeters = 50f;
+
+        // Name of the GaiaRuntimeBridge GameObject; mirrors GaiaRuntimeBridge.GameObjectName.
+        // Assembly-CSharp can't take an asmdef ref on the Gaia-isolated bridge, so we
+        // dispatch via Find + SendMessage instead of a typed call. The bridge self-spawns
+        // via [RuntimeInitializeOnLoadMethod] so it's reliably present after scene load.
+        private const string BridgeGameObjectName = "GaiaRuntimeBridge";
+
+        // Director Hub-emitted atmospherics → apply via Unity SendMessage to the
+        // bridge GameObject. The bridge's Apply(Dictionary<string,object>) signature
+        // handles partial updates + missing-field-skip; we just construct the dict
+        // verbatim from the wire message. Server only broadcasts on change so this
+        // fires sparingly.
+        private void OnAtmosphericsUpdate(AtmosphericsUpdateMessage msg)
+        {
+            var bridgeGO = GameObject.Find(BridgeGameObjectName);
+            if (bridgeGO == null)
+            {
+                Debug.LogWarning($"[ConnectionManager] AtmosphericsUpdate received but no '{BridgeGameObjectName}' in scene; ignoring");
+                return;
+            }
+
+            var dict = new Dictionary<string, object>(11);
+            if (msg.SunPitchDeg.HasValue)       dict["sun_pitch_deg"]       = msg.SunPitchDeg.Value;
+            if (msg.SunRotationDeg.HasValue)    dict["sun_rotation_deg"]    = msg.SunRotationDeg.Value;
+            if (msg.SunIntensity.HasValue)      dict["sun_intensity"]       = msg.SunIntensity.Value;
+            if (msg.SunColorKelvin.HasValue)    dict["sun_color_kelvin"]    = msg.SunColorKelvin.Value;
+            if (msg.WindSpeed.HasValue)         dict["wind_speed"]          = msg.WindSpeed.Value;
+            if (msg.WindDirectionNorm.HasValue) dict["wind_direction_norm"] = msg.WindDirectionNorm.Value;
+            if (msg.SkyboxExposure.HasValue)    dict["skybox_exposure"]     = msg.SkyboxExposure.Value;
+            if (msg.SkyboxTintR.HasValue && msg.SkyboxTintG.HasValue && msg.SkyboxTintB.HasValue)
+            {
+                dict["skybox_tint_rgb"] = new List<object>
+                {
+                    msg.SkyboxTintR.Value, msg.SkyboxTintG.Value, msg.SkyboxTintB.Value,
+                };
+            }
+            dict["transition_seconds"] = msg.TransitionSeconds;
+
+            bridgeGO.SendMessage("Apply", dict, SendMessageOptions.DontRequireReceiver);
+        }
 
         private void OnPlayerUpdate(PlayerUpdate msg)
         {
