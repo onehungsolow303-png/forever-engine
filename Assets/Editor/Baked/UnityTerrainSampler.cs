@@ -29,6 +29,30 @@ namespace ForeverEngine.Procedural.Editor
             return result;
         }
 
+        /// <summary>
+        /// High-res heightmap for Unity Terrain rendering at runtime. Output
+        /// is a vertexCount × vertexCount float array in METERS (not
+        /// normalized), matching the macro Heightmap convention so the
+        /// runtime can clamp01(h / size.y) the same way for both. vertexCount
+        /// must be 2^n + 1 to map directly to TerrainData.heightmapResolution.
+        /// </summary>
+        public static float[] SampleHighResHeightmap(Terrain terrain, int vertexCount, float maxHeightMeters)
+        {
+            var td = terrain.terrainData;
+            var result = new float[vertexCount * vertexCount];
+            for (int z = 0; z < vertexCount; z++)
+            {
+                float nz = (float)z / (vertexCount - 1);
+                for (int x = 0; x < vertexCount; x++)
+                {
+                    float nx = (float)x / (vertexCount - 1);
+                    float normalizedHeight = td.GetInterpolatedHeight(nx, nz) / td.size.y;
+                    result[z * vertexCount + x] = normalizedHeight * maxHeightMeters;
+                }
+            }
+            return result;
+        }
+
         public static byte[] SampleSplat(Terrain terrain, int widthCells, int heightCells)
         {
             var td = terrain.terrainData;

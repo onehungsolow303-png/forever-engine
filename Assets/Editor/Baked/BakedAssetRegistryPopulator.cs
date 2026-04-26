@@ -78,13 +78,47 @@ namespace ForeverEngine.Procedural.Editor
                 prefabEntries.Add(new BakedAssetRegistry.PrefabEntry { Guid = guid, Prefab = prefab });
             }
 
+            // Scan every tile's props.bin for the union of prop prefab GUIDs
+            // (Gaia GameObject placements). Resolve each via AssetDatabase so
+            // the runtime prop renderer can instantiate without AssetDatabase.
+            var propGuids = CollectPropGuids(LayerDir, index);
+            var propEntries = new List<BakedAssetRegistry.PrefabEntry>(propGuids.Count);
+            int propsResolved = 0;
+            foreach (var guid in propGuids)
+            {
+                var path = AssetDatabase.GUIDToAssetPath(guid);
+                var prefab = string.IsNullOrEmpty(path) ? null : AssetDatabase.LoadAssetAtPath<GameObject>(path);
+                if (prefab != null) propsResolved++;
+                else Debug.LogWarning($"[AssetRegistry] could not resolve prop prefab for guid {guid} (path '{path}')");
+                propEntries.Add(new BakedAssetRegistry.PrefabEntry { Guid = guid, Prefab = prefab });
+            }
+
             registry.TerrainLayers = layerEntries.ToArray();
             registry.TreePrefabs   = prefabEntries.ToArray();
+            registry.PropPrefabs   = propEntries.ToArray();
             EditorUtility.SetDirty(registry);
             AssetDatabase.SaveAssets();
 
             Debug.Log($"[AssetRegistry] wrote {RegistryPath}: layers {layersResolved}/{splatGuids.Length}, " +
-                      $"prefabs {prefabsResolved}/{treeGuids.Length}");
+                      $"trees {prefabsResolved}/{treeGuids.Length}, " +
+                      $"props {propsResolved}/{propGuids.Count}");
+        }
+
+        private static HashSet<string> CollectPropGuids(string layerDir, BakedLayerIndex index)
+        {
+            var seen = new HashSet<string>();
+            foreach (var t in index.Tiles ?? Array.Empty<BakedLayerTileEntry>())
+            {
+                var tileDir = Path.Combine(layerDir, t.Path);
+                if (!Directory.Exists(tileDir)) continue;
+                BakedMacroData macro;
+                try { macro = BakedWorldReader.LoadMacro(tileDir); }
+                catch (Exception e) { Debug.LogWarning($"[AssetRegistry] LoadMacro({tileDir}) failed: {e.Message}"); continue; }
+                if (macro.Props == null) continue;
+                foreach (var p in macro.Props)
+                    if (!string.IsNullOrEmpty(p.PrefabGuid)) seen.Add(p.PrefabGuid);
+            }
+            return seen;
         }
     }
 }

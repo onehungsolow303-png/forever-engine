@@ -29,9 +29,13 @@ namespace ForeverEngine.Procedural
 
         public TerrainLayerEntry[] TerrainLayers = System.Array.Empty<TerrainLayerEntry>();
         public PrefabEntry[] TreePrefabs = System.Array.Empty<PrefabEntry>();
+        // Gaia GameObject placements (props.bin). Populated by scanning every
+        // tile's props.bin and resolving the unique PrefabGuid set.
+        public PrefabEntry[] PropPrefabs = System.Array.Empty<PrefabEntry>();
 
         private Dictionary<string, TerrainLayer> _layerCache;
         private Dictionary<string, GameObject> _prefabCache;
+        private Dictionary<string, GameObject> _propCache;
 
         public TerrainLayer ResolveTerrainLayer(string guid)
         {
@@ -47,9 +51,16 @@ namespace ForeverEngine.Procedural
             return _prefabCache.TryGetValue(guid, out var p) ? p : null;
         }
 
+        public GameObject ResolvePropPrefab(string guid)
+        {
+            if (string.IsNullOrEmpty(guid)) return null;
+            EnsureCaches();
+            return _propCache.TryGetValue(guid, out var p) ? p : null;
+        }
+
         private void EnsureCaches()
         {
-            if (_layerCache != null && _prefabCache != null) return;
+            if (_layerCache != null && _prefabCache != null && _propCache != null) return;
             _layerCache = new Dictionary<string, TerrainLayer>(TerrainLayers.Length);
             foreach (var e in TerrainLayers)
                 if (!string.IsNullOrEmpty(e.Guid) && e.Layer != null)
@@ -58,6 +69,10 @@ namespace ForeverEngine.Procedural
             foreach (var e in TreePrefabs)
                 if (!string.IsNullOrEmpty(e.Guid) && e.Prefab != null)
                     _prefabCache[e.Guid] = e.Prefab;
+            _propCache = new Dictionary<string, GameObject>(PropPrefabs.Length);
+            foreach (var e in PropPrefabs)
+                if (!string.IsNullOrEmpty(e.Guid) && e.Prefab != null)
+                    _propCache[e.Guid] = e.Prefab;
         }
 
         private static BakedAssetRegistry _cached;

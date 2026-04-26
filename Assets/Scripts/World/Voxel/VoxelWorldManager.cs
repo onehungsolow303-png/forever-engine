@@ -17,8 +17,11 @@ namespace ForeverEngine.World.Voxel
         [UnityEngine.Tooltip("Where the baked planet lives. Falls back to StreamingAssets if missing.")]
         public string BakedLayerDir = "C:/Dev/.shared/baked/planet/layer_0";
 
-        [UnityEngine.Tooltip("Sub C visual-test mode: retain every known baked tile on Start so the world is visible without a running server. Default OFF — production drives tiles via streamed chunk arrivals.")]
+        [UnityEngine.Tooltip("Sub C visual-test mode: retain every known baked tile on Start so the world is visible without a running server. Default OFF — production drives tiles via the BakedRegionTracker (distance-based) instead.")]
         public bool LoadAllBakedTilesOnStart = false;
+
+        [UnityEngine.Tooltip("Tile retain radius (meters) for the auto-attached BakedRegionTracker. Ignored when LoadAllBakedTilesOnStart is true.")]
+        public float BakedTileRetainRadius = 1500f;
 
         /// <summary>
         /// Max chunks meshed into Unity Meshes per Update frame. Higher = faster
@@ -50,9 +53,10 @@ namespace ForeverEngine.World.Voxel
         private VoxelChunkRenderer _renderer;
         private BakedTerrainTileRenderer _bakedTileRenderer;
         private BakedTreeInstanceRenderer _bakedTreeRenderer;
+        private BakedPropTileRenderer _bakedPropRenderer;
+        private BakedRegionTracker _bakedRegionTracker;
         private BakedLayerIndex _bakedIndex;
         private HashSet<(int, int)> _bakedTileSet;
-        private int _chunksPerTile;
 
         private void EnsureStreamer()
         {
@@ -89,16 +93,29 @@ namespace ForeverEngine.World.Voxel
 
         void Start()
         {
-            if (LoadAllBakedTilesOnStart && _bakedTileSet != null)
+            if (_bakedTileSet == null) return;
+
+            if (LoadAllBakedTilesOnStart)
             {
                 foreach (var (tx, tz) in _bakedTileSet)
                 {
                     _bakedTileRenderer?.RetainTile(tx, tz);
                     _bakedTreeRenderer?.RetainTile(tx, tz);
+                    _bakedPropRenderer?.RetainTile(tx, tz);
                 }
                 Debug.Log($"[VoxelWorldManager] retained all {_bakedTileSet.Count} baked tile(s) for visual test mode");
                 PositionMainCameraOverWorldCenter();
+                return;
             }
+
+            // Production path: distance-based tile retention via the tracker.
+            // Decoupled from VoxelChunkStreamer so baked terrain renders even
+            // without a server connection. Auto-attached so existing scenes
+            // (which only have VoxelWorldManager) work without an editor pass.
+            _bakedRegionTracker = gameObject.GetComponent<BakedRegionTracker>()
+                                  ?? gameObject.AddComponent<BakedRegionTracker>();
+            _bakedRegionTracker.RetainRadiusMeters = BakedTileRetainRadius;
+            _bakedRegionTracker.Init(_bakedTileRenderer, _bakedTreeRenderer, _bakedPropRenderer, _bakedIndex, _bakedTileSet);
         }
 
         private void PositionMainCameraOverWorldCenter()
@@ -140,18 +157,11 @@ namespace ForeverEngine.World.Voxel
             _bakedTileSet = new HashSet<(int, int)>();
             foreach (var t in index.Tiles ?? System.Array.Empty<BakedLayerTileEntry>())
                 _bakedTileSet.Add((t.TileX, t.TileZ));
-            _chunksPerTile = Mathf.Max(1, Mathf.RoundToInt(index.TileSize / ChunkCoord3D.SizeMeters));
 
             _bakedTileRenderer = new BakedTerrainTileRenderer(transform, layerDir, index, registry);
             _bakedTreeRenderer = new BakedTreeInstanceRenderer(layerDir, index, registry);
-            Debug.Log($"[VoxelWorldManager] baked tile renderer ready: {_bakedTileSet.Count} tile(s), {_chunksPerTile} chunks/tile, registry={(registry != null ? "yes" : "MISSING")}");
-        }
-
-        private (int tx, int tz) ChunkToTile(ChunkCoord3D coord)
-        {
-            int tx = Mathf.FloorToInt((float)coord.X / _chunksPerTile);
-            int tz = Mathf.FloorToInt((float)coord.Z / _chunksPerTile);
-            return (tx, tz);
+            _bakedPropRenderer = new BakedPropTileRenderer(transform, layerDir, registry);
+            Debug.Log($"[VoxelWorldManager] baked tile renderer ready: {_bakedTileSet.Count} tile(s), registry={(registry != null ? "yes" : "MISSING")}");
         }
 
         void OnDestroy()
@@ -169,8 +179,6 @@ namespace ForeverEngine.World.Voxel
             // the initial ~441-chunk subscription burst.
             if (_pendingSet.Add(coord))
                 _pendingArrived.Add(coord);
-
-            RetainBakedTileFor(coord);
         }
 
         private void OnDeparted(ChunkCoord3D coord)
@@ -181,26 +189,6 @@ namespace ForeverEngine.World.Voxel
                 _pendingArrived.Remove(coord);
             else
                 _renderer?.OnDeparted(coord);
-
-            ReleaseBakedTileFor(coord);
-        }
-
-        private void RetainBakedTileFor(ChunkCoord3D coord)
-        {
-            if (_bakedTileSet == null) return;
-            var (tx, tz) = ChunkToTile(coord);
-            if (!_bakedTileSet.Contains((tx, tz))) return;
-            _bakedTileRenderer?.RetainTile(tx, tz);
-            _bakedTreeRenderer?.RetainTile(tx, tz);
-        }
-
-        private void ReleaseBakedTileFor(ChunkCoord3D coord)
-        {
-            if (_bakedTileSet == null) return;
-            var (tx, tz) = ChunkToTile(coord);
-            if (!_bakedTileSet.Contains((tx, tz))) return;
-            _bakedTileRenderer?.ReleaseTile(tx, tz);
-            _bakedTreeRenderer?.ReleaseTile(tx, tz);
         }
 
         void Update()

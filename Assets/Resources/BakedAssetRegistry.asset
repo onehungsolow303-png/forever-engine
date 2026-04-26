@@ -13,22 +13,22 @@ MonoBehaviour:
   m_Name: BakedAssetRegistry
   m_EditorClassIdentifier: ForeverEngine::ForeverEngine.Procedural.BakedAssetRegistry
   TerrainLayers:
-  - Guid: 8f64e32e9332ec041b8248bbef8f9a55
-    Layer: {fileID: 8574412962073106934, guid: 8f64e32e9332ec041b8248bbef8f9a55, type: 2}
-  - Guid: f566b43c35f2679428a9a10e65a10432
-    Layer: {fileID: 8574412962073106934, guid: f566b43c35f2679428a9a10e65a10432, type: 2}
-  - Guid: a2c736459aa8697448733c87f499f189
-    Layer: {fileID: 8574412962073106934, guid: a2c736459aa8697448733c87f499f189, type: 2}
-  - Guid: f8b0b26bea463f9418990a32a530dad5
-    Layer: {fileID: 8574412962073106934, guid: f8b0b26bea463f9418990a32a530dad5, type: 2}
-  - Guid: bc18327a1a035ea4387fb0294c77800a
-    Layer: {fileID: 8574412962073106934, guid: bc18327a1a035ea4387fb0294c77800a, type: 2}
-  - Guid: 866cfdef9afb5064bbb84dc7ec43b476
-    Layer: {fileID: 8574412962073106934, guid: 866cfdef9afb5064bbb84dc7ec43b476, type: 2}
-  - Guid: b9af229d0bbdd5e40afd92450702b4fc
-    Layer: {fileID: 8574412962073106934, guid: b9af229d0bbdd5e40afd92450702b4fc, type: 2}
-  - Guid: e652f05b9e6d3c843b271461b51e66fc
-    Layer: {fileID: 8574412962073106934, guid: e652f05b9e6d3c843b271461b51e66fc, type: 2}
+  - Guid: 0f378d9c86eed7f409793397bd0b8782
+    Layer: {fileID: 8574412962073106934, guid: 0f378d9c86eed7f409793397bd0b8782, type: 2}
+  - Guid: 61a5939c28948bb4d899984f03379220
+    Layer: {fileID: 8574412962073106934, guid: 61a5939c28948bb4d899984f03379220, type: 2}
+  - Guid: 129073fa6d68eed4781ae6db042f4f00
+    Layer: {fileID: 8574412962073106934, guid: 129073fa6d68eed4781ae6db042f4f00, type: 2}
+  - Guid: d67edf13defb64a46b214a008abdbdd5
+    Layer: {fileID: 8574412962073106934, guid: d67edf13defb64a46b214a008abdbdd5, type: 2}
+  - Guid: e3e79b9a45eea51499c8dedf2f753183
+    Layer: {fileID: 8574412962073106934, guid: e3e79b9a45eea51499c8dedf2f753183, type: 2}
+  - Guid: eb272f5914932424ebcec6df85412e76
+    Layer: {fileID: 8574412962073106934, guid: eb272f5914932424ebcec6df85412e76, type: 2}
+  - Guid: 86dee5185b990434294684e4214c34c2
+    Layer: {fileID: 8574412962073106934, guid: 86dee5185b990434294684e4214c34c2, type: 2}
+  - Guid: 608a12f78173ddb429590fd4836e2ba3
+    Layer: {fileID: 8574412962073106934, guid: 608a12f78173ddb429590fd4836e2ba3, type: 2}
   TreePrefabs:
   - Guid: 7f88b0ba2baaef0488923234242ff152
     Prefab: {fileID: 7441485611270874908, guid: 7f88b0ba2baaef0488923234242ff152, type: 3}
@@ -56,3 +56,10 @@ MonoBehaviour:
     Prefab: {fileID: 1120019319886688430, guid: 9180e419bfc0c234586abfdafb4937ac, type: 3}
   - Guid: 45eec54989fb50d4ab7abae72337ee6d
     Prefab: {fileID: 6115922682010128875, guid: 45eec54989fb50d4ab7abae72337ee6d, type: 3}
+  PropPrefabs:
+  - Guid: 8825899e2f9d04f42b1a0eb967ccb6e0
+    Prefab: {fileID: 7954932900371079467, guid: 8825899e2f9d04f42b1a0eb967ccb6e0, type: 3}
+  - Guid: 084b6a69f4c01bd40b6918a88d79c0f0
+    Prefab: {fileID: 6192106008933401766, guid: 084b6a69f4c01bd40b6918a88d79c0f0, type: 3}
+  - Guid: 3aaa9274df29ee749ab6475877e0fbda
+    Prefab: {fileID: 4513016249006233060, guid: 3aaa9274df29ee749ab6475877e0fbda, type: 3}

@@ -119,7 +119,7 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
---- !u!1 &876140603
+--- !u!1 &337226315
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -127,8 +127,8 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 876140605}
-  - component: {fileID: 876140604}
+  - component: {fileID: 337226317}
+  - component: {fileID: 337226316}
   m_Layer: 0
   m_Name: Directional Light
   m_TagString: Untagged
@@ -136,13 +136,13 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!108 &876140604
+--- !u!108 &337226316
 Light:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 876140603}
+  m_GameObject: {fileID: 337226315}
   m_Enabled: 1
   serializedVersion: 13
   m_Type: 1
@@ -201,13 +201,13 @@ Light:
   m_LightUnit: 1
   m_LuxAtDistance: 1
   m_EnableSpotReflector: 1
---- !u!4 &876140605
+--- !u!4 &337226317
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 876140603}
+  m_GameObject: {fileID: 337226315}
   serializedVersion: 2
   m_LocalRotation: {x: 0.40821788, y: -0.23456968, z: 0.10938163, w: 0.8754261}
   m_LocalPosition: {x: 0, y: 3, z: 0}
@@ -216,7 +216,7 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 50, y: -30, z: 0}
---- !u!1 &1685621805
+--- !u!1 &887546460
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -224,8 +224,8 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 1685621807}
-  - component: {fileID: 1685621806}
+  - component: {fileID: 887546462}
+  - component: {fileID: 887546461}
   m_Layer: 0
   m_Name: VoxelWorld
   m_TagString: Untagged
@@ -233,13 +233,13 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &1685621806
+--- !u!114 &887546461
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1685621805}
+  m_GameObject: {fileID: 887546460}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 255a179968b7984438785db14b264837, type: 3}
@@ -248,16 +248,17 @@ MonoBehaviour:
   voxelMaterial: {fileID: 0}
   RenderBakedTiles: 1
   BakedLayerDir: C:/Dev/.shared/baked/planet/layer_0
-  LoadAllBakedTilesOnStart: 1
+  LoadAllBakedTilesOnStart: 0
+  BakedTileRetainRadius: 3000
   MaxMeshBuildsPerFrame: 2
   RenderMeshes: 0
---- !u!4 &1685621807
+--- !u!4 &887546462
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1685621805}
+  m_GameObject: {fileID: 887546460}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
@@ -266,7 +267,7 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &1869698114
+--- !u!1 &1590815192
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -274,10 +275,10 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 1869698118}
-  - component: {fileID: 1869698117}
-  - component: {fileID: 1869698116}
-  - component: {fileID: 1869698115}
+  - component: {fileID: 1590815196}
+  - component: {fileID: 1590815195}
+  - component: {fileID: 1590815194}
+  - component: {fileID: 1590815193}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -285,13 +286,13 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &1869698115
+--- !u!114 &1590815193
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1869698114}
+  m_GameObject: {fileID: 1590815192}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: a75c55a51ccc927429b58719290af9e5, type: 3}
@@ -300,21 +301,21 @@ MonoBehaviour:
   MoveSpeed: 200
   LookSpeed: 180
   SprintMultiplier: 5
---- !u!81 &1869698116
+--- !u!81 &1590815194
 AudioListener:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1869698114}
+  m_GameObject: {fileID: 1590815192}
   m_Enabled: 1
---- !u!20 &1869698117
+--- !u!20 &1590815195
 Camera:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1869698114}
+  m_GameObject: {fileID: 1590815192}
   m_Enabled: 1
   serializedVersion: 2
   m_ClearFlags: 1
@@ -340,8 +341,8 @@ Camera:
     width: 1
     height: 1
   near clip plane: 0.3
-  far clip plane: 1000
-  field of view: 60
+  far clip plane: 8192
+  field of view: 70
   orthographic: 0
   orthographic size: 5
   m_Depth: -1
@@ -359,16 +360,16 @@ Camera:
   m_OcclusionCulling: 1
   m_StereoConvergence: 10
   m_StereoSeparation: 0.022
---- !u!4 &1869698118
+--- !u!4 &1590815196
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1869698114}
+  m_GameObject: {fileID: 1590815192}
   serializedVersion: 2
-  m_LocalRotation: {x: -0.1464466, y: 0.8535534, z: -0.3535534, w: -0.35355335}
-  m_LocalPosition: {x: 1024, y: 350, z: 1024}
+  m_LocalRotation: {x: 0.20694275, y: 0, z: 0, w: 0.9783531}
+  m_LocalPosition: {x: 0, y: 900, z: -1400}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -378,6 +379,6 @@ Transform:
 SceneRoots:
   m_ObjectHideFlags: 0
   m_Roots:
-  - {fileID: 1869698118}
-  - {fileID: 876140605}
-  - {fileID: 1685621807}
+  - {fileID: 1590815196}
+  - {fileID: 337226317}
+  - {fileID: 887546462}

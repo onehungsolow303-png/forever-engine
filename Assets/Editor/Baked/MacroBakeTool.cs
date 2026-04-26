@@ -28,6 +28,13 @@ namespace ForeverEngine.Procedural.Editor
         // produces a 256×256 grid; chunks (256 m, 64×64 wire grid) line up 1:1.
         private const float HighResSplatCellSizeMeters = 4f;
 
+        // Gap 1 (v0x0005): high-res heightmap vertex count per side. Must be
+        // 2^n + 1 (Unity TerrainData.heightmapResolution constraint). 513
+        // verts = 512 cells, ~2 m/cell on a 1024 m tile, ~1 MB/tile float
+        // storage. Bumps terrain shape detail up from the bilinear-from-16
+        // upsample that produced visible polygonal seams.
+        private const int HighResHeightmapVertexCount = 513;
+
         [MenuItem("Forever Engine/Bake/Tile (Active Terrain)")]
         public static void BakeTileFromActiveTerrain()
         {
@@ -338,8 +345,12 @@ namespace ForeverEngine.Procedural.Editor
                 terrain, hiResGridSize, unionLayerCount, splatLayerRemap);
             var treeInstances = UnityTerrainSampler.SampleTreeInstances(
                 terrain, treeProtoRemap);
+            // Gap 1 (v0x0005): high-res heightmap for runtime Unity Terrain.
+            var hiResHeights = UnityTerrainSampler.SampleHighResHeightmap(
+                terrain, HighResHeightmapVertexCount, MaxHeightMeters);
             Debug.Log($"[MacroBake]   hiResSplat: {hiResGridSize}×{hiResGridSize} × {unionLayerCount} layers " +
-                      $"({hiResSplat.Length} bytes); treeInstances: {treeInstances.Length}");
+                      $"({hiResSplat.Length} bytes); treeInstances: {treeInstances.Length}; " +
+                      $"hiResHeights: {HighResHeightmapVertexCount}×{HighResHeightmapVertexCount} ({hiResHeights.Length * 4} bytes)");
 
             var tileDir = Path.Combine(layerDir, $"tile_{tileX}_{tileZ}");
             BakedWorldWriter.WriteMacro(
@@ -347,7 +358,9 @@ namespace ForeverEngine.Procedural.Editor
                 highResSplat: hiResSplat,
                 highResSplatLayerCount: (byte)unionLayerCount,
                 highResSplatGridSize: hiResGridSize,
-                treeInstances: treeInstances);
+                treeInstances: treeInstances,
+                highResHeightmap: hiResHeights,
+                highResHeightmapGridSize: HighResHeightmapVertexCount);
         }
     }
 }

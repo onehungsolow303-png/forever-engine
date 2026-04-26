@@ -35,26 +35,26 @@ namespace ForeverEngine.Editor
         {
             ForceCleanBuildDir();
 
-            // Configure scenes
-            EditorBuildSettings.scenes = new[]
+            // S (server-streamed runtime): MainMenu → ClientBoot → World →
+            // WorldBootstrap reads chunks streamed from ForeverEngine.Server.
+            // GaiaWorld_*.unity is kept in the build settings (last index) so
+            // the Gaia-built tile assets / TerrainData are still shipped, but
+            // the scene flow doesn't open it directly — the runtime gets its
+            // world from the server's baked-chunk stream.
+            var scenePaths = new[]
             {
-                new EditorBuildSettingsScene("Assets/Scenes/MainMenu.unity", true),
-                new EditorBuildSettingsScene("Assets/Scenes/World.unity", true),
-                new EditorBuildSettingsScene("Assets/Scenes/BattleMap.unity", true),
-                new EditorBuildSettingsScene("Assets/Scenes/DungeonExploration.unity", true),
-                new EditorBuildSettingsScene("Assets/Scenes/Game.unity", true),
+                "Assets/Scenes/MainMenu.unity",
+                "Assets/Scenes/World.unity",
+                "Assets/Scenes/BattleMap.unity",
+                "Assets/Scenes/DungeonExploration.unity",
+                "Assets/Scenes/GaiaWorld_Coniferous_Forest_Medium.unity",
             };
+            EditorBuildSettings.scenes = Array.ConvertAll(
+                scenePaths, p => new EditorBuildSettingsScene(p, true));
 
             var options = new BuildPlayerOptions
             {
-                scenes = new[]
-                {
-                    "Assets/Scenes/MainMenu.unity",
-                    "Assets/Scenes/World.unity",
-                    "Assets/Scenes/BattleMap.unity",
-                    "Assets/Scenes/DungeonExploration.unity",
-                    "Assets/Scenes/Game.unity",
-                },
+                scenes = scenePaths,
                 locationPathName = BuildExePath,
                 target = BuildTarget.StandaloneWindows64,
                 // CleanBuildCache ensures Unity doesn't shortcut the player build

@@ -13,6 +13,8 @@
   <Project Path="DungeonArchitect.ThirdParty.csproj" />
   <Project Path="Unity.RenderPipelines.Universal.Runtime.csproj" />
   <Project Path="WaveHarmonic.Crest.Shared.Editor.csproj" />
+  <Project Path="ForeverEngine.Tests.EditMode.csproj" />
+  <Project Path="ForeverEngine.Editor.Baked.csproj" />
   <Project Path="Assembly-CSharp.csproj" />
   <Project Path="Unity.RenderPipelines.Core.Runtime.csproj" />
   <Project Path="DungeonArchitect.Core.csproj" />
@@ -28,7 +30,6 @@
   <Project Path="WaveHarmonic.Crest.Shared.csproj" />
   <Project Path="DungeonArchitect.Modules.Flow.Implementations.csproj" />
   <Project Path="DungeonArchitect.Modules.Navigation2D.csproj" />
-  <Project Path="ForeverEngine.Tests.EditMode.csproj" />
   <Project Path="DungeonArchitect.Modules.Grammar.csproj" />
   <Project Path="DungeonArchitect.Modules.SxEngine.csproj" />
   <Project Path="WaveHarmonic.Crest.Samples.csproj" />

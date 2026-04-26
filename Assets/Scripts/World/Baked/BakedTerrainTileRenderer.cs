@@ -19,7 +19,7 @@ namespace ForeverEngine.Procedural
     /// </summary>
     public sealed class BakedTerrainTileRenderer
     {
-        private const int HeightmapResolution = 65;
+        private const int FallbackHeightmapResolution = 65;
         private const float TileHeightMeters = 1000f;
 
         private readonly Transform _root;
@@ -103,9 +103,15 @@ namespace ForeverEngine.Procedural
 
         private GameObject BuildTerrainGameObject(BakedMacroData macro, int tileX, int tileZ, out TerrainData data)
         {
+            // v0x0005 hi-res heightmap drives heightmapResolution directly when
+            // present (513 verts default). Pre-v0x0005 bakes fall back to 65,
+            // matching the legacy bilinear-from-macro path.
+            int heightRes = macro.HighResHeightmapGridSize > 0
+                ? macro.HighResHeightmapGridSize
+                : FallbackHeightmapResolution;
             data = new TerrainData
             {
-                heightmapResolution = HeightmapResolution,
+                heightmapResolution = heightRes,
                 alphamapResolution  = macro.HighResSplatGridSize > 0 ? macro.HighResSplatGridSize : 256,
                 baseMapResolution   = 256,
             };
@@ -133,7 +139,12 @@ namespace ForeverEngine.Procedural
             if (terrain != null)
             {
                 terrain.materialTemplate = GetOrCreateTerrainMaterial();
-                terrain.drawTreesAndFoliage = false; // we render trees ourselves via DrawMeshInstanced
+                // Let Unity Terrain draw whatever's stored in TerrainData
+                // (treeInstances + detail prototypes). For Alpine Meadow this
+                // primarily unlocks grass — 5.7M density per tile baked into
+                // detail layers that were previously suppressed. GameObject
+                // tree placements come through BakedPropTileRenderer instead.
+                terrain.drawTreesAndFoliage = true;
             }
             float minH = float.MaxValue, maxH = float.MinValue;
             for (int i = 0; i < macro.Heightmap.Length; i++)
@@ -165,13 +176,30 @@ namespace ForeverEngine.Procedural
 
         private static void ApplyHeightmap(TerrainData data, BakedMacroData macro)
         {
+            float sy = data.size.y;
+
+            // v0x0005 fast path: hi-res grid maps 1:1 to TerrainData. Source
+            // is float meters; normalize per-cell to [0,1] for SetHeights.
+            if (macro.HighResHeightmapGridSize > 0 && macro.HighResHeightmap.Length > 0)
+            {
+                int g = macro.HighResHeightmapGridSize;
+                var src = macro.HighResHeightmap;
+                var dst = new float[g, g];
+                for (int z = 0; z < g; z++)
+                for (int x = 0; x < g; x++)
+                    dst[z, x] = Mathf.Clamp01(src[z * g + x] / sy);
+                data.SetHeights(0, 0, dst);
+                return;
+            }
+
+            // Fallback: bilinear upsample of the coarse macro heightmap into
+            // the legacy 65x65 TerrainData grid. Used for pre-v0x0005 bakes.
             int srcW = macro.Header.MacroWidthCells;
             int srcH = macro.Header.MacroHeightCells;
-            var src = macro.Heightmap;
+            var srcMacro = macro.Heightmap;
 
-            int dstRes = HeightmapResolution;
-            var dst = new float[dstRes, dstRes];
-            float sy = data.size.y;
+            int dstRes = FallbackHeightmapResolution;
+            var dstMacro = new float[dstRes, dstRes];
             for (int z = 0; z < dstRes; z++)
             {
                 float fz = (float)z / (dstRes - 1) * (srcH - 1);
@@ -185,17 +213,17 @@ namespace ForeverEngine.Procedural
                     int x1 = Mathf.Min(x0 + 1, srcW - 1);
                     float tx = fx - x0;
 
-                    float h00 = src[z0 * srcW + x0];
-                    float h10 = src[z0 * srcW + x1];
-                    float h01 = src[z1 * srcW + x0];
-                    float h11 = src[z1 * srcW + x1];
+                    float h00 = srcMacro[z0 * srcW + x0];
+                    float h10 = srcMacro[z0 * srcW + x1];
+                    float h01 = srcMacro[z1 * srcW + x0];
+                    float h11 = srcMacro[z1 * srcW + x1];
                     float h0 = Mathf.Lerp(h00, h10, tx);
                     float h1 = Mathf.Lerp(h01, h11, tx);
                     float h  = Mathf.Lerp(h0, h1, tz);
-                    dst[z, x] = Mathf.Clamp01(h / sy);
+                    dstMacro[z, x] = Mathf.Clamp01(h / sy);
                 }
             }
-            data.SetHeights(0, 0, dst);
+            data.SetHeights(0, 0, dstMacro);
         }
 
         private void ApplyTerrainLayers(TerrainData data, int layerCount)

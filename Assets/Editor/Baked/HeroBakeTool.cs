@@ -46,11 +46,12 @@ namespace ForeverEngine.Procedural.Editor
             var splat = UnityTerrainSampler.SampleSplat(terrain, w, h);
             var features = new byte[w * h];
 
-            var props = PropPlacementSampler.Sample(
+            var props = PropSourceSelector.Sample(
+                terrain,
                 worldMinX: zoneAsset.WorldMinX, worldMinZ: zoneAsset.WorldMinZ,
                 cellSizeMeters: resolution,
                 widthCells: w, heightCells: h,
-                heightmap: heights, biome: biome,
+                heights: heights, biome: biome,
                 catalog: catalog,
                 seed: zoneAsset.ZoneId.GetHashCode(),
                 layerId: zoneAsset.LayerId);

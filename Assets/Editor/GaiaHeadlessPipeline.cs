@@ -84,10 +84,25 @@ namespace ForeverEngine.Editor.Gaia
                 EditorSceneManager.SaveScene(scene, _scenePath);
                 Log($"  scene saved at {_scenePath}");
 
-                Log("=== Step 2/5: clean any broken Terrains (null terrainData) ===");
+                Log("=== Step 1.5/7: setup basic lighting (sun + skybox + ambient) ===");
+                SetupBasicLighting();
+
+                Log("=== Step 2/7: clean any broken Terrains (null terrainData) ===");
                 CleanBrokenTerrains();
 
-                Log("=== Step 3/5: load biome + kick off GaiaAPI.CreateGaiaWorld ===");
+                // URP convert + NatureManufacture matfixer must run BEFORE
+                // Gaia tries to instance trees. Otherwise the world-creation
+                // coroutine's stamper-active spawners hit "The tree X
+                // couldn't be instanced because one of the materials is
+                // missing" (Built-in / NM shaders not loaded in this URP
+                // project) and produce 0 tree instances. The converter
+                // operates on the project, not on Gaia output, so it's safe
+                // to run before any Gaia work.
+                Log("=== Step 2.5/7: URP convert + matfixer (BEFORE spawn) ===");
+                RunBuiltInToUrpConverter();
+                RunNatureManufactureMatFixer();
+
+                Log("=== Step 3/7: load biome + kick off GaiaAPI.CreateGaiaWorld ===");
                 var biome = AssetDatabase.LoadAssetAtPath<BiomePreset>($"{BiomesDir}/{biomeName}.asset");
                 if (biome == null)
                     throw new Exception($"Missing BiomePreset {biomeName} under {BiomesDir}");
@@ -114,20 +129,35 @@ namespace ForeverEngine.Editor.Gaia
                 Log("  world-creation coroutine started. Driving it to completion...");
                 DriveGaiaCoroutineToCompletion();
 
-                // Step 3 only creates the terrain tiles + runs stamper-active
-                // spawners (texture splats). The full biome (trees/rocks/grass)
-                // needs BiomePreset.CreateBiome which instantiates all
-                // BiomeController child Spawner objects; then Spawner.Spawn
-                // actually paints each prefab onto the terrain.
+                // Step 3.5: apply procedural heightmaps. Gaia's CreateGaiaWorld
+                // makes flat terrains by default (no stamps in WorldCreationSettings).
+                // Without topography, biome spawn rules with slope/height image-masks
+                // find no valid positions → 0 trees, 0 rocks placed (diagnosed
+                // 2026-04-25: spawners exit after 9 MoveNext = "nothing to do").
+                // Multi-octave Perlin gives natural-looking hills + valleys that
+                // the spawn rules can populate against.
+                Log("=== Step 3.5/7: apply procedural heightmaps (multi-octave Perlin) ===");
+                ApplyProceduralHeightmaps();
+
+                // Step 3 only creates the terrain tiles. The full biome
+                // (textures, trees, rocks, grass) needs BiomePreset.CreateBiome
+                // which instantiates all BiomeController child Spawner objects;
+                // then Spawner.Spawn paints each onto the now-stamped terrain.
                 Log("=== Step 4/6: instantiate biome spawners + spawn all ===");
                 InstantiateAndSpawnBiome(biome);
 
-                Log("=== Step 5/6: post-processing (URP convert + matfixer) ===");
+                Log("=== Step 5/7: post-processing (clean broken terrains) ===");
                 CleanBrokenTerrains();
-                RunBuiltInToUrpConverter();
-                RunNatureManufactureMatFixer();
 
-                Log("=== Step 6/6: save scene ===");
+                // The macro bake must run BEFORE saving + exit. Gaia is configured
+                // with m_autoUnloadScenes=true (so the parent scene stays small)
+                // which means terrain GOs only live in memory during this run.
+                // Reading them after a fresh editor open requires loading per-tile
+                // session scenes additively — fragile. Baking now skips that.
+                Log("=== Step 6/7: macro bake (Gaia path via PropSourceSelector) ===");
+                RunMacroBake();
+
+                Log("=== Step 7/7: save scene ===");
                 EditorSceneManager.SaveOpenScenes();
 
                 Log($"=== DONE in {(DateTime.UtcNow - _startedAt).TotalSeconds:F1}s. Scene: {_scenePath} ===");
@@ -251,7 +281,13 @@ namespace ForeverEngine.Editor.Gaia
             var s = ScriptableObject.CreateInstance<WorldCreationSettings>();
             s.m_qualityPreset = GaiaConstants.EnvironmentTarget.Desktop;
             s.m_seaLevel = 50;
-            s.m_autoSpawnBiome = true;
+            // m_autoSpawnBiome=false so the stamper-active spawners (texture
+            // splats etc.) DON'T run during world creation while terrains are
+            // still flat. We apply procedural heightmaps in Step 3.5, then
+            // InstantiateAndSpawnBiome (Step 4) runs all spawners together
+            // against the now-varied topography. Without this, splat rules
+            // see uniform slope=0 everywhere and paint a single layer.
+            s.m_autoSpawnBiome = false;
             s.m_centerOffset = Vector2.zero;
             s.m_dateTimeString = DateTime.UtcNow.ToString("yyyyMMdd_HHmmss");
             s.m_spawnerPresetList = biome.m_spawnerPresetList;
@@ -269,7 +305,15 @@ namespace ForeverEngine.Editor.Gaia
                     s.m_targetSizePreset = GaiaConstants.EnvironmentSizePreset.Custom;
                     s.m_xTiles = 2; s.m_zTiles = 2;
                     s.m_tileSize = 1024; s.m_tileHeight = 800;
-                    s.m_createInScene = true; s.m_autoUnloadScenes = true;
+                    // m_createInScene=false keeps the 4 terrains as GameObjects
+                    // in the main saved scene rather than splitting them into
+                    // per-tile scene files under Assets/Gaia User Data/Sessions/.
+                    // The standalone build only ships the main scene, so per-tile
+                    // scenes would be absent at runtime → empty world. This is
+                    // the right choice for the L (preview) path AND for the
+                    // current build — for very large worlds we'd want true +
+                    // a runtime additive loader (future work, after S works).
+                    s.m_createInScene = false; s.m_autoUnloadScenes = false;
                     s.m_applyFloatingPointFix = true;
                     break;
                 case GaiaWorldBuilder.WorldSize.Large:
@@ -281,6 +325,148 @@ namespace ForeverEngine.Editor.Gaia
                     break;
             }
             return s;
+        }
+
+        // EmptyScene template has no light, no skybox, ambient=black, and no
+        // Main Camera. The built world is invisible at runtime without all
+        // three. Gaia's UI workflow pairs world creation with a Lighting
+        // System component (PWS sun, post-FX volume, weather), but we want
+        // only basics here so visuals never depend on the broken PW Sky /
+        // weather install. Always overwrite — guards previously skipped the
+        // setup when a stale Light or skybox was already present.
+        private static void SetupBasicLighting()
+        {
+            // 1. Sun (directional light) — always (re)create.
+            var existingSun = GameObject.Find("Sun");
+            if (existingSun != null) UnityEngine.Object.DestroyImmediate(existingSun);
+            var sunGO = new GameObject("Sun");
+            var light = sunGO.AddComponent<Light>();
+            light.type = LightType.Directional;
+            light.intensity = 1.5f;
+            light.color = new Color(1.0f, 0.957f, 0.839f); // warm sunlight
+            light.shadows = LightShadows.Soft;
+            sunGO.transform.rotation = Quaternion.Euler(50f, -30f, 0f);
+            Log("  added Directional Light 'Sun'.");
+
+            // 2. Procedural skybox material — always (re)create. Built-in
+            //    shader "Skybox/Procedural" works in URP without any
+            //    pipeline-specific dependency.
+            var sky = new Material(Shader.Find("Skybox/Procedural"));
+            sky.SetFloat("_SunSize", 0.04f);
+            sky.SetFloat("_AtmosphereThickness", 1.0f);
+            sky.SetColor("_SkyTint", new Color(0.5f, 0.5f, 0.5f));
+            sky.SetColor("_GroundColor", new Color(0.369f, 0.349f, 0.341f));
+            sky.SetFloat("_Exposure", 1.3f);
+            Directory.CreateDirectory("Assets/Settings/Lighting");
+            var skyPath = "Assets/Settings/Lighting/HeadlessSkybox.mat";
+            // Overwrite if exists.
+            var existing = AssetDatabase.LoadAssetAtPath<Material>(skyPath);
+            if (existing != null) AssetDatabase.DeleteAsset(skyPath);
+            AssetDatabase.CreateAsset(sky, skyPath);
+            RenderSettings.skybox = sky;
+            Log($"  created procedural skybox at {skyPath}.");
+
+            // 3. Skybox-driven ambient — without this, the terrain renders
+            //    almost black even with sun + skybox in place.
+            RenderSettings.ambientMode = UnityEngine.Rendering.AmbientMode.Skybox;
+            RenderSettings.ambientIntensity = 1.0f;
+            DynamicGI.UpdateEnvironment();
+            Log("  ambient = Skybox, environment updated.");
+
+            // 4. Main Camera — Gaia doesn't add one; without it Unity has
+            //    nothing to render and the build shows the editor's clear
+            //    color (dark gray) instead of the world. Place above origin,
+            //    pitched down so the camera sees the 2x2 terrain grid centered
+            //    around (0,0). Tile size 1024 + applyFloatingPointFix means
+            //    terrains span roughly (-1024, -1024)..(1024, 1024).
+            var existingCam = GameObject.Find("Main Camera");
+            if (existingCam != null) UnityEngine.Object.DestroyImmediate(existingCam);
+            var camGO = new GameObject("Main Camera");
+            camGO.tag = "MainCamera";
+            var cam = camGO.AddComponent<Camera>();
+            cam.clearFlags = CameraClearFlags.Skybox;
+            cam.fieldOfView = 60f;
+            cam.nearClipPlane = 0.3f;
+            cam.farClipPlane = 5000f;        // see all 4 tiles + horizon
+            camGO.AddComponent<AudioListener>();
+            // Position: 400m above the world center, pitched down 30deg looking
+            // toward +Z. With tile_height=800 and seaLevel=50, terrain peaks
+            // are around 100-300m, so 400m above gives a clean overview.
+            camGO.transform.position = new Vector3(0f, 400f, -800f);
+            camGO.transform.rotation = Quaternion.Euler(30f, 0f, 0f);
+            Log("  added Main Camera (overview vantage at y=400, looking forward).");
+        }
+
+        // Multi-octave Perlin heightmap. Gives a mix of broad mountains
+        // (low-frequency octave) and finer ridges + ground roughness
+        // (higher-frequency octaves). Output range is normalized [0..1] of
+        // terrainData.size.y, then biased into [0.08, 0.55] so terrains sit
+        // above the sea level (set to 50m on a 800m-tall tile = 0.0625) and
+        // peaks reach ~440m. Per-tile world-coord lookup ensures adjacent
+        // tiles align seamlessly at their shared edge.
+        private static void ApplyProceduralHeightmaps()
+        {
+            var terrains = UnityEngine.Object.FindObjectsByType<Terrain>(
+                FindObjectsInactive.Exclude, FindObjectsSortMode.None);
+            if (terrains.Length == 0)
+            {
+                Log("  no terrains to stamp — skipping.");
+                return;
+            }
+
+            // Octave config: each successive octave doubles frequency and
+            // halves amplitude (standard fBm). 4 octaves gives smooth terrain
+            // with detail; 6+ starts adding noise that doesn't read as
+            // landform.
+            const int Octaves = 4;
+            const float BaseFrequency = 0.0008f; // wavelength ~= 1250m
+            const float MinHeight = 0.08f;       // ~64m on a 800m tile
+            const float HeightRange = 0.47f;     // up to 0.55 = ~440m peaks
+
+            // Pre-compute amplitude normalization (sum of geometric series).
+            float ampNorm = 0f;
+            for (int o = 0; o < Octaves; o++) ampNorm += Mathf.Pow(0.5f, o);
+
+            foreach (var t in terrains)
+            {
+                if (t.terrainData == null) continue;
+                var data = t.terrainData;
+                int res = data.heightmapResolution;
+                var heights = new float[res, res];
+                var origin = t.transform.position;
+                var size = data.size;
+
+                for (int y = 0; y < res; y++)
+                {
+                    // World Z at this heightmap row.
+                    float wz = origin.z + ((float)y / (res - 1)) * size.z;
+                    for (int x = 0; x < res; x++)
+                    {
+                        float wx = origin.x + ((float)x / (res - 1)) * size.x;
+
+                        // Multi-octave Perlin (fBm).
+                        float n = 0f;
+                        float amp = 1f;
+                        float freq = BaseFrequency;
+                        for (int o = 0; o < Octaves; o++)
+                        {
+                            // +1024 offsets keep the noise away from Perlin's
+                            // origin (which has known directional bias at
+                            // exact integer coords).
+                            n += Mathf.PerlinNoise((wx + 1024f) * freq, (wz + 1024f) * freq) * amp;
+                            amp *= 0.5f;
+                            freq *= 2f;
+                        }
+                        n /= ampNorm;          // normalize to [0..1]
+                        heights[y, x] = MinHeight + n * HeightRange;
+                    }
+                }
+
+                data.SetHeights(0, 0, heights);
+                Log($"    stamped '{t.name}' (res={res}x{res}, range=[{MinHeight * size.y:F0}m, {(MinHeight + HeightRange) * size.y:F0}m])");
+            }
+
+            Log($"  stamped {terrains.Length} terrain(s).");
         }
 
         private static void CleanBrokenTerrains()
@@ -335,6 +521,63 @@ namespace ForeverEngine.Editor.Gaia
             }
         }
 
+        private static int CountAllDescendants(Transform t)
+        {
+            int n = 0;
+            foreach (Transform child in t) { n++; n += CountAllDescendants(child); }
+            return n;
+        }
+
+        private static void RunMacroBake()
+        {
+            // Force Gaia-authored prop source for this bake. PropSourceSelector
+            // already defaults to Gaia, but if a developer toggled to Synthetic
+            // for a CI run, we don't want to silently produce synthetic props
+            // from the Gaia world.
+            ForeverEngine.Procedural.Editor.PropSourceSelector.UseGaiaAuthored = true;
+
+            var terrains = UnityEngine.Object.FindObjectsByType<Terrain>(
+                FindObjectsInactive.Exclude, FindObjectsSortMode.None);
+            int totalTreeInstances = 0;
+            foreach (var t in terrains)
+            {
+                if (t.terrainData != null) totalTreeInstances += t.terrainData.treeInstanceCount;
+                int childCount = CountAllDescendants(t.transform);
+                int protoCount = t.terrainData != null && t.terrainData.treePrototypes != null
+                    ? t.terrainData.treePrototypes.Length : 0;
+                int tdInstanceId = t.terrainData != null ? t.terrainData.GetInstanceID() : 0;
+                string tdName = t.terrainData != null ? t.terrainData.name : "<null>";
+                string tdAssetPath = t.terrainData != null
+                    ? UnityEditor.AssetDatabase.GetAssetPath(t.terrainData) : "<null>";
+                int hmRes = t.terrainData != null ? t.terrainData.heightmapResolution : 0;
+                int detailCount = t.terrainData != null && t.terrainData.detailPrototypes != null
+                    ? t.terrainData.detailPrototypes.Length : 0;
+                Log($"    terrain '{t.name}' pos={t.transform.position} dataName='{tdName}' " +
+                    $"hmRes={hmRes} treeProtos={protoCount} treeInstances={t.terrainData?.treeInstanceCount ?? 0} " +
+                    $"detailProtos={detailCount} GOdescendants={childCount}");
+                Log($"      dataPath={tdAssetPath}");
+            }
+            Log($"  bake input total: {terrains.Length} terrains, {totalTreeInstances} tree instances total.");
+
+            if (terrains.Length == 0)
+            {
+                Debug.LogWarning("[GaiaHeadless] No terrains in scene at bake time — skipping bake.");
+                return;
+            }
+
+            try
+            {
+                ForeverEngine.Procedural.Editor.MacroBakeTool.BakeAllTilesInSceneOrThrow();
+                Log("  macro bake complete.");
+            }
+            catch (Exception ex)
+            {
+                // Bake failure is loud but shouldn't lose the world. Save the
+                // scene anyway so the world can be re-baked separately.
+                Debug.LogError($"[GaiaHeadless] Macro bake threw — scene will still save: {ex.Message}");
+            }
+        }
+
         /// <summary>
         /// Instantiates the full biome (BiomeController + every Spawner child)
         /// and triggers each active spawner to paint its prefabs onto the
@@ -363,6 +606,15 @@ namespace ForeverEngine.Editor.Gaia
                 if (!auto.isActive) { skipped++; continue; }
 
                 var name = auto.spawner.name;
+                // Skip spawners with known broken assets (PW Spruce trees crash
+                // TreeDatabase::ValidateTrees in Unity 6 due to missing materials).
+                // See project_pw_spruce_deferred.md.
+                if (name != null && name.Contains("Tree Spruce"))
+                {
+                    Log($"    [{i + 1}/{biomeController.m_autoSpawners.Count}] SKIPPING '{name}' (PW Spruce material repair pending)");
+                    skipped++;
+                    continue;
+                }
                 Log($"    [{i + 1}/{biomeController.m_autoSpawners.Count}] spawning '{name}'...");
                 try
                 {

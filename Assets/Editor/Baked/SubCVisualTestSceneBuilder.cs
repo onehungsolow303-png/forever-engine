@@ -40,13 +40,30 @@ namespace ForeverEngine.Procedural.Editor
             var vwmGo = new GameObject("VoxelWorld");
             var vwm = vwmGo.AddComponent<VoxelWorldManager>();
             vwm.RenderBakedTiles = true;
-            vwm.LoadAllBakedTilesOnStart = true;
+            // Exercise BakedRegionTracker (gap 4): tracker auto-attaches in Start
+            // and retains/releases tiles by camera distance. 3000 m radius is
+            // generous enough that all 4 tiles in this 2x2 patch stay loaded
+            // from any reasonable cam position — verifies "no regression vs
+            // load-all" while routing through the production codepath.
+            vwm.LoadAllBakedTilesOnStart = false;
+            vwm.BakedTileRetainRadius = 3000f;
 
             var camGo = GameObject.Find("Main Camera") ?? new GameObject("Main Camera");
             if (camGo.GetComponent<Camera>() == null) camGo.AddComponent<Camera>();
             camGo.tag = "MainCamera";
-            camGo.transform.position = new Vector3(1024f, 350f, 1024f);
-            camGo.transform.eulerAngles = new Vector3(45f, 225f, 0f);
+            // Cam high above the world looking down at the center so any
+            // upright trees show as silhouettes / dots even from altitude.
+            // Y=900 m guarantees we're above the 422 m peak on tile (1,0)
+            // and not buried inside terrain. Use WASD+RMB to fly closer.
+            camGo.transform.position = new Vector3(0f, 900f, -1400f);
+            camGo.transform.LookAt(new Vector3(0f, 280f, 0f));
+            var cam = camGo.GetComponent<Camera>();
+            if (cam != null)
+            {
+                cam.fieldOfView = 70f;
+                cam.nearClipPlane = 0.3f;
+                cam.farClipPlane = Mathf.Max(cam.farClipPlane, 8192f);
+            }
             if (camGo.GetComponent<SubCVisualTestFlyCam>() == null)
                 camGo.AddComponent<SubCVisualTestFlyCam>();
 

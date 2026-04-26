@@ -39,6 +39,17 @@ namespace ForeverEngine.Procedural.Editor
         [MenuItem("Forever Engine/Bake/Full Pipeline Rebuild")]
         public static void RunMenu() => Run();
 
+        // Convenience batchmode entry: forces PropSourceSelector to synthetic
+        // before running the full pipeline. Use when Gaia-authored placements
+        // are sparse / tree-instances unpopulated and you want forest-density
+        // synthetic content for a playtest.
+        public static void RunSynthetic()
+        {
+            PropSourceSelector.UseGaiaAuthored = false;
+            Debug.Log("[FullPipelineRebuild] PropSourceSelector forced to Synthetic for this run.");
+            Run();
+        }
+
         public static void Run()
         {
             var sw = System.Diagnostics.Stopwatch.StartNew();
