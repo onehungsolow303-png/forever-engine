@@ -49,6 +49,7 @@ namespace ForeverEngine.Bridges
             var go = new GameObject(GameObjectName);
             go.AddComponent<GaiaRuntimeBridge>();
             UnityEngine.Object.DontDestroyOnLoad(go);
+            UnityEngine.Debug.Log($"[ATMO-DIAG] GaiaRuntimeBridge spawned (DontDestroyOnLoad)");
         }
 
         private void Awake()
@@ -74,6 +75,7 @@ namespace ForeverEngine.Bridges
         public void Apply(Dictionary<string, object> atmo)
         {
             if (atmo == null || atmo.Count == 0) return;
+            UnityEngine.Debug.Log($"[ATMO-DIAG] Bridge.Apply running with {atmo.Count} fields: {string.Join(",", atmo.Keys)}");
 
             // ----- Sun (works without PW Sky) -----
             float? sunPitch = TryFloat(atmo, "sun_pitch_deg");

@@ -275,12 +275,15 @@ namespace ForeverEngine.Network
         // fires sparingly.
         private void OnAtmosphericsUpdate(AtmosphericsUpdateMessage msg)
         {
+            Debug.Log($"[ATMO-DIAG] OnAtmosphericsUpdate fired: tick={msg.ServerTick} sunPitch={msg.SunPitchDeg} skyExp={msg.SkyboxExposure} transition={msg.TransitionSeconds}");
+
             var bridgeGO = GameObject.Find(BridgeGameObjectName);
             if (bridgeGO == null)
             {
                 Debug.LogWarning($"[ConnectionManager] AtmosphericsUpdate received but no '{BridgeGameObjectName}' in scene; ignoring");
                 return;
             }
+            Debug.Log($"[ATMO-DIAG] Bridge GameObject found, dispatching SendMessage('Apply', dict)");
 
             var dict = new Dictionary<string, object>(11);
             if (msg.SunPitchDeg.HasValue)       dict["sun_pitch_deg"]       = msg.SunPitchDeg.Value;
