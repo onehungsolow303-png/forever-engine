@@ -1,12 +1,24 @@
 using System.Collections.Generic;
+using System.IO;
 using UnityEngine;
 using ForeverEngine.Core.World;
+using ForeverEngine.Core.World.Baked;
+using ForeverEngine.Procedural;
 
 namespace ForeverEngine.World.Voxel
 {
     public sealed class VoxelWorldManager : UnityEngine.MonoBehaviour
     {
         public Material voxelMaterial;
+
+        [UnityEngine.Tooltip("Render baked Unity Terrain + tree instances for tiles overlapping streamed chunks. Sub C runtime-bake-extension.")]
+        public bool RenderBakedTiles = true;
+
+        [UnityEngine.Tooltip("Where the baked planet lives. Falls back to StreamingAssets if missing.")]
+        public string BakedLayerDir = "C:/Dev/.shared/baked/planet/layer_0";
+
+        [UnityEngine.Tooltip("Sub C visual-test mode: retain every known baked tile on Start so the world is visible without a running server. Default OFF — production drives tiles via streamed chunk arrivals.")]
+        public bool LoadAllBakedTilesOnStart = false;
 
         /// <summary>
         /// Max chunks meshed into Unity Meshes per Update frame. Higher = faster
@@ -36,6 +48,11 @@ namespace ForeverEngine.World.Voxel
             }
         }
         private VoxelChunkRenderer _renderer;
+        private BakedTerrainTileRenderer _bakedTileRenderer;
+        private BakedTreeInstanceRenderer _bakedTreeRenderer;
+        private BakedLayerIndex _bakedIndex;
+        private HashSet<(int, int)> _bakedTileSet;
+        private int _chunksPerTile;
 
         private void EnsureStreamer()
         {
@@ -66,6 +83,75 @@ namespace ForeverEngine.World.Voxel
                 }
             }
             _renderer = new VoxelChunkRenderer(transform, voxelMaterial, renderMeshes: RenderMeshes);
+
+            if (RenderBakedTiles) TryInitBakedTileRenderer();
+        }
+
+        void Start()
+        {
+            if (LoadAllBakedTilesOnStart && _bakedTileSet != null)
+            {
+                foreach (var (tx, tz) in _bakedTileSet)
+                {
+                    _bakedTileRenderer?.RetainTile(tx, tz);
+                    _bakedTreeRenderer?.RetainTile(tx, tz);
+                }
+                Debug.Log($"[VoxelWorldManager] retained all {_bakedTileSet.Count} baked tile(s) for visual test mode");
+                PositionMainCameraOverWorldCenter();
+            }
+        }
+
+        private void PositionMainCameraOverWorldCenter()
+        {
+            if (_bakedIndex.Tiles == null) return;
+            float worldMinX = _bakedIndex.Origin.X + _bakedIndex.Grid.MinTileX * _bakedIndex.TileSize;
+            float worldMinZ = _bakedIndex.Origin.Z + _bakedIndex.Grid.MinTileZ * _bakedIndex.TileSize;
+            float worldMaxX = _bakedIndex.Origin.X + (_bakedIndex.Grid.MaxTileX + 1) * _bakedIndex.TileSize;
+            float worldMaxZ = _bakedIndex.Origin.Z + (_bakedIndex.Grid.MaxTileZ + 1) * _bakedIndex.TileSize;
+            float centerX = (worldMinX + worldMaxX) * 0.5f;
+            float centerZ = (worldMinZ + worldMaxZ) * 0.5f;
+            float worldSpanX = worldMaxX - worldMinX;
+            float worldSpanZ = worldMaxZ - worldMinZ;
+            float span = Mathf.Max(worldSpanX, worldSpanZ);
+            var cam = Camera.main;
+            if (cam == null) return;
+            cam.transform.position = new Vector3(centerX, span * 0.6f, centerZ - span * 0.6f);
+            cam.transform.LookAt(new Vector3(centerX, 0f, centerZ));
+            cam.farClipPlane = Mathf.Max(cam.farClipPlane, span * 4f);
+            Debug.Log($"[VoxelWorldManager] camera positioned at {cam.transform.position} looking at center ({centerX},{centerZ}); world bounds X[{worldMinX}..{worldMaxX}] Z[{worldMinZ}..{worldMaxZ}]");
+        }
+
+        private void TryInitBakedTileRenderer()
+        {
+            string layerDir = BakedLayerDir;
+            if (!File.Exists(Path.Combine(layerDir, "index.json")))
+                layerDir = Path.Combine(Application.streamingAssetsPath, "baked", "planet", "layer_0");
+            if (!File.Exists(Path.Combine(layerDir, "index.json")))
+            {
+                Debug.LogWarning("[VoxelWorldManager] no baked layer index found; baked tile/tree rendering disabled");
+                return;
+            }
+            BakedLayerIndex index;
+            try { index = BakedWorldReader.LoadLayerIndex(layerDir); }
+            catch (System.Exception e) { Debug.LogError($"[VoxelWorldManager] LoadLayerIndex failed: {e.Message}"); return; }
+
+            var registry = BakedAssetRegistry.Load();
+            _bakedIndex = index;
+            _bakedTileSet = new HashSet<(int, int)>();
+            foreach (var t in index.Tiles ?? System.Array.Empty<BakedLayerTileEntry>())
+                _bakedTileSet.Add((t.TileX, t.TileZ));
+            _chunksPerTile = Mathf.Max(1, Mathf.RoundToInt(index.TileSize / ChunkCoord3D.SizeMeters));
+
+            _bakedTileRenderer = new BakedTerrainTileRenderer(transform, layerDir, index, registry);
+            _bakedTreeRenderer = new BakedTreeInstanceRenderer(layerDir, index, registry);
+            Debug.Log($"[VoxelWorldManager] baked tile renderer ready: {_bakedTileSet.Count} tile(s), {_chunksPerTile} chunks/tile, registry={(registry != null ? "yes" : "MISSING")}");
+        }
+
+        private (int tx, int tz) ChunkToTile(ChunkCoord3D coord)
+        {
+            int tx = Mathf.FloorToInt((float)coord.X / _chunksPerTile);
+            int tz = Mathf.FloorToInt((float)coord.Z / _chunksPerTile);
+            return (tx, tz);
         }
 
         void OnDestroy()
@@ -83,6 +169,8 @@ namespace ForeverEngine.World.Voxel
             // the initial ~441-chunk subscription burst.
             if (_pendingSet.Add(coord))
                 _pendingArrived.Add(coord);
+
+            RetainBakedTileFor(coord);
         }
 
         private void OnDeparted(ChunkCoord3D coord)
@@ -93,9 +181,33 @@ namespace ForeverEngine.World.Voxel
                 _pendingArrived.Remove(coord);
             else
                 _renderer?.OnDeparted(coord);
+
+            ReleaseBakedTileFor(coord);
         }
 
-        void Update() => DrainPending();
+        private void RetainBakedTileFor(ChunkCoord3D coord)
+        {
+            if (_bakedTileSet == null) return;
+            var (tx, tz) = ChunkToTile(coord);
+            if (!_bakedTileSet.Contains((tx, tz))) return;
+            _bakedTileRenderer?.RetainTile(tx, tz);
+            _bakedTreeRenderer?.RetainTile(tx, tz);
+        }
+
+        private void ReleaseBakedTileFor(ChunkCoord3D coord)
+        {
+            if (_bakedTileSet == null) return;
+            var (tx, tz) = ChunkToTile(coord);
+            if (!_bakedTileSet.Contains((tx, tz))) return;
+            _bakedTileRenderer?.ReleaseTile(tx, tz);
+            _bakedTreeRenderer?.ReleaseTile(tx, tz);
+        }
+
+        void Update()
+        {
+            DrainPending();
+            _bakedTreeRenderer?.Render();
+        }
 
         /// <summary>
         /// Drains up to <see cref="MaxMeshBuildsPerFrame"/> queued chunks from the

@@ -6,6 +6,12 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
+    path: Assets/Scenes/SubCVisualTest.unity
+    guid: 8daf0131aca73d847b9e01843675a6f8
+  - enabled: 1
+    path: Assets/Scenes/GaiaWorld_Alpine_Meadow_Medium.unity
+    guid: 7956585cfe3afb847829bb9c54801f3f
+  - enabled: 1
     path: Assets/Scenes/MainMenu.unity
     guid: 1bbb046f078e8954c9cca4f2c856d91d
   - enabled: 1
@@ -17,5 +23,8 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/DungeonExploration.unity
     guid: 046a0b6141b3ddf4b8c35a66933fa4ad
+  - enabled: 1
+    path: Assets/Scenes/GaiaWorld_Coniferous_Forest_Medium.unity
+    guid: 630e04324194dae4e97004b7998eafa8
   m_configObjects:
     com.unity.dt.app-ui: {fileID: 11400000, guid: 1b1c20d82303e4b5781c3ef50ac1449f, type: 2}

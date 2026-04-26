@@ -1,0 +1,58 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b40996b86b2abf0438c55f9bd2cbeec8, type: 3}
+  m_Name: BakedAssetRegistry
+  m_EditorClassIdentifier: ForeverEngine::ForeverEngine.Procedural.BakedAssetRegistry
+  TerrainLayers:
+  - Guid: 8f64e32e9332ec041b8248bbef8f9a55
+    Layer: {fileID: 8574412962073106934, guid: 8f64e32e9332ec041b8248bbef8f9a55, type: 2}
+  - Guid: f566b43c35f2679428a9a10e65a10432
+    Layer: {fileID: 8574412962073106934, guid: f566b43c35f2679428a9a10e65a10432, type: 2}
+  - Guid: a2c736459aa8697448733c87f499f189
+    Layer: {fileID: 8574412962073106934, guid: a2c736459aa8697448733c87f499f189, type: 2}
+  - Guid: f8b0b26bea463f9418990a32a530dad5
+    Layer: {fileID: 8574412962073106934, guid: f8b0b26bea463f9418990a32a530dad5, type: 2}
+  - Guid: bc18327a1a035ea4387fb0294c77800a
+    Layer: {fileID: 8574412962073106934, guid: bc18327a1a035ea4387fb0294c77800a, type: 2}
+  - Guid: 866cfdef9afb5064bbb84dc7ec43b476
+    Layer: {fileID: 8574412962073106934, guid: 866cfdef9afb5064bbb84dc7ec43b476, type: 2}
+  - Guid: b9af229d0bbdd5e40afd92450702b4fc
+    Layer: {fileID: 8574412962073106934, guid: b9af229d0bbdd5e40afd92450702b4fc, type: 2}
+  - Guid: e652f05b9e6d3c843b271461b51e66fc
+    Layer: {fileID: 8574412962073106934, guid: e652f05b9e6d3c843b271461b51e66fc, type: 2}
+  TreePrefabs:
+  - Guid: 7f88b0ba2baaef0488923234242ff152
+    Prefab: {fileID: 7441485611270874908, guid: 7f88b0ba2baaef0488923234242ff152, type: 3}
+  - Guid: eb24491611266984e80a94a0cbfdc8ad
+    Prefab: {fileID: 8027248633461390152, guid: eb24491611266984e80a94a0cbfdc8ad, type: 3}
+  - Guid: 0af82a2ab0505bb4b9c279fc7e27eeea
+    Prefab: {fileID: 6847023277904564872, guid: 0af82a2ab0505bb4b9c279fc7e27eeea, type: 3}
+  - Guid: a4cb8c2a723ad6c4998e2c6a4ace99ca
+    Prefab: {fileID: 6847023277904564872, guid: a4cb8c2a723ad6c4998e2c6a4ace99ca, type: 3}
+  - Guid: 806ae63954eadcc47a63c8b13344395d
+    Prefab: {fileID: 4599972849490057345, guid: 806ae63954eadcc47a63c8b13344395d, type: 3}
+  - Guid: 801fadc30479164409b1e3a3c3e8b012
+    Prefab: {fileID: 3942898020487455799, guid: 801fadc30479164409b1e3a3c3e8b012, type: 3}
+  - Guid: 779801c6aceddbc4bbe1179f4dfab601
+    Prefab: {fileID: 122765203016455862, guid: 779801c6aceddbc4bbe1179f4dfab601, type: 3}
+  - Guid: 943e9fc65625b7f4a8a34cfe75a890d9
+    Prefab: {fileID: 648203257425947960, guid: 943e9fc65625b7f4a8a34cfe75a890d9, type: 3}
+  - Guid: ed035562929f56d4eb82f3f4effc1166
+    Prefab: {fileID: 3803426106304524782, guid: ed035562929f56d4eb82f3f4effc1166, type: 3}
+  - Guid: 9e42153ee58d32041b031ccf0de992da
+    Prefab: {fileID: 3926372882901288413, guid: 9e42153ee58d32041b031ccf0de992da, type: 3}
+  - Guid: f333f387e796ad04f812a0fd86ae297e
+    Prefab: {fileID: 4495520582882520621, guid: f333f387e796ad04f812a0fd86ae297e, type: 3}
+  - Guid: 9180e419bfc0c234586abfdafb4937ac
+    Prefab: {fileID: 1120019319886688430, guid: 9180e419bfc0c234586abfdafb4937ac, type: 3}
+  - Guid: 45eec54989fb50d4ab7abae72337ee6d
+    Prefab: {fileID: 6115922682010128875, guid: 45eec54989fb50d4ab7abae72337ee6d, type: 3}
