@@ -43,6 +43,7 @@ namespace ForeverEngine.Bridges
         [JsonProperty("repetition_penalty")] public int? RepetitionPenalty;
         [JsonProperty("deterministic_fallback")] public bool? DeterministicFallback;
         [JsonProperty("encounter_template")] public Dictionary<string, object> EncounterTemplate;
+        [JsonProperty("atmospherics")] public Dictionary<string, object> Atmospherics;
     }
 
     // from selection.schema.json

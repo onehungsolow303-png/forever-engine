@@ -1,0 +1,16 @@
+{
+    "name": "ForeverEngine.Bridges.Gaia",
+    "rootNamespace": "ForeverEngine.Bridges",
+    "references": [
+        "GaiaCore"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
