@@ -11,16 +11,18 @@ namespace ForeverEngine.Editor.RPG
         private const string WeaponDir = "Assets/Resources/RPG/Content/Weapons";
         private const string ArmorDir = "Assets/Resources/RPG/Content/Armor";
 
-        // Shorthand aliases
-        private const WeaponProperty Fin = WeaponProperty.Finesse;
-        private const WeaponProperty Hvy = WeaponProperty.Heavy;
-        private const WeaponProperty Lgt = WeaponProperty.Light;
-        private const WeaponProperty Thr = WeaponProperty.Thrown;
-        private const WeaponProperty Two = WeaponProperty.TwoHanded;
-        private const WeaponProperty Ver = WeaponProperty.Versatile;
-        private const WeaponProperty Rch = WeaponProperty.Reach;
-        private const WeaponProperty Lod = WeaponProperty.Loading;
-        private const WeaponProperty Amm = WeaponProperty.Ammunition;
+        // Shorthand aliases — `static readonly` instead of `const` to sidestep
+        // a Unity 6 Entities IL post-processor bug (Mono.Cecil GetConstantType
+        // fails to resolve cross-assembly enum types declared as constants).
+        private static readonly WeaponProperty Fin = WeaponProperty.Finesse;
+        private static readonly WeaponProperty Hvy = WeaponProperty.Heavy;
+        private static readonly WeaponProperty Lgt = WeaponProperty.Light;
+        private static readonly WeaponProperty Thr = WeaponProperty.Thrown;
+        private static readonly WeaponProperty Two = WeaponProperty.TwoHanded;
+        private static readonly WeaponProperty Ver = WeaponProperty.Versatile;
+        private static readonly WeaponProperty Rch = WeaponProperty.Reach;
+        private static readonly WeaponProperty Lod = WeaponProperty.Loading;
+        private static readonly WeaponProperty Amm = WeaponProperty.Ammunition;
 
         [MenuItem("Forever Engine/RPG/Generate Equipment")]
         public static void GenerateAll()

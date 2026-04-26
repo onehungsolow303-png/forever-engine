@@ -9,17 +9,20 @@ namespace ForeverEngine.Editor.RPG
     {
         private const string Dir = "Assets/Resources/RPG/Content/Spells";
 
-        // Shorthand aliases
-        private const ClassFlag War = ClassFlag.Warrior;
-        private const ClassFlag Wiz = ClassFlag.Wizard;
-        private const ClassFlag Rog = ClassFlag.Rogue;
-        private const ClassFlag Clr = ClassFlag.Cleric;
-        private const ClassFlag Dru = ClassFlag.Druid;
-        private const ClassFlag Brd = ClassFlag.Bard;
-        private const ClassFlag Rng = ClassFlag.Ranger;
-        private const ClassFlag Pal = ClassFlag.Paladin;
-        private const ClassFlag Sor = ClassFlag.Sorcerer;
-        private const ClassFlag Wlk = ClassFlag.Warlock;
+        // Shorthand aliases — `static readonly` instead of `const` to sidestep
+        // a Unity 6 Entities IL post-processor bug (Mono.Cecil GetConstantType
+        // fails on cross-assembly enum constants). See
+        // feedback_unity6_const_enum_il_postprocessor.md.
+        private static readonly ClassFlag War = ClassFlag.Warrior;
+        private static readonly ClassFlag Wiz = ClassFlag.Wizard;
+        private static readonly ClassFlag Rog = ClassFlag.Rogue;
+        private static readonly ClassFlag Clr = ClassFlag.Cleric;
+        private static readonly ClassFlag Dru = ClassFlag.Druid;
+        private static readonly ClassFlag Brd = ClassFlag.Bard;
+        private static readonly ClassFlag Rng = ClassFlag.Ranger;
+        private static readonly ClassFlag Pal = ClassFlag.Paladin;
+        private static readonly ClassFlag Sor = ClassFlag.Sorcerer;
+        private static readonly ClassFlag Wlk = ClassFlag.Warlock;
 
         [MenuItem("Forever Engine/RPG/Generate Spells")]
         public static void GenerateAll()
@@ -414,10 +417,13 @@ namespace ForeverEngine.Editor.RPG
         }
 
         /// <summary>Leveled spell with attack roll damage.</summary>
+        // NOTE: enum default params use Nullable<T> + ?? sidestep instead of `= EnumValue`
+        // because Unity 6 Entities IL post-processor (Mono.Cecil GetConstantType) crashes
+        // on cross-assembly enum constants. See feedback_unity6_const_enum_il_postprocessor.md.
         private static SpellData DmgSpell(string id, string name, int level, SpellSchool school,
             int diceCount, DieType die, DamageType dmgType, int range, bool spellAttack,
-            ClassFlag classes, Ability save = Ability.STR,
-            int upDice = 0, DieType upDie = DieType.D4,
+            ClassFlag classes, Ability? save = null,
+            int upDice = 0, DieType? upDie = null,
             bool conc = false, string duration = "instantaneous")
         {
             var s = ScriptableObject.CreateInstance<SpellData>();
@@ -427,8 +433,8 @@ namespace ForeverEngine.Editor.RPG
             s.Duration = duration; s.Concentration = conc;
             s.DamageDiceCount = diceCount; s.DamageDie = die; s.DamageType = dmgType;
             s.SpellAttack = spellAttack;
-            if (!spellAttack) { s.HasSave = true; s.SaveType = save; }
-            s.UpcastDamageDiceCount = upDice; s.UpcastDamageDie = upDie;
+            if (!spellAttack) { s.HasSave = true; s.SaveType = save ?? Ability.STR; }
+            s.UpcastDamageDiceCount = upDice; s.UpcastDamageDie = upDie ?? DieType.D4;
             s.Classes = classes;
             return s;
         }
@@ -437,7 +443,7 @@ namespace ForeverEngine.Editor.RPG
         private static SpellData SaveAoE(string id, string name, int level, SpellSchool school,
             int diceCount, DieType die, DamageType dmgType, int range, Ability save,
             AoEShape shape, int areaSize, ClassFlag classes,
-            int upDice = 0, DieType upDie = DieType.D4)
+            int upDice = 0, DieType? upDie = null)
         {
             var s = ScriptableObject.CreateInstance<SpellData>();
             s.Id = id; s.Name = name; s.Level = level; s.School = school;
@@ -447,7 +453,7 @@ namespace ForeverEngine.Editor.RPG
             s.DamageDiceCount = diceCount; s.DamageDie = die; s.DamageType = dmgType;
             s.HasSave = true; s.SaveType = save;
             s.AreaShape = shape; s.AreaSize = areaSize;
-            s.UpcastDamageDiceCount = upDice; s.UpcastDamageDie = upDie;
+            s.UpcastDamageDiceCount = upDice; s.UpcastDamageDie = upDie ?? DieType.D4;
             s.Classes = classes;
             return s;
         }
@@ -536,14 +542,15 @@ namespace ForeverEngine.Editor.RPG
         /// <summary>Concentration utility/buff spell.</summary>
         private static SpellData ConcSpell(string id, string name, int level, SpellSchool school,
             int range, string duration, ClassFlag classes,
-            Ability save = Ability.STR, Condition condition = Condition.None, int condDuration = 0)
+            Ability? save = null, Condition? condition = null, int condDuration = 0)
         {
             var s = UtilitySpell(id, name, level, school, range, duration, true, classes);
-            if (condition != Condition.None)
+            var actualCondition = condition ?? Condition.None;
+            if (actualCondition != Condition.None)
             {
                 s.HasSave = true;
-                s.SaveType = save;
-                s.AppliesCondition = condition;
+                s.SaveType = save ?? Ability.STR;
+                s.AppliesCondition = actualCondition;
                 s.ConditionDuration = condDuration;
             }
             return s;
@@ -553,7 +560,7 @@ namespace ForeverEngine.Editor.RPG
         private static SpellData ConditionSpell(string id, string name, int level, SpellSchool school,
             int range, string duration, ClassFlag classes,
             Condition condition, int condDuration,
-            Ability save = Ability.WIS)
+            Ability? save = null)
         {
             var s = ScriptableObject.CreateInstance<SpellData>();
             s.Id = id; s.Name = name; s.Level = level; s.School = school;
@@ -561,7 +568,7 @@ namespace ForeverEngine.Editor.RPG
             s.Verbal = true; s.Somatic = true; s.Material = true;
             s.Duration = duration;
             s.Concentration = duration.StartsWith("concentration");
-            s.HasSave = true; s.SaveType = save;
+            s.HasSave = true; s.SaveType = save ?? Ability.WIS;
             s.AppliesCondition = condition;
             s.ConditionDuration = condDuration;
             s.Classes = classes;
