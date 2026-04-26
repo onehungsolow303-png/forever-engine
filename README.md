@@ -89,7 +89,7 @@ Both exit `0` on pass, `1` on failure.
 - `Assets/Scripts/Demo/AI/DirectorEvents.cs` — fire-and-forget gameplay → Director event bridge
 - `Assets/Scripts/Demo/UI/DialoguePanel.cs` — UI Toolkit dialogue overlay routing player text through Director Hub
 - `Assets/Scripts/AI/Inference/InferenceEngine.cs` — Sentis ONNX wrapper (per-frame, in-engine)
-- `Assets/Scripts/AI/Learning/QLearner.cs` — pure Q-learning (per-decision, in-engine)
+- `Assets/Scripts/Demo/Battle/AIBehavior.cs` — deterministic combat behavior tree (replaced Q-learning 2026-04-16)
 - `Assets/Scripts/AI/SelfHealing/{SystemMonitor,FaultBoundary,AssetFaultHandler,PerformanceRegulator}.cs` — runtime fault graph
 
 ## Pre-pivot archive

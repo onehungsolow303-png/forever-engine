@@ -58,7 +58,9 @@ Pre-pivot brain code (archived): `C:\Dev\_archive\forever-engine-pre-pivot\`
 - `Assets/Scripts/Demo/GameManager.cs` — Singleton wiring the bridge clients into the demo
 - `Assets/Scripts/AI/Inference/InferenceEngine.cs` — Sentis ONNX wrapper (per-frame, in-engine)
 - `Assets/Scripts/AI/Inference/InferenceScheduler.cs` — Per-frame ms-budget batched inference with PerformanceRegulator feedback
-- `Assets/Scripts/AI/Learning/QLearner.cs` — Pure Q-learning algorithm (per-decision, in-engine)
+- `Assets/Scripts/Demo/Battle/AIBehavior.cs` — deterministic combat behavior tree (Advance/Attack/Retreat/Flank/Hold/RangedAttack/ProtectAlly). Replaced Q-learning on 2026-04-16; Q-learning files (QLearner/QTableStore/SelfPlayTrainer/CombatBrain) were deleted.
+- `Assets/Scripts/ECS/Components/AIBehaviorComponent.cs` — ECS-side combat AI component
+- `Assets/Scripts/AI/Learning/DynamicDifficulty.cs` — runtime difficulty scaling (only file remaining in `AI/Learning/`)
 - `Assets/Scripts/AI/SelfHealing/{SystemMonitor,FaultBoundary,AssetFaultHandler,PerformanceRegulator}.cs` — Runtime fault graph
 
 ## 3D Engine Transition (2026-04-09)
@@ -85,7 +87,7 @@ The voxel infrastructure (VoxelWorldManager + VoxelChunkStreamer + VoxelChunkRen
 
 ### Systems Added 2026-04-13
 
-- **Combat AI State Space B** (`CombatBrain.cs`) — 1296 states (3×3×3×3×2×2×2×2), 7 actions including UseAbility (ranged) and ProtectAlly
+- **Combat AI** — `AIBehavior.cs` deterministic behavior tree (Advance / Attack / Retreat / Flank / Hold / RangedAttack / ProtectAlly) selecting actions from distance + HP + per-enemy behavior tag. The earlier `CombatBrain.cs` 1296-state Q-learning system was deleted on 2026-04-16; its 7-action vocabulary survives in `AIBehavior`. Encounter-level adaptation is delegated to Director Hub's LLM via server-side `DirectorBridge`.
 - **Seamless Battle Zones** (`BattleZone.cs`) — Per-enemy 8×8 grids replacing scene-based arenas
 - **Room Decoration** (`RoomDecorator.cs` + `RoomCatalog.cs`) — Post-build prop placement from asset packs
 - **Atmosphere System** (`AtmosphereSetup.cs`) — URP post-processing (bloom, tonemapping, color grading, vignette, fog)
@@ -102,8 +104,6 @@ The voxel infrastructure (VoxelWorldManager + VoxelChunkStreamer + VoxelChunkRen
 - **Procedural Animation** (`ModelAnimator.cs`) — Transform-based animations on all combat models: idle bob, attack lunge, hit recoil, death topple.
 - **Audio System** — `SoundManager.cs` wired to `AudioConfig.asset` (auto-populated by `AudioPopulator.cs` editor script).
 - **Combat VFX** — Procedural `ParticleSystem` bursts in `BattleEffects.cs` for hit (white) and death (dark red) effects.
-- **Q-Table Persistence** (`QTableStore.cs`) — Saves Q-learning tables to `Application.persistentDataPath/qtable_combat.json` with episode counting. Exploration rate decays with training maturity.
-- **Self-Play Trainer** (`SelfPlayTrainer.cs`) — Editor script: "Forever Engine → Train Combat AI (500/2000 battles)". Headless battle simulation for pre-training.
 - **Save/Load Hardening** — Inventory serialization (parallel arrays), ModelId, MaxHunger/MaxThirst, DungeonState persistence, SaveVersion field for future migration.
 - **17 Encounter Templates** — Up from 7. Spiders, treants, necromancers, mimics, gnolls, wraiths, cursed knights, and more across forest/dungeon/plains/ruins biomes.
 - **Standalone Build** (`StandaloneBuild.cs`) — "Forever Engine → Build Standalone (Windows)" or batchmode `-executeMethod ForeverEngine.Editor.StandaloneBuild.Build`.
@@ -114,7 +114,6 @@ The voxel infrastructure (VoxelWorldManager + VoxelChunkStreamer + VoxelChunkRen
 - **Forever Engine → Create Missing Assets** — creates GameConfig, RoomCatalog, DungeonNPCConfig SOs
 - **Forever Engine → Create Dungeon Exploration Scene** — generates the dungeon scene
 - **Forever Engine → Populate Audio Config** — discovers pack audio clips and assigns to AudioConfig SO
-- **Forever Engine → Train Combat AI (500/2000 battles)** — headless self-play pre-training
 - **Forever Engine → Build Standalone (Windows)** — builds to `Builds/ShatteredKingdom/ShatteredKingdom.exe`
 
 ## Boot sequence

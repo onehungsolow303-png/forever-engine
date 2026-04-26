@@ -1,3 +1,5 @@
+> ⚠️ **HISTORICAL — Q-learning superseded 2026-04-16, scope-correction revoked 2026-04-26.** This document references Q-learning (`QLearner.cs`, `QTableStore.cs`, `SelfPlayTrainer.cs`, `CombatBrain.cs`) as part of its design. Those files were deleted on 2026-04-16; combat AI is now deterministic `AIBehavior` (behavior tree). See `~/.claude/projects/C--Dev/game_dev_tracker/golden_standard.md` (Combat section) and pivot `q-learning-scope-correction-revoked` for the canonical state. Treat this file as historical only.
+
 # 3D Engine Continuation Implementation Plan
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
