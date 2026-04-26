@@ -41,10 +41,13 @@ namespace ForeverEngine.Editor.Tests
                 if (bridge == null) { FAIL("AddComponent returned null"); return; }
                 OK("Bridge instantiated as MonoBehaviour");
 
-                // Awake doesn't fire on AddComponent in edit-mode (only at scene load /
-                // play-mode start). In production, Awake runs and sets Instance. To
-                // test the singleton path here we invoke it manually.
-                bridge.SendMessage("Awake", SendMessageOptions.DontRequireReceiver);
+                // Awake doesn't fire on AddComponent in edit-mode (only at scene load
+                // / play-mode start). In production, Awake runs and sets Instance.
+                // SendMessage("Awake") triggers ShouldRunBehaviour assertion in edit
+                // mode — use reflection instead to invoke the private method directly.
+                var awake = typeof(GaiaRuntimeBridge).GetMethod("Awake",
+                    System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic);
+                awake?.Invoke(bridge, null);
                 if (GaiaRuntimeBridge.Instance == bridge) OK("Instance singleton set after manual Awake");
                 else FAIL($"Instance not set ({GaiaRuntimeBridge.Instance})");
 
