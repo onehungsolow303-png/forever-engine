@@ -41,4 +41,5 @@
   <Project Path="Gaia.UnityURPWater.Editor.csproj" />
   <Project Path="WaveHarmonic.Crest.Editor.Dependents.csproj" />
   <Project Path="DungeonArchitect.Modules.Meshing.csproj" />
+  <Project Path="ForeverEngine.Bridges.Gaia.csproj" />
 </Solution>
