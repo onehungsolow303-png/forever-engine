@@ -296,11 +296,14 @@ namespace ForeverEngine.Procedural
                 UnityEngine.Object.DontDestroyOnLoad(panelGO);
             }
 
-            // Spec 7 Phase 3 Task 8: F-key debug dungeon entry.
-            if (UnityEngine.Object.FindFirstObjectByType<ForeverEngine.Procedural.DungeonEntryInput>() == null)
-            {
-                new GameObject("DungeonEntryInput").AddComponent<ForeverEngine.Procedural.DungeonEntryInput>();
-            }
+            // Spec 7 Phase 3 Task 8: F-key debug dungeon entry — DISABLED.
+            // Scope is planet-only until the world is finished. F was triggering
+            // an unintended scene swap into DungeonExploration.unity during planet
+            // playtests. Re-enable when dungeon work resumes.
+            // if (UnityEngine.Object.FindFirstObjectByType<ForeverEngine.Procedural.DungeonEntryInput>() == null)
+            // {
+            //     new GameObject("DungeonEntryInput").AddComponent<ForeverEngine.Procedural.DungeonEntryInput>();
+            // }
         }
 
         /// <summary>
