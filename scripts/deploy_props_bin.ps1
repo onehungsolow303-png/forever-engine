@@ -57,6 +57,28 @@ $startStamp = Get-Date -Format "yyyy-MM-dd HH:mm:ss"
 Write-Host "[deploy_props_bin] ===== $startStamp =====" -ForegroundColor Cyan
 
 # ---------------------------------------------------------------------------
+# Step 0: Stitch tile heightmaps in place.
+#
+# Gaia bakes adjacent terrain tiles independently and produces 20-60m vertical
+# steps along shared boundaries (gaia-architecture skill Bug #34, source root
+# cause unverified). Run scripts/stitch_baked_heightmaps.py to average shared
+# edges + heal sub-1m anomaly cells before pushing. Mandatory pre-deploy until
+# a bake-time stitch lands.
+# ---------------------------------------------------------------------------
+function Invoke-StitchHeightmaps {
+    Write-Host "[deploy_props_bin] Step 0/5: stitch tile heightmaps"
+    $stitchScript = Join-Path $PSScriptRoot "stitch_baked_heightmaps.py"
+    if (-not (Test-Path $stitchScript)) {
+        throw "[deploy_props_bin] stitch script missing: $stitchScript"
+    }
+    & python $stitchScript --layer-dir $LocalRoot
+    if ($LASTEXITCODE -ne 0) {
+        throw "[deploy_props_bin] stitch failed (exit $LASTEXITCODE)."
+    }
+    Write-Host "[deploy_props_bin]   stitch complete"
+}
+
+# ---------------------------------------------------------------------------
 # Step 1: Validate local artifacts.
 # ---------------------------------------------------------------------------
 function Assert-LocalArtifactsReady {
@@ -180,6 +202,7 @@ function Wait-ForFreshHealth {
 # Run.
 # ---------------------------------------------------------------------------
 try {
+    Invoke-StitchHeightmaps
     $totalBytes = Assert-LocalArtifactsReady
     Copy-ToServer
     Assert-RemoteSizeMatches -expectedBytes $totalBytes
