@@ -52,7 +52,6 @@ namespace ForeverEngine.Procedural.Editor
             // --- STAMPER (terrain heightmap tooling, never prop spawning) ---
             (new[] { "mega stamp" },                                       PackRole.StamperOnly,         Array.Empty<BiomeType>()),
             (new[] { "gaia user data" },                                   PackRole.StamperOnly,         Array.Empty<BiomeType>()),
-            (new[] { "procedural worlds" },                                PackRole.StamperOnly,         Array.Empty<BiomeType>()),
 
             // --- OUTDOOR (the allowlist — only these feed the biome catalog) ---
             // NatureManufacture Assets is a meta-pack: Meadow / Winter Forest /
@@ -60,6 +59,22 @@ namespace ForeverEngine.Procedural.Editor
             // Broad biome coverage so the one pack can serve whatever biome the
             // tile sampler picks.
             (new[] { "naturemanufacture" },                                PackRole.OutdoorBiomeContent, new[]
+            {
+                BiomeType.Grassland,
+                BiomeType.TemperateForest,
+                BiomeType.BorealForest,
+                BiomeType.Taiga,
+                BiomeType.Mountain,
+            }),
+
+            // Procedural Worlds — Gaia Pro biome packs (Gaia Pro Assets and Biomes)
+            // ship their own GameObject prototypes (PW Stumps, Stones, Particles,
+            // AudioZones) that biome spawners place into the scene at bake time.
+            // MacroBake serializes those into props.bin → registry must include
+            // them or BakedPropRenderer logs every placement as a miss (the
+            // PrefabRegistry OUT-OF-SYNC banner). Reclassified from StamperOnly
+            // 2026-04-26 — same biome coverage as NatureManufacture above.
+            (new[] { "procedural worlds" },                                PackRole.OutdoorBiomeContent, new[]
             {
                 BiomeType.Grassland,
                 BiomeType.TemperateForest,
