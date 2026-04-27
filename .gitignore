@@ -106,6 +106,15 @@ Assets/GTS User Data/
 Assets/GTS User Data.meta
 Packages/com.waveharmonic.crest/
 
+# GTS bake artifacts in Resources/ — regenerable, large (~300MB texture arrays
+# + per-tile materials). Source-of-truth lives in Assets/GTS User Data/ which
+# is also gitignored above (under Assets/GTS User Data/). See gaia skill
+# Bugs #24-#26 for the runtime port that motivates the Resources/ copy.
+Assets/Resources/GTSProfiles/
+Assets/Resources/GTSProfiles.meta
+Assets/Resources/GTSMaterials/
+Assets/Resources/GTSMaterials.meta
+
 # Build/test artifacts at repo root (added 2026-04-26)
 /TestResults*.xml
 /proptest*.xml

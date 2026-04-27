@@ -624,9 +624,15 @@ namespace ForeverEngine.Editor.Gaia
                 return;
             }
 
-            var profilesDir = "Assets/Procedural Worlds/_GTSProfiles";
+            // Profile + texture arrays land under Assets/Resources/GTSProfiles/
+            // so the runtime BakedTerrainTileRenderer can Resources.Load them
+            // by name (matches BakedAssetRegistry / PrefabRegistry precedent;
+            // project uses Resources, not Addressables).
+            const string profilesDir = "Assets/Resources/GTSProfiles";
+            if (!AssetDatabase.IsValidFolder("Assets/Resources"))
+                AssetDatabase.CreateFolder("Assets", "Resources");
             if (!AssetDatabase.IsValidFolder(profilesDir))
-                AssetDatabase.CreateFolder("Assets/Procedural Worlds", "_GTSProfiles");
+                AssetDatabase.CreateFolder("Assets/Resources", "GTSProfiles");
             var profilePath = $"{profilesDir}/{_biomeName.Replace(' ', '_')}_{_sizeName}_GTS.asset";
 
             var profile = AssetDatabase.LoadAssetAtPath<GTSProfile>(profilePath);
@@ -661,6 +667,52 @@ namespace ForeverEngine.Editor.Gaia
             profile.UpdateProfile();
             AssetDatabase.SaveAssets();
             Log($"  GTS applied to {terrains.Length} terrain(s); profile={profilePath}");
+
+            // Copy each terrain's GTS material into Resources/ so the runtime
+            // BakedTerrainTileRenderer can Resources.Load it by tile coord.
+            // Without this the .mat lives at Assets/GTS User Data/Scenes/...
+            // which is OUTSIDE Resources/ → standalone builds render default
+            // Unity grass instead of GTS (community-reported, see gaia skill
+            // Bug #25). The runtime SO from SetRuntimeData() is already
+            // Resources-loadable because it lives next to the profile.
+            const string matsDir = "Assets/Resources/GTSMaterials";
+            if (!AssetDatabase.IsValidFolder(matsDir))
+                AssetDatabase.CreateFolder("Assets/Resources", "GTSMaterials");
+            string biomeKey = $"{_biomeName.Replace(' ', '_')}_{_sizeName}";
+            // Tile coord derivation: parse Gaia's "Terrain_<x>_<z>-<timestamp>"
+            // naming convention. Server-side baked tile_X_Y dirs use the same
+            // 0-based positive scheme — perfect alignment with what the runtime
+            // BakedTerrainTileRenderer's RetainTile(tileX, tileZ) caller passes.
+            // Position-based rounding would fail because Gaia centers tiles
+            // around world origin → negative coords for half the tiles.
+            var tilePattern = new System.Text.RegularExpressions.Regex(@"^Terrain_(\d+)_(\d+)");
+            int copied = 0;
+            foreach (var t in terrains)
+            {
+                var match = tilePattern.Match(t.name);
+                if (!match.Success)
+                {
+                    Log($"    skip mat copy for '{t.name}' — name doesn't match Terrain_X_Y");
+                    continue;
+                }
+                int tx = int.Parse(match.Groups[1].Value);
+                int tz = int.Parse(match.Groups[2].Value);
+                var srcPath = AssetDatabase.GetAssetPath(t.materialTemplate);
+                if (string.IsNullOrEmpty(srcPath))
+                {
+                    Log($"    skip mat copy for '{t.name}' — materialTemplate has no asset path");
+                    continue;
+                }
+                var dstPath = $"{matsDir}/{biomeKey}_tile_{tx}_{tz}.mat";
+                if (AssetDatabase.LoadAssetAtPath<Material>(dstPath) != null)
+                    AssetDatabase.DeleteAsset(dstPath);
+                if (AssetDatabase.CopyAsset(srcPath, dstPath))
+                    copied++;
+                else
+                    Log($"    CopyAsset failed: {srcPath} -> {dstPath}");
+            }
+            AssetDatabase.SaveAssets();
+            Log($"  GTS materials copied to Resources: {copied}/{terrains.Length}");
         }
 
         /// <summary>

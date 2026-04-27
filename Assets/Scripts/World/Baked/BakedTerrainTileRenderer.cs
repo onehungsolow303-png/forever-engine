@@ -3,6 +3,14 @@ using System.IO;
 using UnityEngine;
 using ForeverEngine.Core.World.Baked;
 
+// NOTE: do NOT add `using ProceduralWorlds.GTS;` here. This file is inside
+// `Assets/Scripts/ForeverEngine.asmdef`; GTS Core has no asmdef and lives
+// in Assembly-CSharp, which asmdef code cannot reference (gaia skill
+// Bug #17). The GTS shader globals are set by `GTSRuntimeAutoBoot.cs` at
+// `Assets/GTSRuntimeAutoBoot.cs` (root, no asmdef → Assembly-CSharp). This
+// file only loads the per-tile .mat, which is plain `UnityEngine.Material`
+// and needs no GTS namespace.
+
 namespace ForeverEngine.Procedural
 {
     /// <summary>
@@ -21,6 +29,12 @@ namespace ForeverEngine.Procedural
     {
         private const int FallbackHeightmapResolution = 65;
         private const float TileHeightMeters = 1000f;
+
+        // Hardcoded for now — Coniferous Forest Medium is the only baked biome.
+        // Lift to per-biome registry (chunk metadata → profile name) when a 2nd
+        // biome lands. Resources.Load paths derived from this key match what
+        // GaiaHeadlessPipeline.ApplyGTSToBakedTerrains writes.
+        private const string GTSBiomeKey = "Coniferous_Forest_Medium";
 
         private readonly Transform _root;
         private readonly string _layerDir;
@@ -120,14 +134,31 @@ namespace ForeverEngine.Procedural
             ApplyHeightmap(data, macro);
 
             int layerCount = macro.HighResSplatLayerCount;
-            if (layerCount > 0 && macro.HighResSplat != null && macro.HighResSplat.Length > 0)
+            bool hasSplats = layerCount > 0 && macro.HighResSplat != null && macro.HighResSplat.Length > 0;
+
+            // GTS path: per-tile .mat baked by GaiaHeadlessPipeline lives at
+            // Resources/GTSMaterials/<biomeKey>_tile_<tx>_<tz>.mat with shader,
+            // texture arrays, and per-tile aux textures all bound. The GTS
+            // shader handles its own splat sampling via the .mat's pre-baked
+            // SplatmapIndex texture, so we skip Unity's TerrainLayers system
+            // (mirrors GTSPreprocessBuild's behavior for editor-authored scenes).
+            // We ALSO skip ApplyAlphamap for the GTS path — Unity's SetAlphamaps
+            // rejects a 3D float array with non-zero layer dim when terrainLayers
+            // is null, and the GTS shader doesn't read Unity's alphamap anyway.
+            var gtsMat = LoadGTSMaterialForTile(tileX, tileZ);
+            bool useGTS = gtsMat != null;
+
+            if (!useGTS)
             {
-                ApplyTerrainLayers(data, layerCount);
-                ApplyAlphamap(data, macro, layerCount);
-            }
-            else
-            {
-                Debug.LogWarning($"[BakedTerrainTile] tile ({tileX},{tileZ}) has no high-res splat — terrain will be blank");
+                if (hasSplats)
+                {
+                    ApplyTerrainLayers(data, layerCount);
+                    ApplyAlphamap(data, macro, layerCount);
+                }
+                else
+                {
+                    Debug.LogWarning($"[BakedTerrainTile] tile ({tileX},{tileZ}) has no high-res splat — terrain will be blank");
+                }
             }
 
             var go = Terrain.CreateTerrainGameObject(data);
@@ -138,7 +169,15 @@ namespace ForeverEngine.Procedural
             var terrain = go.GetComponent<Terrain>();
             if (terrain != null)
             {
-                terrain.materialTemplate = GetOrCreateTerrainMaterial();
+                // Bug #12/#26 prevention: Unity 6 defaults cull terrain at
+                // ~1000-1500 units distance. Match the gaia skill audit floor.
+                terrain.heightmapPixelError = 5f;
+                terrain.basemapDistance = 2000f;
+
+                // GTS shader globals are set by GTSRuntimeAutoBoot (Assembly-CSharp,
+                // RuntimeInitializeOnLoadMethod) — no per-tile bootstrap call here.
+                terrain.materialTemplate = useGTS ? gtsMat : GetOrCreateTerrainMaterial();
+
                 // Let Unity Terrain draw whatever's stored in TerrainData
                 // (treeInstances + detail prototypes). For Alpine Meadow this
                 // primarily unlocks grass — 5.7M density per tile baked into
@@ -150,9 +189,18 @@ namespace ForeverEngine.Procedural
             for (int i = 0; i < macro.Heightmap.Length; i++)
             { if (macro.Heightmap[i] < minH) minH = macro.Heightmap[i]; if (macro.Heightmap[i] > maxH) maxH = macro.Heightmap[i]; }
             Debug.Log($"[BakedTerrainTile] tile ({tileX},{tileZ}) spawned at world ({go.transform.position.x},{go.transform.position.z}) " +
-                      $"heights {minH:F1}..{maxH:F1}m, layers={layerCount}");
+                      $"heights {minH:F1}..{maxH:F1}m, layers={layerCount}, mat={(useGTS ? "GTS" : "URP/Terrain/Lit")}");
             return go;
         }
+
+        /// <summary>
+        /// Per-tile GTS material baked by GaiaHeadlessPipeline.ApplyGTSToBakedTerrains.
+        /// Returns null if the tile wasn't baked with GTS or if Resources/GTSMaterials/
+        /// is empty (e.g. legacy bake without GTS post-processing) — caller then falls
+        /// back to URP/Terrain/Lit.
+        /// </summary>
+        private static Material LoadGTSMaterialForTile(int tileX, int tileZ) =>
+            Resources.Load<Material>($"GTSMaterials/{GTSBiomeKey}_tile_{tileX}_{tileZ}");
 
         /// <summary>
         /// Default Unity Terrain shader is built-in-pipeline, which renders as
