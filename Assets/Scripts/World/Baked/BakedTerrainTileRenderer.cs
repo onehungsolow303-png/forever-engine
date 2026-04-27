@@ -184,6 +184,17 @@ namespace ForeverEngine.Procedural
                 // detail layers that were previously suppressed. GameObject
                 // tree placements come through BakedPropTileRenderer instead.
                 terrain.drawTreesAndFoliage = true;
+
+                // Same class of bug as #26 (heightmapPixelError): runtime-
+                // constructed Terrains inherit Unity 6 defaults for tree LOD,
+                // which sets billboard distance to ~50m. That makes pines
+                // flatten into 2D cards immediately around the player. Saved-
+                // scene values (TreeDistance=1000, BillboardStart=90, CrossFade=50)
+                // don't propagate to Terrain.CreateTerrainGameObject. Override:
+                terrain.treeDistance              = 2000f;  // total tree render distance
+                terrain.treeBillboardDistance     = 600f;   // 3D mesh -> billboard switch (was ~50)
+                terrain.treeCrossFadeLength       = 80f;    // smooth crossfade band
+                terrain.treeMaximumFullLODCount   = 400;    // max simultaneously full-3D trees
             }
             float minH = float.MaxValue, maxH = float.MinValue;
             for (int i = 0; i < macro.Heightmap.Length; i++)
