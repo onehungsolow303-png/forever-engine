@@ -12,6 +12,16 @@ namespace ForeverEngine.Procedural.Editor
     /// </summary>
     public static class UnityTerrainSampler
     {
+        // Heightmap samplers store TRUE world Y in meters. The maxHeightMeters
+        // parameter is retained as an upper-bound sanity clamp only; values
+        // above it are clamped down. Earlier code rescaled by
+        // (world_y / size.y) * maxHeightMeters, which inflated stored values
+        // by maxHeightMeters/size.y when those differed (e.g. m_tileHeight=800
+        // in BuildConiferousMedium → 1.25x inflation), causing runtime terrain
+        // mesh to render 25% taller than reality while GaiaPlacementExtractor's
+        // tree props stayed at TRUE world Y → props rendered ~20% below the
+        // visible surface. Storing true meters keeps both axes in the same
+        // reference frame.
         public static float[] SampleHeightmap(Terrain terrain, int widthCells, int heightCells, float maxHeightMeters)
         {
             var td = terrain.terrainData;
@@ -22,8 +32,8 @@ namespace ForeverEngine.Procedural.Editor
                 {
                     float nx = (float)x / (widthCells - 1);
                     float nz = (float)z / (heightCells - 1);
-                    float normalizedHeight = td.GetInterpolatedHeight(nx, nz) / td.size.y;
-                    result[z * widthCells + x] = normalizedHeight * maxHeightMeters;
+                    float worldY = td.GetInterpolatedHeight(nx, nz);
+                    result[z * widthCells + x] = Mathf.Min(worldY, maxHeightMeters);
                 }
             }
             return result;
@@ -31,10 +41,11 @@ namespace ForeverEngine.Procedural.Editor
 
         /// <summary>
         /// High-res heightmap for Unity Terrain rendering at runtime. Output
-        /// is a vertexCount × vertexCount float array in METERS (not
-        /// normalized), matching the macro Heightmap convention so the
-        /// runtime can clamp01(h / size.y) the same way for both. vertexCount
-        /// must be 2^n + 1 to map directly to TerrainData.heightmapResolution.
+        /// is a vertexCount × vertexCount float array in TRUE WORLD METERS
+        /// (not normalized, not rescaled). Runtime BakedTerrainTileRenderer
+        /// uses TileHeightMeters=1000 as TerrainData.size.y; heights up to
+        /// 1000 round-trip exactly. vertexCount must be 2^n + 1 to map
+        /// directly to TerrainData.heightmapResolution.
         /// </summary>
         public static float[] SampleHighResHeightmap(Terrain terrain, int vertexCount, float maxHeightMeters)
         {
@@ -46,8 +57,8 @@ namespace ForeverEngine.Procedural.Editor
                 for (int x = 0; x < vertexCount; x++)
                 {
                     float nx = (float)x / (vertexCount - 1);
-                    float normalizedHeight = td.GetInterpolatedHeight(nx, nz) / td.size.y;
-                    result[z * vertexCount + x] = normalizedHeight * maxHeightMeters;
+                    float worldY = td.GetInterpolatedHeight(nx, nz);
+                    result[z * vertexCount + x] = Mathf.Min(worldY, maxHeightMeters);
                 }
             }
             return result;
