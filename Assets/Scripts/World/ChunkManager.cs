@@ -57,13 +57,21 @@ namespace ForeverEngine.Procedural
             public GameObject Props;
         }
 
-        private bool _voxelTerrainActive;
+        // Default true: the production world uses Gaia-baked planet (BakedTerrainTile-
+        // Renderer) or voxel mesh as the visible surface; chunk-mesh terrain is the
+        // legacy/fallback path that shouldn't render alongside. Without this default
+        // the heightmap-mesh terrain renders ON TOP OF the baked tiles, producing
+        // the visible "two worlds stacked" / doubled-render artifact (Bug #31, 2026-04-26).
+        // Flip back to false in scene setup if you genuinely want raw chunk-mesh terrain
+        // visible (no callers do as of this write).
+        private bool _voxelTerrainActive = true;
 
         /// <summary>
         /// When true, the heightmap-based terrain MeshRenderers are kept disabled —
-        /// the voxel world rendering takes over the visual surface inside the voxel
-        /// streaming radius. Props remain enabled so trees/rocks still show against
-        /// the voxel mesh.
+        /// the voxel world rendering OR baked-planet rendering takes over the visual
+        /// surface. Props remain enabled so trees/rocks still show. Default is true
+        /// because the production world is bake-once via Gaia; chunk-mesh terrain
+        /// is legacy and would visually conflict with the bake.
         /// </summary>
         public bool VoxelTerrainActive
         {
@@ -80,10 +88,18 @@ namespace ForeverEngine.Procedural
         {
             foreach (var kv in _loaded)
             {
-                var go = kv.Value.TerrainGO;
-                if (go == null) continue;
-                foreach (var mr in go.GetComponentsInChildren<MeshRenderer>(true))
-                    mr.enabled = !_voxelTerrainActive;
+                var terrain = kv.Value.TerrainGO;
+                if (terrain != null)
+                    foreach (var mr in terrain.GetComponentsInChildren<MeshRenderer>(true))
+                        mr.enabled = !_voxelTerrainActive;
+                // Procedural-fallback props (SurfaceDecorator output for chunks
+                // without authored bake data) get hidden too — when bake or voxel
+                // surface is the authoritative renderer, the bake's
+                // BakedPropTileRenderer is the canonical prop source.
+                var props = kv.Value.Props;
+                if (props != null)
+                    foreach (var mr in props.GetComponentsInChildren<MeshRenderer>(true))
+                        mr.enabled = !_voxelTerrainActive;
             }
         }
 
@@ -193,10 +209,16 @@ namespace ForeverEngine.Procedural
                     Props = props,
                 };
 
-                if (_voxelTerrainActive && terrainGO != null)
+                if (_voxelTerrainActive)
                 {
-                    foreach (var mr in terrainGO.GetComponentsInChildren<MeshRenderer>(true))
-                        mr.enabled = false;
+                    if (terrainGO != null)
+                        foreach (var mr in terrainGO.GetComponentsInChildren<MeshRenderer>(true))
+                            mr.enabled = false;
+                    // Hide procedural fallback props too — bake's
+                    // BakedPropTileRenderer is authoritative when bake takes over.
+                    if (props != null)
+                        foreach (var mr in props.GetComponentsInChildren<MeshRenderer>(true))
+                            mr.enabled = false;
                 }
 
                 Debug.Log($"[ChunkManager] Server chunk loaded: {coord} biome={data.Biome}");

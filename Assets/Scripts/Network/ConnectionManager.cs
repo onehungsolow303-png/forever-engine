@@ -515,7 +515,19 @@ namespace ForeverEngine.Network
         }
 
         // Cache the VoxelWorldManager so FindFirstObjectByType isn't called on every chunk.
-        private VoxelWorldManager _voxelWorldManager;
+        // Static so a re-instantiated ConnectionManager (rare) or a parallel-instance
+        // case shares the cache rather than each re-bootstrapping its own. Plus a
+        // fail-loud counter that flags any second bootstrap as a Bug #30 regression
+        // (e.g., scene reload destroying the auto-created GO without DontDestroyOnLoad,
+        // which would invalidate the cache and re-trigger the create path).
+        // NOTE 2026-04-26: an earlier attempt also marked the auto-created GO
+        // DontDestroyOnLoad, which moved it to the DontDestroyOnLoad scene and broke
+        // BakedRegionTracker's cross-scene reference chain (BakedTerrainTile then
+        // never fired). Reverted — static cache alone covers the observed pattern;
+        // if scene reloads later trigger the regression, the LogError above will
+        // surface it before any visual artifacts appear.
+        private static VoxelWorldManager _voxelWorldManager;
+        private static int _autoBootstrapCount;
 
         private VoxelWorldManager GetVoxelWorldManager()
         {
@@ -529,7 +541,18 @@ namespace ForeverEngine.Network
                     // own transform just needs to exist at origin.
                     var go = new GameObject("VoxelWorld");
                     _voxelWorldManager = go.AddComponent<VoxelWorldManager>();
-                    UnityEngine.Debug.Log("[ConnectionManager] Auto-bootstrapped VoxelWorldManager; no scene-placed instance found.");
+                    _autoBootstrapCount++;
+                    if (_autoBootstrapCount > 1)
+                    {
+                        UnityEngine.Debug.LogError(
+                            $"[ConnectionManager] Bug #30 regression: VoxelWorldManager auto-bootstrap #{_autoBootstrapCount}. " +
+                            "Should fire ONCE per session — duplicate baked tile renderers will render the planet twice. " +
+                            "Investigate scene reload + cache lifecycle.");
+                    }
+                    else
+                    {
+                        UnityEngine.Debug.Log("[ConnectionManager] Auto-bootstrapped VoxelWorldManager; no scene-placed instance found.");
+                    }
                 }
             }
             return _voxelWorldManager;
