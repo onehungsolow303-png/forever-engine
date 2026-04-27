@@ -177,16 +177,18 @@ namespace ForeverEngine.Procedural
                 }
             }
 
-            // Sample height from heightmap for spawn position
+            // Match server's PlayerState defaults (X=0, Z=0). Using
+            // spawnCoord.WorldCenter = (128, _, 128) for chunk (0,0) caused a
+            // constant 181m horizontal desync (= sqrt(128^2+128^2)) on every
+            // PlayerUpdate; HardDesyncRecover fired at every snapshot.
             int hmRes = ChunkData.HeightmapRes;
             int centerHm = hmRes / 2;
             float terrainHeight = spawnData.Heightmap[centerHm * hmRes + centerHm];
-            var spawnPos = spawnCoord.WorldCenter;
+            var spawnPos = UnityEngine.Vector3.zero;
 
-            // Raycast down from well above the heightmap sample to find the true
-            // mesh surface Y (bilinear interp can be taller than the sampled cell).
-            // Spawn 2m above the hit so the rigidbody lands cleanly instead of
-            // starting embedded in the mesh and tunneling out the bottom.
+            // Raycast down at the actual spawn (X,Z) to find true mesh surface Y.
+            // Sampled height from chunk-center is a starting guess; the raycast
+            // refines it. Spawn 2m above the hit so the rigidbody lands cleanly.
             spawnPos.y = terrainHeight + 50f;
             if (Physics.Raycast(new Vector3(spawnPos.x, terrainHeight + 100f, spawnPos.z),
                                 Vector3.down, out var hit, 300f))
