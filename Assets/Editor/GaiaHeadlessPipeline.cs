@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using Gaia;
+using ProceduralWorlds.GTS;
 using UnityEditor;
 using UnityEditor.SceneManagement;
 using UnityEngine;
@@ -157,6 +158,9 @@ namespace ForeverEngine.Editor.Gaia
                 // session scenes additively — fragile. Baking now skips that.
                 Log("=== Step 6/7: macro bake (Gaia path via PropSourceSelector) ===");
                 RunMacroBake();
+
+                Log("=== Step 6.5/7: GTS post-bake setup ===");
+                ApplyGTSToBakedTerrains();
 
                 Log("=== Step 7/7: save scene ===");
                 EditorSceneManager.SaveOpenScenes();
@@ -604,6 +608,59 @@ namespace ForeverEngine.Editor.Gaia
                 // scene anyway so the world can be re-baked separately.
                 Debug.LogError($"[GaiaHeadless] Macro bake threw — scene will still save: {ex.Message}");
             }
+        }
+
+        /// <summary>
+        /// Attaches GTS to each baked Terrain so they render with PW's GTS shader
+        /// instead of URP/Terrain/Lit. One GTSProfile per (biome, size); subsequent
+        /// bakes reuse the same asset so manual tuning persists across re-bakes.
+        /// </summary>
+        private static void ApplyGTSToBakedTerrains()
+        {
+            var terrains = Terrain.activeTerrains;
+            if (terrains.Length == 0)
+            {
+                Log("  no terrains; skipping GTS");
+                return;
+            }
+
+            var profilesDir = "Assets/Procedural Worlds/_GTSProfiles";
+            if (!AssetDatabase.IsValidFolder(profilesDir))
+                AssetDatabase.CreateFolder("Assets/Procedural Worlds", "_GTSProfiles");
+            var profilePath = $"{profilesDir}/{_biomeName.Replace(' ', '_')}_{_sizeName}_GTS.asset";
+
+            var profile = AssetDatabase.LoadAssetAtPath<GTSProfile>(profilePath);
+            if (profile == null)
+            {
+                profile = ScriptableObject.CreateInstance<GTSProfile>();
+                AssetDatabase.CreateAsset(profile, profilePath);
+            }
+            AssetDatabase.SaveAssets();
+
+            // Pass 1: attach GTSTerrain components first. RefreshTerrainLayers(Terrain[])
+            // skips any terrain that doesn't already have one (GTSProfile.cs:722), so
+            // calling it before AddGTSToTerrain produces a profile with 0 layers and
+            // null _AlbedoArray on every generated material.
+            foreach (var t in terrains)
+                profile.AddGTSToTerrain(t);
+
+            profile.RefreshTerrainLayers(terrains);
+            profile.CreateTextureArrays();
+            profile.SetRuntimeData();
+
+            // Pass 2: generate material + bake per-terrain textures.
+            foreach (var t in terrains)
+            {
+                var gts = t.GetComponent<GTSTerrain>();
+                gts.ApplyProfile();
+                // Persist material to disk before SaveAllTextures() resolves AssetDatabase.GetAssetPath(material).
+                AssetDatabase.SaveAssets();
+                gts.UpdateAllTextures();
+                gts.SaveAllTextures();
+            }
+            profile.UpdateProfile();
+            AssetDatabase.SaveAssets();
+            Log($"  GTS applied to {terrains.Length} terrain(s); profile={profilePath}");
         }
 
         /// <summary>
