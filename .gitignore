@@ -106,6 +106,59 @@ Assets/GTS User Data/
 Assets/GTS User Data.meta
 Packages/com.waveharmonic.crest/
 
+# Asset Store packs added 2026-04-27/28 (license-protected, DO NOT commit)
+Assets/3Dynamite/
+Assets/3Dynamite.meta
+Assets/AmplifyImpostors/
+Assets/AmplifyImpostors.meta
+Assets/BackwoodsGaming/
+Assets/BackwoodsGaming.meta
+Assets/BOXOPHOBIC/
+Assets/BOXOPHOBIC.meta
+Assets/BOXOPHOBIC+/
+Assets/BOXOPHOBIC+.meta
+Assets/EntroverseLab/
+Assets/EntroverseLab.meta
+Assets/Forst/
+Assets/Forst.meta
+Assets/G-Star/
+Assets/G-Star.meta
+Assets/Samples/
+Assets/Samples.meta
+Assets/SeedMesh/
+Assets/SeedMesh.meta
+Assets/TFP/
+Assets/TFP.meta
+Assets/_SwampBundle/
+Assets/_SwampBundle.meta
+
+# Asset migration / converter scratch outputs (regenerable)
+Assets/_TerrainAutoUpgrade/
+Assets/_TerrainAutoUpgrade.meta
+Assets/Settings/HDRPDefaultResources/
+Assets/Settings/HDRPDefaultResources.meta
+Assets/Settings/Sky and Fog Settings Profile*.asset
+Assets/Settings/Sky and Fog Settings Profile*.asset.meta
+
+# Per-scene lighting bake settings — Unity auto-generates from scene state.
+# Pulled in by every demo scene of every imported asset pack; not source.
+Assets/*Settings.lighting
+Assets/*Settings.lighting.meta
+
+# Stray import artifacts from the 2026-04-28 sweep
+Assets/sky_36_2k.png
+Assets/sky_36_2k.png.meta
+Assets/Scenes/New Setup Settings.asset
+Assets/Scenes/New Setup Settings.asset.meta
+
+# Unity-regenerated solution file — Unity 6.4 emits .slnx every domain reload;
+# tracking it produces phantom diffs on every editor open.
+/Forever engine.slnx
+
+# TextMesh Pro essential resources — Unity prompts to import; regenerable
+Assets/TextMesh Pro/
+Assets/TextMesh Pro.meta
+
 # GTS bake artifacts in Resources/ — regenerable, large (~300MB texture arrays
 # + per-tile materials). Source-of-truth lives in Assets/GTS User Data/ which
 # is also gitignored above (under Assets/GTS User Data/). See gaia skill
