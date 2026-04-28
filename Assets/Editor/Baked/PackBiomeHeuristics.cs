@@ -82,6 +82,75 @@ namespace ForeverEngine.Procedural.Editor
                 BiomeType.Taiga,
                 BiomeType.Mountain,
             }),
+
+            // 2026-04-28: promote Tier-2 vegetation/biome packs from Unknown
+            // (default-deny) to OutdoorBiomeContent. Each was silently excluded
+            // from auto-ingest, so their FBX content never reached PrefabRegistry
+            // → Gaia spawners fired but instances vanished from the registry
+            // (same vector as the pre-2026-04-26 "procedural worlds" issue).
+
+            // Forst — Conifers BOTD (Best of the Dead). Boreal/taiga conifer
+            // FBXs + CTI Runtime Components (CTI shaders also ship here; see
+            // Bug #44 reapply drill in gaia-architecture skill).
+            (new[] { "forst" },                                            PackRole.OutdoorBiomeContent, new[]
+            {
+                BiomeType.BorealForest,
+                BiomeType.Taiga,
+                BiomeType.Mountain,
+            }),
+
+            // Baldinoboy Tropical Forest Pack (folder is `TFP/`). Bundles
+            // CTI Runtime Components — every TFP reimport overwrites Bug #44
+            // shader fixes (per feedback_tfp_reimport_reverts_cti_fixes.md).
+            (new[] { "tfp", "tropical forest pack", "baldinoboy" },        PackRole.OutdoorBiomeContent, new[]
+            {
+                BiomeType.TropicalRainforest,
+                BiomeType.Savanna,
+            }),
+
+            // SeedMesh Studio — Jungle / Tropical Vegetation. Demo scenes
+            // already deleted per Bug #50. Content is foliage + ruin
+            // architecture; tropical biome only.
+            (new[] { "seedmesh" },                                         PackRole.OutdoorBiomeContent, new[]
+            {
+                BiomeType.TropicalRainforest,
+            }),
+
+            // Dmitriy Dryzhak Swamp Bundle I (folder `_SwampBundle/`).
+            // No native swamp biome enum — Wetlands map to Beach/Coastal
+            // for shoreline content + TemperateForest for the canopy.
+            (new[] { "_swampbundle", "swamp bundle", "dryzhak" },          PackRole.OutdoorBiomeContent, new[]
+            {
+                BiomeType.TemperateForest,
+                BiomeType.Beach,
+                BiomeType.Grassland,
+            }),
+
+            // G-Star QualityDeadForest + QualitySwamp. HDRP variants of
+            // QualityDeadForest are already deleted (Bug #45). Dead-forest
+            // content fits TemperateForest aesthetic; swamp half maps as
+            // wetland-adjacent (same as Dryzhak above).
+            (new[] { "g-star", "qualitydeadforest", "qualityswamp" },      PackRole.OutdoorBiomeContent, new[]
+            {
+                BiomeType.TemperateForest,
+                BiomeType.BorealForest,
+                BiomeType.Beach,
+            }),
+
+            // EntroverseLab — Taiga Biome Environment. Three Gaia stamp
+            // packs (Vol 01 Village, Vol 06 Highland, Vol 07 Wetland) are
+            // covered by the BackwoodsGaming line below; this entry catches
+            // any imported FBX/prefab content from the TaigaBiome pack.
+            (new[] { "entroverselab", "entroverse lab", "taigabiome" },    PackRole.OutdoorBiomeContent, new[]
+            {
+                BiomeType.Taiga,
+                BiomeType.BorealForest,
+                BiomeType.Tundra,
+            }),
+
+            // BackwoodsGaming Gaia Stamps — heightmap stamps only, no FBX
+            // prop content. StamperOnly so spawners never see them.
+            (new[] { "backwoodsgaming", "backwoods gaming" },              PackRole.StamperOnly,         Array.Empty<BiomeType>()),
         };
 
         // Legacy keyword-based biome suggester for Unknown packs. Still useful

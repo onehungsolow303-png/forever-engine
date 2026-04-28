@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using Gaia;
 using ProceduralWorlds.GTS;
 using UnityEditor;
@@ -150,6 +151,9 @@ namespace ForeverEngine.Editor.Gaia
                 Log("=== Step 5/7: post-processing (clean + culling settings) ===");
                 CleanBrokenTerrains();
                 ApplyTerrainCullingSettings();
+
+                Log("=== Step 5.5/7: apply PWSky scene infrastructure ===");
+                ApplyPWSky();
 
                 // The macro bake must run BEFORE saving + exit. Gaia is configured
                 // with m_autoUnloadScenes=true (so the parent scene stays small)
@@ -515,6 +519,49 @@ namespace ForeverEngine.Editor.Gaia
             if (n > 0)
                 EditorSceneManager.MarkSceneDirty(SceneManager.GetActiveScene());
             Log($"  applied culling overrides to {n} terrain(s) (PixelError={CullingPixelError}, BasemapDistance={CullingBasemapDistance}).");
+        }
+
+        // Step 5.5 — wire the Procedural Worlds Sky into the scene so runtime
+        // GaiaAPI.SetTimeOfDay* / SetWeather* calls have a PWSkyStandalone.Instance
+        // to drive. Without this step PWSky stays installed-on-disk but unwired,
+        // and every atmospherics call silently no-ops (gaia-architecture Bug #9).
+        // GRC_PWSky.AddToScene() guards against HDRP internally; on URP it
+        // disables existing dir-lights, instantiates the PW Sky prefab tree,
+        // assigns the HDRI skybox material, and sets RenderSettings.fog=true.
+        // Failure is non-fatal — bake proceeds without atmospherics if PW Sky
+        // assets are missing.
+        private static void ApplyPWSky()
+        {
+            try
+            {
+                var grcType = Type.GetType("Gaia.GRC_PWSky, Assembly-CSharp")
+                              ?? AppDomain.CurrentDomain.GetAssemblies()
+                                  .Select(a => a.GetType("Gaia.GRC_PWSky"))
+                                  .FirstOrDefault(t => t != null);
+                if (grcType == null)
+                {
+                    Log("  GRC_PWSky type not found — Procedural Worlds Sky sub-package not installed. Skipping (atmospherics will silent-noop).");
+                    return;
+                }
+
+                var grc = ScriptableObject.CreateInstance(grcType);
+                if (grc == null)
+                {
+                    Log("  ScriptableObject.CreateInstance(GRC_PWSky) returned null. Skipping.");
+                    return;
+                }
+
+                // Initialize() seeds m_orderNumber + help links. AddToScene() does the work.
+                grcType.GetMethod("Initialize")?.Invoke(grc, null);
+                grcType.GetMethod("AddToScene")?.Invoke(grc, null);
+
+                EditorSceneManager.MarkSceneDirty(SceneManager.GetActiveScene());
+                Log("  PWSky scene infrastructure applied (PW Sky.prefab + Lighting + weather + skybox + fog=true).");
+            }
+            catch (Exception ex)
+            {
+                Log($"  PWSky setup failed (non-fatal): {ex.GetType().Name}: {ex.Message}");
+            }
         }
 
         private static void RunBuiltInToUrpConverter()
