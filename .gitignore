@@ -178,3 +178,13 @@ Assets/Resources/PerformanceTestRunInfo.json
 Assets/Resources/PerformanceTestRunInfo.json.meta
 Assets/Resources/PerformanceTestRunSettings.json
 Assets/Resources/PerformanceTestRunSettings.json.meta
+
+# Baked Gaia world scenes — regenerable via BuildXxxMedium and exceed
+# GitHub's 100 MB per-file hard limit after the PWSky retrofit step
+# (PW Sky.prefab + Lighting + weather + post-process + skybox material clone
+# add ~70 MB to each scene). Source of truth for runtime is the bake
+# artifacts in C:/Dev/.shared/baked/planet/layer_0/ + the deployed server
+# binary, NOT this Unity authoring scene. Re-bake any time:
+#   GaiaHeadlessPipeline.BuildConiferousMedium / BuildAlpineMedium / etc.
+Assets/Scenes/GaiaWorld_*.unity
+Assets/Scenes/GaiaWorld_*.unity.meta
