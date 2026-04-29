@@ -132,6 +132,10 @@ Assets/TFP.meta
 Assets/_SwampBundle/
 Assets/_SwampBundle.meta
 
+# Asset Store packs added 2026-04-29 (license-protected, DO NOT commit)
+Assets/ApexForge/
+Assets/ApexForge.meta
+
 # Asset migration / converter scratch outputs (regenerable)
 Assets/_TerrainAutoUpgrade/
 Assets/_TerrainAutoUpgrade.meta
