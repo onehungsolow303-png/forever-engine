@@ -255,14 +255,15 @@ namespace ForeverEngine.Editor.Gaia
         {
             Log("=== Step 4/9: apply 3 stamps (Plains, Mountains, Hills) ===");
 
-            ApplyStamp("Plains", 512, 45, 512, widthPercent: 100, baseLevelY: 45,
+            // Terrain is centered at world origin spanning [-512, +512].
+            ApplyStamp("Plains", 0, 45, 0, widthPercent: 100, baseLevelY: 45,
                        GaiaConstants.FeatureOperation.BlendHeight, "Plains_Baseline");
 
-            ApplyStamp("Mountain", 900, 50, 512, widthPercent: 30, baseLevelY: 50,
+            ApplyStamp("Mountain", 300, 50, 0, widthPercent: 60, baseLevelY: 50,
                        GaiaConstants.FeatureOperation.RaiseHeight, "Mountain_EastCliff",
                        absoluteHeightCap: 170f);
 
-            ApplyStamp("Hills", 575, 53, 512, widthPercent: 40, baseLevelY: 53,
+            ApplyStamp("Hills", -50, 53, 0, widthPercent: 40, baseLevelY: 53,
                        GaiaConstants.FeatureOperation.AddHeight, "Hills_Dunes");
         }
 
@@ -1208,22 +1209,24 @@ namespace ForeverEngine.Editor.Gaia
             if (terrains.Length == 0) return;
             var terrain = terrains[0];
 
-            // Sample Y at world (850, ?, 512) — base of east cliff
+            // Sample Y at east cliff base — terrain centered at origin [-512,+512]
+            const float caveWorldX = 350f;
+            const float caveWorldZ = 0f;
             var data = terrain.terrainData;
             if (data == null)
             {
                 Log("  WARN: terrain has null terrainData — skipping cave placement");
                 return;
             }
-            float nx = (850f - terrain.transform.position.x) / data.size.x;
-            float nz = (512f - terrain.transform.position.z) / data.size.z;
+            float nx = (caveWorldX - terrain.transform.position.x) / data.size.x;
+            float nz = (caveWorldZ - terrain.transform.position.z) / data.size.z;
             float baseY = data.GetInterpolatedHeight(nx, nz);
 
             var caveRoot = new GameObject("DesertBeachCave_Cave");
             var go = (GameObject)PrefabUtility.InstantiatePrefab(cavePrefab, caveRoot.transform);
-            go.transform.position = new Vector3(850f, baseY, 512f);
+            go.transform.position = new Vector3(caveWorldX, baseY, caveWorldZ);
             go.transform.rotation = Quaternion.Euler(0, 270f, 0);  // entrance faces west (toward ocean)
-            Log($"  placed cave prefab '{cavePrefab.name}' at (850, {baseY:F1}, 512)");
+            Log($"  placed cave prefab '{cavePrefab.name}' at ({caveWorldX}, {baseY:F1}, {caveWorldZ})");
         }
 
         private static void SpawnDesertBeachCaveContent()
