@@ -19,7 +19,10 @@ fi
 
 # 1b. No orphan Unity child processes (gaia skill Pre-bake checklist 1b)
 ORPHANS=$(powershell -NoProfile -Command "(Get-Process | Where-Object { \$_.Name -in @('Unity','Unity.ILPP.Runner','UnityShaderCompiler','UnityPackageManager','UnityAutoQuitter') } | Measure-Object).Count" | tr -d '[:space:]')
-if [ "$ORPHANS" = "0" ]; then
+# Note: Unity.Licensing.Client deliberately omitted — it's a persistent Unity Hub service, not an orphan editor child process.
+if ! [[ "$ORPHANS" =~ ^[0-9]+$ ]]; then
+  fail "Could not query orphan processes (powershell output: '$ORPHANS') — verify powershell.exe is on PATH"
+elif [ "$ORPHANS" = "0" ]; then
   ok "No orphan Unity child processes"
 else
   fail "$ORPHANS orphan Unity child processes — kill via Stop-Process -Force then delete Temp/UnityLockfile"
@@ -41,6 +44,8 @@ PACKS=(
   "3DForge/Cave Adventure kit"
   "../Packages/com.waveharmonic.crest"
 )
+# Dual-test: most packs live under Assets/, but UPM packages (Crest) live under Packages/.
+# We probe both locations per entry; only ONE branch will match for a given pack.
 for pack in "${PACKS[@]}"; do
   if [ -e "/c/Dev/Forever engine/Assets/$pack" ] || [ -e "/c/Dev/Forever engine/$pack" ]; then
     ok "$pack present"
