@@ -113,10 +113,9 @@ namespace ForeverEngine.Editor.Gaia
                 Log("  world-creation coroutine started. Driving it to completion...");
                 DriveGaiaCoroutineToCompletion();
 
-                // Stages 4-7 land in subsequent tasks (stamps, spawners, cave, water).
-                // For Task 3 the skeleton ends here — verify a 1024x1024 flat terrain
-                // exists in the scene.
-                Log("=== Steps 4-7/9: skipped (stamps, spawners, cave, water — deferred to subsequent tasks) ===");
+                ApplyDesertBeachCaveStamps();
+
+                Log("=== Steps 5-7/9: skipped (spawners, cave, water — deferred to subsequent tasks) ===");
 
                 Log("=== Step 8/9: post-processing (clean + culling settings) ===");
                 CleanBrokenTerrains();
@@ -155,6 +154,71 @@ namespace ForeverEngine.Editor.Gaia
             s.m_applyFloatingPointFix = false;
 
             return s;
+        }
+
+        // StamperSettings semantics (verified against Gaia source 2026-04-29):
+        //   m_x/m_y/m_z (double) — world position; ALSO sync transform.position because
+        //     Stamper.Stamp() reads transform.position at line 870 (not m_settings.m_x).
+        //   m_width (float) — XZ footprint as PERCENTAGE of terrain (0-100). Stamps are
+        //     square in XZ; 100 = full terrain XZ coverage. Bounds.size.x = m_width *
+        //     terrainData.size.x / 100 per Stamper.cs:870.
+        //   m_height (float) — visualization only (gizmo localScale Y). Does NOT govern
+        //     stamp Y amplitude — that comes from the stamp's grayscale data + m_baseLevel.
+        //   m_baseLevel (float) — floor Y the stamp lifts from.
+        //   m_operation (GaiaConstants.FeatureOperation) — Raise / Add / Blend / etc.
+
+        private static void ApplyStamp(
+            string stampQuery,
+            double worldX, double worldY, double worldZ,
+            float widthPercent,
+            float baseLevelY,
+            GaiaConstants.FeatureOperation op,
+            string label)
+        {
+            Log($"  applying stamp '{label}' at ({worldX},{worldY},{worldZ}) width={widthPercent}% baseY={baseLevelY} op={op}");
+
+            var guids = AssetDatabase.FindAssets($"{stampQuery} t:Texture2D");
+            Texture2D stampTex = null;
+            foreach (var guid in guids)
+            {
+                var path = AssetDatabase.GUIDToAssetPath(guid);
+                if (!path.Contains("Packages - Install/Stamps")) continue;
+                stampTex = AssetDatabase.LoadAssetAtPath<Texture2D>(path);
+                if (stampTex != null) { Log($"    resolved to {path}"); break; }
+            }
+            if (stampTex == null)
+                throw new Exception($"Stamp not found by query '{stampQuery}'. Verify filename in Procedural Worlds/Packages - Install/Stamps/.");
+
+            var go = new GameObject($"Stamper_{label}");
+            var stamper = go.AddComponent<Stamper>();
+            var settings = ScriptableObject.CreateInstance<StamperSettings>();
+            stamper.m_settings = settings;
+            stamper.m_stampImage = stampTex;
+            settings.m_x = worldX; settings.m_y = worldY; settings.m_z = worldZ;
+            settings.m_width = widthPercent;
+            settings.m_height = 5f;
+            settings.m_baseLevel = baseLevelY;
+            settings.m_rotation = 0f;
+            settings.m_operation = op;
+            go.transform.position = new Vector3((float)worldX, (float)worldY, (float)worldZ);
+
+            stamper.Stamp();
+            UnityEngine.Object.DestroyImmediate(go);
+            Log($"    stamp '{label}' applied");
+        }
+
+        private static void ApplyDesertBeachCaveStamps()
+        {
+            Log("=== Step 4/9: apply 3 stamps (Plains, Mountains, Hills) ===");
+
+            ApplyStamp("Plains", 512, 45, 512, widthPercent: 100, baseLevelY: 45,
+                       GaiaConstants.FeatureOperation.BlendHeight, "Plains_Baseline");
+
+            ApplyStamp("Mountain", 900, 50, 512, widthPercent: 50, baseLevelY: 50,
+                       GaiaConstants.FeatureOperation.RaiseHeight, "Mountain_EastCliff");
+
+            ApplyStamp("Hills", 575, 53, 512, widthPercent: 40, baseLevelY: 53,
+                       GaiaConstants.FeatureOperation.AddHeight, "Hills_Dunes");
         }
 
         // ── Pipeline ────────────────────────────────────────────────────────
