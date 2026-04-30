@@ -127,6 +127,11 @@ namespace ForeverEngine.Editor.Gaia
                 CleanBrokenTerrains();
                 ApplyTerrainCullingSettings();
 
+                // NEW (Task 9): MacroBake to test path (outputRoot param added in Task 1)
+                Log($"=== Step 8.75/9: MacroBake to test path: {TestBakeOutputRoot} ===");
+                Directory.CreateDirectory(TestBakeOutputRoot);
+                ForeverEngine.Procedural.Editor.MacroBakeTool.BakeAllTilesInSceneOrThrow(TestBakeOutputRoot);
+
                 Log("=== Step 9/9: save scene ===");
                 EditorSceneManager.SaveOpenScenes();
 
