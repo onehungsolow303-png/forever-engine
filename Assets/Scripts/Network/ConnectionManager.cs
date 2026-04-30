@@ -88,7 +88,9 @@ namespace ForeverEngine.Network
 
             // Build the connection UI overlay
             InitConnectionUI();
+#if !FOREVER_TEST_BUILD
             ShowOverlay("Connecting to server...", $"{Host}:{Port}");
+#endif
 
             // Get or create NetworkClient on this GameObject
             _client = NetworkClient.Instance;
@@ -120,7 +122,11 @@ namespace ForeverEngine.Network
             _client.RegisterHandler<AtmosphericsUpdateMessage>(OnAtmosphericsUpdate);
 
             // Begin connecting
+#if !FOREVER_TEST_BUILD
             _client.Connect(Host, Port);
+#else
+            Debug.Log("[ConnectionManager] FOREVER_TEST_BUILD — autoboot disabled. Running offline.");
+#endif
         }
 
         // ── Spec 7 Phase 1: local player registration ─────────────────────
