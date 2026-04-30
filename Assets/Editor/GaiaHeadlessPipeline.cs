@@ -113,13 +113,13 @@ namespace ForeverEngine.Editor.Gaia
                 Log("  world-creation coroutine started. Driving it to completion...");
                 DriveGaiaCoroutineToCompletion();
 
-                ApplyDesertBeachCaveStamps();
+                ShapeFlatBeach();
 
                 ApplyDesertBeachCaveSplats();
 
                 SpawnDesertBeachCaveContent();
 
-                PlaceDesertBeachCaveStructure();
+                PlaceBeachCliffAndCave();
 
                 SetupCrestWater();
 
@@ -251,20 +251,24 @@ namespace ForeverEngine.Editor.Gaia
             Log($"    stamp '{label}' applied");
         }
 
-        private static void ApplyDesertBeachCaveStamps()
+        private static void ShapeFlatBeach()
         {
-            Log("=== Step 4/9: apply 3 stamps (Plains, Mountains, Hills) ===");
-
-            // Terrain is centered at world origin spanning [-512, +512].
-            ApplyStamp("Plains", 0, 45, 0, widthPercent: 100, baseLevelY: 45,
-                       GaiaConstants.FeatureOperation.BlendHeight, "Plains_Baseline");
-
-            ApplyStamp("Mountain", 300, 50, 0, widthPercent: 60, baseLevelY: 50,
-                       GaiaConstants.FeatureOperation.RaiseHeight, "Mountain_EastCliff",
-                       absoluteHeightCap: 170f);
-
-            ApplyStamp("Hills", -50, 53, 0, widthPercent: 40, baseLevelY: 53,
-                       GaiaConstants.FeatureOperation.AddHeight, "Hills_Dunes");
+            Log("=== Step 4/9: shape flat beach (Y=53, just above sea level Y=50) ===");
+            var terrains = UnityEngine.Object.FindObjectsByType<Terrain>(FindObjectsSortMode.None);
+            foreach (var t in terrains)
+            {
+                if (t.terrainData == null) continue;
+                var data = t.terrainData;
+                int hmRes = data.heightmapResolution;
+                var heights = new float[hmRes, hmRes];
+                float beachY = 53f;
+                float normalized = beachY / data.size.y; // size.y = 800 → 53/800 = 0.06625
+                for (int z = 0; z < hmRes; z++)
+                    for (int x = 0; x < hmRes; x++)
+                        heights[z, x] = normalized;
+                data.SetHeights(0, 0, heights);
+                Log($"  flat beach {hmRes}x{hmRes} cells set to world Y={beachY} on '{t.name}'");
+            }
         }
 
         private static TerrainLayer LoadOrCreateLayer(string name, string textureGuidOrName)
@@ -307,47 +311,46 @@ namespace ForeverEngine.Editor.Gaia
             return layer;
         }
 
+        private static TerrainLayer LoadDesertSandLayer()
+        {
+            var albedo = AssetDatabase.LoadAssetAtPath<Texture2D>(
+                "Assets/Procedural Worlds/Packages - Install/Gaia Pro Assets and Biomes/Content Resources/Ground Textures/PW_Beach_Sand_D.png");
+            if (albedo == null) throw new Exception(
+                "Sand texture not found at hardcoded path: " +
+                "Assets/Procedural Worlds/Packages - Install/Gaia Pro Assets and Biomes/Content Resources/Ground Textures/PW_Beach_Sand_D.png");
+            var layer = new TerrainLayer
+            {
+                diffuseTexture = albedo,
+                tileSize = new Vector2(8, 8),
+                name = "DBC_BeachSand",
+            };
+            Directory.CreateDirectory("Assets/Procedural Worlds/_GeneratedLayers");
+            AssetDatabase.CreateAsset(layer, "Assets/Procedural Worlds/_GeneratedLayers/DBC_BeachSand.terrainlayer");
+            AssetDatabase.SaveAssets();
+            Log("  LoadDesertSandLayer: created DBC_BeachSand from PW_Beach_Sand_D.png");
+            return layer;
+        }
+
         private static void ApplyDesertBeachCaveSplats()
         {
-            Log("=== Step 5/9: paint sand + rock splats via direct alphamap write ===");
+            Log("=== Step 5/9: paint all-sand splat (single layer, beach) ===");
 
-            var sand = LoadOrCreateLayer("DBC_Sand", "sand");
-            var rock = LoadOrCreateLayer("DBC_Rock", "rock");
+            var sand = LoadDesertSandLayer();
 
             var terrains = UnityEngine.Object.FindObjectsByType<Terrain>(FindObjectsSortMode.None);
             if (terrains.Length == 0) throw new Exception("No terrains in scene");
 
             foreach (var t in terrains)
             {
-                t.terrainData.terrainLayers = new[] { sand, rock };
                 var data = t.terrainData;
+                data.terrainLayers = new[] { sand };
                 int aw = data.alphamapWidth, ah = data.alphamapHeight;
-                var alpha = new float[ah, aw, 2];      // 2 layers — note Unity convention is [y, x, layer]
-
-                int hmRes = data.heightmapResolution;
-                // Sample slope + height at each alphamap cell
+                var alpha = new float[ah, aw, 1]; // single layer
                 for (int y = 0; y < ah; y++)
-                for (int x = 0; x < aw; x++)
-                {
-                    float nx = (float)x / (aw - 1);
-                    float nz = (float)y / (ah - 1);
-                    // Clamp the heightmap index to avoid off-by-one at the boundary
-                    int hx = Mathf.Clamp((int)(nx * (hmRes - 1)), 0, hmRes - 1);
-                    int hz = Mathf.Clamp((int)(nz * (hmRes - 1)), 0, hmRes - 1);
-                    float worldY = data.GetHeight(hx, hz);
-                    float slopeDeg = data.GetSteepness(nx, nz);
-
-                    float sandWeight = (slopeDeg < 25f && worldY >= 45 && worldY <= 65) ? 1f : 0f;
-                    float rockWeight = (slopeDeg > 30f || worldY > 80) ? 1f : 0f;
-                    // If both 0, default to sand (low-elevation flat fallback).
-                    if (sandWeight + rockWeight <= 0f) sandWeight = 1f;
-                    float total = sandWeight + rockWeight;
-                    alpha[y, x, 0] = sandWeight / total;
-                    alpha[y, x, 1] = rockWeight / total;
-                }
-
+                    for (int x = 0; x < aw; x++)
+                        alpha[y, x, 0] = 1f;
                 data.SetAlphamaps(0, 0, alpha);
-                Log($"  splatted terrain '{t.name}' ({aw}x{ah} alphamap)");
+                Log($"  all-sand splat applied to '{t.name}' ({aw}x{ah} alphamap)");
             }
         }
 
@@ -1188,53 +1191,59 @@ namespace ForeverEngine.Editor.Gaia
             Log($"  scattered {placed} prefabs from {prefabs.Length} prototypes");
         }
 
-        private static void PlaceDesertBeachCaveStructure()
+        private static GameObject LoadPrefabByPath(string assetPath)
         {
-            Log("=== Step 7/9: place 3DForge cave entrance at cliff base ===");
+            var prefab = AssetDatabase.LoadAssetAtPath<GameObject>(assetPath);
+            if (prefab == null) throw new Exception($"Prefab not found at {assetPath}");
+            return prefab;
+        }
 
-            GameObject cavePrefab = FindFirstPrefab(
-                "Assets/3DForge/Cave Adventure kit", "Entrance");
-            if (cavePrefab == null) cavePrefab = FindFirstPrefab(
-                "Assets/3DForge/Cave Adventure kit", "Tunnel");
-            if (cavePrefab == null) cavePrefab = FindFirstPrefab(
-                "Assets/3DForge/Cave Adventure kit", "Wall");
+        private static void PlaceBeachCliffAndCave()
+        {
+            Log("=== Step 7/9: place NM beach cliff chain + Realistic cave entrance ===");
 
-            if (cavePrefab == null)
+            // Verified prefab paths — NM Coast Environment cliff series
+            var cliffA    = LoadPrefabByPath("Assets/NatureManufacture Assets/Coast Environment/Cliffs/Prefabs/Prefab_beach_cliff_01_A.prefab");
+            var cliffB    = LoadPrefabByPath("Assets/NatureManufacture Assets/Coast Environment/Cliffs/Prefabs/Prefab_beach_cliff_01_B.prefab");
+            var cliffC    = LoadPrefabByPath("Assets/NatureManufacture Assets/Coast Environment/Cliffs/Prefabs/Prefab_beach_cliff_01_C.prefab");
+            var cliffEndL = LoadPrefabByPath("Assets/NatureManufacture Assets/Coast Environment/Cliffs/Prefabs/Prefab_beach_cliff_01_ending_left.prefab");
+            var cliffEndR = LoadPrefabByPath("Assets/NatureManufacture Assets/Coast Environment/Cliffs/Prefabs/Prefab_beach_cliff_01_ending_right.prefab");
+            var cave      = LoadPrefabByPath("Assets/Realistic Natural Cave 2/Prefabs/CavePart_1.prefab");
+
+            var root = new GameObject("DesertBeachCave_Cliff");
+
+            // Beach terrain is at Y=53. Cliffs along the east edge at world X=350.
+            // Each cliff piece is roughly 80m wide along Z; spacing tuned to chain without overlap.
+            // Chain: ending_left → A → B → C → ending_right. Cave embeds between B and C.
+            var seq = new (GameObject prefab, float z, string label)[]
             {
-                Log("  WARN: no 3DForge Cave Adventure kit prefab found — skipping cave placement");
-                return;
+                (cliffEndL, -200f, "EndL"),
+                (cliffA,    -100f, "A"),
+                (cliffB,       0f, "B"),
+                (cliffC,    +100f, "C"),
+                (cliffEndR, +200f, "EndR"),
+            };
+
+            foreach (var (prefab, zPos, label) in seq)
+            {
+                var go = (GameObject)PrefabUtility.InstantiatePrefab(prefab, root.transform);
+                go.transform.position = new Vector3(350f, 53f, zPos);
+                go.transform.rotation = Quaternion.Euler(0f, 270f, 0f); // face west toward beach
+                Log($"  cliff piece '{label}' at (350, 53, {zPos})");
             }
 
-            var terrains = UnityEngine.Object.FindObjectsByType<Terrain>(FindObjectsSortMode.None);
-            if (terrains.Length == 0) return;
-            var terrain = terrains[0];
-
-            // Sample Y at east cliff base — terrain centered at origin [-512,+512]
-            const float caveWorldX = 350f;
-            const float caveWorldZ = 0f;
-            var data = terrain.terrainData;
-            if (data == null)
-            {
-                Log("  WARN: terrain has null terrainData — skipping cave placement");
-                return;
-            }
-            float nx = (caveWorldX - terrain.transform.position.x) / data.size.x;
-            float nz = (caveWorldZ - terrain.transform.position.z) / data.size.z;
-            float baseY = data.GetInterpolatedHeight(nx, nz);
-
-            var caveRoot = new GameObject("DesertBeachCave_Cave");
-            var go = (GameObject)PrefabUtility.InstantiatePrefab(cavePrefab, caveRoot.transform);
-            go.transform.position = new Vector3(caveWorldX, baseY, caveWorldZ);
-            go.transform.rotation = Quaternion.Euler(0, 270f, 0);  // entrance faces west (toward ocean)
-            Log($"  placed cave prefab '{cavePrefab.name}' at ({caveWorldX}, {baseY:F1}, {caveWorldZ})");
+            // Cave entrance — pulled slightly west of cliff wall so tunnel mouth breaks the geometry
+            var caveGo = (GameObject)PrefabUtility.InstantiatePrefab(cave, root.transform);
+            caveGo.transform.position = new Vector3(330f, 53f, 0f);
+            caveGo.transform.rotation = Quaternion.Euler(0f, 270f, 0f);
+            Log($"  cave 'CavePart_1' at (330, 53, 0)");
         }
 
         private static void SpawnDesertBeachCaveContent()
         {
-            Log("=== Step 6/9: spawn palms + rocks ===");
+            Log("=== Step 6/9: spawn coconut palms on beach ===");
 
             var terrains = UnityEngine.Object.FindObjectsByType<Terrain>(FindObjectsSortMode.None);
-            var contentRoot = new GameObject("DesertBeachCave_Content");
 
             foreach (var t in terrains)
             {
@@ -1244,28 +1253,20 @@ namespace ForeverEngine.Editor.Gaia
                     continue;
                 }
 
-                // Palms (terrainTrees — efficient, batched)
-                var palm = FindFirstPrefab("Assets/TFP/2_Prefabs/Trees", "Palm");
-                if (palm == null) palm = FindFirstPrefab("Assets/TFP/2_Prefabs/Trees", "Tree");
+                // Palms — explicit verified path, no keyword search fallback
+                var palm = AssetDatabase.LoadAssetAtPath<GameObject>(
+                    "Assets/TFP/2_Prefabs/Trees/CoconutPalmTree01_LOD.prefab");
                 if (palm != null)
                 {
                     int idx = t.terrainData.treePrototypes.Length;
                     AddTreePrototype(t, palm);
-                    ScatterTreesByMask(t, idx, count: 30, minY: 50f, maxY: 65f, maxSlopeDeg: 15f, seed: 1337);
+                    ScatterTreesByMask(t, idx, count: 50, minY: 50f, maxY: 65f, maxSlopeDeg: 15f, seed: 1337);
                 }
-                else { Log("  WARN: no palm prefab found in Assets/TFP/2_Prefabs/Trees — skipping"); }
-
-                // Rocks (GameObject prefabs — placed under contentRoot)
-                var rockGuids = AssetDatabase.FindAssets("t:Prefab", new[] { "Assets/Hivemind", "Assets/_SwampBundle" });
-                var rockPrefabs = rockGuids
-                    .Select(g => AssetDatabase.GUIDToAssetPath(g))
-                    .Where(p => p.Contains("Rock", StringComparison.OrdinalIgnoreCase))
-                    .Take(8)
-                    .Select(p => AssetDatabase.LoadAssetAtPath<GameObject>(p))
-                    .Where(p => p != null)
-                    .ToArray();
-                ScatterPrefabsByMask(t, rockPrefabs, count: 15, minY: 55f, maxY: 80f,
-                                     maxSlopeDeg: 35f, seed: 2024, parent: contentRoot.transform);
+                else
+                {
+                    Log("  WARN: CoconutPalmTree01_LOD.prefab not found at explicit path — skipping palms");
+                }
+                // Rock scatter removed — NM beach cliffs + Realistic Cave provide the rock visual
             }
         }
 
