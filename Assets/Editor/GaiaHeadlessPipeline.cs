@@ -178,16 +178,21 @@ namespace ForeverEngine.Editor.Gaia
             Log($"  applying stamp '{label}' at ({worldX},{worldY},{worldZ}) width={widthPercent}% baseY={baseLevelY} op={op}");
 
             var guids = AssetDatabase.FindAssets($"{stampQuery} t:Texture2D");
-            Texture2D stampTex = null;
+            var candidates = new List<string>();
             foreach (var guid in guids)
             {
                 var path = AssetDatabase.GUIDToAssetPath(guid);
-                if (!path.Contains("Packages - Install/Stamps")) continue;
-                stampTex = AssetDatabase.LoadAssetAtPath<Texture2D>(path);
-                if (stampTex != null) { Log($"    resolved to {path}"); break; }
+                if (path.Contains("Packages - Install/Stamps"))
+                    candidates.Add(path);
             }
+            if (candidates.Count > 1)
+                Debug.LogWarning($"[GaiaHeadless] ApplyStamp: {candidates.Count} candidates for '{stampQuery}'; using first: {candidates[0]}");
+            Texture2D stampTex = candidates.Count > 0
+                ? AssetDatabase.LoadAssetAtPath<Texture2D>(candidates[0])
+                : null;
             if (stampTex == null)
                 throw new Exception($"Stamp not found by query '{stampQuery}'. Verify filename in Procedural Worlds/Packages - Install/Stamps/.");
+            Log($"    resolved to {candidates[0]}");
 
             var go = new GameObject($"Stamper_{label}");
             var stamper = go.AddComponent<Stamper>();
@@ -202,8 +207,14 @@ namespace ForeverEngine.Editor.Gaia
             settings.m_operation = op;
             go.transform.position = new Vector3((float)worldX, (float)worldY, (float)worldZ);
 
-            stamper.Stamp();
-            UnityEngine.Object.DestroyImmediate(go);
+            try
+            {
+                stamper.Stamp();
+            }
+            finally
+            {
+                UnityEngine.Object.DestroyImmediate(go);
+            }
             Log($"    stamp '{label}' applied");
         }
 
