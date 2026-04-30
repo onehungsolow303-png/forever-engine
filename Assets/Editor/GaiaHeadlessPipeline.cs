@@ -117,7 +117,9 @@ namespace ForeverEngine.Editor.Gaia
 
                 ApplyDesertBeachCaveSplats();
 
-                Log("=== Steps 6-8/9: skipped (spawners, cave, water — deferred to subsequent tasks) ===");
+                SpawnDesertBeachCaveContent();
+
+                Log("=== Steps 7-8/9: skipped (cave, water — deferred to subsequent tasks) ===");
 
                 Log("=== Step 8/9: post-processing (clean + culling settings) ===");
                 CleanBrokenTerrains();
@@ -1068,6 +1070,125 @@ namespace ForeverEngine.Editor.Gaia
                 }
             }
             Log($"  biome spawn complete. ok={ok} skipped={skipped} fail={fail}");
+        }
+
+        // ── DesertBeachCave content spawners ─────────────────────────────────
+
+        private static GameObject FindFirstPrefab(string queryFolder, string nameContains)
+        {
+            var guids = AssetDatabase.FindAssets("t:Prefab", new[] { queryFolder });
+            foreach (var guid in guids)
+            {
+                var path = AssetDatabase.GUIDToAssetPath(guid);
+                if (!path.Contains(nameContains, StringComparison.OrdinalIgnoreCase)) continue;
+                var prefab = AssetDatabase.LoadAssetAtPath<GameObject>(path);
+                if (prefab != null) return prefab;
+            }
+            return null;
+        }
+
+        private static void AddTreePrototype(Terrain t, GameObject prefab)
+        {
+            if (prefab == null) return;
+            var data = t.terrainData;
+            var existing = data.treePrototypes;
+            var arr = new TreePrototype[existing.Length + 1];
+            Array.Copy(existing, arr, existing.Length);
+            arr[existing.Length] = new TreePrototype { prefab = prefab };
+            data.treePrototypes = arr;
+        }
+
+        private static void ScatterTreesByMask(
+            Terrain t, int prototypeIdx, int count,
+            float minY, float maxY, float maxSlopeDeg, int seed)
+        {
+            var data = t.terrainData;
+            var rng = new System.Random(seed);
+            var instances = new List<TreeInstance>(data.treeInstances);
+            int placed = 0, attempts = 0, maxAttempts = count * 20;
+            while (placed < count && attempts++ < maxAttempts)
+            {
+                float nx = (float)rng.NextDouble();
+                float nz = (float)rng.NextDouble();
+                float worldY = data.GetInterpolatedHeight(nx, nz);
+                float slope = data.GetSteepness(nx, nz);
+                if (worldY < minY || worldY > maxY || slope > maxSlopeDeg) continue;
+
+                instances.Add(new TreeInstance
+                {
+                    prototypeIndex = prototypeIdx,
+                    position = new Vector3(nx, worldY / data.size.y, nz),
+                    heightScale = 1f, widthScale = 1f,
+                    rotation = (float)(rng.NextDouble() * Math.PI * 2),
+                    color = Color.white, lightmapColor = Color.white,
+                });
+                placed++;
+            }
+            data.treeInstances = instances.ToArray();
+            Log($"  scattered {placed} trees (proto={prototypeIdx})");
+        }
+
+        private static void ScatterPrefabsByMask(
+            Terrain t, GameObject[] prefabs, int count,
+            float minY, float maxY, float maxSlopeDeg, int seed,
+            Transform parent)
+        {
+            if (prefabs == null || prefabs.Length == 0) { Log($"  no prefabs to scatter"); return; }
+            var data = t.terrainData;
+            var rng = new System.Random(seed);
+            int placed = 0, attempts = 0, maxAttempts = count * 20;
+            while (placed < count && attempts++ < maxAttempts)
+            {
+                float nx = (float)rng.NextDouble();
+                float nz = (float)rng.NextDouble();
+                float worldY = data.GetInterpolatedHeight(nx, nz);
+                float slope = data.GetSteepness(nx, nz);
+                if (worldY < minY || worldY > maxY || slope > maxSlopeDeg) continue;
+
+                var prefab = prefabs[rng.Next(prefabs.Length)];
+                var go = (GameObject)PrefabUtility.InstantiatePrefab(prefab, parent);
+                go.transform.position = new Vector3(
+                    t.transform.position.x + nx * data.size.x,
+                    worldY,
+                    t.transform.position.z + nz * data.size.z);
+                go.transform.rotation = Quaternion.Euler(0, (float)(rng.NextDouble() * 360), 0);
+                placed++;
+            }
+            Log($"  scattered {placed} prefabs from {prefabs.Length} prototypes");
+        }
+
+        private static void SpawnDesertBeachCaveContent()
+        {
+            Log("=== Step 6/9: spawn palms + rocks ===");
+
+            var terrains = UnityEngine.Object.FindObjectsByType<Terrain>(FindObjectsSortMode.None);
+            var contentRoot = new GameObject("DesertBeachCave_Content");
+
+            foreach (var t in terrains)
+            {
+                // Palms (terrainTrees — efficient, batched)
+                var palm = FindFirstPrefab("Assets/TFP/2_Prefabs/Trees", "Palm");
+                if (palm == null) palm = FindFirstPrefab("Assets/TFP/2_Prefabs/Trees", "Tree");
+                if (palm != null)
+                {
+                    int idx = t.terrainData.treePrototypes.Length;
+                    AddTreePrototype(t, palm);
+                    ScatterTreesByMask(t, idx, count: 30, minY: 50f, maxY: 65f, maxSlopeDeg: 15f, seed: 1337);
+                }
+                else { Log("  WARN: no palm prefab found in Assets/TFP/2_Prefabs/Trees — skipping"); }
+
+                // Rocks (GameObject prefabs — placed under contentRoot)
+                var rockGuids = AssetDatabase.FindAssets("t:Prefab Rock", new[] { "Assets/Hivemind", "Assets/_SwampBundle" });
+                var rockPrefabs = rockGuids
+                    .Select(g => AssetDatabase.GUIDToAssetPath(g))
+                    .Where(p => p.Contains("Rock", StringComparison.OrdinalIgnoreCase))
+                    .Take(8)
+                    .Select(p => AssetDatabase.LoadAssetAtPath<GameObject>(p))
+                    .Where(p => p != null)
+                    .ToArray();
+                ScatterPrefabsByMask(t, rockPrefabs, count: 15, minY: 55f, maxY: 80f,
+                                     maxSlopeDeg: 35f, seed: 2024, parent: contentRoot.transform);
+            }
         }
 
         private static void Log(string msg) => Debug.Log($"[GaiaHeadless] {msg}");
