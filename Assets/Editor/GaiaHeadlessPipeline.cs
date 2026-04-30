@@ -184,9 +184,11 @@ namespace ForeverEngine.Editor.Gaia
             float widthPercent,
             float baseLevelY,
             GaiaConstants.FeatureOperation op,
-            string label)
+            string label,
+            float? absoluteHeightCap = null)
         {
-            Log($"  applying stamp '{label}' at ({worldX},{worldY},{worldZ}) width={widthPercent}% baseY={baseLevelY} op={op}");
+            Log($"  applying stamp '{label}' at ({worldX},{worldY},{worldZ}) width={widthPercent}% baseY={baseLevelY} op={op}" +
+                (absoluteHeightCap.HasValue ? $" absoluteHeightCap={absoluteHeightCap.Value}" : ""));
 
             var guids = AssetDatabase.FindAssets($"{stampQuery} t:Texture2D");
             var candidates = new List<string>();
@@ -213,10 +215,30 @@ namespace ForeverEngine.Editor.Gaia
             settings.m_x = worldX; settings.m_y = worldY; settings.m_z = worldZ;
             settings.m_width = widthPercent;
             settings.m_height = 5f;
-            settings.m_baseLevel = baseLevelY;
+            // m_baseLevel is normalized [0,1] (maps to [terrain.y, terrain.y+terrain.height] at line 2062).
+            // baseLevelY is in meters; divide by terrain height to normalize.
+            {
+                var baseTerrain = Terrain.activeTerrain;
+                float tH = baseTerrain != null ? baseTerrain.terrainData.size.y : 800f;
+                settings.m_baseLevel = Mathf.Clamp01(baseLevelY / tH);
+            }
+            settings.m_absoluteHeightValue = absoluteHeightCap ?? 0f;
             settings.m_rotation = 0f;
             settings.m_operation = op;
             go.transform.position = new Vector3((float)worldX, (float)worldY, (float)worldZ);
+            // Stamp() re-syncs transform.localScale from settings.m_height at line 1026.
+            // SetStampScaleByMeter modifies transform, but Stamp() clobbers it.
+            // Fix: compute the target Y scale using Gaia's own formula and write it into
+            // settings.m_height so Stamp() picks it up correctly.
+            // Formula from StamperSettings.GetStampScaleByMeter: Lerp(0,50, InverseLerp(0, terrainHeight, |cap|))
+            if (absoluteHeightCap.HasValue)
+            {
+                var terrains = Terrain.activeTerrains;
+                float terrainH = terrains.Length > 0 ? terrains[0].terrainData.size.y : 800f;
+                settings.m_height = Mathf.Lerp(0f, 50f,
+                    Mathf.InverseLerp(0f, terrainH, Mathf.Abs(absoluteHeightCap.Value)));
+                Log($"    absoluteHeightCap={absoluteHeightCap.Value}m → settings.m_height={settings.m_height:F3} (terrainH={terrainH}m)");
+            }
 
             try
             {
@@ -236,8 +258,9 @@ namespace ForeverEngine.Editor.Gaia
             ApplyStamp("Plains", 512, 45, 512, widthPercent: 100, baseLevelY: 45,
                        GaiaConstants.FeatureOperation.BlendHeight, "Plains_Baseline");
 
-            ApplyStamp("Mountain", 900, 50, 512, widthPercent: 50, baseLevelY: 50,
-                       GaiaConstants.FeatureOperation.RaiseHeight, "Mountain_EastCliff");
+            ApplyStamp("Mountain", 900, 50, 512, widthPercent: 30, baseLevelY: 50,
+                       GaiaConstants.FeatureOperation.RaiseHeight, "Mountain_EastCliff",
+                       absoluteHeightCap: 170f);
 
             ApplyStamp("Hills", 575, 53, 512, widthPercent: 40, baseLevelY: 53,
                        GaiaConstants.FeatureOperation.AddHeight, "Hills_Dunes");
