@@ -620,10 +620,12 @@ namespace ForeverEngine.Editor
             cam.farClipPlane = 5000f;
             camGo.AddComponent<AudioListener>();
 
-            // Position at seaLevel+30, pulled back from shore, pitched 15° down
-            camGo.transform.position = new Vector3(0f, seaLevel + 30f, -200f);
-            camGo.transform.rotation = Quaternion.Euler(15f, 0f, 0f);
-            Log($"  Main Camera at (0, {seaLevel + 30f:F1}, -200) rot=(15,0,0)");
+            // Position SW of terrain looking NE toward cliff — above max terrain Y (~95m).
+            // Terrain spans roughly X[-500,+500] Z[-500,+500]; camera at Z=-600 is south of terrain
+            // so it's outside the terrain looking into it, avoiding the buried-in-hill black screen.
+            camGo.transform.position = new Vector3(-300f, 150f, -600f);
+            camGo.transform.rotation = Quaternion.Euler(15f, 25f, 0f);
+            Log("  Main Camera at (-300, 150, -600) rot=(15,25,0) — outside terrain SW edge looking NE");
         }
 
         // ── Util ─────────────────────────────────────────────────────────────
