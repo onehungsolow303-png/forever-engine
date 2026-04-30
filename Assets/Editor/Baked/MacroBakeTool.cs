@@ -64,16 +64,23 @@ namespace ForeverEngine.Procedural.Editor
         /// failure (catalog missing, size mismatch, grid misalignment) so callers
         /// like BatchBakeAll can fail loudly instead of swallowing the error.
         /// </summary>
-        public static void BakeAllTilesInSceneOrThrow()
+        /// <param name="outputRoot">
+        /// Root directory to write baked tiles into (e.g. "C:/Dev/.shared/baked/test/desert_beach_cave").
+        /// Defaults to <see cref="OutputRoot"/> (planet path) when null or empty — preserving
+        /// back-compat for all zero-argument callers.
+        /// </param>
+        public static void BakeAllTilesInSceneOrThrow(string outputRoot = null)
         {
             var terrains = UnityEngine.Object.FindObjectsByType<Terrain>(FindObjectsSortMode.None);
             if (terrains == null || terrains.Length == 0)
                 throw new System.InvalidOperationException("[MacroBake] No Terrains found in scene.");
-            BakeTerrainsAsTiles(terrains, fullRewrite: true, allowDialogs: false);
+            BakeTerrainsAsTiles(terrains, fullRewrite: true, allowDialogs: false, outputRoot: outputRoot);
         }
 
-        private static void BakeTerrainsAsTiles(Terrain[] terrains, bool fullRewrite, bool allowDialogs = true)
+        private static void BakeTerrainsAsTiles(Terrain[] terrains, bool fullRewrite, bool allowDialogs = true, string outputRoot = null)
         {
+            var bakeRoot = string.IsNullOrEmpty(outputRoot) ? OutputRoot : outputRoot;
+
             var catalog = AssetPackBiomeCatalog.Load();
             if (catalog == null || catalog.Entries == null || catalog.Entries.Length == 0)
             {
@@ -88,7 +95,7 @@ namespace ForeverEngine.Procedural.Editor
 
             byte layerId = DefaultLayerId;
             float cellSizeMeters = DefaultCellSizeMeters;
-            var layerDir = Path.Combine(OutputRoot, $"layer_{layerId}");
+            var layerDir = Path.Combine(bakeRoot, $"layer_{layerId}");
 
             BakedLayerIndex? existingIndex = null;
             if (!fullRewrite && File.Exists(Path.Combine(layerDir, "index.json")))
