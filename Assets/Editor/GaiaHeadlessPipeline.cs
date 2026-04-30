@@ -1166,6 +1166,12 @@ namespace ForeverEngine.Editor.Gaia
 
             foreach (var t in terrains)
             {
+                if (t.terrainData == null)
+                {
+                    Log($"  WARN: terrain {t.name} has null terrainData — skipping");
+                    continue;
+                }
+
                 // Palms (terrainTrees — efficient, batched)
                 var palm = FindFirstPrefab("Assets/TFP/2_Prefabs/Trees", "Palm");
                 if (palm == null) palm = FindFirstPrefab("Assets/TFP/2_Prefabs/Trees", "Tree");
@@ -1178,7 +1184,7 @@ namespace ForeverEngine.Editor.Gaia
                 else { Log("  WARN: no palm prefab found in Assets/TFP/2_Prefabs/Trees — skipping"); }
 
                 // Rocks (GameObject prefabs — placed under contentRoot)
-                var rockGuids = AssetDatabase.FindAssets("t:Prefab Rock", new[] { "Assets/Hivemind", "Assets/_SwampBundle" });
+                var rockGuids = AssetDatabase.FindAssets("t:Prefab", new[] { "Assets/Hivemind", "Assets/_SwampBundle" });
                 var rockPrefabs = rockGuids
                     .Select(g => AssetDatabase.GUIDToAssetPath(g))
                     .Where(p => p.Contains("Rock", StringComparison.OrdinalIgnoreCase))
