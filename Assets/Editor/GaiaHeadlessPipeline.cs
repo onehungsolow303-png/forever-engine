@@ -121,9 +121,9 @@ namespace ForeverEngine.Editor.Gaia
 
                 PlaceDesertBeachCaveStructure();
 
-                Log("=== Step 8/9: skipped (water — deferred to next task) ===");
+                SetupCrestWater();
 
-                Log("=== Step 8/9: post-processing (clean + culling settings) ===");
+                Log("=== Step 8.5/9: post-processing (clean + culling settings) ===");
                 CleanBrokenTerrains();
                 ApplyTerrainCullingSettings();
 
@@ -1236,6 +1236,62 @@ namespace ForeverEngine.Editor.Gaia
                 ScatterPrefabsByMask(t, rockPrefabs, count: 15, minY: 55f, maxY: 80f,
                                      maxSlopeDeg: 35f, seed: 2024, parent: contentRoot.transform);
             }
+        }
+
+        private static void SetupCrestWater()
+        {
+            Log("=== Step 8/9: setup Crest Water 5 ocean ===");
+
+            // Try prefab path first; fall back to AddComponent if no prefab ships
+            var waterPrefabGuids = AssetDatabase.FindAssets("WaterRenderer t:Prefab");
+            GameObject waterPrefab = null;
+            foreach (var g in waterPrefabGuids)
+            {
+                var path = AssetDatabase.GUIDToAssetPath(g);
+                if (!path.Contains("waveharmonic.crest")) continue;
+                waterPrefab = AssetDatabase.LoadAssetAtPath<GameObject>(path);
+                if (waterPrefab != null) { Log($"  loaded Crest prefab: {path}"); break; }
+            }
+
+            GameObject waterGo;
+            if (waterPrefab != null)
+            {
+                waterGo = (GameObject)PrefabUtility.InstantiatePrefab(waterPrefab);
+                waterGo.transform.position = new Vector3(0, 50f, 0);
+            }
+            else
+            {
+                Log("  no Crest prefab found — attaching WaterRenderer component manually");
+                waterGo = new GameObject("Crest WaterRenderer");
+                waterGo.transform.position = new Vector3(0, 50f, 0);
+                // Reflective AddComponent — Crest's WaterRenderer type is in the WaveHarmonic.Crest.Scripting assembly.
+                var crestAsm = AppDomain.CurrentDomain.GetAssemblies()
+                    .FirstOrDefault(a => a.GetName().Name.Contains("Crest", StringComparison.OrdinalIgnoreCase));
+                if (crestAsm == null)
+                {
+                    Log("  WARN: Crest assembly not found at runtime — skipping water setup");
+                    UnityEngine.Object.DestroyImmediate(waterGo);
+                    return;
+                }
+                var waterRendererType = crestAsm.GetType("WaveHarmonic.Crest.WaterRenderer");
+                if (waterRendererType != null)
+                    waterGo.AddComponent(waterRendererType);
+                else
+                    Log("  WARN: WaterRenderer type not found in Crest assembly — water inert");
+            }
+
+            // Attach WaterCamera to main camera if one exists
+            var mainCam = Camera.main;
+            if (mainCam != null)
+            {
+                var crestAsm = AppDomain.CurrentDomain.GetAssemblies()
+                    .FirstOrDefault(a => a.GetName().Name.Contains("Crest", StringComparison.OrdinalIgnoreCase));
+                var waterCamType = crestAsm?.GetType("WaveHarmonic.Crest.WaterCamera");
+                if (waterCamType != null && mainCam.GetComponent(waterCamType) == null)
+                    mainCam.gameObject.AddComponent(waterCamType);
+            }
+
+            Log("  Crest water configured at sea level Y=50");
         }
 
         private static void Log(string msg) => Debug.Log($"[GaiaHeadless] {msg}");
