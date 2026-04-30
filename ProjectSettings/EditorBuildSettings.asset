@@ -6,9 +6,6 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/Scenes/GaiaWorld_DesertBeachCave.unity
-    guid: 1d0b91a9eba929a40ab0f709c962b38a
-  - enabled: 1
     path: Assets/Scenes/MainMenu.unity
     guid: 1bbb046f078e8954c9cca4f2c856d91d
   - enabled: 1

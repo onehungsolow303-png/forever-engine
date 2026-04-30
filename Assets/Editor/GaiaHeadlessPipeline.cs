@@ -47,6 +47,8 @@ namespace ForeverEngine.Editor.Gaia
         private const double TimeoutSeconds = 20 * 60;
 
         // Captured at start-of-run so EditorApplication.update can read them.
+        // One pipeline runs per Unity launch (EditorApplication.Exit terminates the process);
+        // do not invoke two pipeline entry points in the same session — they share these fields.
         private static string _biomeName;
         private static string _sizeName;
         private static string _scenePath;
@@ -114,6 +116,7 @@ namespace ForeverEngine.Editor.Gaia
                 // Stages 4-7 land in subsequent tasks (stamps, spawners, cave, water).
                 // For Task 3 the skeleton ends here — verify a 1024x1024 flat terrain
                 // exists in the scene.
+                Log("=== Steps 4-7/9: skipped (stamps, spawners, cave, water — deferred to subsequent tasks) ===");
 
                 Log("=== Step 8/9: post-processing (clean + culling settings) ===");
                 CleanBrokenTerrains();
@@ -140,7 +143,10 @@ namespace ForeverEngine.Editor.Gaia
             s.m_autoSpawnBiome = false;                // we drive spawners manually
             s.m_centerOffset = Vector2.zero;
             s.m_dateTimeString = DateTime.UtcNow.ToString("yyyyMMdd_HHmmss");
-            s.m_spawnerPresetList = new List<BiomeSpawnerListEntry>(); // empty: no biome preset
+            // Empty spawner list — Gaia.CreateOrUpdateWorld tolerates this (no biome
+            // instantiation runs). Subsequent tasks construct spawners in code rather
+            // than via a BiomePreset preset list.
+            s.m_spawnerPresetList = new List<BiomeSpawnerListEntry>();
 
             s.m_targetSizePreset = GaiaConstants.EnvironmentSizePreset.Custom;
             s.m_xTiles = 1; s.m_zTiles = 1;
