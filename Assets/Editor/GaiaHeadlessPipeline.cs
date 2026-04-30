@@ -69,6 +69,88 @@ namespace ForeverEngine.Editor.Gaia
         public static void BuildGiantMedium() =>
             RunAsync("Giant Forest", GaiaWorldBuilder.WorldSize.Medium);
 
+        // ── Test bake: Desert Beach Cave (no BiomePreset, hand-curated spawners) ───
+
+        // Root-above-layers — MacroBakeTool.BakeTerrainsAsTiles appends `layer_{layerId}`
+        // itself (line 98 of MacroBakeTool.cs), so this constant must NOT include layer_0.
+        private const string TestBakeOutputRoot =
+            "C:/Dev/.shared/baked/test/desert_beach_cave";
+
+        public static void BuildDesertBeachCave() => RunDesertBeachCave();
+
+        private static void RunDesertBeachCave()
+        {
+            try
+            {
+                _biomeName = "DesertBeachCave";
+                _sizeName = "Test1x1";
+                _startedAt = DateTime.UtcNow;
+
+                Log("=== Step 1/9: new empty scene ===");
+                var scene = EditorSceneManager.NewScene(NewSceneSetup.EmptyScene, NewSceneMode.Single);
+                Directory.CreateDirectory("Assets/Scenes");
+                _scenePath = "Assets/Scenes/GaiaWorld_DesertBeachCave.unity";
+                EditorSceneManager.SaveScene(scene, _scenePath);
+                Log($"  scene saved at {_scenePath}");
+
+                Log("=== Step 1.5/9: setup basic lighting (sun + skybox + ambient) ===");
+                SetupBasicLighting();
+
+                Log("=== Step 2/9: clean any broken Terrains (null terrainData) ===");
+                CleanBrokenTerrains();
+
+                Log("=== Step 2.5/9: URP convert + matfixer (BEFORE spawn) ===");
+                RunBuiltInToUrpConverter();
+                RunNatureManufactureMatFixer();
+
+                Log("=== Step 3/9: create 1x1 km terrain (no biome preset) ===");
+                EnsureSceneViewExists();
+                var settings = BuildDesertBeachCaveSettings();
+                if (!GaiaSessionManager.CreateOrUpdateWorld(settings, executeNow: true, isUpdate: false))
+                    throw new Exception("CreateOrUpdateWorld returned false");
+                Log("  world-creation coroutine started. Driving it to completion...");
+                DriveGaiaCoroutineToCompletion();
+
+                // Stages 4-7 land in subsequent tasks (stamps, spawners, cave, water).
+                // For Task 3 the skeleton ends here — verify a 1024x1024 flat terrain
+                // exists in the scene.
+
+                Log("=== Step 8/9: post-processing (clean + culling settings) ===");
+                CleanBrokenTerrains();
+                ApplyTerrainCullingSettings();
+
+                Log("=== Step 9/9: save scene ===");
+                EditorSceneManager.SaveOpenScenes();
+
+                Log($"=== DONE in {(DateTime.UtcNow - _startedAt).TotalSeconds:F1}s. Scene: {_scenePath} ===");
+                EditorApplication.Exit(0);
+            }
+            catch (Exception ex)
+            {
+                Debug.LogError($"[GaiaHeadless] DesertBeachCave FAIL: {ex}");
+                EditorApplication.Exit(1);
+            }
+        }
+
+        private static WorldCreationSettings BuildDesertBeachCaveSettings()
+        {
+            var s = ScriptableObject.CreateInstance<WorldCreationSettings>();
+            s.m_qualityPreset = GaiaConstants.EnvironmentTarget.Desktop;
+            s.m_seaLevel = 50;                         // matches existing Coniferous convention
+            s.m_autoSpawnBiome = false;                // we drive spawners manually
+            s.m_centerOffset = Vector2.zero;
+            s.m_dateTimeString = DateTime.UtcNow.ToString("yyyyMMdd_HHmmss");
+            s.m_spawnerPresetList = new List<BiomeSpawnerListEntry>(); // empty: no biome preset
+
+            s.m_targetSizePreset = GaiaConstants.EnvironmentSizePreset.Custom;
+            s.m_xTiles = 1; s.m_zTiles = 1;
+            s.m_tileSize = 1024; s.m_tileHeight = 800;
+            s.m_createInScene = false; s.m_autoUnloadScenes = false;
+            s.m_applyFloatingPointFix = false;
+
+            return s;
+        }
+
         // ── Pipeline ────────────────────────────────────────────────────────
 
         private static void RunAsync(string biomeName, GaiaWorldBuilder.WorldSize size)
