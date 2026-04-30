@@ -99,9 +99,8 @@ namespace ForeverEngine.Editor
                 Log("=== Step 4: apply NM Sand terrain layers ===");
                 ApplyTerrainLayers(terrain);
 
-                // ── Step 5: URP converter + NM MatFixer ─────────────────────
-                Log("=== Step 5: URP convert + NatureManufactureMatFixer ===");
-                RunUrpConverter();
+                // ── Step 5: NM MatFixer ─────────────────────────────────────
+                Log("=== Step 5: NatureManufactureMatFixer ===");
                 RunNmMatFixer();
 
                 // ── Step 6: compute height stats ────────────────────────────
@@ -143,8 +142,19 @@ namespace ForeverEngine.Editor
                 EnsureCamera(seaLevel);
 
                 // ── Step 13: save + exit ─────────────────────────────────────
-                Log("=== Step 13: save scene ===");
-                EditorSceneManager.SaveOpenScenes();
+                Log("=== Step 13: save scene + verify ===");
+                var activeScene = EditorSceneManager.GetActiveScene();
+                EditorSceneManager.MarkSceneDirty(activeScene);
+                bool saved = EditorSceneManager.SaveScene(activeScene, ScenePath);
+                if (!saved) throw new Exception($"SaveScene returned false for {ScenePath}");
+
+                // Post-save assertion: scene file must be substantial (terrain + content adds ≥100 KB)
+                AssetDatabase.Refresh();
+                var sceneInfo = new FileInfo(ScenePath);
+                if (!sceneInfo.Exists) throw new Exception($"Scene file missing post-save: {ScenePath}");
+                if (sceneInfo.Length < 100_000)
+                    throw new Exception($"Scene file is suspiciously small ({sceneInfo.Length} bytes) — content didn't make it to disk. Expected >= 100 KB for terrain + cliffs + cave + trees + details + water. Check for scene-reload mid-build.");
+                Log($"  scene saved: {sceneInfo.Length:N0} bytes");
 
                 double elapsed = (DateTime.UtcNow - startedAt).TotalSeconds;
                 Log($"=== DONE in {elapsed:F1}s. Scene: {ScenePath}  trees={treesPlaced}  details={detailsPlaced}  seaLevel={seaLevel:F2} ===");
