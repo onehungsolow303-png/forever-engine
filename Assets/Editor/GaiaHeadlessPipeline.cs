@@ -115,7 +115,9 @@ namespace ForeverEngine.Editor.Gaia
 
                 ApplyDesertBeachCaveStamps();
 
-                Log("=== Steps 5-7/9: skipped (spawners, cave, water — deferred to subsequent tasks) ===");
+                ApplyDesertBeachCaveSplats();
+
+                Log("=== Steps 6-8/9: skipped (spawners, cave, water — deferred to subsequent tasks) ===");
 
                 Log("=== Step 8/9: post-processing (clean + culling settings) ===");
                 CleanBrokenTerrains();
@@ -230,6 +232,90 @@ namespace ForeverEngine.Editor.Gaia
 
             ApplyStamp("Hills", 575, 53, 512, widthPercent: 40, baseLevelY: 53,
                        GaiaConstants.FeatureOperation.AddHeight, "Hills_Dunes");
+        }
+
+        private static TerrainLayer LoadOrCreateLayer(string name, string textureGuidOrName)
+        {
+            // Try to find an existing TerrainLayer with this name
+            var layerGuids = AssetDatabase.FindAssets($"{name} t:TerrainLayer");
+            foreach (var guid in layerGuids)
+            {
+                var path = AssetDatabase.GUIDToAssetPath(guid);
+                var existing = AssetDatabase.LoadAssetAtPath<TerrainLayer>(path);
+                if (existing != null) return existing;
+            }
+            // Otherwise create one referencing the texture
+            var texGuids = AssetDatabase.FindAssets(textureGuidOrName + " t:Texture2D");
+            Texture2D albedo = null;
+            foreach (var guid in texGuids)
+            {
+                var path = AssetDatabase.GUIDToAssetPath(guid);
+                albedo = AssetDatabase.LoadAssetAtPath<Texture2D>(path);
+                if (albedo != null)
+                {
+                    Log($"  LoadOrCreateLayer '{name}': resolved texture at {path}");
+                    break;
+                }
+            }
+            if (albedo == null)
+                throw new Exception($"Could not resolve texture for layer '{name}' (query='{textureGuidOrName}')");
+
+            var layer = new TerrainLayer
+            {
+                diffuseTexture = albedo,
+                tileSize = new Vector2(8, 8),
+                name = name,
+            };
+            Directory.CreateDirectory("Assets/Procedural Worlds/_GeneratedLayers");
+            var layerPath = $"Assets/Procedural Worlds/_GeneratedLayers/{name}.terrainlayer";
+            AssetDatabase.CreateAsset(layer, layerPath);
+            AssetDatabase.SaveAssets();
+            Log($"  LoadOrCreateLayer '{name}': created new TerrainLayer at {layerPath}");
+            return layer;
+        }
+
+        private static void ApplyDesertBeachCaveSplats()
+        {
+            Log("=== Step 5/9: paint sand + rock splats via direct alphamap write ===");
+
+            var sand = LoadOrCreateLayer("DBC_Sand", "sand");
+            var rock = LoadOrCreateLayer("DBC_Rock", "rock");
+
+            var terrains = UnityEngine.Object.FindObjectsByType<Terrain>(FindObjectsSortMode.None);
+            if (terrains.Length == 0) throw new Exception("No terrains in scene");
+
+            foreach (var t in terrains)
+            {
+                t.terrainData.terrainLayers = new[] { sand, rock };
+                var data = t.terrainData;
+                int aw = data.alphamapWidth, ah = data.alphamapHeight;
+                var alpha = new float[ah, aw, 2];      // 2 layers — note Unity convention is [y, x, layer]
+
+                int hmRes = data.heightmapResolution;
+                // Sample slope + height at each alphamap cell
+                for (int y = 0; y < ah; y++)
+                for (int x = 0; x < aw; x++)
+                {
+                    float nx = (float)x / (aw - 1);
+                    float nz = (float)y / (ah - 1);
+                    // Clamp the heightmap index to avoid off-by-one at the boundary
+                    int hx = Mathf.Clamp((int)(nx * (hmRes - 1)), 0, hmRes - 1);
+                    int hz = Mathf.Clamp((int)(nz * (hmRes - 1)), 0, hmRes - 1);
+                    float worldY = data.GetHeight(hx, hz);
+                    float slopeDeg = data.GetSteepness(nx, nz);
+
+                    float sandWeight = (slopeDeg < 25f && worldY >= 45 && worldY <= 65) ? 1f : 0f;
+                    float rockWeight = (slopeDeg > 30f || worldY > 80) ? 1f : 0f;
+                    // If both 0, default to sand (low-elevation flat fallback).
+                    if (sandWeight + rockWeight <= 0f) sandWeight = 1f;
+                    float total = sandWeight + rockWeight;
+                    alpha[y, x, 0] = sandWeight / total;
+                    alpha[y, x, 1] = rockWeight / total;
+                }
+
+                data.SetAlphamaps(0, 0, alpha);
+                Log($"  splatted terrain '{t.name}' ({aw}x{ah} alphamap)");
+            }
         }
 
         // ── Pipeline ────────────────────────────────────────────────────────
