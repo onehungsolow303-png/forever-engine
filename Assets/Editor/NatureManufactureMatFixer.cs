@@ -25,7 +25,16 @@ namespace ForeverEngine.Editor
                 "Assets/Realistic Natural Cave 2",
                 "Assets/Magic Pig Games (Infinity PBR)",
                 "Assets/Procedural Worlds",
-                "Assets/Prefabs/Overworld"
+                "Assets/Prefabs/Overworld",
+                // 2026-04-29 PM: extended for full asset variety unlock pass
+                "Assets/_SwampBundle",
+                "Assets/G-Star",
+                "Assets/TFP",
+                "Assets/SeedMesh",
+                "Assets/Hivemind/Art",
+                "Assets/Forst",
+                "Assets/EntroverseLab",
+                "Assets/Eternal Temple"
             });
 
             int fixed_count = 0;
