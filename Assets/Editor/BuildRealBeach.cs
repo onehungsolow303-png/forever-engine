@@ -384,7 +384,9 @@ namespace ForeverEngine.Editor
             caveGo.name = "CaveEntrance_NaturalCave2";
             caveGo.transform.position = new Vector3(caveX, cliffMidpoint.y, cliffMidpoint.z);
             caveGo.transform.rotation = Quaternion.Euler(0f, 270f, 0f);
-            Log($"  cave at ({caveX:F1}, {cliffMidpoint.y:F1}, {cliffMidpoint.z:F1})");
+            // Realistic Natural Cave 2's CavePart_1 is ~5-10m at scale 1; scale 5x reads as a 30m cave entrance against the 95m cliff.
+            caveGo.transform.localScale = new Vector3(5f, 5f, 5f);
+            Log($"  cave at ({caveX:F1}, {cliffMidpoint.y:F1}, {cliffMidpoint.z:F1}) scale=5x");
         }
 
         // ── Step 9: scatter trees ─────────────────────────────────────────────
@@ -620,12 +622,14 @@ namespace ForeverEngine.Editor
             cam.farClipPlane = 5000f;
             camGo.AddComponent<AudioListener>();
 
-            // Position SW of terrain looking NE toward cliff — above max terrain Y (~95m).
-            // Terrain spans roughly X[-500,+500] Z[-500,+500]; camera at Z=-600 is south of terrain
-            // so it's outside the terrain looking into it, avoiding the buried-in-hill black screen.
-            camGo.transform.position = new Vector3(-300f, 150f, -600f);
-            camGo.transform.rotation = Quaternion.Euler(15f, 25f, 0f);
-            Log("  Main Camera at (-300, 150, -600) rot=(15,25,0) — outside terrain SW edge looking NE");
+            // Ground-level beach view — camera 150m WEST of the cliff at moderate elevation,
+            // looking east directly at the cliff face where the cave is embedded. Cliff is at
+            // world X=491, cave at (461, 87, 50). Position at (300, 30, 50) → cliff is 191m
+            // east in the camera's forward direction, cave entrance ~57m above camera.
+            // Pitch -15° looks up to frame the cave; no yaw drift.
+            camGo.transform.position = new Vector3(300f, 30f, 50f);
+            camGo.transform.rotation = Quaternion.Euler(-15f, 90f, 0f);
+            Log("  Main Camera at (300, 30, 50) rot=(-15,90,0) — beach-level looking east at cliff/cave");
         }
 
         // ── Util ─────────────────────────────────────────────────────────────
