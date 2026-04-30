@@ -119,7 +119,9 @@ namespace ForeverEngine.Editor.Gaia
 
                 SpawnDesertBeachCaveContent();
 
-                Log("=== Steps 7-8/9: skipped (cave, water — deferred to subsequent tasks) ===");
+                PlaceDesertBeachCaveStructure();
+
+                Log("=== Step 8/9: skipped (water — deferred to next task) ===");
 
                 Log("=== Step 8/9: post-processing (clean + culling settings) ===");
                 CleanBrokenTerrains();
@@ -1155,6 +1157,45 @@ namespace ForeverEngine.Editor.Gaia
                 placed++;
             }
             Log($"  scattered {placed} prefabs from {prefabs.Length} prototypes");
+        }
+
+        private static void PlaceDesertBeachCaveStructure()
+        {
+            Log("=== Step 7/9: place 3DForge cave entrance at cliff base ===");
+
+            GameObject cavePrefab = FindFirstPrefab(
+                "Assets/3DForge/Cave Adventure kit", "Entrance");
+            if (cavePrefab == null) cavePrefab = FindFirstPrefab(
+                "Assets/3DForge/Cave Adventure kit", "Tunnel");
+            if (cavePrefab == null) cavePrefab = FindFirstPrefab(
+                "Assets/3DForge/Cave Adventure kit", "Wall");
+
+            if (cavePrefab == null)
+            {
+                Log("  WARN: no 3DForge Cave Adventure kit prefab found — skipping cave placement");
+                return;
+            }
+
+            var terrains = UnityEngine.Object.FindObjectsByType<Terrain>(FindObjectsSortMode.None);
+            if (terrains.Length == 0) return;
+            var terrain = terrains[0];
+
+            // Sample Y at world (850, ?, 512) — base of east cliff
+            var data = terrain.terrainData;
+            if (data == null)
+            {
+                Log("  WARN: terrain has null terrainData — skipping cave placement");
+                return;
+            }
+            float nx = (850f - terrain.transform.position.x) / data.size.x;
+            float nz = (512f - terrain.transform.position.z) / data.size.z;
+            float baseY = data.GetInterpolatedHeight(nx, nz);
+
+            var caveRoot = new GameObject("DesertBeachCave_Cave");
+            var go = (GameObject)PrefabUtility.InstantiatePrefab(cavePrefab, caveRoot.transform);
+            go.transform.position = new Vector3(850f, baseY, 512f);
+            go.transform.rotation = Quaternion.Euler(0, 270f, 0);  // entrance faces west (toward ocean)
+            Log($"  placed cave prefab '{cavePrefab.name}' at (850, {baseY:F1}, 512)");
         }
 
         private static void SpawnDesertBeachCaveContent()
